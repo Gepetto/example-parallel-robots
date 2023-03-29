@@ -1,0 +1,149 @@
+digraph G {
+node [shape=box];
+"buste" [label="buste"];
+"arriere_cuissep2_2" [label="arriere_cuissep2_2"];
+"arriere_cuisse_2" [label="arriere_cuisse_2"];
+"cuisse_2" [label="cuisse_2"];
+"avant_cuisse" [label="avant_cuisse"];
+"tibia_2" [label="tibia_2"];
+"rotule_tibias_2" [label="rotule_tibias_2"];
+"sphere_8" [label="sphere_8"];
+"joint_pied_2" [label="joint_pied_2"];
+"pied_2" [label="pied_2"];
+"joint_tendons_3" [label="joint_tendons_3"];
+"sphere_11" [label="sphere_11"];
+"joint_tendons_4" [label="joint_tendons_4"];
+"sphere_12" [label="sphere_12"];
+"servo_mollet_2_2" [label="servo_mollet_2_2"];
+"rotule_servo_mollet_4" [label="rotule_servo_mollet_4"];
+"molet_2/2_4" [label="molet_2/2_4"];
+"sphere_10" [label="sphere_10"];
+"servo_mollet_1_2" [label="servo_mollet_1_2"];
+"rotule_servo_mollet_3" [label="rotule_servo_mollet_3"];
+"molet_2/2_3" [label="molet_2/2_3"];
+"sphere_9" [label="sphere_9"];
+"rotule_cuisse_2" [label="rotule_cuisse_2"];
+"barre_cuisse_1_2" [label="barre_cuisse_1_2"];
+"sphere_7" [label="sphere_7"];
+"arriere_cuissep2" [label="arriere_cuissep2"];
+"arriere_cuisse" [label="arriere_cuisse"];
+"rotule_cuisse" [label="rotule_cuisse"];
+"barre_cuisse_1" [label="barre_cuisse_1"];
+"sphere" [label="sphere"];
+"cuisse" [label="cuisse"];
+"avant_cuisse_2" [label="avant_cuisse_2"];
+"tibia" [label="tibia"];
+"rotule_tibias" [label="rotule_tibias"];
+"sphere_2" [label="sphere_2"];
+"joint_pied" [label="joint_pied"];
+"pied" [label="pied"];
+"joint_tendons" [label="joint_tendons"];
+"sphere_5" [label="sphere_5"];
+"joint_tendons_2" [label="joint_tendons_2"];
+"sphere_6" [label="sphere_6"];
+"servo_mollet_2" [label="servo_mollet_2"];
+"rotule_servo_mollet_2" [label="rotule_servo_mollet_2"];
+"molet_2/2_2" [label="molet_2/2_2"];
+"sphere_4" [label="sphere_4"];
+"servo_mollet_1" [label="servo_mollet_1"];
+"rotule_servo_mollet" [label="rotule_servo_mollet"];
+"molet_2/2" [label="molet_2/2"];
+"sphere_3" [label="sphere_3"];
+node [shape=ellipse, color=blue, fontcolor=blue];
+"buste" -> "jambed_hautcuisse1_mot" [label="xyz: -0.0100493 -0.00587489 -0.0750625 \nrpy: -1.5708 -0.669942 -1.5708"]
+"jambed_hautcuisse1_mot" -> "arriere_cuissep2_2"
+"arriere_cuissep2_2" -> "jambed_hautcuisse2_mot" [label="xyz: -2.77556e-17 0.013 -0.007 \nrpy: -1.5708 -0.632403 3.14159"]
+"jambed_hautcuisse2_mot" -> "arriere_cuisse_2"
+"arriere_cuisse_2" -> "jambed_cuisse_mot" [label="xyz: -0.005 -2.08167e-17 -0.013 \nrpy: -1.5708 1.10854 -1.5708"]
+"jambed_cuisse_mot" -> "cuisse_2"
+"cuisse_2" -> "jambeg_bascuisse_mot" [label="xyz: 0.026 4.16334e-17 3.46945e-17 \nrpy: -3.14159 -7.71718e-15 -2.2506"]
+"jambeg_bascuisse_mot" -> "avant_cuisse"
+"avant_cuisse" -> "jambed_genoux_libre" [label="xyz: 0.04 -0.0738647 -6.59195e-17 \nrpy: 3.14159 2.05968e-15 0.83194"]
+"jambed_genoux_libre" -> "tibia_2"
+"tibia_2" -> "jambed_rotulebascuisse_libre" [label="xyz: 0.0123856 -0.0355731 -0.001 \nrpy: 3.14159 1.36864e-15 -2.23741"]
+"jambed_rotulebascuisse_libre" -> "rotule_tibias_2"
+"rotule_tibias_2" -> "jambed_fermeture2B" [label="xyz: -1.11022e-16 -0.001 -0.006 \nrpy: -1.5708 -1.2143 4.77183e-16"]
+"jambed_fermeture2B" -> "sphere_8"
+"tibia_2" -> "jambed_rotulepied_libre" [label="xyz: -0.012 0.126392 0.00852 \nrpy: 1.23412e-15 -2.98621e-15 1.10371"]
+"jambed_rotulepied_libre" -> "joint_pied_2"
+"joint_pied_2" -> "jambed_pied_libre" [label="xyz: 0.00260311 -0.00149124 -0.00352 \nrpy: -1.5708 -0.78376 1.05056"]
+"jambed_pied_libre" -> "pied_2"
+"pied_2" -> "jambed_rotuletendonext_libre" [label="xyz: 0.00829748 0.003 0.0166803 \nrpy: -1.5708 -0.249769 -3.14159"]
+"jambed_rotuletendonext_libre" -> "joint_tendons_3"
+"joint_tendons_3" -> "jambed_fermeture6B" [label="xyz: -0.00125 -1.38778e-17 -0.002 \nrpy: 1.5708 -0.53594 -1.5708"]
+"jambed_fermeture6B" -> "sphere_11"
+"pied_2" -> "jambed_rotuletendonint_libre" [label="xyz: 0.00829748 -0.003 0.0166803 \nrpy: -1.5708 0.249769 4.86955e-16"]
+"jambed_rotuletendonint_libre" -> "joint_tendons_4"
+"joint_tendons_4" -> "jambed_fermeture5B" [label="xyz: 0.00125 -1.38778e-17 -0.002 \nrpy: -1.5708 0.53594 -1.5708"]
+"jambed_fermeture5B" -> "sphere_12"
+"tibia_2" -> "jambed_servomoletint_mot" [label="xyz: -0.006 0.0378209 0.012 \nrpy: 3.14159 -7.68678e-16 3.11485"]
+"jambed_servomoletint_mot" -> "servo_mollet_2_2"
+"servo_mollet_2_2" -> "jambed_rotuleservoint_libre" [label="xyz: 0.015538 -0.0038171 -0.002 \nrpy: -3.14159 1.31655e-15 3.14159"]
+"jambed_rotuleservoint_libre" -> "rotule_servo_mollet_4"
+"rotule_servo_mollet_4" -> "jambed_rotuletendonmoletint_libre" [label="xyz: 0.001 2.08167e-17 -0.004 \nrpy: 1.5708 0.374741 -1.5708"]
+"jambed_rotuletendonmoletint_libre" -> "molet_2/2_4"
+"molet_2/2_4" -> "jambed_fermeture5A" [label="xyz: -0.11 -3.64292e-17 5.55112e-17 \nrpy: 3.14159 7.46845e-16 -3.0777"]
+"jambed_fermeture5A" -> "sphere_10"
+"tibia_2" -> "jambed_servomolletext_mot" [label="xyz: -0.006 0.0378209 -0.002 \nrpy: -2.08765e-15 1.06376e-15 3.11485"]
+"jambed_servomolletext_mot" -> "servo_mollet_1_2"
+"servo_mollet_1_2" -> "jambed_rotuleservoext_libre" [label="xyz: 0.015538 0.0038171 -0.002 \nrpy: 3.14159 -8.11676e-16 3.14159"]
+"jambed_rotuleservoext_libre" -> "rotule_servo_mollet_3"
+"rotule_servo_mollet_3" -> "jambed_rotuletendonmoletext_libre" [label="xyz: -0.001 6.93889e-18 -0.004 \nrpy: 1.5708 -0.374741 1.5708"]
+"jambed_rotuletendonmoletext_libre" -> "molet_2/2_3"
+"molet_2/2_3" -> "jambed_fermeture6A" [label="xyz: -0.11 2.77556e-17 0.0025 \nrpy: -2.22199e-15 -1.05086e-15 3.0777"]
+"jambed_fermeture6A" -> "sphere_9"
+"arriere_cuisse_2" -> "jambed_rotulecuisse_libre" [label="xyz: 0.005 6.93889e-18 -0.013 \nrpy: -1.5708 -1.14085 1.5708"]
+"jambed_rotulecuisse_libre" -> "rotule_cuisse_2"
+"rotule_cuisse_2" -> "jambed_rotuletendoncuisse_libre" [label="xyz: -1.38778e-17 -0.001 -0.004 \nrpy: -1.5708 -1.04789 3.14159"]
+"jambed_rotuletendoncuisse_libre" -> "barre_cuisse_1_2"
+"barre_cuisse_1_2" -> "jambed_fermeture2A" [label="xyz: 5.20417e-18 0.09 0.001 \nrpy: -3.14159 -1.02864e-15 -0.856693"]
+"jambed_fermeture2A" -> "sphere_7"
+"buste" -> "jambeg_hautcuisse1_mot" [label="xyz: -0.0100493 0.0241251 -0.0750625 \nrpy: -1.5708 0.785398 -1.5708"]
+"jambeg_hautcuisse1_mot" -> "arriere_cuissep2"
+"arriere_cuissep2" -> "jambeg_hautcuisse2_mot" [label="xyz: -1.38778e-17 0.013 -0.007 \nrpy: 1.5708 0.195145 0"]
+"jambeg_hautcuisse2_mot" -> "arriere_cuisse"
+"arriere_cuisse" -> "jambeg_rotulecuisse_libre" [label="xyz: 0.005 2.81025e-16 -0.013 \nrpy: 1.5708 -1.31689 -1.5708"]
+"jambeg_rotulecuisse_libre" -> "rotule_cuisse"
+"rotule_cuisse" -> "jambeg_rotuletendoncuisse_libre" [label="xyz: 2.77556e-17 0.001 -0.004 \nrpy: -1.5708 1.02974 1.0778e-15"]
+"jambeg_rotuletendoncuisse_libre" -> "barre_cuisse_1"
+"barre_cuisse_1" -> "jambeg_fermeture1A" [label="xyz: 6.07153e-18 0.09 0.001 \nrpy: 3.92954e-16 1.65481e-16 -1.79016"]
+"jambeg_fermeture1A" -> "sphere"
+"arriere_cuisse" -> "jambg_cuisse_mot" [label="xyz: -0.005 -1.73472e-18 -0.013 \nrpy: -1.5708 -0.698132 -1.5708"]
+"jambg_cuisse_mot" -> "cuisse"
+"cuisse" -> "jambed_bascuisse_mot" [label="xyz: -0.026 1.38778e-17 3.46945e-17 \nrpy: -3.14159 6.99964e-15 -2.28343"]
+"jambed_bascuisse_mot" -> "avant_cuisse_2"
+"avant_cuisse_2" -> "jambeg_genoux_libre" [label="xyz: 0.04 0.0738647 -0.01 \nrpy: 7.2811e-16 -1.05748e-16 -1.66468"]
+"jambeg_genoux_libre" -> "tibia"
+"tibia" -> "jambeg_rotulebascuisse_libre" [label="xyz: 0.0123856 -0.0355731 0.011 \nrpy: -1.22847e-15 1.70863e-17 1.66468"]
+"jambeg_rotulebascuisse_libre" -> "rotule_tibias"
+"rotule_tibias" -> "jambeg_fermeture1B" [label="xyz: -9.45424e-17 -0.001 -0.006 \nrpy: 1.5708 -0.259871 6.03118e-16"]
+"jambeg_fermeture1B" -> "sphere_2"
+"tibia" -> "jambeg_rotulepied_libre" [label="xyz: -0.012 0.126392 0.00852 \nrpy: -2.40205e-14 -2.29275e-16 -8.5497e-16"]
+"jambeg_rotulepied_libre" -> "joint_pied"
+"joint_pied" -> "jambeg_pied_libre" [label="xyz: 0.00260311 0.00149124 -0.00352 \nrpy: -1.5708 0.145365 2.09103"]
+"jambeg_pied_libre" -> "pied"
+"pied" -> "jambeg_rotuletendonext_libre" [label="xyz: 0.00829748 -0.003 0.0166803 \nrpy: -1.5708 0.901603 4.47415e-16"]
+"jambeg_rotuletendonext_libre" -> "joint_tendons"
+"joint_tendons" -> "jambeg_fermeture3B" [label="xyz: 0.00125 0 -0.002 \nrpy: -1.5708 -0.460769 -1.5708"]
+"jambeg_fermeture3B" -> "sphere_5"
+"pied" -> "jambeg_rotuletendonint_libre" [label="xyz: 0.00829748 0.007 0.0166803 \nrpy: -1.5708 0.901603 4.47415e-16"]
+"jambeg_rotuletendonint_libre" -> "joint_tendons_2"
+"joint_tendons_2" -> "jambeg_fermeture4B" [label="xyz: 0.00125 -5.55112e-17 -0.002 \nrpy: -1.5708 -0.460769 -1.5708"]
+"jambeg_fermeture4B" -> "sphere_6"
+"tibia" -> "jambeg_servomolletext_mot" [label="xyz: -0.006 0.0378209 0.012 \nrpy: 3.14159 3.0629e-16 3.14159"]
+"jambeg_servomolletext_mot" -> "servo_mollet_2"
+"servo_mollet_2" -> "jambeg_rotuleservoext_libre" [label="xyz: 0.015538 -0.0038171 -0.002 \nrpy: 3.14159 -2.14977e-16 3.14159"]
+"jambeg_rotuleservoext_libre" -> "rotule_servo_mollet_2"
+"rotule_servo_mollet_2" -> "jambeg_rotuletendonmoletext_libre" [label="xyz: -0.001 -6.93889e-18 -0.004 \nrpy: -1.5708 0.270889 -1.5708"]
+"jambeg_rotuletendonmoletext_libre" -> "molet_2/2_2"
+"molet_2/2_2" -> "jambeg_fermeture3A" [label="xyz: -0.11 -2.77556e-17 0.0025 \nrpy: 1.23201e-15 -1.9333e-16 -3.11475"]
+"jambeg_fermeture3A" -> "sphere_4"
+"tibia" -> "jambeg_servomolletint_mot" [label="xyz: -0.006 0.0378209 -0.002 \nrpy: 4.37281e-16 2.38274e-16 3.14159"]
+"jambeg_servomolletint_mot" -> "servo_mollet_1"
+"servo_mollet_1" -> "jambeg_rotuleservoint_libre" [label="xyz: 0.015538 0.0038171 -0.002 \nrpy: -3.14159 1.07381e-15 3.14159"]
+"jambeg_rotuleservoint_libre" -> "rotule_servo_mollet"
+"rotule_servo_mollet" -> "jambeg_rotuletendonmoletint_libre" [label="xyz: -0.001 -2.08167e-17 -0.004 \nrpy: 1.5708 -0.270889 1.5708"]
+"jambeg_rotuletendonmoletint_libre" -> "molet_2/2"
+"molet_2/2" -> "jambeg_fermeture4A" [label="xyz: -0.11 -2.77556e-17 0.0025 \nrpy: -1.07237e-17 -1.81317e-16 3.14159"]
+"jambeg_fermeture4A" -> "sphere_3"
+}
