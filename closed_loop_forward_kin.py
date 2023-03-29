@@ -293,31 +293,34 @@ class TestRobotInfo(unittest.TestCase):
     def test_forwardkinematics(self):
         q0, q_ini= closedLoopForwardKinematics(new_model, new_data,goal,q_prec=q_prec)
         constraint=norm(constraints6D(new_model,new_data,q0))
-        self.assertTrue(constraint<1e-6)
+        self.assertTrue(constraint<1e-6) #check the constraint
     def test_inversekinematics(self):
         InvKin=closedLoopInverseKinematics(new_model,new_data,fgoal,q_prec=q_prec,name_eff=frame_effector)
         self.assertTrue(InvKin[3]==0) #chexk that joint 15 is a spherical
     def test_forwarkinematicsipopt(self):
         qipopt,info=closedLoop6DIpoptForwardKinematics(new_model, goal, q_prec=q_prec)
         constraint=norm(constraints6D(new_model,new_data,qipopt))
-        self.assertTrue(constraint<1e-6)
+        self.assertTrue(constraint<1e-6) #check the constraint
 
 
 if __name__ == "__main__":
+    # import robot
     path=os.getcwd()+"/robot_marcheur_1"
     robot=RobotWrapper.BuildFromURDF(path + "/robot.urdf", path)
     model=robot.model
     visual_model = robot.visual_model
+    #change the joint type
     new_model=jointTypeUpdate(model,rotule_name="to_rotule")
     new_data=new_model.createData()
+    
+    #init variable use by test
     Lidmot=idmot(new_model)
-
     goal=np.zeros(len(Lidmot))
     q_prec=q2freeq(new_model,pin.neutral(new_model))
-
     fgoal=new_data.oMf[36]
     frame_effector='bout_pied_frame'
     
+    #run test
     unittest.main()
 
 

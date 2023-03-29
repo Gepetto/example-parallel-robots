@@ -150,16 +150,20 @@ class TestRobotInfo(unittest.TestCase):
         vq=inverseConstraintKinematics(new_model,new_data,constraint_model,constraint_data,q0,34,vapply,name_mot="mot")[0]
         pin.computeAllTerms(new_model,new_data,q0,vq)
         vcheck=new_data.v[13].np #frame 34 is center on joint 13
+        #check that the computing vq give the good speed 
         self.assertTrue(norm(vcheck-vapply)<1e-6)
 
 
 if __name__ == "__main__":
+    #load robot
     path=os.getcwd()+"/robot_marcheur_1"
     robot=RobotWrapper.BuildFromURDF(path + "/robot.urdf", path)
     model=robot.model
     visual_model = robot.visual_model
     new_model=jointTypeUpdate(model,rotule_name="to_rotule")
     new_data=new_model.createData()
+
+    #create variable use by test
     Lidmot=idmot(new_model)
 
     goal=np.zeros(len(Lidmot))
@@ -170,6 +174,6 @@ if __name__ == "__main__":
     constraint_model=getConstraintModelFromName(new_model,name_constraint)
     constraint_data = [c.createData() for c in constraint_model]
     
-
+    #test
     unittest.main()
 

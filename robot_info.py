@@ -289,11 +289,13 @@ import unittest
 class TestRobotInfo(unittest.TestCase):
     def test_getRobotInfo(self):
         name__closedloop,name_mot,number_closedloop,type=getRobotInfo(path)
+        #check the model parsing
         self.assertTrue(number_closedloop==3)
         self.assertTrue(name_mot=="mot")
         self.assertTrue(name__closedloop=="fermeture")
     def test_jointTypeUpdate(self):
         new_model=jointTypeUpdate(model,rotule_name="to_rotule")
+        #check that there is new spherical joint
         self.assertTrue(new_model.joints[15].nq==4) #chexk that joint 15 is a spherical
     def test_idmot(self):
         Lid=idmot(new_model)
@@ -306,16 +308,21 @@ class TestRobotInfo(unittest.TestCase):
         Lc3D=constraints3D(new_model, new_data, q)
         Lc3D=np.concatenate(Lc3D).tolist()
         Lc6D=np.concatenate(Lc6D).tolist()
+        #check the constraint
         self.assertTrue(Lc3D[0]==Lc6D[0])
 
     def test_nameFrameConstraint(self):
         Lnom=nameFrameConstraint(new_model)
         nomf1=Lnom[0][0]
+        #check the parsing
         self.assertTrue(nomf1=='fermeture1_B')
 
 if __name__ == "__main__":
     path=os.getcwd()+"/robot_marcheur_1"
+    #load robot
     robot=RobotWrapper.BuildFromURDF(path + "/robot.urdf", path)
     model=robot.model
+    #change joint type
     new_model=jointTypeUpdate(model,rotule_name="to_rotule")
+    #run test
     unittest.main()
