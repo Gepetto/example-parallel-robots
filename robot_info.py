@@ -1,3 +1,12 @@
+"""
+-*- coding: utf-8 -*-
+Virgile BATTO, march 2022
+
+Tools to load and parse a urdf file with closed loop
+
+"""
+
+
 import pinocchio as pin
 import numpy as np
 from pinocchio.robot_wrapper import RobotWrapper

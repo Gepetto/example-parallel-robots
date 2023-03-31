@@ -1,3 +1,10 @@
+"""
+-*- coding: utf-8 -*-
+Virgile BATTO, march 2022
+
+Tools to compute the forwark and inverse kinematics of a robot with  closed loop 
+
+"""
 import pinocchio as pin
 import numpy as np
 from pinocchio.robot_wrapper import RobotWrapper

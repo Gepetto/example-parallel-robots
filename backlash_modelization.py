@@ -1,3 +1,12 @@
+"""
+-*- coding: utf-8 -*-
+Virgile BATTO, march 2022
+
+Tools to modelize flexibility and backlash inside a robot
+(not test yet)
+
+"""
+
 import pinocchio as pin
 import numpy as np
 from numpy.linalg import norm
@@ -159,7 +168,7 @@ def rotationalFlexBacklash(model, data, q, vq, aq, I, Lf=[]):
 import unittest
 
 # class TestRobotInfo(unittest.TestCase):
-    #only test inverse constraint kineatics because it runs all precedent code
+    #only test inverse constraint kineatics because it sruns all precedent code
     # def test_backlash(self):
 
 

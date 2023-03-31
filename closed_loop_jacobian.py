@@ -1,8 +1,15 @@
+"""
+-*- coding: utf-8 -*-
+Virgile BATTO, march 2022
+
+tools to compute of jacobian inside closed loop
+
+"""
 import pinocchio as pin
 import numpy as np
 from numpy.linalg import norm
 from robot_info import *
-from closed_loop_forward_kin import *
+from closed_loop_kinematics import *
 from pinocchio.robot_wrapper import RobotWrapper
 
 def jacobianFinitDiffClosedLoop(model, idframe: int, idref: int, qmot: np.array,q_prec, dq=1e-6,name_mot='mot',fermeture='fermeture'):
@@ -102,7 +109,7 @@ def dq_dqmot(model,LJ):
     return(dq)
 
 
-def inverseConstraintKinematics(model,data,constraint_model,constraint_data,q0,ideff,veff,name_mot="mot"):
+def inverseConstraintKinematicsSpeed(model,data,constraint_model,constraint_data,q0,ideff,veff,name_mot="mot"):
     """
     vq,Jf_closed=inverseConstraintKinematics(model,data,constraint_model,constraint_data,q0,ideff,veff,name_mot="mot")
 
@@ -147,7 +154,7 @@ class TestRobotInfo(unittest.TestCase):
     #only test inverse constraint kineatics because it runs all precedent code
     def test_inverseConstraintKinematics(self):
         vapply=np.array([0,0,1,0,0,0])
-        vq=inverseConstraintKinematics(new_model,new_data,constraint_model,constraint_data,q0,34,vapply,name_mot="mot")[0]
+        vq=inverseConstraintKinematicsSpeed(new_model,new_data,constraint_model,constraint_data,q0,34,vapply,name_mot="mot")[0]
         pin.computeAllTerms(new_model,new_data,q0,vq)
         vcheck=new_data.v[13].np #frame 34 is center on joint 13
         #check that the computing vq give the good speed 
