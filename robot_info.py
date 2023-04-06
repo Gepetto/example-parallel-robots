@@ -305,7 +305,7 @@ class TestRobotInfo(unittest.TestCase):
     def test_jointTypeUpdate(self):
         new_model=jointTypeUpdate(model,rotule_name="to_rotule")
         #check that there is new spherical joint
-        self.assertTrue(new_model.joints[15].nq==4) #chexk that joint 15 is a spherical
+        self.assertTrue(new_model.joints[15].nq==4) #check that joint 15 is a spherical
     def test_idmot(self):
         Lid=idmot(new_model)
         self.assertTrue(Lid==[0, 1, 4, 5, 7, 12]) #check the idmot
