@@ -8,6 +8,7 @@ Tools to compute the forwark and inverse kinematics of a robot with  closed loop
 import pinocchio as pin
 import numpy as np
 from pinocchio.robot_wrapper import RobotWrapper
+from pinocchio import casadi as caspin
 from numpy.linalg import norm
 import os
 from scipy.optimize import fmin_slsqp
@@ -18,7 +19,7 @@ from robot_info import *
 
 def constraintQuaternion(model, q):
     """
-    L=constraintQuaternion(model, q)
+    L = constraintQuaternion(model, q)
     return the list of 1 - the squared norm of each quaternion inside the configuration vector q (work for free flyer and spherical joint)
     """
     L = []
@@ -32,29 +33,24 @@ def constraintQuaternion(model, q):
     return L
 
 
-def closedLoopForwardKinematics(
-    model, data, goal, q_prec=[], name_mot="mot", nom_fermeture="fermeture", type="6D"
-):
+def closedLoopForwardKinematics(model, data, target, q_prec=[], name_mot="mot", nom_fermeture="fermeture", type="6D"):
 
     """
         forwardgeom_parra(
-        model, data, goal, q_prec=[], name_mot="mot", nom_fermeture="fermeture", type="6D"):
+        model, data, target, q_prec=[], name_mot="mot", nom_fermeture="fermeture", type="6D"):
 
-        take the goal position of the motors  axis of the robot ( joint with name_mot, ("mot" if empty) in the name), the robot model and data,
-        the current configuration of all joint ( set to robot.q0 if let empty)
+        take the target position of the motors  axis of the robot ( joint with name_mot, ("mot" if empty) in the name), the robot model and data,
+        the current configuration of all joint (set to robot.q0 if let empty)
         the name of the joint who close the kinematic loop nom_fermeture
 
-        return a configuration who match the goal position of the motor
-
+        return a configuration that matches the target position of the motor
     """
-
-    if not (len(q_prec) == (model.nq - len(goal))):
-        
+    if not (len(q_prec) == (model.nq - len(target))):
         if len(q_prec) == 0:
-            warn("!!!!!!!!!  no q_prec   !!!!!!!!!!!!!!")
+            warn("No previous configuration given... Using neutral configuration")
         else:
-            warn("!!!!!!!!!invalid q_prec!!!!!!!!!!!!!!")
-        q_prec = q2freeq(model,pin.neutral(model))
+            warn("Invalid previous configuration: size does not match the number of free joints... Using neutral configuration instead")
+        q_prec = q2freeq(model, pin.neutral(model), name_mot)
 
     nombre_chaine = len(model.names) // 2
     Lid = idmot(model, name_mot)
@@ -71,7 +67,6 @@ def closedLoopForwardKinematics(
         for i in range(model.nq):
             if not (i in Lid):
                 extend_q[i] = rq.pop(0)
-
         return extend_q
 
     def costnorm(q):

@@ -7,6 +7,7 @@ Tools to load and parse a urdf file with closed loop
 """
 
 
+import unittest
 import pinocchio as pin
 import numpy as np
 from pinocchio.robot_wrapper import RobotWrapper
@@ -17,8 +18,6 @@ from yaml.loader import SafeLoader
 from warnings import warn
 
 
-
-
 def idmot(model, name_mot="mot"):
     """
     Lid=idmot(model,name_mot='mot')
@@ -26,10 +25,8 @@ def idmot(model, name_mot="mot"):
     """
     Lid = []
     for i, name in enumerate(model.names):
-        match = re.search(name_mot, name)
-        if match:
-            idx=model.joints[i].idx_q
-            Lid.append(idx)
+        if re.search(name_mot, name):
+            Lid.append(model.joints[i].idx_q)
     return Lid
 
 
@@ -40,24 +37,26 @@ def idvmot(model, name_mot="mot"):
     """
     Lid = []
     for i, name in enumerate(model.names):
-        match = re.search(name_mot, name)
-        if match:
-            idx=model.joints[i].idx_v
-            Lid.append(idx)
+        if re.search(name_mot, name):
+            Lid.append(model.joints[i].idx_v)
     return Lid
 
-
-def q2freeq(model,q, name_mot="mot"):
+def q2freeq(model, q, name_mot="mot"):
     """
     freeq=q2freeq(model,q, name_mot="mot")
     return the non motor coordinate of q in accordance with the robot model
     """
-    Lidmot=idmot(model, name_mot)
-    freeq=[]
-    for i in range(len(q.tolist())):
-        if not(i in Lidmot):
-            freeq.append(q[i])
-    return(freeq)
+    Lidmot = idmot(model, name_mot)
+    # freeq = []
+    # for i in range(len(q.tolist())):
+    #     if not (i in Lidmot):
+    #         freeq.append(q[i])
+    mask = np.ones_like(q, bool)
+    mask[Lidmot] = False
+    return(q[mask])
+    # freeq = np.delete(q, Lidmot) This is a numpy alternative
+    # return (freeq)
+
 
 def getRobotInfo(path):
     """
@@ -68,21 +67,21 @@ def getRobotInfo(path):
     try:
         yaml_file = open(path+"/robot.yaml", 'r')
         yaml_content = yaml.load(yaml_file, Loader=SafeLoader)
-        name_closedloop=yaml_content["name_closedloop"]
-        name_mot=yaml_content["name_mot"]
-        type=yaml_content["type"]
-        try :
-            number_closedloop=yaml_content["closed_loop_number"]
-        except :
-            number_closedloop=-1
- 
-    except :
+        name_closedloop = yaml_content["name_closedloop"]
+        name_mot = yaml_content["name_mot"]
+        type = yaml_content["type"]
+        try:
+            number_closedloop = yaml_content["closed_loop_number"]
+        except:
+            number_closedloop = -1
+
+    except:
         warn("no robot.yaml found, default value applied")
-        name_closedloop="fermeture"
-        name_mot="mot"
-        number_closedloop=-1
-        type="6D"
-    return(name_closedloop,name_mot,number_closedloop,type)
+        name_closedloop = "fermeture"
+        name_mot = "mot"
+        number_closedloop = -1
+        type = "6D"
+    return (name_closedloop, name_mot, number_closedloop, type)
 
 
 def getSimplifiedRobot(path):
@@ -97,13 +96,12 @@ def getSimplifiedRobot(path):
     try:
         yaml_file = open(path+"/robot.yaml", 'r')
         yaml_content = yaml.load(yaml_file)
-        name_closedloop=yaml_content["name_closedloop"]
-        name_mot=yaml_content["name_mot"]
-    except :
+        name_closedloop = yaml_content["name_closedloop"]
+        name_mot = yaml_content["name_mot"]
+    except:
         warn("no robot.yaml found, default value applied")
-        name_closedloop="fermeture"
-        name_mot="mot"
-    
+        name_closedloop = "fermeture"
+        name_mot = "mot"
 
     rob = RobotWrapper.BuildFromURDF(path + "/robot.urdf", path)
     Lid = []
@@ -151,7 +149,8 @@ def nameFrameConstraint(model, nomferme="fermeture", Lid=[]):
             Lnames.append(pair_names)
     return Lnames
 
-def getConstraintModelFromName(model, Lnjoint, ref=pin.ReferenceFrame.LOCAL):
+
+def getConstraintModelFromName(model, Lnjoint, ref=pin.ReferenceFrame.LOCAL, const_type=pin.ContactType.CONTACT_6D):
     """
     getconstraintModelfromname(model,Lnjoint,ref=pin.ReferenceFrame.LOCAL):
 
@@ -170,7 +169,7 @@ def getConstraintModelFromName(model, Lnjoint, ref=pin.ReferenceFrame.LOCAL):
         parentjoint1 = model.frames[id1].parentJoint
         parentjoint2 = model.frames[id2].parentJoint
         constraint = pin.RigidConstraintModel(
-            pin.ContactType.CONTACT_6D,
+            const_type,
             model,
             parentjoint1,
             Se3joint1,
@@ -178,8 +177,10 @@ def getConstraintModelFromName(model, Lnjoint, ref=pin.ReferenceFrame.LOCAL):
             Se3joint2,
             ref,
         )
+        constraint.name = name1[:-2]
         Lconstraintmodel.append(constraint)
     return Lconstraintmodel
+
 
 def constraints3D(model, data, q, nomb_boucle=-1, name_closedloop="fermeture"):
     """
@@ -191,8 +192,8 @@ def constraints3D(model, data, q, nomb_boucle=-1, name_closedloop="fermeture"):
     """
     # rob.updateGeometryPlacements(q)
     Lcont = []
-    if nomb_boucle<=0:
-        nomb_boucle=len(model.names)//2
+    if nomb_boucle <= 0:
+        nomb_boucle = len(model.names)//2
     pin.framesForwardKinematics(model, data, q)
     for i in range(nomb_boucle):
         L = []
@@ -204,7 +205,7 @@ def constraints3D(model, data, q, nomb_boucle=-1, name_closedloop="fermeture"):
                 L.append(data.oMf[j])
         if len(L) == 2:
             c = pin.log(L[0].inverse() * L[1]).vector
-            L=[c[0],c[1],c[2]]
+            L = [c[0], c[1], c[2]]
             Lcont.append(np.array(L))
     return Lcont
 
@@ -217,8 +218,8 @@ def constraintsPlanar(model, data, q, nomb_boucle=-1, nom_fermeture="fermeture")
     the joint in contact must be name nom_fermetureX where X is the number of the kinematics loop (start at 1)
     return list of the planar distance (plan x,y in local frame )
     """
-    if nomb_boucle<=0:
-        nomb_boucle=len(model.names)//2
+    if nomb_boucle <= 0:
+        nomb_boucle = len(model.names)//2
     Lcont = []
     pin.framesForwardKinematics(model, data, q)
     for i in range(nomb_boucle):
@@ -229,11 +230,12 @@ def constraintsPlanar(model, data, q, nomb_boucle=-1, nom_fermeture="fermeture")
             if match and not (match2):
                 L.append(data.oMf[j])
         if len(L) == 2:
-            
+
             c = pin.log(L[0].inverse() * L[1]).vector
-            L=[c[0],c[1],c[5]]
+            L = [c[0], c[1], c[5]]
             Lcont.append(np.array(L))
     return Lcont
+
 
 def constraints6D(model, data, q, nomb_boucle=-1, nom_fermeture="fermeture"):
     """
@@ -243,8 +245,8 @@ def constraints6D(model, data, q, nomb_boucle=-1, nom_fermeture="fermeture"):
     the joint in contact must be name nom_fermetureX where X is the number of the kinematics loop (start at 1)
     return list  6D distance between joints
     """
-    if nomb_boucle<=0:
-        nomb_boucle=len(model.names)//2
+    if nomb_boucle <= 0:
+        nomb_boucle = len(model.names)//2
     Lcont = []
     pin.framesForwardKinematics(model, data, q)
     for i in range(nomb_boucle):
@@ -256,16 +258,17 @@ def constraints6D(model, data, q, nomb_boucle=-1, nom_fermeture="fermeture"):
                 L.append(data.oMf[j])
         if len(L) == 2:
             c = L[0].inverse() * L[1]
-            Lcont.append(pin.log(c).vector)  # return plan constraint (2D problem here)
+            # return plan constraint (2D problem here)
+            Lcont.append(pin.log(c).vector)
     return Lcont
 
-def jointTypeUpdate(model,rotule_name="to_rotule"):
+
+def jointTypeUpdate(model, rotule_name="to_rotule"):
     """
     model=jointTypeUpdate(model,rotule_name="to_rotule")
     take a robot model, and update type to change the joint whith the name rotule_name inside to rotule joint
-
     """
-    new_model = pin.Model() 
+    new_model = pin.Model()
     first = True
     i = 0
     for jp, iner, name, i in zip(
@@ -290,48 +293,54 @@ def jointTypeUpdate(model,rotule_name="to_rotule"):
         frame = pin.Frame(name, parent_joint, placement, pin.BODY)
         _ = new_model.addFrame(frame, False)
 
-    return(new_model)
+    return (new_model)
 
-##########TEST ZONE ##########################
-import unittest
+
+########## TEST ZONE ##########################
+
 
 class TestRobotInfo(unittest.TestCase):
     def test_getRobotInfo(self):
-        name__closedloop,name_mot,number_closedloop,type=getRobotInfo(path)
-        #check the model parsing
-        self.assertTrue(number_closedloop==3)
-        self.assertTrue(name_mot=="mot")
-        self.assertTrue(name__closedloop=="fermeture")
+        name__closedloop, name_mot, number_closedloop, type = getRobotInfo(
+            path)
+        # check the model parsing
+        self.assertTrue(number_closedloop == 3)
+        self.assertTrue(name_mot == "mot")
+        self.assertTrue(name__closedloop == "fermeture")
+
     def test_jointTypeUpdate(self):
-        new_model=jointTypeUpdate(model,rotule_name="to_rotule")
-        #check that there is new spherical joint
-        self.assertTrue(new_model.joints[15].nq==4) #check that joint 15 is a spherical
+        new_model = jointTypeUpdate(model, rotule_name="to_rotule")
+        # check that there is new spherical joint
+        # check that joint 15 is a spherical
+        self.assertTrue(new_model.joints[15].nq == 4)
+
     def test_idmot(self):
-        Lid=idmot(new_model)
-        self.assertTrue(Lid==[0, 1, 4, 5, 7, 12]) #check the idmot
+        Lid = idmot(new_model)
+        self.assertTrue(Lid == [0, 1, 4, 5, 7, 12])  # check the idmot
 
     def test_constraint(self):
-        q=pin.neutral(new_model)
-        new_data=new_model.createData()
-        Lc6D=constraints6D(new_model, new_data, q)
-        Lc3D=constraints3D(new_model, new_data, q)
-        Lc3D=np.concatenate(Lc3D).tolist()
-        Lc6D=np.concatenate(Lc6D).tolist()
-        #check the constraint
-        self.assertTrue(Lc3D[0]==Lc6D[0])
+        q = pin.neutral(new_model)
+        new_data = new_model.createData()
+        Lc6D = constraints6D(new_model, new_data, q)
+        Lc3D = constraints3D(new_model, new_data, q)
+        Lc3D = np.concatenate(Lc3D).tolist()
+        Lc6D = np.concatenate(Lc6D).tolist()
+        # check the constraint
+        self.assertTrue(Lc3D[0] == Lc6D[0])
 
     def test_nameFrameConstraint(self):
-        Lnom=nameFrameConstraint(new_model)
-        nomf1=Lnom[0][0]
-        #check the parsing
-        self.assertTrue(nomf1=='fermeture1_B')
+        Lnom = nameFrameConstraint(new_model)
+        nomf1 = Lnom[0][0]
+        # check the parsing
+        self.assertTrue(nomf1 == 'fermeture1_B')
+
 
 if __name__ == "__main__":
-    path=os.getcwd()+"/robot_marcheur_1"
-    #load robot
-    robot=RobotWrapper.BuildFromURDF(path + "/robot.urdf", path)
-    model=robot.model
-    #change joint type
-    new_model=jointTypeUpdate(model,rotule_name="to_rotule")
-    #run test
+    path = os.getcwd()+"/robot_marcheur_1"
+    # load robot
+    robot = RobotWrapper.BuildFromURDF(path + "/robot.urdf", path)
+    model = robot.model
+    # change joint type
+    new_model = jointTypeUpdate(model, rotule_name="to_rotule")
+    # run test
     unittest.main()

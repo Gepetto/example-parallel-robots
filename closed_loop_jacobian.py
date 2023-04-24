@@ -19,7 +19,6 @@ def jacobianFinitDiffClosedLoop(model, idframe: int, idref: int, qmot: np.array,
     """
     LJ = []  # the transpose of the Jacobian ( list of list)
 
- 
     data = model.createData()
     q,b=closedLoopForwardKinematics(model, data, qmot, q_prec, name_mot, fermeture)
     pin.framesForwardKinematics(model, data, q)
