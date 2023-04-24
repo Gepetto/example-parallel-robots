@@ -11,7 +11,7 @@ from pinocchio.robot_wrapper import RobotWrapper
 from numpy.linalg import norm
 import os
 from scipy.optimize import fmin_slsqp
-import ipopt
+import cyipopt
 
 from robot_info import *
 
@@ -132,7 +132,7 @@ def closedLoopInverseKinematics(model,data,fgoal,q_prec=[],name_eff="effecteur",
         else:
             warn("!!!!!!!!!invalid q_prec!!!!!!!!!!!!!!")
 
-    nombre_chaine = len(model.names) // 2
+    n_chaines = len(model.names) // 2
 
     def costnorm(q):
         cdata = model.createData()
@@ -147,11 +147,11 @@ def closedLoopInverseKinematics(model,data,fgoal,q_prec=[],name_eff="effecteur",
 
     def contraintesimp(q):
         if type == "3D":
-            L1 = constraints3D(model, data, q, nombre_chaine, nom_fermeture)
+            L1 = constraints3D(model, data, q, n_chaines, nom_fermeture)
         elif type == "planar":
-            L1 = constraintsPlanar(model, data, q, nombre_chaine, nom_fermeture)
+            L1 = constraintsPlanar(model, data, q, n_chaines, nom_fermeture)
         else:
-            L1 = constraints6D(model, data, q, nombre_chaine, nom_fermeture)
+            L1 = constraints6D(model, data, q, n_chaines, nom_fermeture)
         L = []
         for l in L1:
             L = L + l.tolist()
@@ -190,6 +190,7 @@ class ipotSolver(object):
         eq = q.tolist()
         extend_q = np.zeros(model.nq)
         nq = model.nq
+
         Lid = getMotId_q(model)
         for i, goalq in zip(Lid, goal):
             extend_q[i] = goalq
@@ -198,7 +199,7 @@ class ipotSolver(object):
                 extend_q[i] = eq.pop(0)
 
         data = model.createData()
-        Lc = constraints6D(model, data, extend_q,nomb_boucle=self.number_closed_loop+1,nom_fermeture=self.name_closed_loop)
+        Lc = constraints6D(model, data, extend_q,n_loop=self.number_closed_loop+1,nom_fermeture=self.name_closed_loop)
         self.nc=len(Lc)
         L = []
         n = 0
@@ -212,9 +213,7 @@ class ipotSolver(object):
         return np.array(np.array(L))
 
     def jacobian(self, q):
-        T=np.zeros((self.model.nv,self.nc))
-
-        return np.array(T)
+        return np.zeros((self.model.nv,self.nc))
 
     def intermediate(
         self,
@@ -230,10 +229,6 @@ class ipotSolver(object):
         alpha_pr,
         ls_trials,
     ):
-
-        #
-        # Example for the use of the intermediate callback.
-        #
         print("Constraints value at iteration #%d is - %g" % (iter_count, self.const))
 
 def closedLoop6DIpoptForwardKinematics(
@@ -251,7 +246,7 @@ def closedLoop6DIpoptForwardKinematics(
         if len(q_prec) == 0:
             warn("!!!!!!!!!  no q_prec   !!!!!!!!!!!!!!")
         else:
-            warn("!!!!!!!!!invalid q_prec!!!!!!!!!!!!!!")
+            warn("!!!!!!!!! Invalid q_prec !!!!!!!!!!!!!!")
         q_prec = q2freeq(model,pin.neutral(model))
     q_prec=np.array(q_prec)
     solv.q_prec = np.array(q_prec)
@@ -262,10 +257,7 @@ def closedLoop6DIpoptForwardKinematics(
     
     cl_np = np.zeros(6 * number_closed_loop)
 
-
-
-
-    nlp = ipopt.problem(
+    nlp = cyipopt.Problem(
         n=model.nq - len(Lidmot),
         m=len(cl_np),
         problem_obj=solv,
@@ -276,11 +268,11 @@ def closedLoop6DIpoptForwardKinematics(
     )
 
 
-    nlp.addOption("mu_strategy", "adaptive")
-    nlp.addOption("tol", 1e-8)
-    nlp.addOption("max_iter", 100)
-    nlp.addOption("jacobian_approximation", "finite-difference-values")
-    q_free,info=nlp.solve(q_prec)
+    nlp.add_option("mu_strategy", "adaptive")
+    nlp.add_option("tol", 1e-8)
+    nlp.add_option("max_iter", 100)
+    nlp.add_option("jacobian_approximation", "finite-difference-values")
+    q_free, info=nlp.solve(q_prec)
 
     def goal2q(free_q):
         """
@@ -309,12 +301,12 @@ class TestRobotInfo(unittest.TestCase):
     def test_forwardkinematics(self):
         q0, q_ini= closedLoopForwardKinematics(new_model, new_data,goal,q_prec=q_prec)
         constraint=norm(constraints6D(new_model,new_data,q0))
-        self.assertTrue(constraint<1e-6) #check the constraint
+        self.assertTrue(constraint<1e-6) # check the constraint
     def test_inversekinematics(self):
         InvKin=closedLoopInverseKinematics(new_model,new_data,fgoal,q_prec=q_prec,name_eff=frame_effector)
         self.assertTrue(InvKin[3]==0) #chexk that joint 15 is a spherical
     def test_forwarkinematicsipopt(self):
-        qipopt,info=closedLoop6DIpoptForwardKinematics(new_model, goal, q_prec=q_prec)
+        qipopt, info=closedLoop6DIpoptForwardKinematics(new_model, goal, q_prec=q_prec)
         constraint=norm(constraints6D(new_model,new_data,qipopt))
         self.assertTrue(constraint<1e-6) #check the constraint
 

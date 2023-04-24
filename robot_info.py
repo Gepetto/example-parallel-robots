@@ -81,11 +81,11 @@ def getRobotInfo(path):
         Tuple containing the info extracted
     """
     try:
-        yaml_file = open(path+"/robot.yaml", 'r')
-        yaml_content = yaml.load(yaml_file, Loader=SafeLoader)
-        name_closedloop = yaml_content["name_closedloop"]
-        name_mot = yaml_content["name_mot"]
-        type = yaml_content["type"]
+        with open(path+"/robot.yaml", 'r') as yaml_file:
+            yaml_content = yaml.load(yaml_file, Loader=SafeLoader)
+            name_closedloop = yaml_content["name_closedloop"]
+            name_mot = yaml_content["name_mot"]
+            type = yaml_content["type"]
         try:
             number_closedloop = yaml_content["closed_loop_number"]
         except:
