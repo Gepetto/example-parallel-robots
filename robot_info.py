@@ -18,10 +18,16 @@ from yaml.loader import SafeLoader
 from warnings import warn
 
 
-def idmot(model, name_mot="mot"):
+def getMotId_q(model, name_mot="mot"):
     """
-    Lid=idmot(model,name_mot='mot')
-    return the id of the motor axis
+    GetMotId_q = (model, name_mot='mot')
+    Return a list of ids corresponding to the configurations associated with motors joints
+
+    Arguments:
+        model - robot model from pinocchio
+        name_mot - string to be found in the motors joints names
+    Return:
+        Lid - List of motors configuration ids
     """
     Lid = []
     for i, name in enumerate(model.names):
@@ -30,10 +36,16 @@ def idmot(model, name_mot="mot"):
     return Lid
 
 
-def idvmot(model, name_mot="mot"):
+def getMotId_v(model, name_mot="mot"):
     """
-    Lid=idmot(model,name_mot='mot')
-    return the id of the motor axis
+    GetMotId_q = (model, name_mot='mot')
+    Return a list of ids corresponding to the configurations velocity associated with motors joints
+
+    Arguments:
+        model - robot model from pinocchio
+        name_mot - string to be found in the motors joints names
+    Return:
+        Lid - List of motors configuration velocity ids
     """
     Lid = []
     for i, name in enumerate(model.names):
@@ -43,26 +55,30 @@ def idvmot(model, name_mot="mot"):
 
 def q2freeq(model, q, name_mot="mot"):
     """
-    freeq=q2freeq(model,q, name_mot="mot")
-    return the non motor coordinate of q in accordance with the robot model
+    free_q = q2freeq(model, q, name_mot="mot")
+    Return the non-motor coordinate of q, i.e. the configuration of the non-actuated joints
+
+    Arguments:
+        model - robot model from pinocchio
+        q - complete configuration vector
+        name_mot - string to be found in the motors joints names
+    Return:
+        Lid - List of motors configuration velocity ids
     """
-    Lidmot = idmot(model, name_mot)
-    # freeq = []
-    # for i in range(len(q.tolist())):
-    #     if not (i in Lidmot):
-    #         freeq.append(q[i])
+    Lidmot = getMotId_q(model, name_mot)
     mask = np.ones_like(q, bool)
     mask[Lidmot] = False
     return(q[mask])
-    # freeq = np.delete(q, Lidmot) This is a numpy alternative
-    # return (freeq)
-
 
 def getRobotInfo(path):
     """
-    (name__closedloop,name_mot,number_closedloop,type)=getRobotInfo(path)
-    path the diredction of the file that contain the robot
-    return the info stored in  robot.yaml file. If no yaml, default value are returned
+    (name__closedloop, name_mot, number_closedloop, type) = getRobotInfo(path)
+    Returns information stored in the YAML file at path 'path/robot.yaml'. If no YAML file is found, default values are returned.
+    
+    Arguments:  
+        path - path to the directory contained the YAML info file
+    Return:
+        Tuple containing the info extracted
     """
     try:
         yaml_file = open(path+"/robot.yaml", 'r')
@@ -86,13 +102,17 @@ def getRobotInfo(path):
 
 def getSimplifiedRobot(path):
     """
-    robot=getSimplifiedRobot(path)
-    path, the dir of the file that contain the urdf file & the stl files
+    robot = getSimplifiedRobot(path)
+    Loads a robot and builds a reduced model from the yaml file info
 
-
+    Argument:
+        path - the dir of the file that contain the urdf file & the stl files
+    Return:
+        rob - The simplified robot
+    
     load a robot with N closed loop with a joint on each of the 2 branch that are closed, return a simplified model of the robot where one of this joint is fixed
     """
-
+    # TODO we should here reuse the previous function, no point in doing this again
     try:
         yaml_file = open(path+"/robot.yaml", 'r')
         yaml_content = yaml.load(yaml_file)
@@ -123,16 +143,20 @@ def getSimplifiedRobot(path):
 
 def nameFrameConstraint(model, nomferme="fermeture", Lid=[]):
     """
-     nameFrameConstraint(model,nomferme="fermeture",Lid=[])
+    nameFrameConstraint(model, nomferme="fermeture", Lid=[])
 
+    Takes a robot model and returns a list of frame names that are constrained to be in contact: Ln=[['name_frame1_A','name_frame1_B'],['name_frame2_A','name_frame2_B'].....]
+    where names_frameX_A and names_frameX_B are the frames in forced contact by the kinematic loop.
+    The frames must be named: "...nomfermeX_..." where X is the number of the corresponding kinematic loop.
+    The kinematics loop can be selectionned with Lid=[id_kinematcsloop1, id_kinematicsloop2 .....] = [1,2,...]
+    if Lid = [] all the kinematics loop will be treated.
 
-    take a robot model  and return Ln=[['name_frame1_A','name_frame1_B'],['name_frame2_A','name_frame2_B'].....]
-    where names_frameX_A and names_frameX_B, the frzme in forced contact by the kinematic loop.
-
-    The frame must be named: "...nomfermeX_..." where X is the number of the associated kinematic loop.
-
-    The kinematics loop can be selectionned with Lid=[id_kinematcsloop1, id_kinematicsloop2 .....]=[1,2,...]
-    if Lid= [] all the kinematics loop will be treated.
+    Argument:
+        model - Pinocchio robot model
+        nom_ferme - nom de la fermeture  
+        Lid - List of kinematic loop indexes to select
+    Return:
+        Lnames - List of frame names that should be in contact
     """
     if Lid == []:
         Lid = range(len(model.frames) // 2)
@@ -154,9 +178,16 @@ def getConstraintModelFromName(model, Lnjoint, ref=pin.ReferenceFrame.LOCAL, con
     """
     getconstraintModelfromname(model,Lnjoint,ref=pin.ReferenceFrame.LOCAL):
 
+    Takes a robot model and Lnjoint=[['name_joint1_A','name_joint1_B'],['name_joint2_A','name_joint2_B'].....]
+    Returns the list of the constraintmodel where joint1A is in contact with joint1_B, joint2_A in contact with joint2_B etc
 
-    take robot model and Lnjoint=[['name_joint1_A','name_joint1_B'],['name_joint2_A','name_joint2_B'].....]
-    return the list of the constraintmodel wehre joint1A is in copntact with joint1_B , joint2_A in contact with joint2_B etc
+    Argument:
+        model - Pinocchio robot model
+        Lnjoint - List of frame names to should be in contact (As generated by nameFrameConstraint) 
+        ref - Reference frame from pinocchio, should be pin.ReferenceFrame.{LOCAL, WORLD, LOCAL_WORLD_ALIGNED}
+        const_type - Type of constraint to usem should be pin.ContactType.{CONTACT_6D, CONTACT_3D}
+    Return:
+        Lconstraintmodel - List of corresponding pinocchio constraint models
     """
     Lconstraintmodel = []
     for L in Lnjoint:
@@ -182,23 +213,31 @@ def getConstraintModelFromName(model, Lnjoint, ref=pin.ReferenceFrame.LOCAL, con
     return Lconstraintmodel
 
 
-def constraints3D(model, data, q, nomb_boucle=-1, name_closedloop="fermeture"):
+def constraints3D(model, data, q, n_loop=-1, name_closedloop="fermeture"):
     """
-    contrainte3D(model,data, q,nomb_boucle, nom_fermeture="fermeture")
+    TODO - I don't understand what this function is doing... Try to complete the doc string
+    contrainte3D(model,data, q,n_loop, nom_fermeture="fermeture")
 
-    take a robot model and data with n closed kinematics loop (nomb_boucle) and a configuration q
+    Takes a robot model and data with n closed kinematics loop (n_loop) and a configuration q
     the joint in contact must be name nom_fermetureX where X is the number of the kinematics loop (start at 1)
     return list of 3D distance between the joints
+
+    Argument:
+        model - Pinocchio robot model
+        Lnjoint - List of frame names to should be in contact (As generated by nameFrameConstraint) 
+        ref - Reference frame from pinocchio, should be pin.ReferenceFrame.{LOCAL, WORLD, LOCAL_WORLD_ALIGNED}
+        const_type - Type of constraint to usem should be pin.ContactType.{CONTACT_6D, CONTACT_3D}
+    Return:
+        Lconstraintmodel - List of corresponding pinocchio constraint models
     """
     # rob.updateGeometryPlacements(q)
     Lcont = []
-    if nomb_boucle <= 0:
-        nomb_boucle = len(model.names)//2
+    if n_loop <= 0:
+        n_loop = len(model.names)//2
     pin.framesForwardKinematics(model, data, q)
-    for i in range(nomb_boucle):
+    for i in range(n_loop):
         L = []
         for j, frame in enumerate(model.frames):
-            match = re.search(name_closedloop + str(i + 1), frame.name)
             match = re.search(name_closedloop + str(i + 1), frame.name)
             match2 = re.search("frame", frame.name)
             if match and not (match2):
@@ -210,19 +249,20 @@ def constraints3D(model, data, q, nomb_boucle=-1, name_closedloop="fermeture"):
     return Lcont
 
 
-def constraintsPlanar(model, data, q, nomb_boucle=-1, nom_fermeture="fermeture"):
+def constraintsPlanar(model, data, q, n_loop=-1, nom_fermeture="fermeture"):
     """
-    contraintePlanar(model,data, q,nomb_boucle=-1, nom_fermeture="fermeture")
+    TODO - I don't understand what this function is doing... Try to complete the doc string
+    contraintePlanar(model,data, q,n_loop=-1, nom_fermeture="fermeture")
 
-    take a robot model and data with n closed kinematics loop (nomb_boucle) and a configuration q
+    take a robot model and data with n closed kinematics loop (n_loop) and a configuration q
     the joint in contact must be name nom_fermetureX where X is the number of the kinematics loop (start at 1)
     return list of the planar distance (plan x,y in local frame )
     """
-    if nomb_boucle <= 0:
-        nomb_boucle = len(model.names)//2
+    if n_loop <= 0:
+        n_loop = len(model.names)//2
     Lcont = []
     pin.framesForwardKinematics(model, data, q)
-    for i in range(nomb_boucle):
+    for i in range(n_loop):
         L = []
         for j, frame in enumerate(model.frames):
             match = re.search(nom_fermeture + str(i + 1), frame.name)
@@ -237,19 +277,20 @@ def constraintsPlanar(model, data, q, nomb_boucle=-1, nom_fermeture="fermeture")
     return Lcont
 
 
-def constraints6D(model, data, q, nomb_boucle=-1, nom_fermeture="fermeture"):
+def constraints6D(model, data, q, n_loop=-1, nom_fermeture="fermeture"):
     """
-    contrainte(rob,nomb_boucle,q,nom_fermeture="fermeture")
+    TODO - I don't understand what this function is doing... Try to complete the doc string
+    contrainte(rob,n_loop,q,nom_fermeture="fermeture")
 
-    take a robot (rob) rob with n closed kinematics loop (nomb_boucle) and a configuration q
+    take a robot (rob) rob with n closed kinematics loop (n_loop) and a configuration q
     the joint in contact must be name nom_fermetureX where X is the number of the kinematics loop (start at 1)
     return list  6D distance between joints
     """
-    if nomb_boucle <= 0:
-        nomb_boucle = len(model.names)//2
+    if n_loop <= 0:
+        n_loop = len(model.names)//2
     Lcont = []
     pin.framesForwardKinematics(model, data, q)
-    for i in range(nomb_boucle):
+    for i in range(n_loop):
         L = []
         for j, frame in enumerate(model.frames):
             match = re.search(nom_fermeture + str(i + 1), frame.name)
@@ -265,8 +306,13 @@ def constraints6D(model, data, q, nomb_boucle=-1, nom_fermeture="fermeture"):
 
 def jointTypeUpdate(model, rotule_name="to_rotule"):
     """
-    model=jointTypeUpdate(model,rotule_name="to_rotule")
-    take a robot model, and update type to change the joint whith the name rotule_name inside to rotule joint
+    model = jointTypeUpdate(model,rotule_name="to_rotule")
+    Takes a robot model and change joints whose name contains rotule_name to rotule joint type. 
+    
+    Argument:
+        model - Pinocchio robot model
+    Return:
+        new_model - Updated robot model
     """
     new_model = pin.Model()
     first = True
@@ -315,7 +361,7 @@ class TestRobotInfo(unittest.TestCase):
         self.assertTrue(new_model.joints[15].nq == 4)
 
     def test_idmot(self):
-        Lid = idmot(new_model)
+        Lid = getMotId_q(new_model)
         self.assertTrue(Lid == [0, 1, 4, 5, 7, 12])  # check the idmot
 
     def test_constraint(self):
