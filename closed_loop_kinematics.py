@@ -19,7 +19,13 @@ from robot_info import *
 def constraintQuaternion(model, q):
     """
     L=constraintQuaternion(model, q)
-    return the list of 1 - the squared norm of each quaternion inside the configuration vector q (work for free flyer and spherical joint)
+    Returns the list of the squared norm of each quaternion inside the configuration vector q (work for free flyer and spherical joint)
+
+    Arguments:
+        model - Pinocchio robot model
+        q - Joints configuration vector
+    Return:
+        L - List of quaternions norms
     """
     L = []
     for j in model.joints:
@@ -33,40 +39,45 @@ def constraintQuaternion(model, q):
 
 
 def closedLoopForwardKinematics(
-    model, data, goal, q_prec=[], name_mot="mot", nom_fermeture="fermeture", type="6D"
+    model, data, target, q_prec=[], name_mot="mot", nom_fermeture="fermeture", type="6D"
 ):
 
     """
-        forwardgeom_parra(
-        model, data, goal, q_prec=[], name_mot="mot", nom_fermeture="fermeture", type="6D"):
+        closedLoopForwardKinematics(model, data, goal, q_prec=[], name_mot="mot", nom_fermeture="fermeture", type="6D"):
 
-        take the goal position of the motors  axis of the robot ( joint with name_mot, ("mot" if empty) in the name), the robot model and data,
-        the current configuration of all joint ( set to robot.q0 if let empty)
-        the name of the joint who close the kinematic loop nom_fermeture
+        Takes the target position of the motors axis of the robot (joint with name_mot ("mot" if empty) in the name),
+        the current configuration of all joint (set to robot.q0 if let empty) and the name of the joints that close the kinematic loop. And returns a configuration that matches the goal positions of the motors
+        This function solves a minimization problem
+        TODO - writes explicitly the minimization problem and change solver
 
-        return a configuration who match the goal position of the motor
-
+        Argument:
+            model - Pinocchio robot model
+            data - Pinocchio robot data
+            target - Target configuration of the motors joints. Should be have size of the number of motors
+            q_prec - Previous configuration of the free joints
+            n_mot - String contained in the motors joints names
+            nom_fermeture - String contained in the frame names that should be in contact
+            type - Constraint type
     """
 
-    if not (len(q_prec) == (model.nq - len(goal))):
-        
+    if len(q_prec) != (model.nq - len(target)):
         if len(q_prec) == 0:
-            warn("!!!!!!!!!  no q_prec   !!!!!!!!!!!!!!")
+            warn("!!!!!!!!!  No q_prec   !!!!!!!!!!!!!!")
         else:
-            warn("!!!!!!!!!invalid q_prec!!!!!!!!!!!!!!")
-        q_prec = q2freeq(model,pin.neutral(model))
+            warn("!!!!!!!!! Invalid q_prec !!!!!!!!!!!!!!")
+        q_prec = q2freeq(model, pin.neutral(target))
 
-    nombre_chaine = len(model.names) // 2
-    Lid = idmot(model, name_mot)
+    n_loop = len(model.names) // 2
+    Lid = getMotId_q(model, name_mot)
 
     def goal2q(free_q):
         """
-        take q, configuration of free axis/configuration vector, return nq, global configuration, q with the motor axi set to goal
+        Takes q, configuration vector of the free axis and returns nq the global configuration with the motor axis configurations set to goal
         """
         rq = free_q.tolist()
 
         extend_q = np.zeros(model.nq)
-        for i, goalq in zip(Lid, goal):
+        for i, goalq in zip(Lid, target):
             extend_q[i] = goalq
         for i in range(model.nq):
             if not (i in Lid):
@@ -74,25 +85,26 @@ def closedLoopForwardKinematics(
 
         return extend_q
 
-    def costnorm(q):
+    def cost(q):
         c = norm(q - q_prec) ** 2
         return c
 
-    def contraintesimp(q):
+    def constraintsImp(q):
         q = goal2q(q)
+        # Carefull, we assume here that all constraints are the sames
         if type == "3D":
-            L1 = constraints3D(model, data, q, nombre_chaine, nom_fermeture)
+            L1 = constraints3D(model, data, q, n_loop, nom_fermeture)
         elif type == "planar":
-            L1 = constraintsPlanar(model, data, q, nombre_chaine, nom_fermeture)
-        else:
-            L1 = constraints6D(model, data, q, nombre_chaine, nom_fermeture)
+            L1 = constraintsPlanar(model, data, q, n_loop, nom_fermeture)
+        else:   # We assume here that the input is correct
+            L1 = constraints6D(model, data, q, n_loop, nom_fermeture)
         L = []
         for l in L1:
             L = L + l.tolist()
         L2 = constraintQuaternion(model, q)
         return np.array(np.array(L + L2))
 
-    free_q_goal = fmin_slsqp(costnorm, q_prec, f_eqcons=contraintesimp)
+    free_q_goal = fmin_slsqp(cost, q_prec, f_eqcons=constraintsImp)
     q_goal = goal2q(free_q_goal)
 
     return q_goal, free_q_goal
@@ -178,7 +190,7 @@ class ipotSolver(object):
         eq = q.tolist()
         extend_q = np.zeros(model.nq)
         nq = model.nq
-        Lid = idmot(model)
+        Lid = getMotId_q(model)
         for i, goalq in zip(Lid, goal):
             extend_q[i] = goalq
         for i in range(nq):
@@ -227,7 +239,7 @@ class ipotSolver(object):
 def closedLoop6DIpoptForwardKinematics(
     model, goal, q_prec=[], name_mot="mot", nom_fermeture="fermeture",number_closed_loop=-1
 ):
-    Lidmot=idmot(model, name_mot)
+    Lidmot=getMotId_q(model, name_mot)
     solv = ipotSolver(model, goal, Lidmot)
 
     if number_closed_loop<0:
@@ -318,7 +330,7 @@ if __name__ == "__main__":
     new_data=new_model.createData()
     
     #init variable use by test
-    Lidmot=idmot(new_model)
+    Lidmot=getMotId_q(new_model)
     goal=np.zeros(len(Lidmot))
     q_prec=q2freeq(new_model,pin.neutral(new_model))
     fgoal=new_data.oMf[36]
