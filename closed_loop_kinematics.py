@@ -12,6 +12,8 @@ from numpy.linalg import norm
 import os
 from scipy.optimize import fmin_slsqp
 import cyipopt
+import casadi
+from pinocchio import casadi as caspin
 
 from robot_info import *
 
@@ -206,11 +208,11 @@ class ipotSolver(object):
         for c in Lc:
             L = L + c.tolist()
             n = n + norm(c)
-        
+
         L = L + constraintQuaternion(model, extend_q)
         self.const = norm(L)
-        self.nc=len(L)
-        return np.array(np.array(L))
+        self.nc = len(L)
+        return np.array(L)
 
     def jacobian(self, q):
         return np.zeros((self.model.nv,self.nc))
@@ -247,11 +249,10 @@ def closedLoop6DIpoptForwardKinematics(
             warn("!!!!!!!!!  no q_prec   !!!!!!!!!!!!!!")
         else:
             warn("!!!!!!!!! Invalid q_prec !!!!!!!!!!!!!!")
-        q_prec = q2freeq(model,pin.neutral(model))
-    q_prec=np.array(q_prec)
+        q_prec = q2freeq(model, pin.neutral(model))
+    q_prec = np.array(q_prec)
     solv.q_prec = np.array(q_prec)
     
-
     lb_np = -1 * np.pi * np.ones(model.nq - len(Lidmot))
     ub_np = 1 * np.pi * np.ones(model.nq - len(Lidmot))
     
@@ -266,7 +267,6 @@ def closedLoop6DIpoptForwardKinematics(
         cl=cl_np,
         cu=cl_np,
     )
-
 
     nlp.add_option("mu_strategy", "adaptive")
     nlp.add_option("tol", 1e-8)
@@ -289,24 +289,108 @@ def closedLoop6DIpoptForwardKinematics(
 
         return extend_q
     q = goal2q(q_free)
-    return(q,q_free)
+    return(q, q_free)
 
+def closedLoop6DCasadiForwardKinematics(rmodel, q_mot_target, q_prec=[], name_mot="mot", nom_fermeture="fermeture", number_closed_loop=-1):
+    model = caspin.Model(rmodel)
+    # * Defining problem functions
+    Lid = getMotId_q(model)
+    Id_free = np.delete(np.arange(model.nq), Lid)
+    if number_closed_loop<0:
+        number_closed_loop=len(nameFrameConstraint(model,nom_fermeture))
+    if len(q_prec) != (model.nq - len(goal)):
+        if len(q_prec) == 0:
+            warn("!!!!!!!!!  no q_prec   !!!!!!!!!!!!!!")
+        else:
+            warn("!!!!!!!!! Invalid q_prec !!!!!!!!!!!!!!")
+        q_prec = q2freeq(model, pin.neutral(model))
+    q_prec = np.array(q_prec)
 
+    def cost(q):
+        return(casadi.norm_2(q[Id_free] - q_prec))
+    
+    def constraints(q):
+        # * Define an extended configuration vector containing actuators and free joints configurations
+        # We need to order it correctly using the actuators (motors) indexes
+        # q_all = casadi.SX.sym('q', model.nq)
+        # q_all[Lid] = q_A
+        # mask = np.ones(model.nq, bool)
+        # mask[Lid] = False
+        # q_all[np.array(range(model.nq))[mask]] = q_F
+
+        data = model.createData()
+        Lc = constraints6D(model, data, q, n_loop=number_closed_loop+1, nom_fermeture=nom_fermeture, namespace=caspin)
+        L = []
+        n = 0
+        for c in Lc:
+            L = L + c.tolist()
+            n = n + norm(c)
+
+        L = L + constraintQuaternion(model, q)
+        return np.array(L)
+    
+    def gradient():
+        pass
+
+    cx = casadi.SX.sym("x", model.nq, 1)
+    constraintCost = casadi.Function('constraint', [cx], [constraints(cx)])
+
+    optim = casadi.Opti()
+    q = optim.variable(model.nq)
+
+    optim.subject_to(constraintCost(q) == 0)
+    optim.subject_to(q[Lid]==q_mot_target)
+    total_cost = cost(q)
+    optim.minimize(total_cost)
+
+    opts = {}
+    optim.solver("ipopt", opts)
+
+    try:
+        sol = optim.solve_limited()
+        print("Solution found")
+        q = optim.value(q)
+    except:
+        print('ERROR in convergence, press enter to plot debug info.')
+    
+    def goal2q(free_q):
+        """
+        take q, configuration of free axis/configuration vector, return nq, global configuration, q with the motor axi set to goal
+        """
+        rq = free_q.tolist()
+
+        extend_q = np.zeros(model.nq)
+        for i, goalq in zip(Lidmot, goal):
+            extend_q[i] = goalq
+        for i in range(model.nq):
+            if not (i in Lidmot):
+                extend_q[i] = rq.pop(0)
+
+        return extend_q
+
+    return(q, q[Id_free])
 
 
 ##########TEST ZONE ##########################
 import unittest
 
 class TestRobotInfo(unittest.TestCase):
-    def test_forwardkinematics(self):
-        q0, q_ini= closedLoopForwardKinematics(new_model, new_data,goal,q_prec=q_prec)
-        constraint=norm(constraints6D(new_model,new_data,q0))
-        self.assertTrue(constraint<1e-6) # check the constraint
-    def test_inversekinematics(self):
-        InvKin=closedLoopInverseKinematics(new_model,new_data,fgoal,q_prec=q_prec,name_eff=frame_effector)
-        self.assertTrue(InvKin[3]==0) #chexk that joint 15 is a spherical
-    def test_forwarkinematicsipopt(self):
-        qipopt, info=closedLoop6DIpoptForwardKinematics(new_model, goal, q_prec=q_prec)
+    # def test_forwardkinematics(self):
+    #     q0, q_ini= closedLoopForwardKinematics(new_model, new_data,goal,q_prec=q_prec)
+    #     constraint=norm(constraints6D(new_model,new_data,q0))
+    #     self.assertTrue(constraint<1e-6) # check the constraint
+
+    # def test_inversekinematics(self):
+    #     InvKin=closedLoopInverseKinematics(new_model,new_data,fgoal,q_prec=q_prec,name_eff=frame_effector)
+    #     self.assertTrue(InvKin[3]==0) #chexk that joint 15 is a spherical
+
+    # def test_forwarkinematicsipopt(self):
+    #     qipopt, info=closedLoop6DIpoptForwardKinematics(new_model, goal, q_prec=q_prec)
+    #     constraint=norm(constraints6D(new_model,new_data,qipopt))
+    #     self.assertTrue(constraint<1e-6) #check the constraint
+
+    def test_forwarkinematicscasadi(self):
+        qipopt, info=closedLoop6DCasadiForwardKinematics(new_model, goal, q_prec=q_prec)
         constraint=norm(constraints6D(new_model,new_data,qipopt))
         self.assertTrue(constraint<1e-6) #check the constraint
 

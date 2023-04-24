@@ -16,6 +16,7 @@ import re
 import yaml
 from yaml.loader import SafeLoader
 from warnings import warn
+from pinocchio import casadi as caspin
 
 
 def getMotId_q(model, name_mot="mot"):
@@ -277,7 +278,7 @@ def constraintsPlanar(model, data, q, n_loop=-1, nom_fermeture="fermeture"):
     return Lcont
 
 
-def constraints6D(model, data, q, n_loop=-1, nom_fermeture="fermeture"):
+def constraints6D(model, data, q, n_loop=-1, nom_fermeture="fermeture", namespace=pin):
     """
     TODO - I don't understand what this function is doing... Try to complete the doc string
     contrainte(rob,n_loop,q,nom_fermeture="fermeture")
@@ -289,7 +290,7 @@ def constraints6D(model, data, q, n_loop=-1, nom_fermeture="fermeture"):
     if n_loop <= 0:
         n_loop = len(model.names)//2
     Lcont = []
-    pin.framesForwardKinematics(model, data, q)
+    namespace.framesForwardKinematics(model, data, q)
     for i in range(n_loop):
         L = []
         for j, frame in enumerate(model.frames):
@@ -300,7 +301,7 @@ def constraints6D(model, data, q, n_loop=-1, nom_fermeture="fermeture"):
         if len(L) == 2:
             c = L[0].inverse() * L[1]
             # return plan constraint (2D problem here)
-            Lcont.append(pin.log(c).vector)
+            Lcont.append(namespace.log(c).vector)
     return Lcont
 
 
