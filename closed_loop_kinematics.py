@@ -314,6 +314,7 @@ def closedLoop6DCasadiForwardKinematics(rmodel, rdata, cmodels, cdatas, q_mot_ta
 
     opts = {}
     optim.solver("ipopt", opts)
+    optim.set_initial(qF, q_prec)
     try:
         sol = optim.solve_limited()
         print("Solution found")
