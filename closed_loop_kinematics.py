@@ -16,28 +16,7 @@ import casadi
 from pinocchio import casadi as caspin
 
 from robot_info import *
-
-
-def constraintQuaternion(model, q):
-    """
-    L=constraintQuaternion(model, q)
-    Returns the list of the squared norm of each quaternion inside the configuration vector q (work for free flyer and spherical joint)
-
-    Arguments:
-        model - Pinocchio robot model
-        q - Joints configuration vector
-    Return:
-        L - List of quaternions norms
-    """
-    L = []
-    for j in model.joints:
-        idx_q = j.idx_q
-        nq = j.nq
-        nv = j.nv
-        if nq != nv:
-            quat = q[idx_q : idx_q + 4]
-            L.append(norm(quat) ** 2 - 1)
-    return L
+from constraints import *
 
 
 def closedLoopForwardKinematics(
@@ -61,6 +40,8 @@ def closedLoopForwardKinematics(
             nom_fermeture - String contained in the frame names that should be in contact
             type - Constraint type
     """
+
+
 
     if len(q_prec) != (model.nq - len(target)):
         if len(q_prec) == 0:
@@ -291,84 +272,53 @@ def closedLoop6DIpoptForwardKinematics(
     q = goal2q(q_free)
     return(q, q_free)
 
-def closedLoop6DCasadiForwardKinematics(rmodel, q_mot_target, q_prec=[], name_mot="mot", nom_fermeture="fermeture", number_closed_loop=-1):
-    model = caspin.Model(rmodel)
-    # * Defining problem functions
-    Lid = getMotId_q(model)
-    Id_free = np.delete(np.arange(model.nq), Lid)
-    if number_closed_loop<0:
-        number_closed_loop=len(nameFrameConstraint(model,nom_fermeture))
-    if len(q_prec) != (model.nq - len(goal)):
-        if len(q_prec) == 0:
-            warn("!!!!!!!!!  no q_prec   !!!!!!!!!!!!!!")
-        else:
-            warn("!!!!!!!!! Invalid q_prec !!!!!!!!!!!!!!")
-        q_prec = q2freeq(model, pin.neutral(model))
+def closedLoop6DCasadiForwardKinematics(rmodel, rdata, cmodels, cdatas, q_mot_target, q_prec=[]):
+    # * Defining casadi models
+    casmodel = caspin.Model(rmodel)
+    casdata = casmodel.createData()
+
+    # * Getting ids of actuated and free joints
+    Lid = getMotId_q(rmodel)
+
+    Id_free = np.delete(np.arange(rmodel.nq), Lid)
+    if len(q_prec) != (rmodel.nq - len(goal)):
+        q_prec = q2freeq(rmodel, pin.neutral(rmodel))
     q_prec = np.array(q_prec)
 
+    # * Optimisation functions
     def cost(q):
         return(casadi.norm_2(q[Id_free] - q_prec))
     
     def constraints(q):
-        # * Define an extended configuration vector containing actuators and free joints configurations
-        # We need to order it correctly using the actuators (motors) indexes
-        # q_all = casadi.SX.sym('q', model.nq)
-        # q_all[Lid] = q_A
-        # mask = np.ones(model.nq, bool)
-        # mask[Lid] = False
-        # q_all[np.array(range(model.nq))[mask]] = q_F
+        Lc = constraintsResidual(casmodel, casdata, cmodels, cdatas, q, recompute=True, pinspace=caspin, quaternions=False)
+        return Lc
+    cx = casadi.SX.sym("x", rmodel.nq, 1)
+    constraintsCost = casadi.Function('constraint', [cx], [constraints(cx)])
 
-        data = model.createData()
-        Lc = constraints6D(model, data, q, n_loop=number_closed_loop+1, nom_fermeture=nom_fermeture, namespace=caspin)
-        L = []
-        n = 0
-        for c in Lc:
-            L = L + c.tolist()
-            n = n + norm(c)
-
-        L = L + constraintQuaternion(model, q)
-        return np.array(L)
-    
-    def gradient():
-        pass
-
-    cx = casadi.SX.sym("x", model.nq, 1)
-    constraintCost = casadi.Function('constraint', [cx], [constraints(cx)])
-
+    # * Optimisation problem
     optim = casadi.Opti()
-    q = optim.variable(model.nq)
-
-    optim.subject_to(constraintCost(q) == 0)
+    q = optim.variable(rmodel.nq)
+    # * Constraints
+    optim.subject_to(constraintsCost(q)==0)
     optim.subject_to(q[Lid]==q_mot_target)
+    # * Bounds
+    optim.subject_to(q[Id_free]>-1*np.pi)
+    optim.subject_to(q[Id_free]<1*np.pi)
+    # * cost minimization
     total_cost = cost(q)
     optim.minimize(total_cost)
 
     opts = {}
+    # opts["nlp_lower"]
     optim.solver("ipopt", opts)
-
     try:
         sol = optim.solve_limited()
         print("Solution found")
-        q = optim.value(q)
+        qs = optim.value(q)
     except:
         print('ERROR in convergence, press enter to plot debug info.')
-    
-    def goal2q(free_q):
-        """
-        take q, configuration of free axis/configuration vector, return nq, global configuration, q with the motor axi set to goal
-        """
-        rq = free_q.tolist()
 
-        extend_q = np.zeros(model.nq)
-        for i, goalq in zip(Lidmot, goal):
-            extend_q[i] = goalq
-        for i in range(model.nq):
-            if not (i in Lidmot):
-                extend_q[i] = rq.pop(0)
-
-        return extend_q
-
-    return(q, q[Id_free])
+    return(qs, qs[Id_free])
 
 
 ##########TEST ZONE ##########################
@@ -390,29 +340,38 @@ class TestRobotInfo(unittest.TestCase):
     #     self.assertTrue(constraint<1e-6) #check the constraint
 
     def test_forwarkinematicscasadi(self):
-        qipopt, info=closedLoop6DCasadiForwardKinematics(new_model, goal, q_prec=q_prec)
-        constraint=norm(constraints6D(new_model,new_data,qipopt))
+        qipopt, info=closedLoop6DCasadiForwardKinematics(new_model, new_data, cmodels, cdatas, goal, q_prec=q_prec)
+        constraint=norm(constraintsResidual(new_model,new_data,qipopt))
         self.assertTrue(constraint<1e-6) #check the constraint
 
 
 if __name__ == "__main__":
-    # import robot
-    path=os.getcwd()+"/robot_marcheur_1"
-    robot=RobotWrapper.BuildFromURDF(path + "/robot.urdf", path)
-    model=robot.model
-    visual_model = robot.visual_model
-    #change the joint type
-    new_model=jointTypeUpdate(model,rotule_name="to_rotule")
-    new_data=new_model.createData()
+    # * Import robot
+    path = os.getcwd()+"/robot_marcheur_1"
+    robot = RobotWrapper.BuildFromURDF(path + "/robot.urdf", path)
+    model = robot.model
+
+    # * Change the joint type
+    new_model = jointTypeUpdate(model,rotule_name="to_rotule")
+    new_data = new_model.createData()
+
+    # * Create robot constraint models
+    Lnames = nameFrameConstraint(robot.model)
+    constraints = getConstraintModelFromName(robot.model, Lnames, const_type=pin.ContactType.CONTACT_6D)
+    robot.constraint_models = cmodels = constraints
+    robot.full_constraint_models = robot.constraint_models
+    robot.full_constraint_datas = {cm: cm.createData()
+                                for cm in robot.constraint_models}
+    robot.constraint_datas = cdatas = [robot.full_constraint_datas[cm]
+                            for cm in robot.constraint_models]
+    # * Init variable used by Unitests
+    Lidmot = getMotId_q(new_model)
+    goal = np.zeros(len(Lidmot))
+    q_prec = q2freeq(new_model,pin.neutral(new_model))
+    fgoal = new_data.oMf[36]
+    frame_effector = 'bout_pied_frame'
     
-    #init variable use by test
-    Lidmot=getMotId_q(new_model)
-    goal=np.zeros(len(Lidmot))
-    q_prec=q2freeq(new_model,pin.neutral(new_model))
-    fgoal=new_data.oMf[36]
-    frame_effector='bout_pied_frame'
-    
-    #run test
+    # * Run test
     unittest.main()
 
 
