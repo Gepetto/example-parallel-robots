@@ -287,15 +287,17 @@ def closedLoop6DCasadiForwardKinematics(rmodel, rdata, cmodels, cdatas, q_mot_ta
     nF = len(Id_free)
 
     # * Optimisation functions
+    # difference = casadi.Function('difference', [cx],[caspin.difference(robot.casmodel, cx[:nq], casadi.SX(robot.q0))])
     def cost(qF):
-        return(casadi.norm_2(qF - q_prec)**2)
+        return(casadi.norm_2(qF)**2)
     
     def constraints(qF):
         q = casadi.SX.sym('q', rmodel.nq, 1)
         q[Lid] = q_mot_target
         q[Id_free] = qF
-        Lc = constraintsResidual(casmodel, casdata, cmodels, cdatas, q, recompute=False, pinspace=caspin, quaternions=True)
+        Lc = constraintsResidual(casmodel, casdata, cmodels, cdatas, q, recompute=True, pinspace=caspin, quaternions=True)
         return Lc
+    
     cx = casadi.SX.sym("x", nF, 1)
     constraintsCost = casadi.Function('constraint', [cx], [constraints(cx)])
 
@@ -303,11 +305,10 @@ def closedLoop6DCasadiForwardKinematics(rmodel, rdata, cmodels, cdatas, q_mot_ta
     optim = casadi.Opti()
     qF = optim.variable(nF)
     # * Constraints
-    optim.subject_to(constraintsCost(qF)<1e-8)
-    # optim.subject_to(q[Lid]==q_mot_target)
+    optim.subject_to(constraintsCost(qF)==0)
     # * Bounds
-    # optim.subject_to(qF>-1*np.pi)
-    # optim.subject_to(qF<1*np.pi)
+    optim.subject_to(qF>-1*np.pi)
+    optim.subject_to(qF<1*np.pi)
     # * cost minimization
     total_cost = cost(qF)
     optim.minimize(total_cost)
@@ -318,12 +319,14 @@ def closedLoop6DCasadiForwardKinematics(rmodel, rdata, cmodels, cdatas, q_mot_ta
     try:
         sol = optim.solve_limited()
         print("Solution found")
-        qs = optim.value(qF)
+        qFs = optim.value(qF)
     except:
         print('ERROR in convergence, press enter to plot debug info.')
-        print(optim.debug.value(qF))
 
-    return(qs, qs[Id_free])
+    q = np.empty(rmodel.nq)
+    q[Lid] = q_mot_target
+    q[Id_free] = qFs
+    return(q, qFs)
 
 
 ##########TEST ZONE ##########################
@@ -345,8 +348,8 @@ class TestRobotInfo(unittest.TestCase):
     #     self.assertTrue(constraint<1e-6) #check the constraint
 
     def test_forwarkinematicscasadi(self):
-        qipopt, info=closedLoop6DCasadiForwardKinematics(new_model, new_data, cmodels, cdatas, goal, q_prec=q_prec)
-        constraint=norm(constraintsResidual(new_model,new_data,qipopt))
+        q_opt, qF_opt=closedLoop6DCasadiForwardKinematics(new_model, new_data, cmodels, cdatas, goal, q_prec=q_prec)
+        constraint=norm(constraintsResidual(new_model, new_data, cmodels, cdatas, q_opt, recompute=True, pinspace=pin, quaternions=True))
         self.assertTrue(constraint<1e-6) #check the constraint
 
 

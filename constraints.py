@@ -31,7 +31,7 @@ def constraintResidual(model, data, cmodel, cdata, q=None, recompute=True, pinsp
         raise(NotImplementedError("Only 6D and 3D constraints are implemented for now"))
 
 # TODO clean quaternion constraints
-def constraintQuaternion(model, q):
+def constraintQuaternion(model, q, pinspace=pin):
     """
     L=constraintQuaternion(model, q)
     Returns the list of the squared norm of each quaternion inside the configuration vector q (work for free flyer and spherical joint)
@@ -49,7 +49,10 @@ def constraintQuaternion(model, q):
         nv = j.nv
         if nq != nv:
             quat = q[idx_q : idx_q + 4]
-            L.append(casadi.norm_2(quat) ** 2 - 1) # ! This is not robust to change in namespace name
+            if pinspace is caspin:
+                L.append(casadi.norm_2(quat) ** 2 - 1)
+            else:
+                L.append(np.linalg.norm(quat)**2 - 1)
     return L
 
 # TODO add constraintsPlanar
@@ -59,11 +62,13 @@ def constraintsResidual(model, data, cmodels, cdatas, q=None, recompute=True, pi
     for cm, cd in zip(cmodels, cdatas):
         res.append(constraintResidual(
             model, data, cm, cd, q, recompute, pinspace))
-    if quaternions:
-        res += constraintQuaternion(model, q)
     if pinspace is pin:
+        if quaternions:
+            res.append(constraintQuaternion(model, q, pinspace))
         return np.concatenate(res)
     elif pinspace is caspin:
+        if quaternions:
+            res += constraintQuaternion(model, q, pinspace)
         return casadi.vertcat(*res)
     else:
         assert (False and "Should never happen")
