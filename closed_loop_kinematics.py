@@ -284,39 +284,43 @@ def closedLoop6DCasadiForwardKinematics(rmodel, rdata, cmodels, cdatas, q_mot_ta
     if len(q_prec) != (rmodel.nq - len(goal)):
         q_prec = q2freeq(rmodel, pin.neutral(rmodel))
     q_prec = np.array(q_prec)
+    nF = len(Id_free)
 
     # * Optimisation functions
-    def cost(q):
-        return(casadi.norm_2(q[Id_free] - q_prec))
+    def cost(qF):
+        return(casadi.norm_2(qF - q_prec)**2)
     
-    def constraints(q):
-        Lc = constraintsResidual(casmodel, casdata, cmodels, cdatas, q, recompute=True, pinspace=caspin, quaternions=False)
+    def constraints(qF):
+        q = casadi.SX.sym('q', rmodel.nq, 1)
+        q[Lid] = q_mot_target
+        q[Id_free] = qF
+        Lc = constraintsResidual(casmodel, casdata, cmodels, cdatas, q, recompute=False, pinspace=caspin, quaternions=True)
         return Lc
-    cx = casadi.SX.sym("x", rmodel.nq, 1)
+    cx = casadi.SX.sym("x", nF, 1)
     constraintsCost = casadi.Function('constraint', [cx], [constraints(cx)])
 
     # * Optimisation problem
     optim = casadi.Opti()
-    q = optim.variable(rmodel.nq)
+    qF = optim.variable(nF)
     # * Constraints
-    optim.subject_to(constraintsCost(q)==0)
-    optim.subject_to(q[Lid]==q_mot_target)
+    optim.subject_to(constraintsCost(qF)<1e-8)
+    # optim.subject_to(q[Lid]==q_mot_target)
     # * Bounds
-    optim.subject_to(q[Id_free]>-1*np.pi)
-    optim.subject_to(q[Id_free]<1*np.pi)
+    # optim.subject_to(qF>-1*np.pi)
+    # optim.subject_to(qF<1*np.pi)
     # * cost minimization
-    total_cost = cost(q)
+    total_cost = cost(qF)
     optim.minimize(total_cost)
 
     opts = {}
-    # opts["nlp_lower"]
     optim.solver("ipopt", opts)
     try:
         sol = optim.solve_limited()
         print("Solution found")
-        qs = optim.value(q)
+        qs = optim.value(qF)
     except:
         print('ERROR in convergence, press enter to plot debug info.')
+        print(optim.debug.value(qF))
 
     return(qs, qs[Id_free])
 
