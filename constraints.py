@@ -1,3 +1,11 @@
+"""
+-*- coding: utf-8 -*-
+Nicolas MANSARD & Ludovic DE MATTEIS & Virgile BATTO, April 2023
+
+Tool functions to compute the constraints residuals from a robot constraint model. Also includes quaternion normalization constraint
+
+"""
+
 import pinocchio as pin
 import numpy as np
 from pinocchio import casadi as caspin

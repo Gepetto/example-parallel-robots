@@ -1,6 +1,6 @@
 """
 -*- coding: utf-8 -*-
-Virgile BATTO, march 2022
+Virgile BATTO & Ludovic DE MATTEIS, April 2023
 
 Tools to load and parse a urdf file with closed loop
 

@@ -1,6 +1,6 @@
 """
 -*- coding: utf-8 -*-
-Virgile BATTO, march 2022
+Ludovic DE MATTEIS & Virgile BATTO, April 2023
 
 Tools to compute the forwark and inverse kinematics of a robot with  closed loop 
 

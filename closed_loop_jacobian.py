@@ -1,6 +1,6 @@
 """
 -*- coding: utf-8 -*-
-Virgile BATTO, march 2022
+Virgile BATTO, April 2023
 
 tools to compute of jacobian inside closed loop
 
