@@ -146,12 +146,14 @@ def proximalSolver(model,data,constraint_model,constraint_data,max_it=100,eps=1e
     
     return(q)
 
-def inverseGeomProximalSolver(model,constraint_model,idframe,pos,only_translation=False,max_it=100,eps=1e-12,rho=1e-10,mu=1e-4):
+def inverseGeomProximalSolver(nmodel,nconstraint_model,idframe,pos,only_translation=False,max_it=100,eps=1e-12,rho=1e-10,mu=1e-4):
     """
     tentative 
     raw here (L84-126):https://gitlab.inria.fr/jucarpen/pinocchio/-/blob/pinocchio-3x/examples/simulation-closed-kinematic-chains.py
     """
 
+    model=nmodel.copy()
+    constraint_model=nconstraint_model.copy()
     #add a contact constraint
     frame_constraint=model.frames[idframe]
     parent_joint=frame_constraint.parentJoint
@@ -190,7 +192,7 @@ def inverseGeomProximalSolver(model,constraint_model,idframe,pos,only_translatio
         primal_feas = np.linalg.norm(constraint_value,np.inf)
         dual_feas = np.linalg.norm(J.T.dot(constraint_value + y),np.inf)
         if primal_feas < eps and dual_feas < eps:
-            print("Convergence achieved")
+            print("Convergence achieved in " + str(k) + " iterations")
             break
         print("constraint_value:",np.linalg.norm(constraint_value))
         rhs = np.concatenate([-constraint_value - y*mu, np.zeros(model.nv)])
@@ -439,8 +441,24 @@ if __name__ == "__main__":
     frame_effector='bout_pied_frame'
     
     #run test
+    robot=RobotWrapper.BuildFromURDF(path + "/robot.urdf", path)
+    model,constraint_model=completeModelFromDirectory(path)
+    data=model.createData()
+    constraint_data=[cm.createData() for cm in constraint_model]
+    import meshcat
+    from pinocchio.visualize import MeshcatVisualizer
+    viz = MeshcatVisualizer(model, visual_model, visual_model)
+    viz.viewer = meshcat.Visualizer(zmq_url="tcp://127.0.0.1:6000")
+    viz.loadViewerModel(rootNodeName="number 1")
+    viz.display(pin.neutral(model))
+    qtest=proximalSolver(model,data,constraint_model,constraint_data)
 
 
+    goal=pin.SE3.Identity()
+    goal.translation=np.array([-0.1,-0.04,-0.8])
+    q2=inverseGeomProximalSolver(model,constraint_model,38,goal)
+
+    
     unittest.main()
 
 
