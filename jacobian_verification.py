@@ -32,7 +32,7 @@ def get_simplified_robot(path):
     load a robot with 1 closed loop with a joint on each of the 2 branch that are closed, return a simplified model of the robot with 1 joint
     that closed the loop
     """
-    path = path + "/robot_simple"
+    
     robot = RobotWrapper.BuildFromURDF(path + "/robot.urdf", path)
 
     # to simplifie the conception, the two contact point are generate with a joint
@@ -52,7 +52,7 @@ def get_simplified_robot(path):
 def Jf_calc_LWA(lbarre: float, lbarre_eff: float, q):
     """
     Jf=Jf_calc_LWA(lbarre,lbarre_eff,q)
-    compute the JAcobian of the effector frame (frame 14) of the robot
+    compute the JAcobian of the effector frame (frame 14) of robot_simple (Local_World_Aligned)
     """
     Jf_calcT = np.array(
         [
@@ -85,7 +85,7 @@ def Jf_calc_LWA(lbarre: float, lbarre_eff: float, q):
 def Jb_calc_LWA(lbarre: float, q):
     """
     Jb=Jb_calc_LWA(lbarre,q)
-    compute the JAcobian of the frame 15 of the robot
+    compute the JAcobian of the frame 15 of robot_simple (Local_World_Aligned)
     """
     Jb_calcT = np.array(
         [
@@ -117,7 +117,7 @@ def Jb_calc_LWA(lbarre: float, q):
 def Ja_calc_LWA(lbarre, q):
     """
     Ja=Ja_calc_LWA(lbarre,q)
-    compute the Jacobian of the frame 1 of the robot
+    compute the Jacobian of the frame 1 of robot_simple (Local_World_Aligned)
     """
     Ja_calcT = np.array(
         [
@@ -150,6 +150,7 @@ def aXb(ida: int, idb: int, qo, rob):
     """
     aXb=aXb(ida,idb,qo,rob)
     return the transfert matrix that change the aplplication point of the 6d speed
+    same as se3.action 
     """
     oMb = rob.framePlacement(qo, idb).copy()  # require to avoid bad pointing
     oMa = rob.framePlacement(qo, ida).copy()
@@ -210,13 +211,12 @@ def Jacobian_finit_diff(model, idframe: int, idref: int, qo: np.array, dq=1e-6):
     J = np.transpose(np.array(LJ))
     J = RrefXframe @ J
 
-    # Jacobian_diff_finis(robot,15,15,qo) (first execution) != Jacobian_diff_finis(robot,15,15,qo) (every other execution)
     return J
 
 
 # creation of the robot
 path = os.getcwd()
-robot = get_simplified_robot(path)
+robot = get_simplified_robot(path+"/robot_simple")
 
 model = robot.model
 data = model.createData()
@@ -233,6 +233,7 @@ j1Mca = model.frames[ida].placement
 j2Mcb = model.frames[idb].placement
 idj1 = model.frames[ida].parentJoint
 idj2 = model.frames[idb].parentJoint
+
 constraint_local = pin.RigidConstraintModel(
     pin.ContactType.CONTACT_6D,
     model,
