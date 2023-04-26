@@ -1,1 +1,1 @@
-## A library that compile tools for closed loop kinematics modelization
+jacobian_verification.py validate the computing of jacobian

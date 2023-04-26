@@ -1,0 +1,217 @@
+<robot name="onshape">
+<link name="batie">
+<visual>
+<origin xyz="0 0 0" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package:///batie.stl"/>
+</geometry>
+<material name="batie_material">
+<color rgba="0.615686 0.811765 0.929412 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 0" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package:///batie.stl"/>
+</geometry>
+<material name="batie_material">
+<color rgba="0.615686 0.811765 0.929412 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="0.005 9.48069e-18 0.0420187" rpy="0 0 0"/>
+<mass value="0.090558" />
+<inertia ixx="2.37569e-05" ixy="0"  ixz="0" iyy="5.76249e-06" iyz="0" izz="1.95037e-05" />
+</inertial>
+</link>
+
+<link name="barre">
+<visual>
+<origin xyz="-0.0562696 -0.0405348 0" rpy="-1.5708 -1.5708 0" />
+<geometry>
+<mesh filename="package:///barre.stl"/>
+</geometry>
+<material name="barre_material">
+<color rgba="0.647059 0.647059 0.647059 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.0562696 -0.0405348 0" rpy="-1.5708 -1.5708 0" />
+<geometry>
+<mesh filename="package:///barre.stl"/>
+</geometry>
+<material name="barre_material">
+<color rgba="0.647059 0.647059 0.647059 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-5.11497e-64 -0.023 0.0025" rpy="0 0 0"/>
+<mass value="0.024821" />
+<inertia ixx="6.80855e-06" ixy="-1.09714e-68"  ixz="0" iyy="3.76116e-07" iyz="0" izz="7.08125e-06" />
+</inertial>
+</link>
+
+<link name="barre_2">
+<visual>
+<origin xyz="-0.0562696 -0.0405348 0" rpy="-1.5708 -1.5708 0" />
+<geometry>
+<mesh filename="package:///barre.stl"/>
+</geometry>
+<material name="barre_material">
+<color rgba="0.647059 0.647059 0.647059 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.0562696 -0.0405348 0" rpy="-1.5708 -1.5708 0" />
+<geometry>
+<mesh filename="package:///barre.stl"/>
+</geometry>
+<material name="barre_material">
+<color rgba="0.647059 0.647059 0.647059 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-3.83623e-64 -0.023 0.0025" rpy="0 0 0"/>
+<mass value="0.024821" />
+<inertia ixx="6.80855e-06" ixy="-8.22858e-69"  ixz="0" iyy="3.76116e-07" iyz="0" izz="7.08125e-06" />
+</inertial>
+</link>
+
+<link name="sphere">
+<inertial>
+<origin xyz="0 -3.46945e-18 1.68389e-19" rpy="0 0 0"/>
+<mass value="3.35103e-07" />
+<inertia ixx="5.36165e-13" ixy="-8.51586e-30"  ixz="0" iyy="5.36165e-13" iyz="0" izz="5.36165e-13" />
+</inertial>
+</link>
+
+<joint name="fermeture1_A" type="revolute">
+<origin xyz="0 -0.046 0" rpy="0 -0 2.11941" />
+<parent link="barre_2" />
+<child link="sphere" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="libre1" type="revolute">
+<origin xyz="0 -0.046 0.005" rpy="0 -0 0" />
+<parent link="barre" />
+<child link="barre_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="mot1" type="revolute">
+<origin xyz="0.01 0.015 0.0420187" rpy="1.5708 -0 1.5708" />
+<parent link="batie" />
+<child link="barre" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="barre_3">
+<visual>
+<origin xyz="-0.0562696 0.0405348 0.005" rpy="1.5708 1.5708 0" />
+<geometry>
+<mesh filename="package:///barre.stl"/>
+</geometry>
+<material name="barre_material">
+<color rgba="0.647059 0.647059 0.647059 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.0562696 0.0405348 0.005" rpy="1.5708 1.5708 0" />
+<geometry>
+<mesh filename="package:///barre.stl"/>
+</geometry>
+<material name="barre_material">
+<color rgba="0.647059 0.647059 0.647059 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="6.39371e-65 0.023 0.0025" rpy="0 0 0"/>
+<mass value="0.024821" />
+<inertia ixx="6.80855e-06" ixy="-1.37143e-69"  ixz="0" iyy="3.76116e-07" iyz="0" izz="7.08125e-06" />
+</inertial>
+</link>
+
+<link name="barre_bout">
+<visual>
+<origin xyz="0.0562696 -0.0405348 -0.005" rpy="-1.5708 -1.5708 0" />
+<geometry>
+<mesh filename="package:///barre_bout.stl"/>
+</geometry>
+<material name="barre_bout_material">
+<color rgba="0.647059 0.647059 0.647059 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.0562696 -0.0405348 -0.005" rpy="-1.5708 -1.5708 0" />
+<geometry>
+<mesh filename="package:///barre_bout.stl"/>
+</geometry>
+<material name="barre_bout_material">
+<color rgba="0.647059 0.647059 0.647059 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="6.93889e-18 -0.0268659 -0.00165832" rpy="0 0 0"/>
+<mass value="0.0298449" />
+<inertia ixx="9.22972e-06" ixy="-2.05871e-69"  ixz="-1.74941e-69" iyy="5.64602e-07" iyz="4.79778e-07" izz="9.46106e-06" />
+</inertial>
+</link>
+
+<link name="effecteur">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="effecteur_frame" type="fixed">
+<origin xyz="6.93889e-18 -0.0505 1.73472e-18" rpy="-1.5708 -1.5708 0" />
+<parent link="barre_bout" />
+<child link="effecteur" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<link name="sphere_2">
+<inertial>
+<origin xyz="0 0 1.68389e-19" rpy="0 0 0"/>
+<mass value="3.35103e-07" />
+<inertia ixx="5.36165e-13" ixy="1.95502e-75"  ixz="0" iyy="5.36165e-13" iyz="0" izz="5.36165e-13" />
+</inertial>
+</link>
+
+<joint name="fermeture1_B" type="revolute">
+<origin xyz="0 -0.046 0.005" rpy="0 -0 -1.5708" />
+<parent link="barre_bout" />
+<child link="sphere_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="libre2" type="revolute">
+<origin xyz="0 0.046 -3.46945e-18" rpy="0 -0 3.14159" />
+<parent link="barre_3" />
+<child link="barre_bout" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="mot2" type="revolute">
+<origin xyz="0.01 -0.015 0.0420187" rpy="-1.5708 -0 -1.5708" />
+<parent link="batie" />
+<child link="barre_3" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+
+</robot>
