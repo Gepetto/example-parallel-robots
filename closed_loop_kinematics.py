@@ -98,6 +98,59 @@ def closedLoopForwardKinematics(
     return q_goal, free_q_goal
 
 
+
+def proximalSolver(model,data,constraint_model,constraint_data,max_it=100,eps=1e-12,rho=1e-10,mu=1e-4):
+    """
+    tentative 
+    raw here (l84-126):https://gitlab.inria.fr/jucarpen/pinocchio/-/blob/pinocchio-3x/examples/simulation-closed-kinematic-chains.py
+    """
+    q=pin.neutral(model)
+    constraint_dim=0
+    for cm in constraint_model:
+        constraint_dim += cm.size() 
+
+    y = np.ones((constraint_dim))
+    data.M = np.eye(model.nv) * rho
+    kkt_constraint = pin.ContactCholeskyDecomposition(model,constraint_model)
+
+    for k in range(max_it):
+        pin.computeJointJacobians(model,data,q)
+        kkt_constraint.compute(model,data,constraint_model,constraint_data,mu)
+
+        constraint_value = np.concatenate([pin.log(cd.c1Mc2) for cd in constraint_data])
+
+        # J = pin.getFrameJacobian(model,data,constraint_model.joint1_id,constraint_model.joint1_placement,constraint_model.reference_frame)[:3,:]
+
+        LJ=[]
+        for (cm,cd) in zip(constraint_model,constraint_data):
+            Jc=pin.getConstraintJacobian(model,data,cm,cd)
+            LJ.append(Jc)
+        J=np.concatenate(LJ)
+
+        primal_feas = np.linalg.norm(constraint_value,np.inf)
+        dual_feas = np.linalg.norm(J.T.dot(constraint_value + y),np.inf)
+        if primal_feas < eps and dual_feas < eps:
+            print("Convergence achieved")
+            break
+        print("constraint_value:",np.linalg.norm(constraint_value))
+        rhs = np.concatenate([-constraint_value - y*mu, np.zeros(model.nv)])
+
+        dz = kkt_constraint.solve(rhs) 
+        dy = dz[:constraint_dim]
+        dq = dz[constraint_dim:]
+
+        alpha = 1.
+        q = pin.integrate(model,q,-alpha*dq)
+        y -= alpha*(-dy + y)
+
+    
+    return(q)
+
+
+
+
+
+
 def closedLoopInverseKinematics(model,data,fgoal,q_prec=[],name_eff="effecteur",nom_fermeture="fermeture",type="6D",onlytranslation=False):
     
     """
@@ -312,7 +365,7 @@ class TestRobotInfo(unittest.TestCase):
 
 if __name__ == "__main__":
     # import robot
-    path=os.getcwd()+"/robot_marcheur_1"
+    path=os.getcwd()+"/robots/robot_marcheur_4"
     robot=RobotWrapper.BuildFromURDF(path + "/robot.urdf", path)
     model=robot.model
     visual_model = robot.visual_model
@@ -328,6 +381,10 @@ if __name__ == "__main__":
     frame_effector='bout_pied_frame'
     
     #run test
+    robot=RobotWrapper.BuildFromURDF(path + "/robot.urdf", path)
+    model,constraint_model=completeModelFromDirectory(path)
+    data=model.createData()
+    constraint_data=[cm.createData() for cm in constraint_model]
     unittest.main()
 
 
