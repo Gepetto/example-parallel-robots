@@ -13,6 +13,7 @@ from robot_info import *
 from closed_loop_kinematics import *
 from closed_loop_jacobian import *
 from pinocchio.robot_wrapper import RobotWrapper
+
 pin.SE3.__repr__ = pin.SE3.__str__
 def closedLoopForcePropagation(model,data,constraint_model,constraint_data,q,vq,Lidf=[],Lf=[],name_mot="mot"):
     """
@@ -20,7 +21,7 @@ def closedLoopForcePropagation(model,data,constraint_model,constraint_data,q,vq,
     Propagate the force applied on frame idf (Lidf=[id1,..,idf]) with value fn (Lf=[f1,..,fn]) inside a model with constraints
     The result is stored in data 
     """
-    Lidvmot=idvmot(model,name_mot)
+    Lidvmot=getMotId_v(model,name_mot)
     
     LJ=[]
     for (cm,cd) in zip(constraint_model,constraint_data):
@@ -81,7 +82,7 @@ class TestRobotInfo(unittest.TestCase):
     #only test inverse constraint kineatics because it runs all precedent code
     def test_forcepropagation(self):
         vapply=np.array([0,0,1,0,0,0])
-        vq=inverseConstraintKinematics(new_model,new_data,constraint_model,constraint_data,q0,34,vapply,name_mot="mot")[0]
+        vq=inverseConstraintKinematicsSpeed(new_model,new_data,constraint_model,constraint_data,q0,34,vapply,name_mot="mot")[0]
         closedLoopForcePropagation(new_model,new_data,constraint_model,constraint_data,q0,vq)
         #check that the computing vq give the good speed 
         self.assertTrue(norm(new_data.f[5])>-1)
@@ -103,7 +104,7 @@ if __name__ == "__main__":
     new_data=new_model.createData()
 
     #create variable use by test
-    Lidmot=idmot(new_model)
+    Lidmot=getMotId_q(new_model)
 
     #init of the robot
     goal=np.zeros(len(Lidmot))

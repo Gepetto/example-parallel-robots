@@ -1,6 +1,6 @@
 """
 -*- coding: utf-8 -*-
-Virgile BATTO, march 2022
+Virgile BATTO, April 2023
 
 tools to compute of jacobian inside closed loop
 
@@ -19,7 +19,6 @@ def jacobianFinitDiffClosedLoop(model, idframe: int, idref: int, qmot: np.array,
     """
     LJ = []  # the transpose of the Jacobian ( list of list)
 
- 
     data = model.createData()
     q,b=closedLoopForwardKinematics(model, data, qmot, q_prec, name_mot, fermeture)
     pin.framesForwardKinematics(model, data, q)
@@ -27,7 +26,7 @@ def jacobianFinitDiffClosedLoop(model, idframe: int, idref: int, qmot: np.array,
     oMrep = data.oMf[idref].copy()
 
     RrefXframe = (oMrep.inverse() * oMf1).action
-    Lidmot=idmot(model,name_mot)
+    Lidmot=getMotId_q(model,name_mot)
     for i in range(len(Lidmot)):  # finit difference algorithm
         qmot[i] = qmot[i] + dq
         nq,b=closedLoopForwardKinematics(model, data, qmot, q_prec, name_mot, fermeture)
@@ -50,7 +49,7 @@ def sepJc(model,Jn):
     take a constraint Jacobian, and separate it into Jcmot and Jcfree , the constrant jacobian associate to motor and free joint
     
     """
-    Lidmot=idvmot(model)
+    Lidmot=getMotId_v(model)
     LJT=Jn.T.tolist()
     Jmot=np.zeros((6,len(Lidmot)))
     Jfree=np.zeros((6,model.nv-len(Lidmot)))
@@ -72,7 +71,7 @@ def dqRowReorder(model,dq):
     return q reorganized in accordance with the model
     """
     nJ=dq.copy()
-    Lidmot=idvmot(model)
+    Lidmot=getMotId_v(model)
     Lidfree=[]
     for i in range(model.nq):
         if not(i in Lidmot):
@@ -94,7 +93,7 @@ def dq_dqmot(model,LJ):
     take J the constraint Jacobian and return dq/dqmot
     
     """
-    Lidmot=idvmot(model)
+    Lidmot=getMotId_v(model)
     Jmot=np.zeros((0,len(Lidmot)))
     Jfree=np.zeros((0,model.nv-len(Lidmot)))
     for J in LJ:
@@ -124,7 +123,7 @@ def inverseConstraintKinematicsSpeed(model,data,constraint_model,constraint_data
         Jc=pin.getConstraintJacobian(model,data,cm,cd)
         LJ.append(Jc)
 
-    Lidmot=idmot(model,name_mot)
+    Lidmot=getMotId_q(model,name_mot)
     dq_dmot=dq_dqmot(model,LJ)
 
     Jf=pin.computeFrameJacobian(model,data,q0,ideff,pin.LOCAL)
@@ -171,7 +170,7 @@ if __name__ == "__main__":
     new_data=new_model.createData()
 
     #create variable use by test
-    Lidmot=idmot(new_model)
+    Lidmot=getMotId_q(new_model)
 
     goal=np.zeros(len(Lidmot))
     q_prec=q2freeq(new_model,pin.neutral(new_model))
