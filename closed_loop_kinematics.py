@@ -8,7 +8,6 @@ Tools to compute the forwark and inverse kinematics of a robot with  closed loop
 import pinocchio as pin
 import numpy as np
 from pinocchio.robot_wrapper import RobotWrapper
-from numpy.linalg import norm
 import os
 try:
     from pinocchio import casadi as caspin
@@ -17,12 +16,12 @@ try:
 except:
     _WITH_CASADI = False
     from scipy.optimize import fmin_slsqp
-    import cyipopt
+    from numpy.linalg import norm
 
 from robot_info import *
 from constraints import *
 
-def closedLoopInverseKinematics(rmodel, rdata, cmodels, cdatas, target_frame, q_prec=[], name_eff="effecteur", onlytranslation=False):
+def closedLoopInverseKinematicsCasadi(rmodel, rdata, cmodels, cdatas, target_frame, q_prec=[], name_eff="effecteur", onlytranslation=False):
     
     """
         q=closedLoopInverseKinematics(model,data,fgoal,constraint_model,constraint_data,q_prec=[],name_eff="effecteur",nom_fermeture="fermeture",type="6D"):
@@ -90,11 +89,57 @@ def closedLoopInverseKinematics(rmodel, rdata, cmodels, cdatas, target_frame, q_
         qs = optim.value(q)
     except:
         print('ERROR in convergence, press enter to plot debug info.')
-
     return qs
 
+def closedLoopInverseKinematicsScipy(rmodel, rdata, cmodels, cdatas, target_frame, q_prec=[], name_eff="effecteur", onlytranslation=False):
+    
+    """
+    q=invgeom_parra(model,data,fgoal,constraint_model,constraint_data,q_prec=[],name_eff="effecteur",nom_fermeture="fermeture",type="6D"):
 
-def closedLoopForwardKinematics(rmodel, rdata, cmodels, cdatas, q_mot_target, q_prec=[]):
+        take the goal position of the motors  axis of the robot ( joint with name_mot, ("mot" if empty) in the name), the robot model and data,
+        the current configuration of all joint ( set to robot.q0 if let empty)
+        the name of the joint who close the kinematic loop nom_fermeture
+
+        return a configuration who match the goal position of the effector
+
+    """
+
+    ideff = model.getFrameId(name_eff)
+
+    if len(q_prec) < model.nq:
+        q_prec = pin.neutral(model)
+        if len(q_prec) == 0:
+            warn("!!!!!!!!!  no q_prec   !!!!!!!!!!!!!!")
+        else:
+            warn("!!!!!!!!!invalid q_prec!!!!!!!!!!!!!!")
+
+    def costnorm(q):
+        cdata = model.createData()
+        pin.framesForwardKinematics(model, cdata, q)
+        if onlytranslation:
+            terr = (target_frame.translation - cdata.oMf[ideff].translation)
+            c = (norm(terr)) ** 2
+        else :
+            err = pin.log(target_frame.inverse() * cdata.oMf[ideff]).vector
+            c = (norm(err)) ** 2 
+        return c 
+
+    def contraintesimp(q):
+        Lc = constraintsResidual(rmodel, rdata, cmodels, cdatas, q, recompute=True, pinspace=pin, quaternions=True)
+        return Lc
+
+    L = fmin_slsqp(costnorm, q_prec, f_eqcons=contraintesimp, full_output=True)
+
+    return L
+
+
+def closedLoopInverseKinematics(*args, **kwargs):
+    if _WITH_CASADI:
+        return(closedLoopInverseKinematicsCasadi(*args, **kwargs))
+    else:
+        return(closedLoopInverseKinematicsScipy(*args, **kwargs))
+
+def closedLoopForwardKinematicsCasadi(rmodel, rdata, cmodels, cdatas, q_mot_target, q_prec=[]):
     """
         closedLoopForwardKinematics(model, data, goal, q_prec=[], name_mot="mot", nom_fermeture="fermeture", type="6D"):
 
@@ -166,6 +211,69 @@ def closedLoopForwardKinematics(rmodel, rdata, cmodels, cdatas, q_mot_target, q_
     q[Lid] = q_mot_target
     q[Id_free] = qFs
     return(q, qFs)
+
+def closedLoopForwardKinematicsScipy(rmodel, rdata, cmodels, cdatas, q_mot_target, q_prec=[]):
+
+    """
+        forwardgeom_parra(
+        model, data, goal, q_prec=[], name_mot="mot", nom_fermeture="fermeture", type="6D"):
+
+        take the goal position of the motors  axis of the robot ( joint with name_mot, ("mot" if empty) in the name), the robot model and data,
+        the current configuration of all joint ( set to robot.q0 if let empty)
+        the name of the joint who close the kinematic loop nom_fermeture
+
+        return a configuration who match the goal position of the motor
+
+    """
+
+    if not (len(q_prec) == (model.nq - len(goal))):
+        
+        if len(q_prec) == 0:
+            warn("!!!!!!!!!  no q_prec   !!!!!!!!!!!!!!")
+        else:
+            warn("!!!!!!!!!invalid q_prec!!!!!!!!!!!!!!")
+        q_prec = q2freeq(model,pin.neutral(model))
+
+    Lid = getMotId_q(model)
+    Id_free = np.delete(np.arange(rmodel.nq), Lid)
+
+    def goal2q(free_q):
+        """
+        take q, configuration of free axis/configuration vector, return nq, global configuration, q with the motor axi set to goal
+        """
+        rq = free_q.tolist()
+
+        extend_q = np.zeros(model.nq)
+        for i, goalq in zip(Lid, goal):
+            extend_q[i] = goalq
+        for i in range(model.nq):
+            if not (i in Lid):
+                extend_q[i] = rq.pop(0)
+
+        return extend_q
+
+    def costnorm(q):
+        c = norm(q - q_prec) ** 2
+        return c
+
+    def contraintesimp(qF):
+        q = casadi.SX.sym('q', rmodel.nq, 1)
+        q[Lid] = q_mot_target
+        q[Id_free] = qF
+        Lc = constraintsResidual(rmodel, rdata, cmodels, cdatas, q, recompute=True, pinspace=pin, quaternions=True)
+        return Lc
+
+    free_q_goal = fmin_slsqp(costnorm, q_prec, f_eqcons=contraintesimp)
+    q_goal = goal2q(free_q_goal)
+
+    return q_goal, free_q_goal
+
+
+def closedLoopForwardKinematics(*args, **kwargs):
+    if _WITH_CASADI:
+        return(closedLoopForwardKinematicsCasadi(*args, **kwargs))
+    else:
+        return(closedLoopForwardKinematicsScipy(*args, **kwargs))
 
 
 ##########TEST ZONE ##########################
