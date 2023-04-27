@@ -165,7 +165,7 @@ def closedLoopForwardKinematicsCasadi(rmodel, rdata, cmodels, cdatas, q_mot_targ
     Lid = getMotId_q(rmodel)
 
     Id_free = np.delete(np.arange(rmodel.nq), Lid)
-    if len(q_prec) != (rmodel.nq - len(goal)):
+    if len(q_prec) != (rmodel.nq - len(q_mot_target)):
         q_prec = q2freeq(rmodel, pin.neutral(rmodel))
     q_prec = np.array(q_prec)
     nF = len(Id_free)
