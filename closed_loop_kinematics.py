@@ -139,14 +139,18 @@ def closedLoopInverseKinematics(*args, **kwargs):
     else:
         return(closedLoopInverseKinematicsScipy(*args, **kwargs))
 
-def closedLoopForwardKinematicsCasadi(rmodel, rdata, cmodels, cdatas, q_mot_target, q_prec=[]):
+def closedLoopForwardKinematicsCasadi(rmodel, rdata, cmodels, cdatas, q_mot_target, q_prec=None):
     """
         closedLoopForwardKinematics(model, data, goal, q_prec=[], name_mot="mot", nom_fermeture="fermeture", type="6D"):
 
         Takes the target position of the motors axis of the robot (joint with name_mot ("mot" if empty) in the name),
         the current configuration of all joint (set to robot.q0 if let empty) and the name of the joints that close the kinematic loop. And returns a configuration that matches the goal positions of the motors
-        This function solves a minimization problem
-        TODO - writes explicitly the minimization problem
+        This function solves a minimization problem over q
+        
+        min || q - q_prec ||^2
+
+        subject to:  f_c(q)=0              # Kinematics constraints are satisfied
+                     vq[motors]=q_motors    # The motors joints should be as commanded
 
         Argument:
             model - Pinocchio robot model
@@ -163,54 +167,44 @@ def closedLoopForwardKinematicsCasadi(rmodel, rdata, cmodels, cdatas, q_mot_targ
 
     # * Getting ids of actuated and free joints
     Lid = getMotId_q(rmodel)
-
     Id_free = np.delete(np.arange(rmodel.nq), Lid)
-    if len(q_prec) != (rmodel.nq - len(goal)):
-        q_prec = q2freeq(rmodel, pin.neutral(rmodel))
-    q_prec = np.array(q_prec)
-    nF = len(Id_free)
-
-    # * Optimisation functions
-    # difference = casadi.Function('difference', [cx],[caspin.difference(robot.casmodel, cx[:nq], casadi.SX(robot.q0))])
-    def cost(qF):
-        return(casadi.norm_2(qF)**2)
+    if q_prec is None or q_prec == []:
+        q_prec = pin.neutral(rmodel)
     
-    def constraints(qF):
-        q = casadi.SX.sym('q', rmodel.nq, 1)
-        q[Lid] = q_mot_target
-        q[Id_free] = qF
-        Lc = constraintsResidual(casmodel, casdata, cmodels, cdatas, q, recompute=True, pinspace=caspin, quaternions=True)
+    # * Optimisation functions
+    def constraints(q):
+        Lc = constraintsResidual(casmodel, casdata, cmodels, cdatas, q, recompute=True, pinspace=caspin, quaternions=False)
         return Lc
     
-    cx = casadi.SX.sym("x", nF, 1)
-    constraintsCost = casadi.Function('constraint', [cx], [constraints(cx)])
+    cq = casadi.SX.sym("q", rmodel.nq, 1)
+    cv = casadi.SX.sym("v", rmodel.nv, 1)
+    constraintsCost = casadi.Function('constraint', [cq], [constraints(cq)])
+    integrate = casadi.Function('integrate', [cq, cv],[ caspin.integrate(casmodel, cq, cv)])
 
     # * Optimisation problem
     optim = casadi.Opti()
-    qF = optim.variable(nF)
+    vdq = optim.variable(rmodel.nv)
+    vq = integrate(q_prec, vdq)
     # * Constraints
-    optim.subject_to(constraintsCost(qF)==0)
-    # * Bounds
-    optim.subject_to(qF>-1*np.pi)
-    optim.subject_to(qF<1*np.pi)
+    optim.subject_to(constraintsCost(vq)==0)
+    optim.subject_to(vq[Lid]==q_mot_target)
+
     # * cost minimization
-    total_cost = cost(qF)
+    total_cost = casadi.sumsqr(vq - q_prec)
     optim.minimize(total_cost)
 
     opts = {}
     optim.solver("ipopt", opts)
-    optim.set_initial(qF, q_prec)
+    optim.set_initial(vdq, np.zeros(rmodel.nv))
     try:
         sol = optim.solve_limited()
         print("Solution found")
-        qFs = optim.value(qF)
+        dq = optim.value(vdq)
     except:
         print('ERROR in convergence, press enter to plot debug info.')
 
-    q = np.empty(rmodel.nq)
-    q[Lid] = q_mot_target
-    q[Id_free] = qFs
-    return(q, qFs)
+    q = pin.integrate(rmodel, q_prec, dq)
+    return(q, q[Id_free])
 
 def closedLoopForwardKinematicsScipy(rmodel, rdata, cmodels, cdatas, q_mot_target, q_prec=[]):
 
