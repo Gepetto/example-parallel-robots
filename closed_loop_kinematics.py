@@ -15,8 +15,8 @@ try:
     _WITH_CASADI = True
 except:
     _WITH_CASADI = False
-    from scipy.optimize import fmin_slsqp
-    from numpy.linalg import norm
+from scipy.optimize import fmin_slsqp
+from numpy.linalg import norm
 
 from robot_info import *
 from constraints import *
@@ -226,42 +226,26 @@ def closedLoopForwardKinematicsScipy(rmodel, rdata, cmodels, cdatas, q_mot_targe
 
     """
 
-    if not (len(q_prec) == (rmodel.nq - len(goal))):
-        q_prec = q2freeq(rmodel, pin.neutral(rmodel))
-
+    # * Getting ids of actuated and free joints
     Lid = getMotId_q(rmodel)
     Id_free = np.delete(np.arange(rmodel.nq), Lid)
+    if q_prec is None or q_prec == []:
+        q_prec = pin.neutral(rmodel)
 
-    def goal2q(free_q):
-        """
-        take q, configuration of free axis/configuration vector, return nq, global configuration, q with the motor axi set to goal
-        """
-        rq = free_q.tolist()
-
-        extend_q = np.zeros(rmodel.nq)
-        for i, goalq in zip(Lid, goal):
-            extend_q[i] = goalq
-        for i in range(rmodel.nq):
-            if not (i in Lid):
-                extend_q[i] = rq.pop(0)
-
-        return extend_q
-
-    def costnorm(q):
-        c = norm(q - q_prec) ** 2
+    def costnorm(dq):
+        c = norm(dq) ** 2
         return c
 
-    def contraintesimp(qF):
-        q = np.empty(rmodel.nq)
-        q[Lid] = q_mot_target
-        q[Id_free] = qF
-        Lc = constraintsResidual(rmodel, rdata, cmodels, cdatas, q, recompute=True, pinspace=pin, quaternions=True)
+    def contraintesimp(dq):
+        q = pin.integrate(rmodel, q_prec, dq)
+        Lc = constraintsResidual(rmodel, rdata, cmodels, cdatas, q, recompute=True, pinspace=pin, quaternions=False)
+        Lc = np.concatenate((Lc, q[Lid]==q_mot_target))
         return Lc
 
-    free_q_goal = fmin_slsqp(costnorm, q_prec, f_eqcons=contraintesimp)
-    q_goal = goal2q(free_q_goal)
+    dq_sol = fmin_slsqp(costnorm, np.zeros(rmodel.nv), f_eqcons=contraintesimp)
+    q_sol = pin.integrate(rmodel, q_prec, dq_sol)
 
-    return q_goal, free_q_goal
+    return q_sol, q_sol[Id_free]
 
 
 def closedLoopForwardKinematics(*args, **kwargs):
