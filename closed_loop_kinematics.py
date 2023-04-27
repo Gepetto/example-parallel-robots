@@ -265,6 +265,126 @@ def closedLoopForwardKinematics(*args, **kwargs):
         return(closedLoopForwardKinematicsScipy(*args, **kwargs))
 
 
+def proximalSolver(model,data,constraint_model,constraint_data,max_it=100,eps=1e-12,rho=1e-10,mu=1e-4):
+    """
+    q=proximalSolver(model,data,constraint_model,constraint_data,max_it=100,eps=1e-12,rho=1e-10,mu=1e-4)
+    build the robot in respect of the constraint with a proximal solver
+    raw here (L84-126):https://gitlab.inria.fr/jucarpen/pinocchio/-/blob/pinocchio-3x/examples/simulation-closed-kinematic-chains.py
+    """
+
+    #proximal solver (black magic)
+    q=pin.neutral(model)
+    constraint_dim=0
+    for cm in constraint_model:
+        constraint_dim += cm.size() 
+
+    y = np.ones((constraint_dim))
+    data.M = np.eye(model.nv) * rho
+    kkt_constraint = pin.ContactCholeskyDecomposition(model,constraint_model)
+
+    for k in range(max_it):
+        pin.computeJointJacobians(model,data,q)
+        kkt_constraint.compute(model,data,constraint_model,constraint_data,mu)
+
+        constraint_value = np.concatenate([pin.log(cd.c1Mc2) for cd in constraint_data])
+
+        LJ=[]
+        for (cm,cd) in zip(constraint_model,constraint_data):
+            Jc=pin.getConstraintJacobian(model,data,cm,cd)
+            LJ.append(Jc)
+        J=np.concatenate(LJ)
+
+        primal_feas = np.linalg.norm(constraint_value,np.inf)
+        dual_feas = np.linalg.norm(J.T.dot(constraint_value + y),np.inf)
+        if primal_feas < eps and dual_feas < eps:
+            print("Convergence achieved")
+            break
+        print("constraint_value:",np.linalg.norm(constraint_value))
+        rhs = np.concatenate([-constraint_value - y*mu, np.zeros(model.nv)])
+
+        dz = kkt_constraint.solve(rhs) 
+        dy = dz[:constraint_dim]
+        dq = dz[constraint_dim:]
+
+        alpha = 1.
+        q = pin.integrate(model,q,-alpha*dq)
+        y -= alpha*(-dy + y)
+
+    
+    return(q)
+
+
+def closedLoopForwardKinematics(*args, **kwargs):
+    if _WITH_CASADI:
+        return(closedLoopForwardKinematicsCasadi(*args, **kwargs))
+    else:
+        return(closedLoopForwardKinematicsScipy(*args, **kwargs))
+
+
+def inverseGeomProximalSolver(rmodel,rdata,rconstraint_model,rconstraint_data,idframe,pos,only_translation=False,max_it=100,eps=1e-12,rho=1e-10,mu=1e-4):
+    """
+    q=inverseGeomProximalSolver(rmodel,rdata,rconstraint_model,rconstraint_data,idframe,pos,only_translation=False,max_it=100,eps=1e-12,rho=1e-10,mu=1e-4)
+
+    make the inverse kinematics with a constraint on the frame idframe that must be placed on pos (on world coordinate)
+    raw here (L84-126):https://gitlab.inria.fr/jucarpen/pinocchio/-/blob/pinocchio-3x/examples/simulation-closed-kinematic-chains.py
+    """
+
+    model=rmodel.copy()
+    constraint_model=rconstraint_model.copy()
+    #add a contact constraint
+    frame_constraint=model.frames[idframe]
+    parent_joint=frame_constraint.parentJoint
+    placement=frame_constraint.placement
+    if only_translation:
+        final_constraint=pin.RigidConstraintModel(pin.ContactType.CONTACT_3D,model,parent_joint,placement,0,pos)
+    else :
+        final_constraint=pin.RigidConstraintModel(pin.ContactType.CONTACT_6D,model,parent_joint,placement,0,pos)
+    constraint_model.append(final_constraint)
+
+    data=model.createData()
+    constraint_data=[cm.createData() for cm in constraint_model]
+
+    #proximal solver (black magic)
+    q=pin.neutral(model)
+    constraint_dim=0
+    for cm in constraint_model:
+        constraint_dim += cm.size() 
+
+    y = np.ones((constraint_dim))
+    data.M = np.eye(model.nv) * rho
+    kkt_constraint = pin.ContactCholeskyDecomposition(model,constraint_model)
+
+    for k in range(max_it):
+        pin.computeJointJacobians(model,data,q)
+        kkt_constraint.compute(model,data,constraint_model,constraint_data,mu)
+
+        constraint_value = np.concatenate([pin.log(cd.c1Mc2) for cd in constraint_data])
+
+        LJ=[]
+        for (cm,cd) in zip(constraint_model,constraint_data):
+            Jc=pin.getConstraintJacobian(model,data,cm,cd)
+            LJ.append(Jc)
+        J=np.concatenate(LJ)
+
+        primal_feas = np.linalg.norm(constraint_value,np.inf)
+        dual_feas = np.linalg.norm(J.T.dot(constraint_value + y),np.inf)
+        if primal_feas < eps and dual_feas < eps:
+            print("Convergence achieved in " + str(k) + " iterations")
+            break
+        print("constraint_value:",np.linalg.norm(constraint_value))
+        rhs = np.concatenate([-constraint_value - y*mu, np.zeros(model.nv)])
+
+        dz = kkt_constraint.solve(rhs) 
+        dy = dz[:constraint_dim]
+        dq = dz[constraint_dim:]
+
+        alpha = 1.
+        q = pin.integrate(model,q,-alpha*dq)
+        y -= alpha*(-dy + y)
+
+    
+    return(q)
+
 ##########TEST ZONE ##########################
 import unittest
 
@@ -292,6 +412,28 @@ class TestRobotInfo(unittest.TestCase):
         
         print("Forward Kinematics", q_opt_casadi, q_opt_scipy)
         self.assertTrue((np.abs(q_opt_scipy - q_opt_casadi)<1e-1).all())
+
+    def testProximalSolver(self):
+        q_prox=proximalSolver(new_model,new_data,cmodels,cdatas)
+        constraint=norm(constraintsResidual(new_model, new_data, cmodels, cdatas, q_prox, recompute=True, pinspace=pin, quaternions=True))
+        self.assertTrue(constraint<1e-6) #check the constraint
+
+    def testInvGeomProximalSolver(self):
+        ideff=new_model.getFrameId(frame_effector)
+        q=inverseGeomProximalSolver(new_model,new_data,cmodels,cdatas,ideff,fgoal)
+        constraint=norm(constraintsResidual(new_model, new_data, cmodels, cdatas, q, recompute=True, pinspace=pin, quaternions=True))
+        self.assertTrue(constraint<1e-6) #check the constraint
+        pin.frameForwardKinematics(new_model,new_data,q)
+        pos=new_data.oMf[ideff]
+        err_goal=norm(pin.log(pos.inverse()@fgoal))
+        self.assertTrue(err_goal<1e-6) #check the position
+
+        
+
+
+
+
+
 
 
 if __name__ == "__main__":
@@ -326,6 +468,10 @@ if __name__ == "__main__":
         
         # * Run test
         unittest.main()
+
+
+
+
 
 
     
