@@ -201,7 +201,6 @@ def closedLoopForwardKinematicsCasadi(rmodel, rdata, cmodels, cdatas, q_mot_targ
         print("Solution found")
         dq = optim.value(vdq)
         q = pin.integrate(rmodel, q_prec, dq)
-        return(q, q[Id_free])
     except:
         print('ERROR in convergence, press enter to plot debug info.')
         input()
@@ -209,7 +208,7 @@ def closedLoopForwardKinematicsCasadi(rmodel, rdata, cmodels, cdatas, q_mot_targ
         vq = pin.integrate(rmodel, q_prec, dq)
         print(vq)
         q = q_prec
-        return(q, q[Id_free])
+    return q
     
 
 def closedLoopForwardKinematicsScipy(rmodel, rdata, cmodels, cdatas, q_mot_target, q_prec=[]):
@@ -223,29 +222,32 @@ def closedLoopForwardKinematicsScipy(rmodel, rdata, cmodels, cdatas, q_mot_targe
         the name of the joint who close the kinematic loop nom_fermeture
 
         return a configuration who match the goal position of the motor
-
     """
 
-    # * Getting ids of actuated and free joints
     Lid = getMotId_q(rmodel)
     Id_free = np.delete(np.arange(rmodel.nq), Lid)
-    if q_prec is None or q_prec == []:
-        q_prec = pin.neutral(rmodel)
+    if not (len(q_prec) == (len(Id_free))):
+        q_prec = pin.neutral(rmodel)[Id_free]
 
-    def costnorm(dq):
-        c = norm(dq) ** 2
+    def costnorm(qF):
+        c = norm(qF - q_prec) ** 2
         return c
 
-    def contraintesimp(dq):
-        q = pin.integrate(rmodel, q_prec, dq)
-        Lc = constraintsResidual(rmodel, rdata, cmodels, cdatas, q, recompute=True, pinspace=pin, quaternions=False)
-        Lc = np.concatenate((Lc, q[Lid]==q_mot_target))
+    def contraintesimp(qF):
+        q = np.empty(rmodel.nq)
+        q[Lid] = q_mot_target
+        q[Id_free] = qF
+        Lc = constraintsResidual(rmodel, rdata, cmodels, cdatas, q, recompute=True, pinspace=pin, quaternions=True)
         return Lc
 
-    dq_sol = fmin_slsqp(costnorm, np.zeros(rmodel.nv), f_eqcons=contraintesimp)
-    q_sol = pin.integrate(rmodel, q_prec, dq_sol)
+    free_q_goal = fmin_slsqp(costnorm, q_prec, f_eqcons=contraintesimp)
+    q_goal = np.empty(rmodel.nq)
+    q_goal[Lid] = q_mot_target
+    q_goal[Id_free] = free_q_goal
 
-    return q_sol, q_sol[Id_free]
+    return q_goal
+
+
 
 
 def closedLoopForwardKinematics(*args, **kwargs):

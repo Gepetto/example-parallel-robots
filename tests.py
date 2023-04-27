@@ -6,7 +6,7 @@ from pinocchio.robot_wrapper import RobotWrapper
 
 if __name__ == "__main__":
     #load robot
-    path = os.getcwd()+"/robots/robot_marcheur_4"
+    path = os.getcwd()+"/robots/robot_marcheur_1"
     robot = RobotWrapper.BuildFromURDF(path + "/robot.urdf", path)
 
     rmodel = robot.model = jointTypeUpdate(robot.model,rotule_name="to_rotule")
@@ -36,7 +36,7 @@ if __name__ == "__main__":
 
     # * Get initial feasible configuration
 
-    q0, q_ini = closedLoopForwardKinematics(rmodel, rdata, constraint_model, constraint_data, goal, q_prec=q0)
+    q0 = closedLoopForwardKinematicsCasadi(rmodel, rdata, constraint_model, constraint_data, goal, q_prec=q0)
     print("Solution found, press enter to visualize")
     input()
 
