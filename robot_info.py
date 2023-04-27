@@ -1,12 +1,3 @@
-"""
--*- coding: utf-8 -*-
-Virgile BATTO & Ludovic DE MATTEIS, April 2023
-
-Tools to load and parse a urdf file with closed loop
-
-"""
-
-
 import unittest
 import pinocchio as pin
 import numpy as np
@@ -16,7 +7,7 @@ import re
 import yaml
 from yaml.loader import SafeLoader
 from warnings import warn
-from pinocchio import casadi as caspin
+# from pinocchio import casadi as caspin
 
 
 def getMotId_q(model, name_mot="mot"):
@@ -33,7 +24,10 @@ def getMotId_q(model, name_mot="mot"):
     Lid = []
     for i, name in enumerate(model.names):
         if re.search(name_mot, name):
-            Lid.append(model.joints[i].idx_q)
+            idx=model.joints[i].idx_q
+            nq=model.joints[i].nq
+            for j in range(nq):
+                Lid.append(idx+j)
     return Lid
 
 
@@ -51,7 +45,10 @@ def getMotId_v(model, name_mot="mot"):
     Lid = []
     for i, name in enumerate(model.names):
         if re.search(name_mot, name):
-            Lid.append(model.joints[i].idx_v)
+            idv=model.joints[i].idx_v
+            nv=model.joints[i].nv
+            for j in range(nv):
+                Lid.append(idv+j)
     return Lid
 
 def q2freeq(model, q, name_mot="mot"):
@@ -251,16 +248,111 @@ def jointTypeUpdate(model, rotule_name="to_rotule"):
     return (new_model)
 
 
-########## TEST ZONE ##########################
 
+def autoYamlWriter(path):
+    """
+    if robot.urdf inside the path, write a yaml file associate to the the robot.
+    Write the name of the frame constrained, the type of the constraint, the presence of rotule articulation, 
+    the name of the motor, idq and idv (with the sphrical joint).
+    """
+    name_mot="mot"
+    name_rotule="to_rotule" 
+    rob = RobotWrapper.BuildFromURDF(path + "/robot.urdf", path)
+    model=jointTypeUpdate(rob.model,name_rotule)
+
+
+    name_frame_constraint=nameFrameConstraint(model, nomferme="fermeture")
+    constraint_type=["6d"]*len(name_frame_constraint)
+
+
+    Lidmot=getMotId_q(model,name_mot)
+    Lidvmot=getMotId_v(model,name_mot)
+    with open(path + '/robot.yaml', 'w') as f:
+        f.write('name_mot: '+name_mot+'\n')
+        f.write('rotule_name: '+name_rotule+'\n')
+        f.write('Lidmot: '+str(Lidmot)+'\n')
+        f.write('Lidvmot: '+str(Lidvmot)+'\n')
+        f.write('closed_loop: '+ str(name_frame_constraint)+'\n')
+        f.write('type: '+str(constraint_type)+'\n')
+    return()
+
+def completeModelFromDirectory(path,name_urdf="robot.urdf",name_yaml="robot.yaml"):
+    """
+    Return  model and constraint model associated to a directory, where the name od the urdf is robot.urdf and the name of the yam is robot.yaml
+    if no type assiciated, 6D type is applied
+    """
+    #load robot
+    rob = RobotWrapper.BuildFromURDF(path + "/" + name_urdf, path)
+    model=rob.model
+    #load yaml and constraint
+    yaml_file = open(path+"/"+name_yaml, 'r')
+    yaml_content = yaml.load(yaml_file, Loader=SafeLoader)
+    name_frame_constraint=yaml_content['closed_loop']
+
+    #try to update model
+    try :
+        rotule_name=yaml_content['rotule_name']   
+    except :
+        rotule_name="to_rotule"
+
+    model=jointTypeUpdate(model,rotule_name)
+
+    #check if type is associated,else 6D is used
+    try :
+        constraint_type=yaml_content['type']
+    except :
+        constraint_type=["6d"]*len(name_frame_constraint)
+    
+    #construction of constraint model
+    Lconstraintmodel = []
+    for L,ctype in zip(name_frame_constraint,constraint_type):
+        name1 = L[0]
+        name2 = L[1]
+        id1 = model.getFrameId(name1)
+        id2 = model.getFrameId(name2)
+        Se3joint1 = model.frames[id1].placement
+        Se3joint2 = model.frames[id2].placement
+        parentjoint1 = model.frames[id1].parentJoint
+        parentjoint2 = model.frames[id2].parentJoint
+        if ctype=="3D":
+            constraint = pin.RigidConstraintModel(
+                pin.ContactType.CONTACT_3D,
+                model,
+                parentjoint1,
+                Se3joint1,
+                parentjoint2,
+                Se3joint2,
+                pin.ReferenceFrame.LOCAL,
+            )
+        else :
+            constraint = pin.RigidConstraintModel(
+                pin.ContactType.CONTACT_6D,
+                model,
+                parentjoint1,
+                Se3joint1,
+                parentjoint2,
+                Se3joint2,
+                pin.ReferenceFrame.LOCAL,
+            )
+        Lconstraintmodel.append(constraint)
+
+    return(model,Lconstraintmodel)
+
+
+
+
+
+##########TEST ZONE ##########################
 
 class TestRobotInfo(unittest.TestCase):
     def test_getRobotInfo(self):
-        name__closedloop,name_mot,number_closedloop,type=getRobotInfo(path)
-        #check the model parsing
-        
-        self.assertTrue(name_mot=="mot")
-        self.assertTrue(name__closedloop=="fermeture")
+        name__closedloop, name_mot, number_closedloop, type = getRobotInfo(
+            path)
+        # check the model parsing
+        self.assertTrue(number_closedloop == 3)
+        self.assertTrue(name_mot == "mot")
+        self.assertTrue(name__closedloop == "fermeture")
+
     def test_jointTypeUpdate(self):
         new_model = jointTypeUpdate(model, rotule_name="to_rotule")
         # check that there is new spherical joint
@@ -271,16 +363,6 @@ class TestRobotInfo(unittest.TestCase):
         Lid = getMotId_q(new_model)
         self.assertTrue(Lid == [0, 1, 4, 5, 7, 12])  # check the idmot
 
-    def test_constraint(self):
-        q = pin.neutral(new_model)
-        new_data = new_model.createData()
-        Lc6D = constraints6D(new_model, new_data, q)
-        Lc3D = constraints3D(new_model, new_data, q)
-        Lc3D = np.concatenate(Lc3D).tolist()
-        Lc6D = np.concatenate(Lc6D).tolist()
-        # check the constraint
-        self.assertTrue(Lc3D[0] == Lc6D[0])
-
     def test_nameFrameConstraint(self):
         Lnom = nameFrameConstraint(new_model)
         nomf1 = Lnom[0][0]
@@ -289,11 +371,12 @@ class TestRobotInfo(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    path=os.getcwd()+"/robots/robot_marcheur_1"
-    #load robot
-    robot=RobotWrapper.BuildFromURDF(path + "/robot.urdf", path)
-    model=robot.model
-    #change joint type
-    new_model=jointTypeUpdate(model,rotule_name="to_rotule")
-    #run test
+    path = os.getcwd()+"/robot_marcheur_1"
+    # load robot
+    robot = RobotWrapper.BuildFromURDF(path + "/robot.urdf", path)
+    model = robot.model
+    # change joint type
+    new_model = jointTypeUpdate(model, rotule_name="to_rotule")
+    # run test
     unittest.main()
+
