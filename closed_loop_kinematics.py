@@ -320,6 +320,12 @@ def proximalSolver(model,data,constraint_model,constraint_data,max_it=100,eps=1e
     return(q)
 
 
+def closedLoopForwardKinematics(*args, **kwargs):
+    if _WITH_CASADI:
+        return(closedLoopForwardKinematicsCasadi(*args, **kwargs))
+    else:
+        return(closedLoopForwardKinematicsScipy(*args, **kwargs))
+
 
 def inverseGeomProximalSolver(rmodel,rdata,rconstraint_model,rconstraint_data,idframe,pos,only_translation=False,max_it=100,eps=1e-12,rho=1e-10,mu=1e-4):
     """
