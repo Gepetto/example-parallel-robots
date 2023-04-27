@@ -267,8 +267,7 @@ Jconst_auto_local_world_aligned = pin.getConstraintJacobian(
 )
 
 
-# creation of ext force on the effector_frame
-f = pin.Force(np.array([10, 0, 0, 0, 0, 0]))
+# check passage from local world aligne to local
 idframe_effector = model.getFrameId("effecteur")
 Mf = data.oMf[idframe_effector]
 Rf = Mf.rotation
