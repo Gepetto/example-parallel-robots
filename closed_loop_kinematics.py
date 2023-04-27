@@ -190,7 +190,7 @@ def closedLoopForwardKinematicsCasadi(rmodel, rdata, cmodels, cdatas, q_mot_targ
     optim.subject_to(vq[Lid]==q_mot_target)
 
     # * cost minimization
-    total_cost = casadi.sumsqr(vq - q_prec)
+    total_cost = casadi.sumsqr(vdq)
     optim.minimize(total_cost)
 
     opts = {}
@@ -200,11 +200,17 @@ def closedLoopForwardKinematicsCasadi(rmodel, rdata, cmodels, cdatas, q_mot_targ
         sol = optim.solve_limited()
         print("Solution found")
         dq = optim.value(vdq)
+        q = pin.integrate(rmodel, q_prec, dq)
+        return(q, q[Id_free])
     except:
         print('ERROR in convergence, press enter to plot debug info.')
-
-    q = pin.integrate(rmodel, q_prec, dq)
-    return(q, q[Id_free])
+        input()
+        dq = optim.debug.value(vdq)
+        vq = pin.integrate(rmodel, q_prec, dq)
+        print(vq)
+        q = q_prec
+        return(q, q[Id_free])
+    
 
 def closedLoopForwardKinematicsScipy(rmodel, rdata, cmodels, cdatas, q_mot_target, q_prec=[]):
 
