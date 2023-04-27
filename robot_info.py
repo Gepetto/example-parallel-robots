@@ -1,3 +1,12 @@
+"""
+-*- coding: utf-8 -*-
+Virgile BATTO & Ludovic DE MATTEIS, April 2023
+
+Tools to load and parse a urdf file with closed loop
+
+"""
+
+
 import unittest
 import pinocchio as pin
 import numpy as np
@@ -70,6 +79,9 @@ def q2freeq(model, q, name_mot="mot"):
 
 def getRobotInfo(path):
     """
+    Dont semms usefull anymore with completeModelFromDirectory(path)
+
+
     (name__closedloop, name_mot, number_closedloop, type) = getRobotInfo(path)
     Returns information stored in the YAML file at path 'path/robot.yaml'. If no YAML file is found, default values are returned.
     
@@ -345,13 +357,6 @@ def completeModelFromDirectory(path,name_urdf="robot.urdf",name_yaml="robot.yaml
 ##########TEST ZONE ##########################
 
 class TestRobotInfo(unittest.TestCase):
-    def test_getRobotInfo(self):
-        name__closedloop, name_mot, number_closedloop, type = getRobotInfo(
-            path)
-        # check the model parsing
-        self.assertTrue(number_closedloop == 3)
-        self.assertTrue(name_mot == "mot")
-        self.assertTrue(name__closedloop == "fermeture")
 
     def test_jointTypeUpdate(self):
         new_model = jointTypeUpdate(model, rotule_name="to_rotule")
@@ -371,7 +376,7 @@ class TestRobotInfo(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    path = os.getcwd()+"/robot_marcheur_1"
+    path = os.getcwd()+"/robots/robot_marcheur_1"
     # load robot
     robot = RobotWrapper.BuildFromURDF(path + "/robot.urdf", path)
     model = robot.model

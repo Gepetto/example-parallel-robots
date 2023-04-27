@@ -1,5 +1,6 @@
 name_mot: mot
-Lidmot: [2, 6, 9, 31, 33, 35]
-Lidvmot: [2, 6, 9, 31, 33, 35]
-closed_loop: [['fermeture2_B', 'fermeture2_A'], ['fermeture3_B', 'fermeture3_A'], ['fermeture4_B', 'fermeture4_A'], ['fermeture5_A', 'fermeture5_B'], ['fermeture6_B', 'fermeture6_A'], ['fermeture7_B', 'fermeture7_A'], ['fermeture8_A', 'fermeture8_B'], ['fermeture9_B', 'fermeture9_A'], ['fermeture10_A', 'fermeture10_B']]
-type: ['6d', '6d', '6d', '6d', '6d', '6d', '6d', '6d', '6d']
+rotule_name: to_rotule
+Lidmot: [5, 9, 12, 70, 75, 80]
+Lidvmot: [4, 8, 11, 57, 61, 65]
+closed_loop: [['fermeture0_A', 'fermeture0_B'], ['fermeture1_B', 'fermeture1_A'], ['fermeture2_B', 'fermeture2_A'], ['fermeture3_B', 'fermeture3_A'], ['fermeture4_B', 'fermeture4_A'], ['fermeture5_A', 'fermeture5_B'], ['fermeture6_B', 'fermeture6_A'], ['fermeture7_B', 'fermeture7_A'], ['fermeture8_A', 'fermeture8_B'], ['fermeture9_B', 'fermeture9_A']]
+type: ['6d', '6d', '6d', '6d', '6d', '6d', '6d', '6d', '6d', '6d']
