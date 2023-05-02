@@ -1,5 +1,6 @@
-name_mot: "mot"
-name_closedloop: "fermeture"
-closed_loop_number: 1
-type: "3D"
-
+name_mot: mot
+rotule_name: to_rotule
+Lidmot: [1, 2]
+Lidvmot: [1, 2]
+closed_loop: [['fermeture3D_1B', 'fermeture3D_1A']]
+type: ['3D']
