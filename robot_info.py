@@ -301,7 +301,7 @@ def completeRobotLoader(path,name_urdf="robot.urdf",name_yaml="robot.yaml"):
     try :
         constraint_type = yaml_content['type']
     except :
-        constraint_type = ["6d"]*len(name_frame_constraint)
+        constraint_type = ["6D"]*len(name_frame_constraint)
     
     #construction of constraint model
     Lconstraintmodel = []
@@ -314,7 +314,7 @@ def completeRobotLoader(path,name_urdf="robot.urdf",name_yaml="robot.yaml"):
         Se3joint2 = model.frames[id2].placement
         parentjoint1 = model.frames[id1].parentJoint
         parentjoint2 = model.frames[id2].parentJoint
-        if ctype=="3D":
+        if ctype=="3D" or ctype=="3d":
             constraint = pin.RigidConstraintModel(
                 pin.ContactType.CONTACT_3D,
                 model,
@@ -324,7 +324,7 @@ def completeRobotLoader(path,name_urdf="robot.urdf",name_yaml="robot.yaml"):
                 Se3joint2,
                 pin.ReferenceFrame.LOCAL,
             )
-        else :
+        else:
             constraint = pin.RigidConstraintModel(
                 pin.ContactType.CONTACT_6D,
                 model,
