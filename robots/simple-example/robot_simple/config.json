@@ -1,0 +1,7 @@
+{
+    "documentId": "121f77195ecc2ff50a252d83",
+    "outputFormat": "urdf",
+    "ignore":[
+        "Frame","sphere"
+    ]
+}
