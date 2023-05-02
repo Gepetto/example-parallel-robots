@@ -1,27 +1,37 @@
 import pinocchio as pin
 import os
-from robot_info import *
-from closed_loop_kinematics import *
+YAML = True
+if YAML:
+    from robot_info import completeRobotLoader, getMotId_q
+else:
+    from robot_info import jointTypeUpdate, getMotId_q, nameFrameConstraint, getConstraintModelFromName
+from closed_loop_kinematics import closedLoopForwardKinematics, closedLoopForwardKinematicsCasadi
 from pinocchio.robot_wrapper import RobotWrapper
+import numpy as np
 
 if __name__ == "__main__":
-    #load robot
-    path = os.getcwd()+"/robots/robot_marcheur_1"
-    robot = RobotWrapper.BuildFromURDF(path + "/robot.urdf", path)
+    # * Load robot
+    path = os.getcwd()+"/robots/robot_marcheur_4"
+    if YAML :
+        robot = completeRobotLoader(path)
+        rmodel = robot.model
+        rdata = robot.data
+        constraint_model = robot.constraint_models
+        constraint_data = robot.constraint_datas
+    else :
+        robot = RobotWrapper.BuildFromURDF(path + "/robot.urdf", path)
 
-    rmodel = robot.model = jointTypeUpdate(robot.model,rotule_name="to_rotule")
-    rdata = robot.data = robot.model.createData()
+        rmodel = robot.model = jointTypeUpdate(robot.model,rotule_name="to_rotule")
+        rdata = robot.data = robot.model.createData()
+         
+        name_constraint = nameFrameConstraint(rmodel)
+        constraint_model = getConstraintModelFromName(rmodel,name_constraint)
+        constraint_data = [c.createData() for c in constraint_model]
 
-    q0 = robot.q0 = pin.neutral(rmodel)
-    
     # * Create variables 
+    q0 = robot.q0 = pin.neutral(rmodel)
     Lidmot = getMotId_q(rmodel)
-    goal = np.zeros(len(Lidmot))
-    # q_prec = q2freeq(rmodel, pin.neutral(rmodel)) # Initial guess
-    
-    name_constraint = nameFrameConstraint(rmodel)
-    constraint_model = getConstraintModelFromName(rmodel,name_constraint)
-    constraint_data = [c.createData() for c in constraint_model]
+    goal = np.zeros(len(Lidmot))       
 
     # * Initialize visualizer
     viewer_type = 'Gepetto'
