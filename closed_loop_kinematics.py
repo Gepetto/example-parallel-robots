@@ -19,7 +19,7 @@ from scipy.optimize import fmin_slsqp
 from numpy.linalg import norm
 
 from robot_info import *
-from constraints import *
+from constraints import constraintsResidual
 
 def closedLoopInverseKinematicsCasadi(rmodel, rdata, cmodels, cdatas, target_frame, q_prec=[], name_eff="effecteur", onlytranslation=False):
     
@@ -167,7 +167,6 @@ def closedLoopForwardKinematicsCasadi(rmodel, rdata, cmodels, cdatas, q_mot_targ
 
     # * Getting ids of actuated and free joints
     Lid = getMotId_q(rmodel)
-    Id_free = np.delete(np.arange(rmodel.nq), Lid)
     if q_prec is None or q_prec == []:
         q_prec = pin.neutral(rmodel)
     
@@ -209,7 +208,7 @@ def closedLoopForwardKinematicsCasadi(rmodel, rdata, cmodels, cdatas, q_mot_targ
         print(vq)
         q = q_prec
     return q
-    
+
 
 def closedLoopForwardKinematicsScipy(rmodel, rdata, cmodels, cdatas, q_mot_target, q_prec=[]):
 
@@ -244,11 +243,7 @@ def closedLoopForwardKinematicsScipy(rmodel, rdata, cmodels, cdatas, q_mot_targe
     q_goal = np.empty(rmodel.nq)
     q_goal[Lid] = q_mot_target
     q_goal[Id_free] = free_q_goal
-
     return q_goal
-
-
-
 
 def closedLoopForwardKinematics(*args, **kwargs):
     if _WITH_CASADI:

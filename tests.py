@@ -5,7 +5,7 @@ if YAML:
     from robot_info import completeRobotLoader, getMotId_q
 else:
     from robot_info import jointTypeUpdate, getMotId_q, nameFrameConstraint, getConstraintModelFromName
-from closed_loop_kinematics import closedLoopForwardKinematics, closedLoopForwardKinematicsCasadi
+from closed_loop_kinematics import closedLoopForwardKinematics, closedLoopForwardKinematicsCasadi, proximalSolver, closedLoopForwardKinematicsScipy
 from pinocchio.robot_wrapper import RobotWrapper
 import numpy as np
 
@@ -31,7 +31,9 @@ if __name__ == "__main__":
     # * Create variables 
     q0 = robot.q0 = pin.neutral(rmodel)
     Lidmot = getMotId_q(rmodel)
-    goal = np.zeros(len(Lidmot))       
+    goal = np.zeros(len(Lidmot))   
+
+    # robot.viewer.gui.deleteNode('world', True)    
 
     # * Initialize visualizer
     viewer_type = 'Gepetto'
@@ -45,8 +47,13 @@ if __name__ == "__main__":
     robot.display(q0)
 
     # * Get initial feasible configuration
+    idx = [2,3]
+    constraint_model = [ cm for i,cm in enumerate(constraint_model) if i in idx ]
+    constraint_data = [ cm for i,cm in enumerate(constraint_data) if i in idx ]
 
+    # q0_Scipy = closedLoopForwardKinematicsScipy(rmodel, rdata, constraint_model, constraint_data, goal, q_prec=q0)
     q0 = closedLoopForwardKinematicsCasadi(rmodel, rdata, constraint_model, constraint_data, goal, q_prec=q0)
+    # q0 = proximalSolver(rmodel, rdata, constraint_model, constraint_data)
     print("Solution found, press enter to visualize")
     input()
 
