@@ -288,36 +288,36 @@ def autoYamlWriter(path):
         f.write('type: '+str(constraint_type)+'\n')
     return()
 
-def completeModelFromDirectory(path,name_urdf="robot.urdf",name_yaml="robot.yaml"):
+def completeRobotLoader(path,name_urdf="robot.urdf",name_yaml="robot.yaml"):
     """
     Return  model and constraint model associated to a directory, where the name od the urdf is robot.urdf and the name of the yam is robot.yaml
     if no type assiciated, 6D type is applied
     """
     #load robot
-    rob = RobotWrapper.BuildFromURDF(path + "/" + name_urdf, path)
-    model=rob.model
+    robot = RobotWrapper.BuildFromURDF(path + "/" + name_urdf, path)
     #load yaml and constraint
-    yaml_file = open(path+"/"+name_yaml, 'r')
-    yaml_content = yaml.load(yaml_file, Loader=SafeLoader)
-    name_frame_constraint=yaml_content['closed_loop']
+    with open(path+"/"+name_yaml, 'r') as yaml_file:
+        yaml_content = yaml.load(yaml_file, Loader=SafeLoader)
+        name_frame_constraint=yaml_content['closed_loop']
 
-    #try to update model
+    # try to update model
     try :
         rotule_name=yaml_content['rotule_name']   
     except :
         rotule_name="to_rotule"
 
-    model=jointTypeUpdate(model,rotule_name)
+    model = robot.model = jointTypeUpdate(robot.model,rotule_name)
+    robot.rebuildData()
 
     #check if type is associated,else 6D is used
     try :
-        constraint_type=yaml_content['type']
+        constraint_type = yaml_content['type']
     except :
-        constraint_type=["6d"]*len(name_frame_constraint)
+        constraint_type = ["6D"]*len(name_frame_constraint)
     
     #construction of constraint model
     Lconstraintmodel = []
-    for L,ctype in zip(name_frame_constraint,constraint_type):
+    for L,ctype in zip(name_frame_constraint, constraint_type):
         name1 = L[0]
         name2 = L[1]
         id1 = model.getFrameId(name1)
@@ -326,7 +326,7 @@ def completeModelFromDirectory(path,name_urdf="robot.urdf",name_yaml="robot.yaml
         Se3joint2 = model.frames[id2].placement
         parentjoint1 = model.frames[id1].parentJoint
         parentjoint2 = model.frames[id2].parentJoint
-        if ctype=="3d":
+        if ctype=="3D" or ctype=="3d":
             constraint = pin.RigidConstraintModel(
                 pin.ContactType.CONTACT_3D,
                 model,
@@ -349,8 +349,15 @@ def completeModelFromDirectory(path,name_urdf="robot.urdf",name_yaml="robot.yaml
             )
             constraint.name = name1[:-2]
         Lconstraintmodel.append(constraint)
+    
+    robot.constraint_models = Lconstraintmodel
+    robot.full_constraint_models = robot.constraint_models
+    robot.full_constraint_datas = {cm: cm.createData()
+                               for cm in robot.constraint_models}
+    robot.constraint_datas = [robot.full_constraint_datas[cm]
+                          for cm in robot.constraint_models]
 
-    return(model,Lconstraintmodel)
+    return(robot)
 
 
 

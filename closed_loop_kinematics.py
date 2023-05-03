@@ -15,11 +15,11 @@ try:
     _WITH_CASADI = True
 except:
     _WITH_CASADI = False
-    from scipy.optimize import fmin_slsqp
-    from numpy.linalg import norm
+from scipy.optimize import fmin_slsqp
+from numpy.linalg import norm
 
 from robot_info import *
-from constraints import *
+from constraints import constraintsResidual
 
 def closedLoopInverseKinematicsCasadi(rmodel, rdata, cmodels, cdatas, target_frame, q_prec=[], name_eff="effecteur", onlytranslation=False):
     
@@ -167,7 +167,6 @@ def closedLoopForwardKinematicsCasadi(rmodel, rdata, cmodels, cdatas, q_mot_targ
 
     # * Getting ids of actuated and free joints
     Lid = getMotId_q(rmodel)
-    Id_free = np.delete(np.arange(rmodel.nq), Lid)
     if q_prec is None or q_prec == []:
         q_prec = pin.neutral(rmodel)
     
@@ -190,7 +189,7 @@ def closedLoopForwardKinematicsCasadi(rmodel, rdata, cmodels, cdatas, q_mot_targ
     optim.subject_to(vq[Lid]==q_mot_target)
 
     # * cost minimization
-    total_cost = casadi.sumsqr(vq - q_prec)
+    total_cost = casadi.sumsqr(vdq)
     optim.minimize(total_cost)
 
     opts = {}
@@ -200,11 +199,16 @@ def closedLoopForwardKinematicsCasadi(rmodel, rdata, cmodels, cdatas, q_mot_targ
         sol = optim.solve_limited()
         print("Solution found")
         dq = optim.value(vdq)
+        q = pin.integrate(rmodel, q_prec, dq)
     except:
         print('ERROR in convergence, press enter to plot debug info.')
+        input()
+        dq = optim.debug.value(vdq)
+        vq = pin.integrate(rmodel, q_prec, dq)
+        print(vq)
+        q = q_prec
+    return q
 
-    q = pin.integrate(rmodel, q_prec, dq)
-    return(q, q[Id_free])
 
 def closedLoopForwardKinematicsScipy(rmodel, rdata, cmodels, cdatas, q_mot_target, q_prec=[]):
 
@@ -217,32 +221,15 @@ def closedLoopForwardKinematicsScipy(rmodel, rdata, cmodels, cdatas, q_mot_targe
         the name of the joint who close the kinematic loop nom_fermeture
 
         return a configuration who match the goal position of the motor
-
     """
-
-    if not (len(q_prec) == (rmodel.nq - len(goal))):
-        q_prec = q2freeq(rmodel, pin.neutral(rmodel))
 
     Lid = getMotId_q(rmodel)
     Id_free = np.delete(np.arange(rmodel.nq), Lid)
+    if not (len(q_prec) == (len(Id_free))):
+        q_prec = pin.neutral(rmodel)[Id_free]
 
-    def goal2q(free_q):
-        """
-        take q, configuration of free axis/configuration vector, return nq, global configuration, q with the motor axi set to goal
-        """
-        rq = free_q.tolist()
-
-        extend_q = np.zeros(rmodel.nq)
-        for i, goalq in zip(Lid, goal):
-            extend_q[i] = goalq
-        for i in range(rmodel.nq):
-            if not (i in Lid):
-                extend_q[i] = rq.pop(0)
-
-        return extend_q
-
-    def costnorm(q):
-        c = norm(q - q_prec) ** 2
+    def costnorm(qF):
+        c = norm(qF - q_prec) ** 2
         return c
 
     def contraintesimp(qF):
@@ -253,10 +240,10 @@ def closedLoopForwardKinematicsScipy(rmodel, rdata, cmodels, cdatas, q_mot_targe
         return Lc
 
     free_q_goal = fmin_slsqp(costnorm, q_prec, f_eqcons=contraintesimp)
-    q_goal = goal2q(free_q_goal)
-
-    return q_goal, free_q_goal
-
+    q_goal = np.empty(rmodel.nq)
+    q_goal[Lid] = q_mot_target
+    q_goal[Id_free] = free_q_goal
+    return q_goal
 
 def closedLoopForwardKinematics(*args, **kwargs):
     if _WITH_CASADI:
