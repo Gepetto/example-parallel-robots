@@ -1,0 +1,827 @@
+<robot name="onshape">
+<link name="hips">
+<visual>
+<origin xyz="-5.898059818321144121e-17 0.24137310969398340088 -0.019600000000000006306" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package:///hips.stl"/>
+</geometry>
+<material name="hips_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-5.898059818321144121e-17 0.24137310969398340088 -0.019600000000000006306" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package:///hips.stl"/>
+</geometry>
+<material name="hips_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-2.3907769963552781151e-17 -2.7755575615628913511e-17 -0.012064234213706833548" rpy="0 0 0"/>
+<mass value="31.098475560970634035" />
+<inertia ixx="2.5963107988662690317" ixy="0"  ixz="0" iyy="0.73248819579456636575" iyz="0" izz="3.322526335046191992" />
+</inertial>
+</link>
+
+<link name="centre_hanche">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="centre_hanche_frame" type="fixed">
+<origin xyz="-6.4306394915936567452e-19 -0.19600000000000000755 0.0024999999999999961489" rpy="0 -0 0" />
+<parent link="hips" />
+<child link="centre_hanche" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<link name="motor">
+<visual>
+<origin xyz="0 0 0" rpy="3.141592653589793116 -0 0" />
+<geometry>
+<mesh filename="package:///motor.stl"/>
+</geometry>
+<material name="motor_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 0" rpy="3.141592653589793116 -0 0" />
+<geometry>
+<mesh filename="package:///motor.stl"/>
+</geometry>
+<material name="motor_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="3.856870359518011532e-19 -0.0078299815808531743333 -0.19472702084804258127" rpy="0 0 0"/>
+<mass value="2.7885886641797732466" />
+<inertia ixx="0.046543620871877910972" ixy="0"  ixz="0" iyy="0.045846138598219787763" iyz="0.0023259746632628415346" izz="0.0014804911041356582247" />
+</inertial>
+</link>
+
+<link name="axis_1">
+<visual>
+<origin xyz="0 0 0.44100000000000005862" rpy="3.141592653589793116 -0 0" />
+<geometry>
+<mesh filename="package:///axis_1.stl"/>
+</geometry>
+<material name="axis_1_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 0.44100000000000005862" rpy="3.141592653589793116 -0 0" />
+<geometry>
+<mesh filename="package:///axis_1.stl"/>
+</geometry>
+<material name="axis_1_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="2.5413382566798702309e-20 -9.0011539737330488676e-19 -0.044100000000000028066" rpy="0 0 0"/>
+<mass value="0.095801676679286573712" />
+<inertia ixx="6.7280799019288280464e-05" ixy="0"  ixz="0" iyy="6.7280799019288266912e-05" iyz="0" izz="1.0350892156813519451e-05" />
+</inertial>
+</link>
+
+<link name="fermeture1_A">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="fermeture1_A_frame" type="fixed">
+<origin xyz="0 0 -0.088200000000000056133" rpy="0 -0 0" />
+<parent link="axis_1" />
+<child link="fermeture1_A" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<joint name="mot_4" type="prismatic">
+<origin xyz="0 0 -0.44100000000000000311" rpy="0 -0 0" />
+<parent link="motor" />
+<child link="axis_1" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="to_rotule_1" type="revolute">
+<origin xyz="-0.24500000000000016209 -0.20176688122757496791 -0.058800000000000018918" rpy="0 -0 0" />
+<parent link="hips" />
+<child link="motor" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="motor_2">
+<visual>
+<origin xyz="0 0 0" rpy="3.141592653589793116 -0 0" />
+<geometry>
+<mesh filename="package:///motor.stl"/>
+</geometry>
+<material name="motor_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 0" rpy="3.141592653589793116 -0 0" />
+<geometry>
+<mesh filename="package:///motor.stl"/>
+</geometry>
+<material name="motor_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="3.856870359518011532e-19 -0.0078299815808531743333 -0.19472702084804258127" rpy="0 0 0"/>
+<mass value="2.7885886641797732466" />
+<inertia ixx="0.046543620871877910972" ixy="0"  ixz="0" iyy="0.045846138598219787763" iyz="0.0023259746632628415346" izz="0.0014804911041356582247" />
+</inertial>
+</link>
+
+<link name="axis_1_2">
+<visual>
+<origin xyz="0 0 0.44100000000000005862" rpy="3.141592653589793116 -0 0" />
+<geometry>
+<mesh filename="package:///axis_1.stl"/>
+</geometry>
+<material name="axis_1_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 0.44100000000000005862" rpy="3.141592653589793116 -0 0" />
+<geometry>
+<mesh filename="package:///axis_1.stl"/>
+</geometry>
+<material name="axis_1_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="2.5413382566798702309e-20 -9.0011539737330488676e-19 -0.044100000000000028066" rpy="0 0 0"/>
+<mass value="0.095801676679286573712" />
+<inertia ixx="6.7280799019288280464e-05" ixy="0"  ixz="0" iyy="6.7280799019288266912e-05" iyz="0" izz="1.0350892156813519451e-05" />
+</inertial>
+</link>
+
+<link name="fermeture2_A">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="fermeture2_A_frame" type="fixed">
+<origin xyz="0 0 -0.088200000000000056133" rpy="0 -0 0" />
+<parent link="axis_1_2" />
+<child link="fermeture2_A" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<joint name="mot_1" type="prismatic">
+<origin xyz="0 0 -0.44100000000000000311" rpy="0 -0 0" />
+<parent link="motor_2" />
+<child link="axis_1_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="to_rotule_2" type="revolute">
+<origin xyz="-0.088200000000000000622 -0.47335244785437513571 -0.058800000000000018918" rpy="0 -0 0" />
+<parent link="hips" />
+<child link="motor_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="motor_3">
+<visual>
+<origin xyz="0 0 0" rpy="3.141592653589793116 -0 0" />
+<geometry>
+<mesh filename="package:///motor.stl"/>
+</geometry>
+<material name="motor_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 0" rpy="3.141592653589793116 -0 0" />
+<geometry>
+<mesh filename="package:///motor.stl"/>
+</geometry>
+<material name="motor_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="3.856870359518011532e-19 -0.0078299815808531743333 -0.19472702084804258127" rpy="0 0 0"/>
+<mass value="2.7885886641797732466" />
+<inertia ixx="0.046543620871877910972" ixy="0"  ixz="0" iyy="0.045846138598219787763" iyz="0.0023259746632628415346" izz="0.0014804911041356582247" />
+</inertial>
+</link>
+
+<link name="axis_1_3">
+<visual>
+<origin xyz="0 0 0.44100000000000005862" rpy="3.141592653589793116 -0 0" />
+<geometry>
+<mesh filename="package:///axis_1.stl"/>
+</geometry>
+<material name="axis_1_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 0.44100000000000005862" rpy="3.141592653589793116 -0 0" />
+<geometry>
+<mesh filename="package:///axis_1.stl"/>
+</geometry>
+<material name="axis_1_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="2.5413382566798702309e-20 -9.0011539737330488676e-19 -0.044100000000000028066" rpy="0 0 0"/>
+<mass value="0.095801676679286573712" />
+<inertia ixx="6.7280799019288280464e-05" ixy="0"  ixz="0" iyy="6.7280799019288266912e-05" iyz="0" izz="1.0350892156813519451e-05" />
+</inertial>
+</link>
+
+<link name="fermeture3_A">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="fermeture3_A_frame" type="fixed">
+<origin xyz="0 0 -0.088200000000000056133" rpy="0 -0 0" />
+<parent link="axis_1_3" />
+<child link="fermeture3_A" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<joint name="mot_2" type="prismatic">
+<origin xyz="0 0 -0.44100000000000000311" rpy="0 -0 0" />
+<parent link="motor_3" />
+<child link="axis_1_3" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="to_rotule_3" type="revolute">
+<origin xyz="0.088200000000000028377 -0.47335244785437513571 -0.058800000000000018918" rpy="0 -0 0" />
+<parent link="hips" />
+<child link="motor_3" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="motor_4">
+<visual>
+<origin xyz="0 0 0" rpy="3.141592653589793116 -0 0" />
+<geometry>
+<mesh filename="package:///motor.stl"/>
+</geometry>
+<material name="motor_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 0" rpy="3.141592653589793116 -0 0" />
+<geometry>
+<mesh filename="package:///motor.stl"/>
+</geometry>
+<material name="motor_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="3.856870359518011532e-19 -0.0078299815808531743333 -0.19472702084804258127" rpy="0 0 0"/>
+<mass value="2.7885886641797732466" />
+<inertia ixx="0.046543620871877910972" ixy="0"  ixz="0" iyy="0.045846138598219787763" iyz="0.0023259746632628415346" izz="0.0014804911041356582247" />
+</inertial>
+</link>
+
+<link name="axis_2">
+<visual>
+<origin xyz="0 0 0.52920100000000014351" rpy="3.141592653589793116 -0 0" />
+<geometry>
+<mesh filename="package:///axis_2.stl"/>
+</geometry>
+<material name="axis_2_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 0.52920100000000014351" rpy="3.141592653589793116 -0 0" />
+<geometry>
+<mesh filename="package:///axis_2.stl"/>
+</geometry>
+<material name="axis_2_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="2.5413382566798762495e-20 -9.0011539737330469417e-19 -0.044099499999999958177" rpy="0 0 0"/>
+<mass value="0.095800590492475995452" />
+<inertia ixx="6.7278627937740191514e-05" ixy="0"  ixz="0" iyy="6.7278627937740191514e-05" iyz="0" izz="1.035077479975957068e-05" />
+</inertial>
+</link>
+
+<link name="fermeture4_A">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="fermeture4_A_frame" type="fixed">
+<origin xyz="0 0 -0.088198999999999916355" rpy="0 -0 0" />
+<parent link="axis_2" />
+<child link="fermeture4_A" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<joint name="mot_3" type="prismatic">
+<origin xyz="0 0 -0.44100000000000011413" rpy="0 -0 0" />
+<parent link="motor_4" />
+<child link="axis_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="to_rotule_4" type="revolute">
+<origin xyz="0.24499999999999999556 -0.20176688122757496791 -0.058800000000000018918" rpy="0 -0 0" />
+<parent link="hips" />
+<child link="motor_4" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="motor_5">
+<visual>
+<origin xyz="0 0 0" rpy="3.141592653589793116 -0 0" />
+<geometry>
+<mesh filename="package:///motor.stl"/>
+</geometry>
+<material name="motor_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 0" rpy="3.141592653589793116 -0 0" />
+<geometry>
+<mesh filename="package:///motor.stl"/>
+</geometry>
+<material name="motor_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="3.856870359518011532e-19 -0.0078299815808531743333 -0.19472702084804258127" rpy="0 0 0"/>
+<mass value="2.7885886641797732466" />
+<inertia ixx="0.046543620871877910972" ixy="0"  ixz="0" iyy="0.045846138598219787763" iyz="0.0023259746632628415346" izz="0.0014804911041356582247" />
+</inertial>
+</link>
+
+<link name="axis_2_2">
+<visual>
+<origin xyz="0 0 0.52920100000000014351" rpy="3.141592653589793116 -0 0" />
+<geometry>
+<mesh filename="package:///axis_2.stl"/>
+</geometry>
+<material name="axis_2_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 0.52920100000000014351" rpy="3.141592653589793116 -0 0" />
+<geometry>
+<mesh filename="package:///axis_2.stl"/>
+</geometry>
+<material name="axis_2_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="2.5413382566798762495e-20 -9.0011539737330469417e-19 -0.044099499999999958177" rpy="0 0 0"/>
+<mass value="0.095800590492475995452" />
+<inertia ixx="6.7278627937740191514e-05" ixy="0"  ixz="0" iyy="6.7278627937740191514e-05" iyz="0" izz="1.035077479975957068e-05" />
+</inertial>
+</link>
+
+<link name="fermeture5_A">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="fermeture5_A_frame" type="fixed">
+<origin xyz="0 0 -0.088198999999999916355" rpy="0 -0 0" />
+<parent link="axis_2_2" />
+<child link="fermeture5_A" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<joint name="mot_5" type="prismatic">
+<origin xyz="0 0 -0.44100000000000011413" rpy="0 -0 0" />
+<parent link="motor_5" />
+<child link="axis_2_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="to_rotule_5" type="revolute">
+<origin xyz="-0.15680000000000030025 -0.04899999999999998801 -0.058800000000000018918" rpy="0 -0 0" />
+<parent link="hips" />
+<child link="motor_5" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="motor_6">
+<visual>
+<origin xyz="0 0 0" rpy="3.141592653589793116 -0 0" />
+<geometry>
+<mesh filename="package:///motor.stl"/>
+</geometry>
+<material name="motor_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 0" rpy="3.141592653589793116 -0 0" />
+<geometry>
+<mesh filename="package:///motor.stl"/>
+</geometry>
+<material name="motor_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="3.856870359518011532e-19 -0.0078299815808531743333 -0.19472702084804258127" rpy="0 0 0"/>
+<mass value="2.7885886641797732466" />
+<inertia ixx="0.046543620871877910972" ixy="0"  ixz="0" iyy="0.045846138598219787763" iyz="0.0023259746632628415346" izz="0.0014804911041356582247" />
+</inertial>
+</link>
+
+<link name="part_4">
+<visual>
+<origin xyz="0 0 -0.61740000000000005986" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package:///part_4.stl"/>
+</geometry>
+<material name="part_4_material">
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.61740000000000005986" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package:///part_4.stl"/>
+</geometry>
+<material name="part_4_material">
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-2.8651562969017415438e-19 9.0011539737330469417e-19 -0.088199999999999945111" rpy="0 0 0"/>
+<mass value="0.19160335335857300865" />
+<inertia ixx="0.00050719371568386175005" ixy="0"  ixz="0" iyy="0.00050719371568386175005" iyz="0" izz="2.0701784313627028737e-05" />
+</inertial>
+</link>
+
+<link name="foot">
+<visual>
+<origin xyz="0 -0.093357538527962399821 -0.024499999999999966249" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package:///foot.stl"/>
+</geometry>
+<material name="foot_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 -0.093357538527962399821 -0.024499999999999966249" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package:///foot.stl"/>
+</geometry>
+<material name="foot_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-0.012714979969319060299 -0.093368423907325595601 -0.045318972591631201396" rpy="0 0 0"/>
+<mass value="2.4747804760634357635" />
+<inertia ixx="0.014467802251627134152" ixy="3.4252788315737039103e-07"  ixz="-0.00011583009502572473668" iyy="0.016513309020961718793" iyz="5.872408729564604947e-07" izz="0.030449874716511216716" />
+</inertial>
+</link>
+
+<link name="bout_pied">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="bout_pied_frame" type="fixed">
+<origin xyz="-0.014741140454145040817 -0.093357538527962455333 -0.051400000000000001243" rpy="0 -0 0" />
+<parent link="foot" />
+<child link="bout_pied" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<link name="axis_1_4">
+<visual>
+<origin xyz="0 0 0.44100000000000005862" rpy="-3.141592653589793116 -0 0" />
+<geometry>
+<mesh filename="package:///axis_1.stl"/>
+</geometry>
+<material name="axis_1_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 0.44100000000000005862" rpy="-3.141592653589793116 -0 0" />
+<geometry>
+<mesh filename="package:///axis_1.stl"/>
+</geometry>
+<material name="axis_1_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="2.5413382566798702309e-20 -4.5078448805398044544e-18 -0.044100000000000028066" rpy="0 0 0"/>
+<mass value="0.095801676679286573712" />
+<inertia ixx="6.7280799019288280464e-05" ixy="0"  ixz="0" iyy="6.7280799019288266912e-05" iyz="4.3121880232220659584e-21" izz="1.0350892156813519451e-05" />
+</inertial>
+</link>
+
+<link name="fermeture2_B">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="fermeture2_B_frame" type="fixed">
+<origin xyz="0 0 -0.088200000000000056133" rpy="-3.141592653589793116 -0 0" />
+<parent link="axis_1_4" />
+<child link="fermeture2_B" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<joint name="to_rotule_7" type="revolute">
+<origin xyz="-0.080849999999999991318 -0.1400363077919436483 0" rpy="-2.6179938779914944114 -0 0" />
+<parent link="foot" />
+<child link="axis_1_4" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="axis_2_3">
+<visual>
+<origin xyz="0 5.5511151231257827021e-17 0.52920100000000014351" rpy="3.141592653589793116 -0 0" />
+<geometry>
+<mesh filename="package:///axis_2.stl"/>
+</geometry>
+<material name="axis_2_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 5.5511151231257827021e-17 0.52920100000000014351" rpy="3.141592653589793116 -0 0" />
+<geometry>
+<mesh filename="package:///axis_2.stl"/>
+</geometry>
+<material name="axis_2_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="2.5413382566798762495e-20 6.740208788437366136e-17 -0.044099499999999958177" rpy="0 0 0"/>
+<mass value="0.095800590492475995452" />
+<inertia ixx="6.7278627937740191514e-05" ixy="0"  ixz="0" iyy="6.7278627937740191514e-05" iyz="-4.4660096494610829631e-21" izz="1.035077479975957068e-05" />
+</inertial>
+</link>
+
+<link name="fermeture1_B">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="fermeture1_B_frame" type="fixed">
+<origin xyz="0 8.3266726846886740532e-17 -0.088199000000000027377" rpy="3.141592653589793116 -0 0" />
+<parent link="axis_2_3" />
+<child link="fermeture1_B" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<joint name="to_rotule_8" type="revolute">
+<origin xyz="-0.080849999999999991318 -0.1400363077919436483 0" rpy="2.6179938779914944114 -0 0" />
+<parent link="foot" />
+<child link="axis_2_3" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="axis_1_5">
+<visual>
+<origin xyz="0 0 0.44100000000000005862" rpy="-3.141592653589793116 -0 0" />
+<geometry>
+<mesh filename="package:///axis_1.stl"/>
+</geometry>
+<material name="axis_1_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 0.44100000000000005862" rpy="-3.141592653589793116 -0 0" />
+<geometry>
+<mesh filename="package:///axis_1.stl"/>
+</geometry>
+<material name="axis_1_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="2.5413382566798702309e-20 -4.5078448805398044544e-18 -0.044100000000000028066" rpy="0 0 0"/>
+<mass value="0.095801676679286573712" />
+<inertia ixx="6.7280799019288280464e-05" ixy="0"  ixz="0" iyy="6.7280799019288266912e-05" iyz="4.3121880232220659584e-21" izz="1.0350892156813519451e-05" />
+</inertial>
+</link>
+
+<link name="fermeture3_B">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="fermeture3_B_frame" type="fixed">
+<origin xyz="0 0 -0.088200000000000056133" rpy="-3.141592653589793116 -0 0" />
+<parent link="axis_1_5" />
+<child link="fermeture3_B" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<joint name="to_rotule_9" type="revolute">
+<origin xyz="0.08084999999999997744 -0.1400363077919436483 0" rpy="-2.6179938779914944114 -0 0" />
+<parent link="foot" />
+<child link="axis_1_5" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="axis_2_4">
+<visual>
+<origin xyz="0 2.7755575615628913511e-17 -0.61740000000000005986" rpy="-6.2948235302926546307e-17 -0 0" />
+<geometry>
+<mesh filename="package:///axis_2.stl"/>
+</geometry>
+<material name="axis_2_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 2.7755575615628913511e-17 -0.61740000000000005986" rpy="-6.2948235302926546307e-17 -0 0" />
+<geometry>
+<mesh filename="package:///axis_2.stl"/>
+</geometry>
+<material name="axis_2_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="2.5413382566798762495e-20 2.4392006996172495179e-17 -0.044099499999999958177" rpy="0 0 0"/>
+<mass value="0.095800590492475995452" />
+<inertia ixx="6.7278627937740191514e-05" ixy="0"  ixz="0" iyy="6.7278627937740191514e-05" iyz="-4.3120504846756399603e-21" izz="1.035077479975957068e-05" />
+</inertial>
+</link>
+
+<link name="fermeture4_B">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="fermeture4_B_frame" type="fixed">
+<origin xyz="0 -2.7755575615628913511e-17 -0.088199000000000027377" rpy="3.141592653589793116 -0 0" />
+<parent link="axis_2_4" />
+<child link="fermeture4_B" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<joint name="to_rotule_10" type="revolute">
+<origin xyz="0.08084999999999997744 -0.1400363077919436483 0" rpy="2.6179938779914944114 -0 0" />
+<parent link="foot" />
+<child link="axis_2_4" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="axis_1_6">
+<visual>
+<origin xyz="0 -5.5511151231257827021e-17 -0.52920000000000022577" rpy="6.2948235302926546307e-17 -0 0" />
+<geometry>
+<mesh filename="package:///axis_1.stl"/>
+</geometry>
+<material name="axis_1_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 -5.5511151231257827021e-17 -0.52920000000000022577" rpy="6.2948235302926546307e-17 -0 0" />
+<geometry>
+<mesh filename="package:///axis_1.stl"/>
+</geometry>
+<material name="axis_1_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="2.5413382566798702309e-20 -5.1003306350718024878e-17 -0.044100000000000139089" rpy="0 0 0"/>
+<mass value="0.095801676679286573712" />
+<inertia ixx="6.7280799019288280464e-05" ixy="0"  ixz="0" iyy="6.7280799019288266912e-05" iyz="4.3121880232220659584e-21" izz="1.0350892156813519451e-05" />
+</inertial>
+</link>
+
+<link name="fermeture5_B">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="fermeture5_B_frame" type="fixed">
+<origin xyz="0 -1.1102230246251565404e-16 -0.088200000000000111644" rpy="-3.141592653589793116 -0 0" />
+<parent link="axis_1_6" />
+<child link="fermeture5_B" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<joint name="to_rotule_11" type="revolute">
+<origin xyz="0 1.3877787807814456755e-17 0" rpy="-2.6179938779914944114 -0 0" />
+<parent link="foot" />
+<child link="axis_1_6" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="to_rotule_12" type="revolute">
+<origin xyz="0 -1.3877787807814456755e-17 -0.17640000000000000124" rpy="0 -0 0" />
+<parent link="part_4" />
+<child link="foot" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="mot_6" type="prismatic">
+<origin xyz="0 0 -0.44100000000000011413" rpy="0 -0 0" />
+<parent link="motor_6" />
+<child link="part_4" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="to_rotule_6" type="revolute">
+<origin xyz="0.15679999999999999494 -0.049000000000000043521 -0.058800000000000018918" rpy="0 -0 0" />
+<parent link="hips" />
+<child link="motor_6" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+
+</robot>

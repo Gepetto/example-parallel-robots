@@ -232,11 +232,11 @@ def jointTypeUpdate(model, rotule_name="to_rotule"):
     Return:
         new_model - Updated robot model
     """
-    new_model = pin.Model()
+    new_model = pin.Model() 
     first = True
     i = 0
-    for jp, iner, name, i in zip(
-        model.jointPlacements, model.inertias, model.names, model.parents
+    for jp, iner, name, i, j in zip(
+        model.jointPlacements, model.inertias, model.names, model.parents,model.joints
     ):
         if first:
             first = False
@@ -246,7 +246,7 @@ def jointTypeUpdate(model, rotule_name="to_rotule"):
             if match:
                 jm = pin.JointModelSpherical()
             else:
-                jm = pin.JointModelRZ()
+                jm = j
             jid = new_model.addJoint(i, jm, jp, name)
             new_model.appendBodyToJoint(jid, iner, pin.SE3.Identity())
 
@@ -257,7 +257,7 @@ def jointTypeUpdate(model, rotule_name="to_rotule"):
         frame = pin.Frame(name, parent_joint, placement, pin.BODY)
         _ = new_model.addFrame(frame, False)
 
-    return (new_model)
+    return(new_model)
 
 
 
@@ -326,7 +326,7 @@ def completeModelFromDirectory(path,name_urdf="robot.urdf",name_yaml="robot.yaml
         Se3joint2 = model.frames[id2].placement
         parentjoint1 = model.frames[id1].parentJoint
         parentjoint2 = model.frames[id2].parentJoint
-        if ctype=="3D":
+        if ctype=="3d":
             constraint = pin.RigidConstraintModel(
                 pin.ContactType.CONTACT_3D,
                 model,
@@ -336,6 +336,7 @@ def completeModelFromDirectory(path,name_urdf="robot.urdf",name_yaml="robot.yaml
                 Se3joint2,
                 pin.ReferenceFrame.LOCAL,
             )
+            constraint.name = name1[:-2]
         else :
             constraint = pin.RigidConstraintModel(
                 pin.ContactType.CONTACT_6D,
@@ -346,6 +347,7 @@ def completeModelFromDirectory(path,name_urdf="robot.urdf",name_yaml="robot.yaml
                 Se3joint2,
                 pin.ReferenceFrame.LOCAL,
             )
+            constraint.name = name1[:-2]
         Lconstraintmodel.append(constraint)
 
     return(model,Lconstraintmodel)
