@@ -1,0 +1,6 @@
+name_mot: mot
+rotule_name: to_rotule
+Lidmot: [1, 2, 12, 13, 14, 20]
+Lidvmot: [1, 2, 10, 11, 12, 18]
+closed_loop: [['fermeture1_B', 'fermeture1_A'], ['fermeture2_A', 'fermeture2_B'], ['fermeture3_B', 'fermeture3_A']]
+type: ['6d', '6d', '6d']

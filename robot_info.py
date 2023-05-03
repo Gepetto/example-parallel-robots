@@ -1,3 +1,12 @@
+"""
+-*- coding: utf-8 -*-
+Virgile BATTO & Ludovic DE MATTEIS, April 2023
+
+Tools to load and parse a urdf file with closed loop
+
+"""
+
+
 import unittest
 import pinocchio as pin
 import numpy as np
@@ -70,6 +79,9 @@ def q2freeq(model, q, name_mot="mot"):
 
 def getRobotInfo(path):
     """
+    Dont semms usefull anymore with completeModelFromDirectory(path)
+
+
     (name__closedloop, name_mot, number_closedloop, type) = getRobotInfo(path)
     Returns information stored in the YAML file at path 'path/robot.yaml'. If no YAML file is found, default values are returned.
     
@@ -220,11 +232,11 @@ def jointTypeUpdate(model, rotule_name="to_rotule"):
     Return:
         new_model - Updated robot model
     """
-    new_model = pin.Model()
+    new_model = pin.Model() 
     first = True
     i = 0
-    for jp, iner, name, i in zip(
-        model.jointPlacements, model.inertias, model.names, model.parents
+    for jp, iner, name, i, j in zip(
+        model.jointPlacements, model.inertias, model.names, model.parents,model.joints
     ):
         if first:
             first = False
@@ -234,7 +246,7 @@ def jointTypeUpdate(model, rotule_name="to_rotule"):
             if match:
                 jm = pin.JointModelSpherical()
             else:
-                jm = pin.JointModelRZ()
+                jm = j
             jid = new_model.addJoint(i, jm, jp, name)
             new_model.appendBodyToJoint(jid, iner, pin.SE3.Identity())
 
@@ -245,7 +257,7 @@ def jointTypeUpdate(model, rotule_name="to_rotule"):
         frame = pin.Frame(name, parent_joint, placement, pin.BODY)
         _ = new_model.addFrame(frame, False)
 
-    return (new_model)
+    return(new_model)
 
 
 
@@ -314,7 +326,7 @@ def completeModelFromDirectory(path,name_urdf="robot.urdf",name_yaml="robot.yaml
         Se3joint2 = model.frames[id2].placement
         parentjoint1 = model.frames[id1].parentJoint
         parentjoint2 = model.frames[id2].parentJoint
-        if ctype=="3D":
+        if ctype=="3d":
             constraint = pin.RigidConstraintModel(
                 pin.ContactType.CONTACT_3D,
                 model,
@@ -324,6 +336,7 @@ def completeModelFromDirectory(path,name_urdf="robot.urdf",name_yaml="robot.yaml
                 Se3joint2,
                 pin.ReferenceFrame.LOCAL,
             )
+            constraint.name = name1[:-2]
         else :
             constraint = pin.RigidConstraintModel(
                 pin.ContactType.CONTACT_6D,
@@ -334,6 +347,7 @@ def completeModelFromDirectory(path,name_urdf="robot.urdf",name_yaml="robot.yaml
                 Se3joint2,
                 pin.ReferenceFrame.LOCAL,
             )
+            constraint.name = name1[:-2]
         Lconstraintmodel.append(constraint)
 
     return(model,Lconstraintmodel)
@@ -345,13 +359,6 @@ def completeModelFromDirectory(path,name_urdf="robot.urdf",name_yaml="robot.yaml
 ##########TEST ZONE ##########################
 
 class TestRobotInfo(unittest.TestCase):
-    def test_getRobotInfo(self):
-        name__closedloop, name_mot, number_closedloop, type = getRobotInfo(
-            path)
-        # check the model parsing
-        self.assertTrue(number_closedloop == 3)
-        self.assertTrue(name_mot == "mot")
-        self.assertTrue(name__closedloop == "fermeture")
 
     def test_jointTypeUpdate(self):
         new_model = jointTypeUpdate(model, rotule_name="to_rotule")
@@ -371,7 +378,7 @@ class TestRobotInfo(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    path = os.getcwd()+"/robot_marcheur_1"
+    path = os.getcwd()+"/robots/robot_marcheur_1"
     # load robot
     robot = RobotWrapper.BuildFromURDF(path + "/robot.urdf", path)
     model = robot.model
