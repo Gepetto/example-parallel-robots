@@ -18,7 +18,6 @@ from yaml.loader import SafeLoader
 from warnings import warn
 # from pinocchio import casadi as caspin
 
-
 def getMotId_q(model, name_mot="mot"):
     """
     GetMotId_q = (model, name_mot='mot')
@@ -273,11 +272,16 @@ def autoYamlWriter(path):
     model=jointTypeUpdate(rob.model,name_rotule)
     Ljoint=[]
     Ltype=[]
+    Lmot=[]
     for name in model.names:
         match = re.search(name_rotule, name)
+        match_mot= re.search(name_mot,name)
         if match :
             Ljoint.append(name)
             Ltype.append("SPHERICAL")
+        if match_mot:
+            Lmot.append(name)
+
 
 
     name_frame_constraint=nameFrameConstraint(model, nomferme="fermeture")
@@ -289,7 +293,7 @@ def autoYamlWriter(path):
 
         f.write('closed_loop: '+ str(name_frame_constraint)+'\n')
         f.write('type: '+str(constraint_type)+'\n')
-
+        f.write('name_mot: '+str(Lmot)+'\n')
         f.write('joint_name: '+str(Ljoint)+'\n')
         f.write('joint_type: '+str(Ltype)+'\n')
     return()

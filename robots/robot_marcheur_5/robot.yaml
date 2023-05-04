@@ -1,4 +1,5 @@
 closed_loop: [['fermeture1_B', 'fermeture1_A'], ['fermeture2_A', 'fermeture2_B'], ['fermeture3_B', 'fermeture3_A']]
 type: ['6d', '6d', '6d']
+name_mot: ['mot_4link2', 'mot_4link4', 'mot_hipsx', 'mot_4link1', 'mot_4link3', 'mot_cheville']
 joint_name: ['free_to_rotule_4link3', 'free_to_rotule_4link6', 'free_to_rotule_4link4', 'free_to_rotule_4link5']
 joint_type: ['SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL']
