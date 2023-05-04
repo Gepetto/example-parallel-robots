@@ -271,21 +271,27 @@ def autoYamlWriter(path):
     name_rotule="to_rotule" 
     rob = RobotWrapper.BuildFromURDF(path + "/robot.urdf", path)
     model=jointTypeUpdate(rob.model,name_rotule)
+    Ljoint=[]
+    Ltype=[]
+    for name in model.names:
+        match = re.search(name_rotule, name)
+        if match :
+            Ljoint.append(name)
+            Ltype.append("SPHERICAL")
 
 
     name_frame_constraint=nameFrameConstraint(model, nomferme="fermeture")
     constraint_type=["6d"]*len(name_frame_constraint)
 
 
-    Lidmot=getMotId_q(model,name_mot)
-    Lidvmot=getMotId_v(model,name_mot)
+
     with open(path + '/robot.yaml', 'w') as f:
-        f.write('name_mot: '+name_mot+'\n')
-        f.write('rotule_name: '+name_rotule+'\n')
-        f.write('Lidmot: '+str(Lidmot)+'\n')
-        f.write('Lidvmot: '+str(Lidvmot)+'\n')
+
         f.write('closed_loop: '+ str(name_frame_constraint)+'\n')
         f.write('type: '+str(constraint_type)+'\n')
+
+        f.write('joint_name: '+str(Ljoint)+'\n')
+        f.write('joint_type: '+str(Ltype)+'\n')
     return()
 
 def completeRobotLoader(path,name_urdf="robot.urdf",name_yaml="robot.yaml"):
@@ -295,69 +301,116 @@ def completeRobotLoader(path,name_urdf="robot.urdf",name_yaml="robot.yaml"):
     """
     #load robot
     robot = RobotWrapper.BuildFromURDF(path + "/" + name_urdf, path)
+    model=robot.model
     #load yaml and constraint
     with open(path+"/"+name_yaml, 'r') as yaml_file:
         yaml_content = yaml.load(yaml_file, Loader=SafeLoader)
-        name_frame_constraint=yaml_content['closed_loop']
 
     # try to update model
-    try :
-        rotule_name=yaml_content['rotule_name']   
-    except :
-        rotule_name="to_rotule"
 
-    model = robot.model = jointTypeUpdate(robot.model,rotule_name)
-    robot.rebuildData()
+    try : 
+        update_joint=yaml_content['joint_name']   
+        joints_types=yaml_content['joint_type']
+        LjointFixed=[]
+        new_model = pin.Model() 
+        visual_model=robot.visual_model
+        first = True
+        i = 0
+        for jp, iner, name, i, j in zip(
+            model.jointPlacements, model.inertias, model.names, model.parents,model.joints
+        ):
+            if first:
+                first = False
+            else:
+
+                if name in update_joint :
+                    idx=update_joint.index(name)
+                    joint_type=joints_types[idx]
+                    if joint_type=='SPHERICAL':
+                        jm = pin.JointModelSpherical()
+                    if joint_type=="FIXED":
+                        jm=j
+                        LjointFixed.append(j.id)
+                    
+                else:
+                    jm = j
+                jid = new_model.addJoint(i, jm, jp, name)
+                new_model.appendBodyToJoint(jid, iner, pin.SE3.Identity())
+
+        first=True
+        
+        for frame in model.frames:
+            name = frame.name
+            parent_joint = frame.parentJoint
+            placement = frame.placement
+            frame = pin.Frame(name, parent_joint, placement, frame.type)
+            _ = new_model.addFrame(frame, False)
+
+        new_model.frames.__delitem__(0)
+        new_model,visual_model=pin.buildReducedModel(new_model,visual_model,LjointFixed,pin.neutral(new_model))
+
+
+
+        robot.model=new_model
+        robot.visual_model=visual_model
+        robot.q0=pin.neutral(new_model)
+        robot.rebuildData()
+    except :
+        print("no joint to update")
 
     #check if type is associated,else 6D is used
     try :
-        constraint_type = yaml_content['type']
-    except :
-        constraint_type = ["6D"]*len(name_frame_constraint)
+        name_frame_constraint=yaml_content['closed_loop']
+        try :
+            constraint_type = yaml_content['type']
+        except :
+            constraint_type = ["6D"]*len(name_frame_constraint)
     
-    #construction of constraint model
-    Lconstraintmodel = []
-    for L,ctype in zip(name_frame_constraint, constraint_type):
-        name1 = L[0]
-        name2 = L[1]
-        id1 = model.getFrameId(name1)
-        id2 = model.getFrameId(name2)
-        Se3joint1 = model.frames[id1].placement
-        Se3joint2 = model.frames[id2].placement
-        parentjoint1 = model.frames[id1].parentJoint
-        parentjoint2 = model.frames[id2].parentJoint
-        if ctype=="3D" or ctype=="3d":
-            constraint = pin.RigidConstraintModel(
-                pin.ContactType.CONTACT_3D,
-                model,
-                parentjoint1,
-                Se3joint1,
-                parentjoint2,
-                Se3joint2,
-                pin.ReferenceFrame.LOCAL,
-            )
-            constraint.name = name1[:-2]
-        else :
-            constraint = pin.RigidConstraintModel(
-                pin.ContactType.CONTACT_6D,
-                model,
-                parentjoint1,
-                Se3joint1,
-                parentjoint2,
-                Se3joint2,
-                pin.ReferenceFrame.LOCAL,
-            )
-            constraint.name = name1[:-2]
-        Lconstraintmodel.append(constraint)
-    
-    robot.constraint_models = Lconstraintmodel
-    robot.full_constraint_models = robot.constraint_models
-    robot.full_constraint_datas = {cm: cm.createData()
-                               for cm in robot.constraint_models}
-    robot.constraint_datas = [robot.full_constraint_datas[cm]
-                          for cm in robot.constraint_models]
-
+        #construction of constraint model
+        Lconstraintmodel = []
+        for L,ctype in zip(name_frame_constraint, constraint_type):
+            name1 = L[0]
+            name2 = L[1]
+            id1 = model.getFrameId(name1)
+            id2 = model.getFrameId(name2)
+            Se3joint1 = model.frames[id1].placement
+            Se3joint2 = model.frames[id2].placement
+            parentjoint1 = model.frames[id1].parentJoint
+            parentjoint2 = model.frames[id2].parentJoint
+            if ctype=="3D" or ctype=="3d":
+                constraint = pin.RigidConstraintModel(
+                    pin.ContactType.CONTACT_3D,
+                    model,
+                    parentjoint1,
+                    Se3joint1,
+                    parentjoint2,
+                    Se3joint2,
+                    pin.ReferenceFrame.LOCAL,
+                )
+                constraint.name = name1[:-2]
+            else :
+                constraint = pin.RigidConstraintModel(
+                    pin.ContactType.CONTACT_6D,
+                    model,
+                    parentjoint1,
+                    Se3joint1,
+                    parentjoint2,
+                    Se3joint2,
+                    pin.ReferenceFrame.LOCAL,
+                )
+                constraint.name = name1[:-2]
+            Lconstraintmodel.append(constraint)
+        
+        robot.constraint_models = Lconstraintmodel
+        robot.full_constraint_models = robot.constraint_models
+        robot.full_constraint_datas = {cm: cm.createData()
+                                for cm in robot.constraint_models}
+        robot.constraint_datas = [robot.full_constraint_datas[cm]
+                            for cm in robot.constraint_models]
+    except:
+        print("no constraint")
     return(robot)
+
 
 
 
@@ -386,7 +439,7 @@ class TestRobotInfo(unittest.TestCase):
 
 if __name__ == "__main__":
     path = os.getcwd()+"/robots/robot_marcheur_1"
-    # load robot
+    # # load robot
     robot = RobotWrapper.BuildFromURDF(path + "/robot.urdf", path)
     model = robot.model
     # change joint type
