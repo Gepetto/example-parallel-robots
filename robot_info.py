@@ -18,6 +18,9 @@ from yaml.loader import SafeLoader
 from warnings import warn
 # from pinocchio import casadi as caspin
 
+        
+
+
 def getMotId_q(model, name_mot="mot"):
     """
     GetMotId_q = (model, name_mot='mot')
@@ -416,8 +419,37 @@ def completeRobotLoader(path,name_urdf="robot.urdf",name_yaml="robot.yaml"):
     return(robot)
 
 
+class ActuationModel(object):
 
+    def __init__(self,path,robot,name_yaml='robot.yaml'):
 
+        with open(path+"/"+name_yaml, 'r') as yaml_file:
+            yaml_content = yaml.load(yaml_file, Loader=SafeLoader)
+        try : 
+            motor=yaml_content['name_mot']   
+            self.motor_name=motor
+            model=robot.model
+            Lid=[]
+            Lidv=[]
+            for i, name in enumerate(model.names):
+                if name in motor:
+                    idx=model.joints[i].idx_q
+                    idv=model.joints[i].idx_v
+
+                    nv=model.joints[i].nv
+                    nq=model.joints[i].nq
+                    for j in range(nq):
+                        Lid.append(idx+j)
+                    for j in range(nv):
+                        Lidv.append(idv+j)   
+            self.idx_q=Lid
+            self.idq_v=Lidv
+        except:
+            self.idx_q=[]
+            self.idx_v=[]
+            warn("no motor found")                 
+
+    
 
 
 ##########TEST ZONE ##########################
