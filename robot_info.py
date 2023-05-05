@@ -374,6 +374,7 @@ def completeRobotLoader(path,name_urdf="robot.urdf",name_yaml="robot.yaml"):
             constraint_type = ["6D"]*len(name_frame_constraint)
     
         #construction of constraint model
+        model=robot.model
         Lconstraintmodel = []
         for L,ctype in zip(name_frame_constraint, constraint_type):
             name1 = L[0]
