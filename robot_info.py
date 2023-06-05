@@ -18,7 +18,7 @@ from yaml.loader import SafeLoader
 from warnings import warn
 # from pinocchio import casadi as caspin
 
-        
+from actuation_model import robot_actuation_model
 
 
 def getMotId_q(model, name_mot="mot"):
@@ -358,10 +358,9 @@ def completeRobotLoader(path,name_urdf="robot.urdf",name_yaml="robot.yaml"):
 
 
 
-        robot.model=new_model
-        robot.visual_model=visual_model
-        robot.q0=pin.neutral(new_model)
-        robot.rebuildData()
+        model=new_model
+        visual_model=visual_model
+        
     except :
         print("no joint to update")
 
@@ -374,7 +373,6 @@ def completeRobotLoader(path,name_urdf="robot.urdf",name_yaml="robot.yaml"):
             constraint_type = ["6D"]*len(name_frame_constraint)
     
         #construction of constraint model
-        model=robot.model
         Lconstraintmodel = []
         for L,ctype in zip(name_frame_constraint, constraint_type):
             name1 = L[0]
@@ -409,49 +407,14 @@ def completeRobotLoader(path,name_urdf="robot.urdf",name_yaml="robot.yaml"):
                 constraint.name = name1[:-2]
             Lconstraintmodel.append(constraint)
         
-        robot.constraint_models = Lconstraintmodel
-        robot.full_constraint_models = robot.constraint_models
-        robot.full_constraint_datas = {cm: cm.createData()
-                                for cm in robot.constraint_models}
-        robot.constraint_datas = [robot.full_constraint_datas[cm]
-                            for cm in robot.constraint_models]
+        constraint_models = Lconstraintmodel
     except:
         print("no constraint")
-    return(robot)
 
+    actuation_model=robot_actuation_model(model,yaml_content['name_mot'])
+    return(model,constraint_models,actuation_model,visual_model)
 
-class ActuationModel(object):
-
-    def __init__(self,path,robot,name_yaml='robot.yaml'):
-
-        with open(path+"/"+name_yaml, 'r') as yaml_file:
-            yaml_content = yaml.load(yaml_file, Loader=SafeLoader)
-        try : 
-            motor=yaml_content['name_mot']   
-            self.motor_name=motor
-            model=robot.model
-            Lid=[]
-            Lidv=[]
-            for i, name in enumerate(model.names):
-                if name in motor:
-                    idx=model.joints[i].idx_q
-                    idv=model.joints[i].idx_v
-
-                    nv=model.joints[i].nv
-                    nq=model.joints[i].nq
-                    for j in range(nq):
-                        Lid.append(idx+j)
-                    for j in range(nv):
-                        Lidv.append(idv+j)   
-            self.idx_q=Lid
-            self.idq_v=Lidv
-        except:
-            self.idx_q=[]
-            self.idx_v=[]
-            warn("no motor found")                 
-
-    
-
+             
 
 ##########TEST ZONE ##########################
 
@@ -477,6 +440,7 @@ class TestRobotInfo(unittest.TestCase):
 if __name__ == "__main__":
     path = os.getcwd()+"/robots/robot_marcheur_1"
     # # load robot
+    completeRobotLoader(path)
     robot = RobotWrapper.BuildFromURDF(path + "/robot.urdf", path)
     model = robot.model
     # change joint type
