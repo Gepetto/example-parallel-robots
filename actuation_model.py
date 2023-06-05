@@ -13,10 +13,10 @@ class robot_actuation_model():
         self.getFreeId_v(model)
 
         
-    def __repr__(self):
+    def __str__(self):
         return(print("Id q motor: " + str(self.idqmot) + "\r" "Id v motor: " + str(self.idvmot) ))
     
-    
+
     def getMotId_q(self,model):
         """
         GetMotId_q = (model, name_mot='mot')

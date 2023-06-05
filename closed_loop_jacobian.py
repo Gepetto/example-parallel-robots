@@ -42,14 +42,14 @@ def jacobianFinitDiffClosedLoop(model, idframe: int, idref: int, qmot: np.array,
     return J
 
 
-def sepJc(model,Jn):
+def sepJc(model,actuation_model,Jn):
     """
     Jmot,Jfree=sepJc(model,Jn)
 
     take a constraint Jacobian, and separate it into Jcmot and Jcfree , the constrant jacobian associate to motor and free joint
     
     """
-    Lidmot=getMotId_v(model)
+    Lidmot=actuation_model.idvmot
     LJT=Jn.T.tolist()
     Jmot=np.zeros((6,len(Lidmot)))
     Jfree=np.zeros((6,model.nv-len(Lidmot)))
@@ -64,14 +64,14 @@ def sepJc(model,Jn):
             ifree+=1
     return(Jmot,Jfree)
 
-def dqRowReorder(model,dq):
+def dqRowReorder(model,actuation_model,dq):
     """
     q=dqRowReorder(model,dq)
     take a voector/matrix organisate as [dqmot dqfree]
     return q reorganized in accordance with the model
     """
     nJ=dq.copy()
-    Lidmot=getMotId_v(model)
+    Lidmot=actuation_model.idvmot
     Lidfree=[]
     for i in range(model.nq):
         if not(i in Lidmot):
@@ -88,27 +88,27 @@ def dqRowReorder(model,dq):
     return(nJ)
 
 
-def dq_dqmot(model,LJ):
+def dq_dqmot(model,actuation_model,LJ):
     """
     take J the constraint Jacobian and return dq/dqmot
     
     """
-    Lidmot=getMotId_v(model)
+    Lidmot=actuation_model.idvmot
     Jmot=np.zeros((0,len(Lidmot)))
     Jfree=np.zeros((0,model.nv-len(Lidmot)))
     for J in LJ:
-        [mot,free]=sepJc(model,J)
+        [mot,free]=sepJc(model,actuation_model,J)
         Jmot=np.concatenate((mot,Jmot))
         Jfree=np.concatenate((free,Jfree))
     
     I=np.identity(len(Lidmot))
     pinvJfree=np.linalg.pinv(Jfree)
     dq=np.concatenate((I,-pinvJfree@Jmot))
-    dq=dqRowReorder(model,dq)
+    dq=dqRowReorder(model,actuation_model,dq)
     return(dq)
 
 
-def inverseConstraintKinematicsSpeed(model,data,constraint_model,constraint_data,q0,ideff,veff,name_mot="mot"):
+def inverseConstraintKinematicsSpeed(model,data,constraint_model,constraint_data,actuation_model,q0,ideff,veff):
     """
     vq,Jf_closed=inverseConstraintKinematics(model,data,constraint_model,constraint_data,q0,ideff,veff,name_mot="mot")
 
@@ -123,8 +123,8 @@ def inverseConstraintKinematicsSpeed(model,data,constraint_model,constraint_data
         Jc=pin.getConstraintJacobian(model,data,cm,cd)
         LJ.append(Jc)
 
-    Lidmot=getMotId_q(model,name_mot)
-    dq_dmot=dq_dqmot(model,LJ)
+    Lidmot=actuation_model.idvmot
+    dq_dmot=dq_dqmot(model,actuation_model,LJ)
 
     Jf=pin.computeFrameJacobian(model,data,q0,ideff,pin.LOCAL)
     Jf_closed=Jf@dq_dmot
@@ -133,12 +133,12 @@ def inverseConstraintKinematicsSpeed(model,data,constraint_model,constraint_data
     Jmot=np.zeros((0,len(Lidmot)))
     Jfree=np.zeros((0,model.nv-len(Lidmot)))
     for J in LJ:
-        [mot,free]=sepJc(model,J)
+        [mot,free]=sepJc(model,actuation_model,J)
         Jmot=np.concatenate((Jmot,mot))
         Jfree=np.concatenate((Jfree,free))
     vqfree=-np.linalg.pinv(Jfree)@Jmot@vqmot
     vqmotfree=np.concatenate((vqmot,vqfree))  # qmotfree=[qmot qfree]
-    vq=dqRowReorder(model,vqmotfree)
+    vq=dqRowReorder(model,actuation_model,vqmotfree)
     return(vq,Jf_closed)
 
 
@@ -153,32 +153,21 @@ class TestRobotInfo(unittest.TestCase):
     #only test inverse constraint kineatics because it runs all precedent code
     def test_inverseConstraintKinematics(self):
         vapply=np.array([0,0,1,0,0,0])
-        vq=inverseConstraintKinematicsSpeed(new_model,new_data,constraint_model,constraint_data,q0,34,vapply,name_mot="mot")[0]
-        pin.computeAllTerms(new_model,new_data,q0,vq)
-        vcheck=new_data.v[13].np #frame 34 is center on joint 13
+        vq=inverseConstraintKinematicsSpeed(model,data,constraint_models,constraint_datas,actuation_model,q0,34,vapply)[0]
+        pin.computeAllTerms(model,data,q0,vq)
+        vcheck=data.v[13].np #frame 34 is center on joint 13
         #check that the computing vq give the good speed 
         self.assertTrue(norm(vcheck-vapply)<1e-6)
 
 
 if __name__ == "__main__":
     #load robot
-    path=os.getcwd()+"/robot_marcheur_1"
-    robot=RobotWrapper.BuildFromURDF(path + "/robot.urdf", path)
-    model=robot.model
-    visual_model = robot.visual_model
-    new_model=jointTypeUpdate(model,rotule_name="to_rotule")
-    new_data=new_model.createData()
-
-    #create variable use by test
-    Lidmot=getMotId_q(new_model)
-
-    goal=np.zeros(len(Lidmot))
-    q_prec=q2freeq(new_model,pin.neutral(new_model))
-    q0, q_ini= closedLoopForwardKinematics(new_model, new_data,goal,q_prec=q_prec)
+    path = os.getcwd()+"/robots/robot_marcheur_1"
+    model,constraint_models,actuation_model,visual_model=completeRobotLoader(path)
+    data=model.createData()
+    constraint_datas=[cm.createData() for cm in constraint_models]
+    q0=proximalSolver(model,data,constraint_models,constraint_datas)
     
-    name_constraint=nameFrameConstraint(new_model)
-    constraint_model=getConstraintModelFromName(new_model,name_constraint)
-    constraint_data = [c.createData() for c in constraint_model]
     
     #test
     unittest.main()
