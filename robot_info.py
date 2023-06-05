@@ -92,6 +92,7 @@ def getRobotInfo(path):
     Return:
         Tuple containing the info extracted
     """
+    warn("getRobotInfo depreceated")
     try:
         with open(path+"/robot.yaml", 'r') as yaml_file:
             yaml_content = yaml.load(yaml_file, Loader=SafeLoader)
@@ -124,6 +125,7 @@ def getSimplifiedRobot(path):
     
     load a robot with N closed loop with a joint on each of the 2 branch that are closed, return a simplified model of the robot where one of this joint is fixed
     """
+    warn("getsimplifiedRobot depreceated")
     # TODO we should here reuse the previous function, no point in doing this again
     try:
         yaml_file = open(path+"/robot.yaml", 'r')
@@ -170,6 +172,7 @@ def nameFrameConstraint(model, nomferme="fermeture", Lid=[]):
     Return:
         Lnames - List of frame names that should be in contact
     """
+    warn("nameFrameConstraint depreceated")
     if Lid == []:
         Lid = range(len(model.frames) // 2)
     Lnames = []
@@ -234,6 +237,7 @@ def jointTypeUpdate(model, rotule_name="to_rotule"):
     Return:
         new_model - Updated robot model
     """
+    warn("jointTypeUpdate depreceated")
     new_model = pin.Model() 
     first = True
     i = 0
@@ -393,7 +397,7 @@ def completeRobotLoader(path,name_urdf="robot.urdf",name_yaml="robot.yaml"):
                     Se3joint2,
                     pin.ReferenceFrame.LOCAL,
                 )
-                constraint.name = name1[:-2]
+                constraint.name = name1+"C"+name2
             else :
                 constraint = pin.RigidConstraintModel(
                     pin.ContactType.CONTACT_6D,
@@ -404,7 +408,7 @@ def completeRobotLoader(path,name_urdf="robot.urdf",name_yaml="robot.yaml"):
                     Se3joint2,
                     pin.ReferenceFrame.LOCAL,
                 )
-                constraint.name = name1[:-2]
+                constraint.name = name1+"C"+name2
             Lconstraintmodel.append(constraint)
         
         constraint_models = Lconstraintmodel
