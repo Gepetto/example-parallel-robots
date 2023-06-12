@@ -1,6 +1,5 @@
-name_mot: mot
-rotule_name: to_rotule
-Lidmot: [0, 1, 2, 3, 8, 13]
-Lidvmot: [0, 1, 2, 3, 7, 11]
 closed_loop: [['fermeture1_B', 'fermeture1_A']]
 type: ['6d']
+name_mot: ['mot_hanche1_droite', 'mot_hanche2_droit', 'mot_hanche3_droite', 'mot_genoux_droite', 'mot_pied_droit', 'mot_cheville_droite']
+joint_name: ['libre_to_rotule_cheville_droite', 'to_rotule_libre_pied_droite']
+joint_type: ['SPHERICAL', 'SPHERICAL']
