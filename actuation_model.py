@@ -26,7 +26,7 @@ class robot_actuation_model():
         return(print("Id q motor: " + str(self.idqmot) + "\r" "Id v motor: " + str(self.idvmot) ))
     
 
-    def __getMotId_q__(self,model):
+    def getMotId_q(self,model):
         """
         GetMotId_q = (model)
         Return a list of ids corresponding to the configurations velocity associated with motors joints
@@ -46,7 +46,7 @@ class robot_actuation_model():
         self.idqmot=Lidq
         return Lidq
 
-    def __getMotId_v__(self,model):
+    def getMotId_v(self,model):
         """
         GetMotId_q = (model)
         Return a list of ids corresponding to the configurations velocity associated with motors joints
@@ -67,7 +67,7 @@ class robot_actuation_model():
         return Lidv
 
 
-    def __getFreeId_q__(self,model):
+    def getFreeId_q(self,model):
         """
         GetFreeId_q = (model)
         Return a list of ids corresponding to the configurations vector associated with motors joints
@@ -84,7 +84,7 @@ class robot_actuation_model():
         self.idqfree=Lidq
         return(Lidq)
     
-    def __getFreeId_v__(self,model):
+    def getFreeId_v(self,model):
         """
         GetFreeId_v = (model)
         Return a list of ids corresponding to the configurations velocity vector associated with motors joints
