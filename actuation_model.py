@@ -12,8 +12,8 @@ class ActuationModel():
         self.idfree, self.idvfree the id of the free joint inside a configuration / velocity vector
     
     """
-    def __init__(self,model,names):
-        self.motname=names
+    def __init__(self, model, names):
+        self.motname = names
         self.getMotId_q(model)
         self.getFreeId_q(model)
         self.getMotId_v(model)

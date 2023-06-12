@@ -5,19 +5,10 @@ Virgile BATTO & Ludovic DE MATTEIS, April 2023
 Tools to load and parse a urdf file with closed loop
 
 """
-
 import unittest
-import pinocchio as pin
 import numpy as np
-from pinocchio.robot_wrapper import RobotWrapper
-import os
-import re
-import yaml
-from yaml.loader import SafeLoader
-from warnings import warn
 # from pinocchio import casadi as caspin
 
-from actuation_model import robot_actuation_model
 
 def qfree(actuation_model, q):
     """
@@ -100,49 +91,62 @@ def mergeq(model, actuation_model, q_mot, q_free):
         q[idqfree] = q_i
     return(q)
 
-def mergev(model, actuation_model, q_mot, q_free):
+def mergev(model, actuation_model, v_mot, v_free):
     """
     completeq = (qmot,qfree)
     concatenate qmot qfree in respect with motor and free id
     """
     v = np.zeros(model.nv)
-    for v_i, idvmot in zip(q_mot, actuation_model.idvmot):
+    for v_i, idvmot in zip(v_mot, actuation_model.idvmot):
         v[idvmot] = v_i
 
-    for q_i,idvfree in zip(q_free, actuation_model.idvfree):
+    for v_i, idvfree in zip(v_free, actuation_model.idvfree):
         v[idvfree] = v_i
     return(v)
             
 
-##########TEST ZONE ##########################
+########## TEST ZONE ##########################
 
-# class TestRobotInfo(unittest.TestCase):
+class TestRobotInfo(unittest.TestCase):
+    
+    def test_q_splitting(self):
+        robots_paths = [['robot_simple_iso3D'],
+                        ['robot_simple_iso6D'],
+                        ['robot_delta']]
+        
+        results = [[[1, 2],[0, 3, 4]],
+                   [[1, 2],[0, 3, 4, 5, 6, 7, 8]],
+                   [[5, 10],[0, 1, 2, 3, 4, 6, 7, 8, 9, 11, 12, 13]]]
 
-#     def test_jointTypeUpdate(self):
-#         new_model = jointTypeUpdate(model, rotule_name="to_rotule")
-#         # check that there is new spherical joint
-#         # check that joint 15 is a spherical
-#         self.assertTrue(new_model.joints[15].nq == 4)
+        for i, rp in enumerate(robots_paths):
+            path = "robots/"+rp[0]
+            m ,cm, am, vm = completeRobotLoader(path)
+            q = np.linspace(0, m.nq-1, m.nq)
+            assert (qmot(am, q)==results[i][0]).all()
+            assert (qfree(am, q)==results[i][1]).all()
+            assert (mergeq(m, am, qmot(am, q), qfree(am, q)) == q).all()
 
-#     def test_idmot(self):
-#         Lid = getMotId_q(new_model)
-#         self.assertTrue(Lid == [0, 1, 4, 5, 7, 12])  # check the idmot
+    def test_v_splitting(self):
+        robots_paths = [['robot_simple_iso3D'],
+                        ['robot_simple_iso6D'],
+                        ['robot_delta']]
+        
+        results = [[[1, 2],[0, 3, 4]],
+                   [[1, 2],[0, 3, 4, 5, 6, 7]],
+                   [[5, 10],[0, 1, 2, 3, 4, 6, 7, 8, 9, 11, 12, 13]]]
 
-#     def test_nameFrameConstraint(self):
-#         Lnom = nameFrameConstraint(new_model)
-#         nomf1 = Lnom[0][0]
-#         # check the parsing
-#         self.assertTrue(nomf1 == 'fermeture1_B')
+        for i, rp in enumerate(robots_paths):
+            path = "robots/"+rp[0]
+            m ,cm, am, vm = completeRobotLoader(path)
+            v = np.linspace(0, m.nv-1, m.nv)
+
+            assert (vmot(am, v)==results[i][0]).all()
+            assert (vfree(am, v)==results[i][1]).all()
+            assert (mergev(m, am, vmot(am, v), vfree(am, v)) == v).all()
 
 
-# if __name__ == "__main__":
-#     path = os.getcwd()+"/robots/robot_marcheur_1"
-#     # # load robot
-#     completeRobotLoader(path)
-#     robot = RobotWrapper.BuildFromURDF(path + "/robot.urdf", path)
-#     model = robot.model
-#     # change joint type
-#     new_model = jointTypeUpdate(model, rotule_name="to_rotule")
-#     # run test
-#     unittest.main()
+
+if __name__ == "__main__":
+    from loader_tools import completeRobotLoader
+    unittest.main()
 
