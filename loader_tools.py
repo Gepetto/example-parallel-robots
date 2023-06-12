@@ -41,46 +41,14 @@ def nameFrameConstraint(model, nomferme="fermeture", Lid=[]):
             Lnames.append(pair_names)
     return Lnames
 
-def jointTypeUpdate(model, rotule_name="to_rotule"):
-    """
-    model = jointTypeUpdate(model,rotule_name="to_rotule")
-    Takes a robot model and change joints whose name contains rotule_name to rotule joint type. 
-    
-    Argument:
-        model - Pinocchio robot model
-    Return:
-        new_model - Updated robot model
-    """
-    warn("Function 'jointTypeUpdate' is depreceated - prefer using a YAML file as complement to the URDF. Should only be used to generate a YAML file")
-    new_model = pin.Model() 
-    for jp, iner, name, i, j in list(zip(model.jointPlacements, model.inertias, model.names, model.parents, model.joints))[1:]:
-        match = re.search(rotule_name, name)
-        if match:
-            jm = pin.JointModelSpherical()
-        else:
-            jm = j
-        jid = new_model.addJoint(i, jm, jp, name)
-        new_model.appendBodyToJoint(jid, iner, pin.SE3.Identity())
-
-    for frame in model.frames:
-        name = frame.name
-        parent_joint = frame.parentJoint
-        placement = frame.placement
-        frame = pin.Frame(name, parent_joint, placement, pin.BODY)
-        new_model.addFrame(frame, False)
-
-    return(new_model)
-
 def generateYAML(path, name_mot="mot", name_spherical="to_rotule", file=None):
     """
     if robot.urdf inside the path, write a yaml file associate to the the robot.
     Write the name of the frame constrained, the type of the constraint, the presence of rotule articulation, 
     the name of the motor, idq and idv (with the sphrical joint).
     """
-    # ! It is using old functions to write the yaml, I would prefer changing this function and removing deprecated functions
     
     rob = RobotWrapper.BuildFromURDF(path + "/robot.urdf", path)
-    model=jointTypeUpdate(rob.model, name_spherical)
     Ljoint=[]
     Ltype=[]
     Lmot=[]
@@ -93,7 +61,7 @@ def generateYAML(path, name_mot="mot", name_spherical="to_rotule", file=None):
         if match_mot:
             Lmot.append(name)
 
-    name_frame_constraint = nameFrameConstraint(model, nomferme="fermeture")
+    name_frame_constraint = nameFrameConstraint(rob.model, nomferme="fermeture")
     constraint_type=["6d"]*len(name_frame_constraint)
 
     if file is None:
