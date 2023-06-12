@@ -200,7 +200,8 @@ class TestRobotLoader(unittest.TestCase):
     def test_generate_yaml(self):
         import io
         robots_paths = [['robot_simple_iso3D', 'unittest_iso3D_yaml.txt'],
-                        ['robot_simple_iso6D', 'unittest_iso6D_yaml.txt']]
+                        ['robot_simple_iso6D', 'unittest_iso6D_yaml.txt'],
+                        ['robot_delta', 'unittest_delta_yaml.txt']]
 
         for rp in robots_paths:
             path = "robots/"+rp[0]
