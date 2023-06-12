@@ -4,7 +4,6 @@ import re
 import yaml
 from yaml.loader import SafeLoader
 from warnings import warn
-import numpy as np
 
 from actuation_model import ActuationModel
 
@@ -169,7 +168,7 @@ def completeRobotLoader(path,name_urdf="robot.urdf",name_yaml="robot.yaml"):
     actuation_model = ActuationModel(model,yaml_content['name_mot'])
     return(model, constraint_models, actuation_model, visual_model)
 
-## TEST ZONE
+########## TEST ZONE ##########################
 
 import unittest
 class TestRobotLoader(unittest.TestCase):
