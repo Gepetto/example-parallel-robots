@@ -25,7 +25,7 @@ def nameFrameConstraint(model, nomferme="fermeture", Lid=[]):
     Return:
         Lnames - List of frame names that should be in contact
     """
-    warn("nameFrameConstraint depreceated")
+    warn("Function nameFrameConstraint depreceated - prefer using a YAML file as complement to the URDF. Should only be used to generate a YAML file")
     if Lid == []:
         Lid = range(len(model.frames) // 2)
     Lnames = []
@@ -51,50 +51,41 @@ def jointTypeUpdate(model, rotule_name="to_rotule"):
     Return:
         new_model - Updated robot model
     """
-    warn("Function 'jointTypeUpdate' is depreceated - prefer using a YAML file as complement to the URDF")
+    warn("Function 'jointTypeUpdate' is depreceated - prefer using a YAML file as complement to the URDF. Should only be used to generate a YAML file")
     new_model = pin.Model() 
-    first = True
-    i = 0
-    for jp, iner, name, i, j in zip(
-        model.jointPlacements, model.inertias, model.names, model.parents,model.joints
-    ):
-        if first:
-            first = False
+    for jp, iner, name, i, j in list(zip(model.jointPlacements, model.inertias, model.names, model.parents, model.joints))[1:]:
+        match = re.search(rotule_name, name)
+        if match:
+            jm = pin.JointModelSpherical()
         else:
-            match = re.search(rotule_name, name)
-
-            if match:
-                jm = pin.JointModelSpherical()
-            else:
-                jm = j
-            jid = new_model.addJoint(i, jm, jp, name)
-            new_model.appendBodyToJoint(jid, iner, pin.SE3.Identity())
+            jm = j
+        jid = new_model.addJoint(i, jm, jp, name)
+        new_model.appendBodyToJoint(jid, iner, pin.SE3.Identity())
 
     for frame in model.frames:
         name = frame.name
         parent_joint = frame.parentJoint
         placement = frame.placement
         frame = pin.Frame(name, parent_joint, placement, pin.BODY)
-        _ = new_model.addFrame(frame, False)
+        new_model.addFrame(frame, False)
 
     return(new_model)
 
-def generateYAML(path):
+def generateYAML(path, name_mot="mot", name_spherical="to_rotule", file=None):
     """
     if robot.urdf inside the path, write a yaml file associate to the the robot.
     Write the name of the frame constrained, the type of the constraint, the presence of rotule articulation, 
     the name of the motor, idq and idv (with the sphrical joint).
     """
     # ! It is using old functions to write the yaml, I would prefer changing this function and removing deprecated functions
-    name_mot="mot"
-    name_rotule="to_rotule" 
+    
     rob = RobotWrapper.BuildFromURDF(path + "/robot.urdf", path)
-    model=jointTypeUpdate(rob.model,name_rotule)
+    model=jointTypeUpdate(rob.model, name_spherical)
     Ljoint=[]
     Ltype=[]
     Lmot=[]
-    for name in model.names:
-        match = re.search(name_rotule, name)
+    for name in rob.model.names:
+        match = re.search(name_spherical, name)
         match_mot= re.search(name_mot,name)
         if match :
             Ljoint.append(name)
@@ -102,15 +93,22 @@ def generateYAML(path):
         if match_mot:
             Lmot.append(name)
 
-    name_frame_constraint=nameFrameConstraint(model, nomferme="fermeture")
+    name_frame_constraint = nameFrameConstraint(model, nomferme="fermeture")
     constraint_type=["6d"]*len(name_frame_constraint)
 
-    with open(path + '/robot.yaml', 'w') as f:
-        f.write('closed_loop: '+ str(name_frame_constraint)+'\n')
-        f.write('type: '+str(constraint_type)+'\n')
-        f.write('name_mot: '+str(Lmot)+'\n')
-        f.write('joint_name: '+str(Ljoint)+'\n')
-        f.write('joint_type: '+str(Ltype)+'\n')
+    if file is None:
+        with open(path + '/robot.yaml', 'w') as f:
+            f.write('closed_loop: '+ str(name_frame_constraint)+'\n')
+            f.write('type: '+str(constraint_type)+'\n')
+            f.write('name_mot: '+str(Lmot)+'\n')
+            f.write('joint_name: '+str(Ljoint)+'\n')
+            f.write('joint_type: '+str(Ltype)+'\n')
+    else:
+        file.write('closed_loop: '+ str(name_frame_constraint)+'\n')
+        file.write('type: '+str(constraint_type)+'\n')
+        file.write('name_mot: '+str(Lmot)+'\n')
+        file.write('joint_name: '+str(Ljoint)+'\n')
+        file.write('joint_type: '+str(Ltype)+'\n')
 
 def getYAMLcontents(path, name_yaml='robot.yaml'):
     with open(path+"/"+name_yaml, 'r') as yaml_file:
@@ -147,12 +145,9 @@ def completeRobotLoader(path,name_urdf="robot.urdf",name_yaml="robot.yaml"):
         jid = new_model.addJoint(parent, jm, place, name)
         new_model.appendBodyToJoint(jid, iner, pin.SE3.Identity())
     
-    for frame in model.frames:
-        # I am pretty sure I can remove the next 4 lines
-        name = frame.name
-        parent_joint = frame.parentJoint
-        placement = frame.placement
-        frame = pin.Frame(name, parent_joint, placement, frame.type)
+    for f in model.frames:
+        n, parent, placement = f.name, f.parentJoint, f.placement
+        frame = pin.Frame(n, parent, placement, f.type)
         new_model.addFrame(frame, False)
 
     new_model.frames.__delitem__(0)
@@ -163,16 +158,12 @@ def completeRobotLoader(path,name_urdf="robot.urdf",name_yaml="robot.yaml"):
     #check if type is associated,else 6D is used
     try :
         name_frame_constraint = yaml_content['closed_loop']
-        try :
-            constraint_type = yaml_content['type']
-        except :
-            constraint_type = ["6D"]*len(name_frame_constraint)
+        constraint_type = yaml_content['type']
     
         #construction of constraint model
         Lconstraintmodel = []
         for L,ctype in zip(name_frame_constraint, constraint_type):
-            name1 = L[0]
-            name2 = L[1]
+            name1, name2 = L
             id1 = model.getFrameId(name1)
             id2 = model.getFrameId(name2)
             Se3joint1 = model.frames[id1].placement
@@ -210,158 +201,7 @@ def completeRobotLoader(path,name_urdf="robot.urdf",name_yaml="robot.yaml"):
     actuation_model = ActuationModel(model,yaml_content['name_mot'])
     return(model, constraint_models, actuation_model, visual_model)
 
-
-def getRobotInfo(path):
-    """
-    Dont semms usefull anymore with completeModelFromDirectory(path)
-
-
-    (name__closedloop, name_mot, number_closedloop, type) = getRobotInfo(path)
-    Returns information stored in the YAML file at path 'path/robot.yaml'. If no YAML file is found, default values are returned.
-    
-    Arguments:  
-        path - path to the directory contained the YAML info file
-    Return:
-        Tuple containing the info extracted
-    """
-    warn("getRobotInfo depreceated")
-    try:
-        with open(path+"/robot.yaml", 'r') as yaml_file:
-            yaml_content = yaml.load(yaml_file, Loader=SafeLoader)
-            name_closedloop = yaml_content["name_closedloop"]
-            name_mot = yaml_content["name_mot"]
-            type = yaml_content["type"]
-        try:
-            number_closedloop = yaml_content["closed_loop_number"]
-        except:
-            number_closedloop = -1
-
-    except:
-        warn("no robot.yaml found, default value applied")
-        name_closedloop = "fermeture"
-        name_mot = "mot"
-        number_closedloop = -1
-        type = "6D"
-    return (name_closedloop, name_mot, number_closedloop, type)
-
-
-def getSimplifiedRobot(path):
-    """
-    robot = getSimplifiedRobot(path)
-    Loads a robot and builds a reduced model from the yaml file info
-
-    Argument:
-        path - the dir of the file that contain the urdf file & the stl files
-    Return:
-        rob - The simplified robot
-    
-    load a robot with N closed loop with a joint on each of the 2 branch that are closed, return a simplified model of the robot where one of this joint is fixed
-    """
-    warn("getsimplifiedRobot depreceated")
-    # TODO we should here reuse the previous function, no point in doing this again
-    try:
-        yaml_file = open(path+"/robot.yaml", 'r')
-        yaml_content = yaml.load(yaml_file)
-        name_closedloop = yaml_content["name_closedloop"]
-        name_mot = yaml_content["name_mot"]
-    except:
-        warn("no robot.yaml found, default value applied")
-        name_closedloop = "fermeture"
-        name_mot = "mot"
-
-    rob = RobotWrapper.BuildFromURDF(path + "/robot.urdf", path)
-    Lid = []
-    # to simplifie the conception, the two contact point are generate with a joint
-    # supression of one of this joint :
-    for (joint, id) in zip(rob.model.names, range(len(rob.model.names))):
-        match = re.search(name_closedloop, joint)
-        match2 = re.search("B", joint)
-        if match and match2:
-            Lid.append(id)
-
-    rob.model, rob.visual_model = pin.buildReducedModel(
-        rob.model, rob.visual_model, Lid, np.zeros(rob.nq)
-    )
-    rob.data = rob.model.createData()
-    rob.q0 = np.zeros(rob.nq)
-    return rob
-
-
-def getConstraintModelFromName(model, Lnjoint, ref=pin.ReferenceFrame.LOCAL, const_type=pin.ContactType.CONTACT_6D):
-    """
-    getconstraintModelfromname(model,Lnjoint,ref=pin.ReferenceFrame.LOCAL):
-
-    Takes a robot model and Lnjoint=[['name_joint1_A','name_joint1_B'],['name_joint2_A','name_joint2_B'].....]
-    Returns the list of the constraintmodel where joint1A is in contact with joint1_B, joint2_A in contact with joint2_B etc
-
-    Argument:
-        model - Pinocchio robot model
-        Lnjoint - List of frame names to should be in contact (As generated by nameFrameConstraint) 
-        ref - Reference frame from pinocchio, should be pin.ReferenceFrame.{LOCAL, WORLD, LOCAL_WORLD_ALIGNED}
-        const_type - Type of constraint to usem should be pin.ContactType.{CONTACT_6D, CONTACT_3D}
-    Return:
-        Lconstraintmodel - List of corresponding pinocchio constraint models
-    """
-    Lconstraintmodel = []
-    for L in Lnjoint:
-        name1 = L[0]
-        name2 = L[1]
-        id1 = model.getFrameId(name1)
-        id2 = model.getFrameId(name2)
-        Se3joint1 = model.frames[id1].placement
-        Se3joint2 = model.frames[id2].placement
-        parentjoint1 = model.frames[id1].parentJoint
-        parentjoint2 = model.frames[id2].parentJoint
-        constraint = pin.RigidConstraintModel(
-            const_type,
-            model,
-            parentjoint1,
-            Se3joint1,
-            parentjoint2,
-            Se3joint2,
-            ref,
-        )
-        constraint.name = name1[:-2]
-        Lconstraintmodel.append(constraint)
-    return Lconstraintmodel
-
-def jointTypeUpdate(model, rotule_name="to_rotule"):
-    """
-    model = jointTypeUpdate(model,rotule_name="to_rotule")
-    Takes a robot model and change joints whose name contains rotule_name to rotule joint type. 
-    
-    Argument:
-        model - Pinocchio robot model
-    Return:
-        new_model - Updated robot model
-    """
-    warn("jointTypeUpdate depreceated")
-    new_model = pin.Model() 
-    first = True
-    i = 0
-    for jp, iner, name, i, j in zip(
-        model.jointPlacements, model.inertias, model.names, model.parents,model.joints
-    ):
-        if first:
-            first = False
-        else:
-            match = re.search(rotule_name, name)
-
-            if match:
-                jm = pin.JointModelSpherical()
-            else:
-                jm = j
-            jid = new_model.addJoint(i, jm, jp, name)
-            new_model.appendBodyToJoint(jid, iner, pin.SE3.Identity())
-
-    for frame in model.frames:
-        name = frame.name
-        parent_joint = frame.parentJoint
-        placement = frame.placement
-        frame = pin.Frame(name, parent_joint, placement, pin.BODY)
-        _ = new_model.addFrame(frame, False)
-
-    return(new_model)
+## TEST ZONE
 
 import unittest
 class TestRobotLoader(unittest.TestCase):
@@ -388,6 +228,22 @@ class TestRobotLoader(unittest.TestCase):
             # Ground truth is defined from a known good result
             with open('unittest/'+rp[1], 'r') as truth:
                 assert truth.read() == results.read()
+    
+    def test_generate_yaml(self):
+        import io
+        robots_paths = [['robot_simple_iso3D', 'unittest_iso3D_yaml.txt'],
+                        ['robot_simple_iso6D', 'unittest_iso6D_yaml.txt']]
+
+        for rp in robots_paths:
+            path = "robots/"+rp[0]
+            results = io.StringIO()
+            generateYAML(path, file=results)
+            results.seek(0)
+
+            # Ground truth is defined from a known good result
+            with open('unittest/'+rp[1], 'r') as truth:
+                assert truth.read() == results.read()
+
         
 if __name__ == "__main__":
     unittest.main()
