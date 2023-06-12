@@ -4,8 +4,9 @@ import re
 import yaml
 from yaml.loader import SafeLoader
 from warnings import warn
+import numpy as np
 
-from actuation_model import robot_actuation_model
+from actuation_model import ActuationModel
 
 def nameFrameConstraint(model, nomferme="fermeture", Lid=[]):
     """
@@ -105,80 +106,63 @@ def generateYAML(path):
     constraint_type=["6d"]*len(name_frame_constraint)
 
     with open(path + '/robot.yaml', 'w') as f:
-
         f.write('closed_loop: '+ str(name_frame_constraint)+'\n')
         f.write('type: '+str(constraint_type)+'\n')
         f.write('name_mot: '+str(Lmot)+'\n')
         f.write('joint_name: '+str(Ljoint)+'\n')
         f.write('joint_type: '+str(Ltype)+'\n')
-    return()
+
+def getYAMLcontents(path, name_yaml='robot.yaml'):
+    with open(path+"/"+name_yaml, 'r') as yaml_file:
+        contents = yaml.load(yaml_file, Loader=SafeLoader)
+    return(contents)
 
 def completeRobotLoader(path,name_urdf="robot.urdf",name_yaml="robot.yaml"):
     """
     Return  model and constraint model associated to a directory, where the name od the urdf is robot.urdf and the name of the yam is robot.yaml
     if no type assiciated, 6D type is applied
     """
-    #load robot
+    # Load the robot model using the pinocchio URDF parser
     robot = RobotWrapper.BuildFromURDF(path + "/" + name_urdf, path)
-    model=robot.model
-    #load yaml and constraint
-    with open(path+"/"+name_yaml, 'r') as yaml_file:
-        yaml_content = yaml.load(yaml_file, Loader=SafeLoader)
+    model = robot.model
+
+    yaml_content = getYAMLcontents(path, name_yaml)
 
     # try to update model
+    update_joint = yaml_content['joint_name']   
+    joints_types = yaml_content['joint_type']
+    LjointFixed=[]
+    new_model = pin.Model() 
+    visual_model = robot.visual_model
+    for place, iner, name, parent, joint in list(zip(model.jointPlacements, model.inertias, model.names, model.parents,model.joints))[1:]:
+        if name in update_joint:
+            joint_type = joints_types[update_joint.index(name)]
+            if joint_type=='SPHERICAL':
+                jm = pin.JointModelSpherical()
+            if joint_type=="FIXED":
+                jm = joint
+                LjointFixed.append(joint.id)
+        else:
+            jm = joint
+        jid = new_model.addJoint(parent, jm, place, name)
+        new_model.appendBodyToJoint(jid, iner, pin.SE3.Identity())
+    
+    for frame in model.frames:
+        # I am pretty sure I can remove the next 4 lines
+        name = frame.name
+        parent_joint = frame.parentJoint
+        placement = frame.placement
+        frame = pin.Frame(name, parent_joint, placement, frame.type)
+        new_model.addFrame(frame, False)
 
-    try : 
-        update_joint=yaml_content['joint_name']   
-        joints_types=yaml_content['joint_type']
-        LjointFixed=[]
-        new_model = pin.Model() 
-        visual_model=robot.visual_model
-        first = True
-        i = 0
-        for jp, iner, name, i, j in zip(
-            model.jointPlacements, model.inertias, model.names, model.parents,model.joints
-        ):
-            if first:
-                first = False
-            else:
+    new_model.frames.__delitem__(0)
+    new_model, visual_model = pin.buildReducedModel(new_model,visual_model,LjointFixed,pin.neutral(new_model))
 
-                if name in update_joint :
-                    idx=update_joint.index(name)
-                    joint_type=joints_types[idx]
-                    if joint_type=='SPHERICAL':
-                        jm = pin.JointModelSpherical()
-                    if joint_type=="FIXED":
-                        jm=j
-                        LjointFixed.append(j.id)
-                    
-                else:
-                    jm = j
-                jid = new_model.addJoint(i, jm, jp, name)
-                new_model.appendBodyToJoint(jid, iner, pin.SE3.Identity())
-
-        first=True
-        
-        for frame in model.frames:
-            name = frame.name
-            parent_joint = frame.parentJoint
-            placement = frame.placement
-            frame = pin.Frame(name, parent_joint, placement, frame.type)
-            _ = new_model.addFrame(frame, False)
-
-        new_model.frames.__delitem__(0)
-        new_model,visual_model=pin.buildReducedModel(new_model,visual_model,LjointFixed,pin.neutral(new_model))
-
-
-
-        model=new_model
-        visual_model=visual_model
-        
-    except :
-        print("no joint to update")
+    model = new_model
 
     #check if type is associated,else 6D is used
     try :
-        name_frame_constraint=yaml_content['closed_loop']
+        name_frame_constraint = yaml_content['closed_loop']
         try :
             constraint_type = yaml_content['type']
         except :
@@ -223,8 +207,8 @@ def completeRobotLoader(path,name_urdf="robot.urdf",name_yaml="robot.yaml"):
     except:
         print("no constraint")
 
-    actuation_model=robot_actuation_model(model,yaml_content['name_mot'])
-    return(model,constraint_models,actuation_model,visual_model)
+    actuation_model = ActuationModel(model,yaml_content['name_mot'])
+    return(model, constraint_models, actuation_model, visual_model)
 
 
 def getRobotInfo(path):
@@ -378,3 +362,32 @@ def jointTypeUpdate(model, rotule_name="to_rotule"):
         _ = new_model.addFrame(frame, False)
 
     return(new_model)
+
+import unittest
+class TestRobotLoader(unittest.TestCase):
+    def test_complete_loader(self):
+        import io
+        robots_paths = [['robot_simple_iso3D', 'unittest_iso3D.txt'],
+                        ['robot_simple_iso6D', 'unittest_iso6D.txt']]
+
+        for rp in robots_paths:
+            path = "robots/"+rp[0]
+            m ,cm, am, vm = completeRobotLoader(path)
+            joints_info = [(j.id, j.shortname(), j.idx_q, j.idx_v) for j in m.joints[1:]]
+            frames_info = [(f.name, f.inertia, f.parentJoint, f.parentFrame, f.type) for f in m.frames]
+            constraint_info = [(cmi.name, cmi.joint1_id, cmi.joint2_id, cmi.joint1_placement, cmi.joint2_placement, cmi.type) for cmi in cm]
+            mot_info = [(am.idqfree, am.idqmot, am.idvfree, am.idvmot)]
+            
+            results = io.StringIO()
+            results.write('\n'.join(f'{x[0]} {x[1]} {x[2]} {x[3]}' for x in joints_info))
+            results.write('\n'.join(f'{x[0]} {x[1]} {x[2]} {x[3]} {x[4]}' for x in frames_info))
+            results.write('\n'.join(f'{x[0]} {x[1]} {x[2]} {x[3]} {x[4]} {x[5]}' for x in constraint_info))
+            results.write('\n'.join(f'{x[0]} {x[1]} {x[2]} {x[3]}' for x in mot_info))
+            results.seek(0)
+
+            # Ground truth is defined from a known good result
+            with open('unittest/'+rp[1], 'r') as truth:
+                assert truth.read() == results.read()
+        
+if __name__ == "__main__":
+    unittest.main()
