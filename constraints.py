@@ -91,10 +91,6 @@ class TestRobotLoader(unittest.TestCase):
         cd = [cmi.createData() for cmi in cm]
         q = casadi.SX(q)
         assert (constraintResidual6d(m, d, cm[0], cd[0], q, True, caspin)-casadi.SX(result)<1e-8).is_one()
-    
-
-
-
-        
+            
 if __name__ == "__main__":
     unittest.main()

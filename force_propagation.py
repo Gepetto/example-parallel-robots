@@ -9,19 +9,17 @@ tools to compute the force propagation inside a robot with closed loop
 
 import pinocchio as pin
 import numpy as np
-from robot_info import *
-from closed_loop_kinematics import *
-from closed_loop_jacobian import *
-from pinocchio.robot_wrapper import RobotWrapper
+from closed_loop_kinematics import closedLoopForwardKinematics
+from closed_loop_jacobian import dq_dqmot, inverseConstraintKinematicsSpeed
 
 pin.SE3.__repr__ = pin.SE3.__str__
-def closedLoopForcePropagation(model,data,constraint_model,constraint_data,q,vq,Lidf=[],Lf=[],name_mot="mot"):
+def closedLoopForcePropagation(model, data, constraint_model, constraint_data, actuation_model, q, vq, Lidf=[], Lf=[]):
     """
     closedLoopForcePropagation(model,data,constraint_model,constraint_data,q,vq,Lidf,Lf,name_mot="mot")
     Propagate the force applied on frame idf (Lidf=[id1,..,idf]) with value fn (Lf=[f1,..,fn]) inside a model with constraints
     The result is stored in data 
     """
-    Lidvmot=getMotId_v(model,name_mot)
+    Lidvmot=actuation_model.idvmot
     
     LJ=[]
     for (cm,cd) in zip(constraint_model,constraint_data):
@@ -51,7 +49,7 @@ def closedLoopForcePropagation(model,data,constraint_model,constraint_data,q,vq,
     
     #generate all exterior forces 
     Lfjoint=[]
-    for i in range(robot.nq+1): #init of ext force
+    for i in range(model.nq+1): #init of ext force
         Lfjoint.append(pin.Force.Zero())
 
     for force,id in zip(Lf,Lidf):
@@ -81,42 +79,24 @@ import unittest
 class TestRobotInfo(unittest.TestCase):
     #only test inverse constraint kineatics because it runs all precedent code
     def test_forcepropagation(self):
-        vapply=np.array([0,0,1,0,0,0])
-        vq=inverseConstraintKinematicsSpeed(new_model,new_data,constraint_model,constraint_data,q0,34,vapply,name_mot="mot")[0]
-        closedLoopForcePropagation(new_model,new_data,constraint_model,constraint_data,q0,vq)
-        #check that the computing vq give the good speed 
-        self.assertTrue(norm(new_data.f[5])>-1)
+        from loader_tools import completeRobotLoader
+
+        path = "robots/robot_marcheur_1"
+        model, constraint_models, actuation_model, visual_model = completeRobotLoader(path)
+        # No gravity
+        model.gravity = pin.Motion(np.zeros(6))
+        # Create data
+        data = model.createData()
+        q0 = closedLoopForwardKinematics(model, data, actuation_model)
+        constraint_datas = [c.createData() for c in constraint_models]
+
+        vapply = np.array([0,0,1,0,0,0])
+        vq = inverseConstraintKinematicsSpeed(model, data, constraint_models, constraint_datas, q0, 34, vapply, name_mot="mot")[0]
+        closedLoopForcePropagation(model, data, constraint_models, constraint_datas, q0, vq)
+        # check that the computing vq give the good speed 
+        self.assertTrue(np.linalg.norm(data.f[5])>-1) # ! I don't like this unittest at all
 
 
 if __name__ == "__main__":
-    #load robot
-    path=os.getcwd()+"/robot_marcheur_1"
-    robot=RobotWrapper.BuildFromURDF(path + "/robot.urdf", path)
-    model=robot.model
-    visual_model = robot.visual_model
-    new_model=jointTypeUpdate(model,rotule_name="to_rotule")
-    
-    #No gravity
-    gravity=pin.Motion(np.zeros(6))
-    new_model.gravity=gravity
-
-    #create data
-    new_data=new_model.createData()
-
-    #create variable use by test
-    Lidmot=getMotId_q(new_model)
-
-    #init of the robot
-    goal=np.zeros(len(Lidmot))
-    q_prec=q2freeq(new_model,pin.neutral(new_model))
-    q0, q_ini= closedLoopForwardKinematics(new_model, new_data,goal,q_prec=q_prec)
-    vq=np.zeros(new_model.nv)
-    #init of constraint
-    name_constraint=nameFrameConstraint(new_model)
-    constraint_model=getConstraintModelFromName(new_model,name_constraint)
-    constraint_data = [c.createData() for c in constraint_model]
-    Lidf=[36] # frame bout pied
-    Lf=[pin.Force(np.array([0,0,1,0,0,0]))]
-    closedLoopForcePropagation(new_model,new_data,constraint_model,constraint_data,q0,vq,Lidf,Lf)
     #test
     unittest.main()
