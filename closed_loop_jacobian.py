@@ -163,7 +163,7 @@ class TestRobotInfo(unittest.TestCase):
 if __name__ == "__main__":
     #load robot
     path = os.getcwd()+"/robots/robot_marcheur_1"
-    model,constraint_models,actuation_model,visual_model=completeRobotLoader(path)
+    model, constraint_models, actuation_model, visual_model, collision_model = completeRobotLoader(path)
     data=model.createData()
     constraint_datas=[cm.createData() for cm in constraint_models]
     q0=proximalSolver(model,data,constraint_models,constraint_datas)
