@@ -120,7 +120,7 @@ class TestRobotInfo(unittest.TestCase):
 
         for i, rp in enumerate(robots_paths):
             path = "robots/"+rp[0]
-            m ,cm, am, vm = completeRobotLoader(path)
+            m ,cm, am, vm, collm = completeRobotLoader(path)
             q = np.linspace(0, m.nq-1, m.nq)
             assert (qmot(am, q)==results[i][0]).all()
             assert (qfree(am, q)==results[i][1]).all()
@@ -137,7 +137,7 @@ class TestRobotInfo(unittest.TestCase):
 
         for i, rp in enumerate(robots_paths):
             path = "robots/"+rp[0]
-            m ,cm, am, vm = completeRobotLoader(path)
+            m ,cm, am, vm, collm = completeRobotLoader(path)
             v = np.linspace(0, m.nv-1, m.nv)
 
             assert (vmot(am, v)==results[i][0]).all()

@@ -82,7 +82,7 @@ class TestRobotInfo(unittest.TestCase):
         from loader_tools import completeRobotLoader
 
         path = "robots/robot_marcheur_1"
-        model, constraint_models, actuation_model, visual_model = completeRobotLoader(path)
+        model, constraint_models, actuation_model, visual_model, collision_model = completeRobotLoader(path)
         # No gravity
         model.gravity = pin.Motion(np.zeros(6))
         # Create data

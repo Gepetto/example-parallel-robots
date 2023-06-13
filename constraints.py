@@ -42,8 +42,10 @@ def constraintsResidual(model, data, cmodels, cdatas, q=None, recompute=True, pi
     res = []
     for cm, cd in zip(cmodels, cdatas):
         res.append(constraintResidual(model, data, cm, cd, q, recompute, pinspace))
-
-    return np.concatenate(res)
+    if pinspace is pin:
+        return np.concatenate(res)
+    else:
+        return casadi.vertcat(*res)
 
 
 import unittest
@@ -53,7 +55,7 @@ class TestRobotLoader(unittest.TestCase):
         from loader_tools import completeRobotLoader
 
         path = "robots/robot_simple_iso3D"
-        m ,cm, am, vm = completeRobotLoader(path)
+        m ,cm, am, vm, colm = completeRobotLoader(path)
         cd = [cmi.createData() for cmi in cm]
         d = m.createData()
         q = pin.neutral(m)
@@ -75,7 +77,7 @@ class TestRobotLoader(unittest.TestCase):
         from loader_tools import completeRobotLoader
 
         path = "robots/robot_simple_iso6D"
-        m ,cm, am, vm = completeRobotLoader(path)
+        m ,cm, am, vm, colm = completeRobotLoader(path)
         cd = [cmi.createData() for cmi in cm]
         d = m.createData()
         q = pin.neutral(m)
