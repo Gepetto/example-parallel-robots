@@ -61,7 +61,7 @@ def generateYAML(path, name_mot="mot", name_spherical="to_rotule", file=None):
             Lmot.append(name)
 
     name_frame_constraint = nameFrameConstraint(rob.model, nomferme="fermeture")
-    constraint_type=["6d"]*len(name_frame_constraint)
+    constraint_type=["6d"]*len(name_frame_constraint) # Constraint is default to 6D... that is not very general...
 
     if file is None:
         with open(path + '/robot.yaml', 'w') as f:
