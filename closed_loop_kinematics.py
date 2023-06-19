@@ -268,7 +268,7 @@ def closedLoopForwardKinematicsCasadi(rmodel, rdata, cmodels, cdatas, actuation_
         dq = optim.debug.value(vdq)
         vq = pin.integrate(rmodel, q_prec, dq)
         print(vq)
-        q = q_prec
+        q = vq
 
     return q # I always return a value even if convergence failed
 
