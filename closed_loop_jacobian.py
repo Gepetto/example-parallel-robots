@@ -12,7 +12,7 @@ from robot_info import *
 from closed_loop_kinematics import *
 from pinocchio.robot_wrapper import RobotWrapper
 
-def jacobianFinitDiffClosedLoop(model, idframe: int, idref: int, qmot: np.array,q_prec, dq=1e-6,name_mot='mot',fermeture='fermeture'):
+def jacobianFinitDiffClosedLoop(model,actuation_model,constraint_model, idframe: int, idref: int, qmot: np.array,q_prec, dq=1e-6,name_mot='mot',fermeture='fermeture'):
     """
     J=Jacobian_diff_finis(robot ,idframe: int,idref :int,qo :np.array,dq: float)
     return the jacobian of the frame id idframe in the reference frame number idref, with the configuration of the robot rob qo
