@@ -19,6 +19,7 @@ def constraintResidual6d(model, data, cmodel, cdata, q, recompute=True, pinspace
     oMc1 = data.oMi[cmodel.joint1_id]*pinspace.SE3(cmodel.joint1_placement)
     oMc2 = data.oMi[cmodel.joint2_id]*pinspace.SE3(cmodel.joint2_placement)
     return pinspace.log6(oMc1.inverse()*oMc2).vector
+    # return oMc1.translation - oMc2.translation
 
 
 def constraintResidual3d(model, data, cmodel, cdata, q=None, recompute=True, pinspace=pin):

@@ -18,7 +18,7 @@ if __name__ == "__main__":
     # * Create vizualizer
     Viewer = pin.visualize.MeshcatVisualizer
     viz = Viewer(model, collision_model, visual_model)
-    viz.initViewer(loadModel=True, open=True)
+    viz.initViewer(loadModel=True, open=False)
 
     # * Create variables 
     Lidmot = actuation_model.idqmot
@@ -64,65 +64,69 @@ if __name__ == "__main__":
     false = []
     true = []
 
-    ids = [2]
-    constraint_datas_red = [constraint_datas[i] for i in ids]
-    constraint_models_red = [constraint_models[i] for i in ids]
-    
-    # * Optimisation functions
-    def constraints(q):
-        Lc = constraintsResidual(casmodel, casdata, constraint_models_red, constraint_datas_red, q, recompute=True, pinspace=caspin, quaternions=False)
-        return Lc
-    
-    cq = casadi.SX.sym("q", model.nq, 1)
-    cv = casadi.SX.sym("v", model.nv, 1)
-    constraintsCost = casadi.Function('constraint', [cq], [constraints(cq)])
-    integrate = casadi.Function('integrate', [cq, cv],[ caspin.integrate(casmodel, cq, cv)])
+    # for r in range(len(constraint_models)):
+    #     for ids in combinations([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], r):
+    for ids in [[1],[2]]:
+            print(ids)
+            constraint_datas_red = [constraint_datas[i] for i in ids]
+            constraint_models_red = [constraint_models[i] for i in ids]
+            
+            # * Optimisation functions
+            def constraints(q):
+                Lc = constraintsResidual(casmodel, casdata, constraint_models_red, constraint_datas_red, q, recompute=True, pinspace=caspin, quaternions=False)
+                return Lc
+            
+            cq = casadi.SX.sym("q", model.nq, 1)
+            cv = casadi.SX.sym("v", model.nv, 1)
+            constraintsCost = casadi.Function('constraint', [cq], [constraints(cq)])
+            integrate = casadi.Function('integrate', [cq, cv],[ caspin.integrate(casmodel, cq, cv)])
 
-    # * Optimisation problem
-    optim = casadi.Opti()
-    vdq = optim.variable(model.nv)
-    vq = integrate(q_prec, vdq)
+            # * Optimisation problem
+            optim = casadi.Opti()
+            vdq = optim.variable(model.nv)
+            vq = integrate(q_prec, vdq)
 
-    # * Constraints
-    if len(constraint_models_red) != 0:
-        optim.subject_to(constraintsCost(vq)==0)
-    q_mot_target = None
-    if q_mot_target is not None:
-        optim.subject_to(vq[Lid]==q_mot_target)
+            # * Constraints
+            if len(constraint_models_red) != 0:
+                optim.subject_to(constraintsCost(vq)==0)
+            q_mot_target = None
+            if q_mot_target is not None:
+                optim.subject_to(vq[Lid]==q_mot_target)
 
-    # ! Computing the derivatives to look for a NaN
-    print("\n\nComputing constraints derivatives\n")
-    print(constraintsCost(vq))
-    print("\nComputing Jacobian :")
-    print(casadi.jacobian(constraintsCost(vq), vdq))
+            # ! Computing the derivatives to look for a NaN
+            print("\n\nComputing constraints derivatives\n")
+            print(constraintsCost(vq))
+            print("\nComputing Jacobian :")
+            print(casadi.jacobian(constraintsCost(vq), vdq))
 
-    print('Trying to compute the derivatives of the Lagrangian')
+            print('Trying to compute the derivatives of the Lagrangian')
 
-    # * cost minimization
-    total_cost = casadi.sumsqr(vdq)
-    optim.minimize(total_cost)
+            # * cost minimization
+            total_cost = casadi.sumsqr(vdq)
+            optim.minimize(total_cost)
 
-    opts = {}
-    optim.solver("ipopt", opts)
-    optim.set_initial(vdq, vdq_init)
-    try:
-        sol = optim.solve_limited()
-        print("Solution found")
-        dq = optim.value(vdq)   
-        q0 = pin.integrate(model, q_prec, dq)
-        true.append(ids)
-    except:
-        print('ERROR in convergence, press enter to plot debug info.')
-        # input()
-        dq = optim.debug.value(vdq)
-        q = pin.integrate(model, q_prec, dq)
-        # print(dq)
-        # print(q)
-        q0 = q_prec
-        false.append(ids)
+            opts = {}
+            optim.solver("ipopt", opts)
+            optim.set_initial(vdq, vdq_init)
+            try:
+                sol = optim.solve_limited()
+                print("Solution found")
+                dq = optim.value(vdq)   
+                q0 = pin.integrate(model, q_prec, dq)
+                true.append(ids)
+            except:
+                print('ERROR in convergence, press enter to plot debug info.')
+                # input()
+                dq = optim.debug.value(vdq)
+                q = pin.integrate(model, q_prec, dq)
+                # print(dq)
+                # print(q)
+                q0 = q_prec
+                false.append(ids)
 
-    # print("Solution found, press enter to visualize")
-    # input()
+            # print("Solution found, press enter to visualize")
+            # input()
 
-    # # * Display
-    # viz.display(q0)
+            # # * Display
+            # viz.display(q0)
+    print(ids)

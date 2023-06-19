@@ -27,8 +27,8 @@ if __name__ == "__main__":
 
     # * Get initial feasible configuration
     # q0 = closedLoopForwardKinematicsScipy(model, data, constraint_models, constraint_datas, actuation_model, goal, q_prec=q0)
-    # q0 = closedLoopForwardKinematicsCasadi(model, data, constraint_models, constraint_datas, actuation_model, goal, q_prec=q0)
-    q0 = closedLoopForwardKinematicsProximal(model, data, constraint_models, constraint_datas, actuation_model, goal, q_prec=q0)
+    q0 = closedLoopForwardKinematicsCasadi(model, data, constraint_models, constraint_datas, actuation_model, goal, q_prec=q0)
+    # q0 = closedLoopForwardKinematicsProximal(model, data, constraint_models, constraint_datas, actuation_model, goal, q_prec=q0)
     print("Solution found, press enter to visualize")
     input()
 
