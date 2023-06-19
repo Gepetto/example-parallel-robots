@@ -229,8 +229,7 @@ def closedLoopForwardKinematicsCasadi(rmodel, rdata, cmodels, cdatas, actuation_
     Lid = actuation_model.idqmot
     if q_prec is None or q_prec == []:
         q_prec = pin.neutral(rmodel)
-    if q_mot_target is None:
-        q_mot_target = np.zeros(len(Lid))
+
     
     # * Optimisation functions
     def constraints(q):
@@ -248,7 +247,8 @@ def closedLoopForwardKinematicsCasadi(rmodel, rdata, cmodels, cdatas, actuation_
     vq = integrate(q_prec, vdq)
     # * Constraints
     optim.subject_to(constraintsCost(vq)==0)
-    optim.subject_to(vq[Lid]==q_mot_target)
+    if q_mot_target is not None:
+        optim.subject_to(vq[Lid]==q_mot_target)
 
     # * cost minimization
     total_cost = casadi.sumsqr(vdq)
