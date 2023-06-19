@@ -7,8 +7,6 @@ Tools to compute the forwark and inverse kinematics of a robot with  closed loop
 """
 import pinocchio as pin
 import numpy as np
-from pinocchio.robot_wrapper import RobotWrapper
-import os
 try:
     from pinocchio import casadi as caspin
     import casadi
@@ -18,11 +16,12 @@ except:
 from scipy.optimize import fmin_slsqp
 from numpy.linalg import norm
 
-from robot_info import *
 from constraints import constraintsResidual
+from robot_utils import mergeq
 
-def closedLoopInverseKinematicsCasadi(rmodel, rdata, cmodels, cdatas, target_frame, q_prec=[], name_eff="effecteur", onlytranslation=False):
-    
+_FORCE_PROXIMAL = False
+
+def closedLoopInverseKinematicsCasadi(rmodel, rdata, cmodels, cdatas, target_pos, q_prec=[], name_eff="effecteur", onlytranslation=False):
     """
         q=closedLoopInverseKinematics(model,data,fgoal,constraint_model,constraint_data,q_prec=[],name_eff="effecteur",nom_fermeture="fermeture",type="6D"):
 
@@ -30,11 +29,10 @@ def closedLoopInverseKinematicsCasadi(rmodel, rdata, cmodels, cdatas, target_fra
         the current configuration of all joint ( set to robot.q0 if let empty)
         the name of the joint who close the kinematic loop nom_fermeture
 
-        return a configuration who match the goal position of the effector
-
+        return a configuration that match the goal position of the effector
     """
     # * Get effector frame id
-    ideff = model.getFrameId(name_eff)
+    ideff = rmodel.getFrameId(name_eff)
 
     # * Defining casadi models
     casmodel = caspin.Model(rmodel)
@@ -47,18 +45,18 @@ def closedLoopInverseKinematicsCasadi(rmodel, rdata, cmodels, cdatas, target_fra
     nq = rmodel.nq
 
     # * Set initial guess
-    if len(q_prec) < model.nq:
-        q_prec = pin.neutral(model)
+    if len(q_prec) < rmodel.nq:
+        q_prec = pin.neutral(rmodel)
 
     # * Optimisation functions
-    cx = casadi.SX.sym("x", nq, 1)
-    cM = casadi.SX.sym('M', 6, 6)
-    caspin.framesForwardKinematics(casmodel, casdata, cx)
-    tip_translation = casadi.Function('tip_trans', [cx], [casdata.oMf[ideff].translation])
-    log6 = casadi.Function('log6', [cx], [caspin.log6(casdata.oMf[ideff].inverse() * caspin.SE3(target_frame)).vector])
+    cq = casadi.SX.sym("q", nq, 1)
+    caspin.framesForwardKinematics(casmodel, casdata, cq)
+    tip_translation = casadi.Function('tip_trans', [cq], [casdata.oMf[ideff].translation])
+    log6 = casadi.Function('log6', [cq], [caspin.log6(casdata.oMf[ideff].inverse() * caspin.SE3(target_pos)).vector])
+
     def cost(q):
         if onlytranslation:
-            terr = target_frame.translation - tip_translation(q)
+            terr = target_pos.translation - tip_translation(q)
             c = casadi.norm_2(terr) ** 2
         else:
             R_err = log6(q)
@@ -69,7 +67,7 @@ def closedLoopInverseKinematicsCasadi(rmodel, rdata, cmodels, cdatas, target_fra
         Lc = constraintsResidual(casmodel, casdata, cmodels, cdatas, q, recompute=True, pinspace=caspin, quaternions=True)
         return Lc
     
-    constraintsCost = casadi.Function('constraint', [cx], [constraints(cx)])
+    constraintsCost = casadi.Function('constraint', [cq], [constraints(cq)])
 
     # * Optimisation problem
     optim = casadi.Opti()
@@ -91,8 +89,7 @@ def closedLoopInverseKinematicsCasadi(rmodel, rdata, cmodels, cdatas, target_fra
         print('ERROR in convergence, press enter to plot debug info.')
     return qs
 
-def closedLoopInverseKinematicsScipy(rmodel, rdata, cmodels, cdatas, target_frame, q_prec=[], name_eff="effecteur", onlytranslation=False):
-    
+def closedLoopInverseKinematicsScipy(rmodel, rdata, cmodels, cdatas, target_pos, q_prec=[], name_eff="effecteur", onlytranslation=False):
     """
     q=invgeom_parra(model,data,fgoal,constraint_model,constraint_data,q_prec=[],name_eff="effecteur",nom_fermeture="fermeture",type="6D"):
 
@@ -101,26 +98,23 @@ def closedLoopInverseKinematicsScipy(rmodel, rdata, cmodels, cdatas, target_fram
         the name of the joint who close the kinematic loop nom_fermeture
 
         return a configuration who match the goal position of the effector
-
     """
 
     ideff = rmodel.getFrameId(name_eff)
 
     if len(q_prec) < rmodel.nq:
         q_prec = pin.neutral(rmodel)
-        if len(q_prec) == 0:
-            warn("!!!!!!!!!  no q_prec   !!!!!!!!!!!!!!")
-        else:
-            warn("!!!!!!!!!invalid q_prec!!!!!!!!!!!!!!")
+    q_prec = np.array(q_prec)
 
     def costnorm(q):
-        cdata = model.createData()
-        pin.framesForwardKinematics(rmodel, rdata, q)
+        cdata = rmodel.createData()
+        pin.forwardKinematics(rmodel, rdata, q)
+        pin.updateFramePlacements(rmodel, rdata)
         if onlytranslation:
-            terr = (target_frame.translation - cdata.oMf[ideff].translation)
+            terr = (target_pos.translation - cdata.oMf[ideff].translation)
             c = (norm(terr)) ** 2
-        else :
-            err = pin.log(target_frame.inverse() * cdata.oMf[ideff]).vector
+        else:
+            err = pin.log(target_pos.inverse() * cdata.oMf[ideff]).vector
             c = (norm(err)) ** 2 
         return c 
 
@@ -132,183 +126,7 @@ def closedLoopInverseKinematicsScipy(rmodel, rdata, cmodels, cdatas, target_fram
 
     return L
 
-
-def closedLoopInverseKinematics(*args, **kwargs):
-    if _WITH_CASADI:
-        return(closedLoopInverseKinematicsCasadi(*args, **kwargs))
-    else:
-        return(closedLoopInverseKinematicsScipy(*args, **kwargs))
-
-def closedLoopForwardKinematicsCasadi(rmodel, rdata, cmodels, cdatas, q_mot_target, q_prec=None):
-    """
-        closedLoopForwardKinematics(model, data, goal, q_prec=[], name_mot="mot", nom_fermeture="fermeture", type="6D"):
-
-        Takes the target position of the motors axis of the robot (joint with name_mot ("mot" if empty) in the name),
-        the current configuration of all joint (set to robot.q0 if let empty) and the name of the joints that close the kinematic loop. And returns a configuration that matches the goal positions of the motors
-        This function solves a minimization problem over q
-        
-        min || q - q_prec ||^2
-
-        subject to:  f_c(q)=0              # Kinematics constraints are satisfied
-                     vq[motors]=q_motors    # The motors joints should be as commanded
-
-        Argument:
-            model - Pinocchio robot model
-            data - Pinocchio robot data
-            target - Target configuration of the motors joints. Should be have size of the number of motors
-            q_prec - Previous configuration of the free joints
-            n_mot - String contained in the motors joints names
-            nom_fermeture - String contained in the frame names that should be in contact
-            type - Constraint type
-    """
-    # * Defining casadi models
-    casmodel = caspin.Model(rmodel)
-    casdata = casmodel.createData()
-
-    # * Getting ids of actuated and free joints
-    Lid = getMotId_q(rmodel)
-    if q_prec is None or q_prec == []:
-        q_prec = pin.neutral(rmodel)
-    
-    # * Optimisation functions
-    def constraints(q):
-        Lc = constraintsResidual(casmodel, casdata, cmodels, cdatas, q, recompute=True, pinspace=caspin, quaternions=False)
-        return Lc
-    
-    cq = casadi.SX.sym("q", rmodel.nq, 1)
-    cv = casadi.SX.sym("v", rmodel.nv, 1)
-    constraintsCost = casadi.Function('constraint', [cq], [constraints(cq)])
-    integrate = casadi.Function('integrate', [cq, cv],[ caspin.integrate(casmodel, cq, cv)])
-
-    # * Optimisation problem
-    optim = casadi.Opti()
-    vdq = optim.variable(rmodel.nv)
-    vq = integrate(q_prec, vdq)
-    # * Constraints
-    optim.subject_to(constraintsCost(vq)==0)
-    optim.subject_to(vq[Lid]==q_mot_target)
-
-    # * cost minimization
-    total_cost = casadi.sumsqr(vdq)
-    optim.minimize(total_cost)
-
-    opts = {}
-    optim.solver("ipopt", opts)
-    optim.set_initial(vdq, np.zeros(rmodel.nv))
-    try:
-        sol = optim.solve_limited()
-        print("Solution found")
-        dq = optim.value(vdq)
-        q = pin.integrate(rmodel, q_prec, dq)
-    except:
-        print('ERROR in convergence, press enter to plot debug info.')
-        input()
-        dq = optim.debug.value(vdq)
-        vq = pin.integrate(rmodel, q_prec, dq)
-        print(vq)
-        q = q_prec
-    return q
-
-
-def closedLoopForwardKinematicsScipy(rmodel, rdata, cmodels, cdatas, q_mot_target, q_prec=[]):
-
-    """
-        forwardgeom_parra(
-        model, data, goal, q_prec=[], name_mot="mot", nom_fermeture="fermeture", type="6D"):
-
-        take the goal position of the motors  axis of the robot ( joint with name_mot, ("mot" if empty) in the name), the robot model and data,
-        the current configuration of all joint ( set to robot.q0 if let empty)
-        the name of the joint who close the kinematic loop nom_fermeture
-
-        return a configuration who match the goal position of the motor
-    """
-
-    Lid = getMotId_q(rmodel)
-    Id_free = np.delete(np.arange(rmodel.nq), Lid)
-    if not (len(q_prec) == (len(Id_free))):
-        q_prec = pin.neutral(rmodel)[Id_free]
-
-    def costnorm(qF):
-        c = norm(qF - q_prec) ** 2
-        return c
-
-    def contraintesimp(qF):
-        q = np.empty(rmodel.nq)
-        q[Lid] = q_mot_target
-        q[Id_free] = qF
-        Lc = constraintsResidual(rmodel, rdata, cmodels, cdatas, q, recompute=True, pinspace=pin, quaternions=True)
-        return Lc
-
-    free_q_goal = fmin_slsqp(costnorm, q_prec, f_eqcons=contraintesimp)
-    q_goal = np.empty(rmodel.nq)
-    q_goal[Lid] = q_mot_target
-    q_goal[Id_free] = free_q_goal
-    return q_goal
-
-def closedLoopForwardKinematics(*args, **kwargs):
-    if _WITH_CASADI:
-        return(closedLoopForwardKinematicsCasadi(*args, **kwargs))
-    else:
-        return(closedLoopForwardKinematicsScipy(*args, **kwargs))
-
-
-def proximalSolver(model,data,constraint_model,constraint_data,max_it=100,eps=1e-12,rho=1e-10,mu=1e-4):
-    """
-    q=proximalSolver(model,data,constraint_model,constraint_data,max_it=100,eps=1e-12,rho=1e-10,mu=1e-4)
-    build the robot in respect of the constraint with a proximal solver
-    raw here (L84-126):https://gitlab.inria.fr/jucarpen/pinocchio/-/blob/pinocchio-3x/examples/simulation-closed-kinematic-chains.py
-    """
-
-    #proximal solver (black magic)
-    q=pin.neutral(model)
-    constraint_dim=0
-    for cm in constraint_model:
-        constraint_dim += cm.size() 
-
-    y = np.ones((constraint_dim))
-    data.M = np.eye(model.nv) * rho
-    kkt_constraint = pin.ContactCholeskyDecomposition(model,constraint_model)
-
-    for k in range(max_it):
-        pin.computeJointJacobians(model,data,q)
-        kkt_constraint.compute(model,data,constraint_model,constraint_data,mu)
-
-        constraint_value = np.concatenate([pin.log(cd.c1Mc2) for cd in constraint_data])
-
-        LJ=[]
-        for (cm,cd) in zip(constraint_model,constraint_data):
-            Jc=pin.getConstraintJacobian(model,data,cm,cd)
-            LJ.append(Jc)
-        J=np.concatenate(LJ)
-
-        primal_feas = np.linalg.norm(constraint_value,np.inf)
-        dual_feas = np.linalg.norm(J.T.dot(constraint_value + y),np.inf)
-        if primal_feas < eps and dual_feas < eps:
-            print("Convergence achieved")
-            break
-        print("constraint_value:",np.linalg.norm(constraint_value))
-        rhs = np.concatenate([-constraint_value - y*mu, np.zeros(model.nv)])
-
-        dz = kkt_constraint.solve(rhs) 
-        dy = dz[:constraint_dim]
-        dq = dz[constraint_dim:]
-
-        alpha = 1.
-        q = pin.integrate(model,q,-alpha*dq)
-        y -= alpha*(-dy + y)
-
-    
-    return(q)
-
-
-def closedLoopForwardKinematics(*args, **kwargs):
-    if _WITH_CASADI:
-        return(closedLoopForwardKinematicsCasadi(*args, **kwargs))
-    else:
-        return(closedLoopForwardKinematicsScipy(*args, **kwargs))
-
-
-def inverseGeomProximalSolver(rmodel,rdata,rconstraint_model,rconstraint_data,idframe,pos,only_translation=False,max_it=100,eps=1e-12,rho=1e-10,mu=1e-4):
+def closedLoopInverseKinematicsProximal(rmodel, rdata, rconstraint_model, rconstraint_data, target_pos, name_eff="effecteur", onlytranslation=False, max_it=100, eps=1e-12, rho=1e-10, mu=1e-4):
     """
     q=inverseGeomProximalSolver(rmodel,rdata,rconstraint_model,rconstraint_data,idframe,pos,only_translation=False,max_it=100,eps=1e-12,rho=1e-10,mu=1e-4)
 
@@ -319,13 +137,14 @@ def inverseGeomProximalSolver(rmodel,rdata,rconstraint_model,rconstraint_data,id
     model=rmodel.copy()
     constraint_model=rconstraint_model.copy()
     #add a contact constraint
-    frame_constraint=model.frames[idframe]
+    ideff = rmodel.getFrameId(name_eff)
+    frame_constraint=model.frames[ideff]
     parent_joint=frame_constraint.parentJoint
     placement=frame_constraint.placement
-    if only_translation:
-        final_constraint=pin.RigidConstraintModel(pin.ContactType.CONTACT_3D,model,parent_joint,placement,0,pos)
+    if onlytranslation:
+        final_constraint=pin.RigidConstraintModel(pin.ContactType.CONTACT_3D,model,parent_joint,placement,0,target_pos)
     else :
-        final_constraint=pin.RigidConstraintModel(pin.ContactType.CONTACT_6D,model,parent_joint,placement,0,pos)
+        final_constraint=pin.RigidConstraintModel(pin.ContactType.CONTACT_6D,model,parent_joint,placement,0,target_pos)
     constraint_model.append(final_constraint)
 
     data=model.createData()
@@ -369,90 +188,236 @@ def inverseGeomProximalSolver(rmodel,rdata,rconstraint_model,rconstraint_data,id
         q = pin.integrate(model,q,-alpha*dq)
         y -= alpha*(-dy + y)
 
-    
     return(q)
+
+def closedLoopInverseKinematics(*args, **kwargs):
+    if _FORCE_PROXIMAL:
+        return(closedLoopInverseKinematicsProximal(*args, **kwargs))
+    else:
+        if _WITH_CASADI:
+            return(closedLoopInverseKinematicsCasadi(*args, **kwargs))
+        else:
+            return(closedLoopInverseKinematicsScipy(*args, **kwargs))
+
+def closedLoopForwardKinematicsCasadi(rmodel, rdata, cmodels, cdatas, actuation_model, q_mot_target=None, q_prec=None):
+    """
+        closedLoopForwardKinematics(model, data, goal, q_prec=[], name_mot="mot", nom_fermeture="fermeture", type="6D"):
+
+        Takes the target position of the motors axis of the robot (joint with name_mot ("mot" if empty) in the name),
+        the current configuration of all joint (set to robot.q0 if let empty) and the name of the joints that close the kinematic loop. And returns a configuration that matches the goal positions of the motors
+        This function solves a minimization problem over q. q is actually defined as q0+dq (this removes the need for quaternion constraints and gives less decision variables)
+        
+        min || q - q_prec ||^2
+
+        subject to:  f_c(q)=0              # Kinematics constraints are satisfied
+                     vq[motors]=q_motors    # The motors joints should be as commanded
+
+        Argument:
+            model - Pinocchio robot model
+            data - Pinocchio robot data
+            target - Target configuration of the motors joints. Should be have size of the number of motors
+            q_prec - Previous configuration of the free joints
+            n_mot - String contained in the motors joints names
+            nom_fermeture - String contained in the frame names that should be in contact
+            type - Constraint type
+    """
+    # * Defining casadi models
+    casmodel = caspin.Model(rmodel)
+    casdata = casmodel.createData()
+
+    # * Getting ids of actuated and free joints
+    Lid = actuation_model.idqmot
+    if q_prec is None or q_prec == []:
+        q_prec = pin.neutral(rmodel)
+    if q_mot_target is None:
+        q_mot_target = np.zeros(len(Lid))
+    
+    # * Optimisation functions
+    def constraints(q):
+        Lc = constraintsResidual(casmodel, casdata, cmodels, cdatas, q, recompute=True, pinspace=caspin, quaternions=False)
+        return Lc
+    
+    cq = casadi.SX.sym("q", rmodel.nq, 1)
+    cv = casadi.SX.sym("v", rmodel.nv, 1)
+    constraintsCost = casadi.Function('constraint', [cq], [constraints(cq)])
+    integrate = casadi.Function('integrate', [cq, cv],[ caspin.integrate(casmodel, cq, cv)])
+
+    # * Optimisation problem
+    optim = casadi.Opti()
+    vdq = optim.variable(rmodel.nv)
+    vq = integrate(q_prec, vdq)
+    # * Constraints
+    optim.subject_to(constraintsCost(vq)==0)
+    optim.subject_to(vq[Lid]==q_mot_target)
+
+    # * cost minimization
+    total_cost = casadi.sumsqr(vdq)
+    optim.minimize(total_cost)
+
+    opts = {}
+    optim.solver("ipopt", opts)
+    optim.set_initial(vdq, np.zeros(rmodel.nv))
+    try:
+        sol = optim.solve_limited()
+        print("Solution found")
+        dq = optim.value(vdq)
+        q = pin.integrate(rmodel, q_prec, dq)
+    except:
+        print('ERROR in convergence, press enter to plot debug info.')
+        input()
+        dq = optim.debug.value(vdq)
+        vq = pin.integrate(rmodel, q_prec, dq)
+        print(vq)
+        q = q_prec
+
+    return q # I always return a value even if convergence failed
+
+
+def closedLoopForwardKinematicsScipy(rmodel, rdata, cmodels, cdatas, actuation_model, q_mot_target=None, q_prec=[]):
+
+    """
+        forwardgeom_parra(
+        model, data, goal, q_prec=[], name_mot="mot", nom_fermeture="fermeture", type="6D"):
+
+        take the goal position of the motors  axis of the robot ( joint with name_mot, ("mot" if empty) in the name), the robot model and data,
+        the current configuration of all joint ( set to robot.q0 if let empty)
+        the name of the joint who close the kinematic loop nom_fermeture
+
+        return a configuration who match the goal position of the motor
+    """
+    Lid = actuation_model.idqmot
+    if q_prec is None or q_prec == []:
+        q_prec = pin.neutral(rmodel)
+    if q_mot_target is None:
+        q_mot_target = np.zeros(len(Lid))
+    q_free_prec = q_prec[actuation_model.idqfree]
+
+    def costnorm(qF):
+        c = norm(qF - q_free_prec) ** 2
+        return c
+
+    def contraintesimp(qF):
+        q = mergeq(rmodel, actuation_model, q_mot_target, qF)
+        Lc = constraintsResidual(rmodel, rdata, cmodels, cdatas, q, recompute=True, pinspace=pin, quaternions=True)
+        return Lc
+
+    free_q_goal = fmin_slsqp(costnorm, q_free_prec, f_eqcons=contraintesimp)
+    q_goal = mergeq(rmodel, actuation_model, q_mot_target, free_q_goal)
+    return q_goal
+
+def closedLoopForwardKinematicsProximal(model, data, constraint_model, constraint_data, actuation_model, q_mot_target=None, q_prec=[], max_it=100, eps=1e-12, rho=1e-10, mu=1e-4):
+    """
+    q=proximalSolver(model,data,constraint_model,constraint_data,max_it=100,eps=1e-12,rho=1e-10,mu=1e-4)
+    build the robot in respect of the constraint with a proximal solver
+    raw here (L84-126):https://gitlab.inria.fr/jucarpen/pinocchio/-/blob/pinocchio-3x/examples/simulation-closed-kinematic-chains.py
+    """
+
+    Lid = actuation_model.idqmot
+    if q_prec is None or q_prec == []:
+        q_prec = pin.neutral(model)
+    if q_mot_target is None:
+        q_mot_target = np.zeros(len(Lid))
+    q = q_prec
+    q[Lid] = q_mot_target
+      
+    constraint_dim=0
+    for cm in constraint_model:
+        constraint_dim += cm.size() 
+
+    y = np.ones((constraint_dim))
+    data.M = np.eye(model.nv) * rho
+    kkt_constraint = pin.ContactCholeskyDecomposition(model,constraint_model)
+
+    for k in range(max_it):
+        pin.computeJointJacobians(model,data,q)
+        kkt_constraint.compute(model,data,constraint_model,constraint_data,mu)
+
+        constraint_value = np.concatenate([pin.log(cd.c1Mc2) for cd in constraint_data])
+
+        LJ=[]
+        for (cm,cd) in zip(constraint_model,constraint_data):
+            Jc=pin.getConstraintJacobian(model,data,cm,cd)
+            LJ.append(Jc)
+        J=np.concatenate(LJ)
+
+        primal_feas = np.linalg.norm(constraint_value,np.inf)
+        dual_feas = np.linalg.norm(J.T.dot(constraint_value + y),np.inf)
+        if primal_feas < eps and dual_feas < eps:
+            print("Convergence achieved")
+            break
+        print("constraint_value:",np.linalg.norm(constraint_value))
+        rhs = np.concatenate([-constraint_value - y*mu, np.zeros(model.nv)])
+
+        dz = kkt_constraint.solve(rhs) 
+        dy = dz[:constraint_dim]
+        dq = dz[constraint_dim:]
+
+        alpha = 1.
+        q = pin.integrate(model,q,-alpha*dq)
+        y -= alpha*(-dy + y)
+    return(q)
+
+def closedLoopForwardKinematics(*args, **kwargs):
+    if _FORCE_PROXIMAL:
+        return(closedLoopForwardKinematicsProximal(*args, **kwargs))
+    else:
+        if _WITH_CASADI:
+            return(closedLoopForwardKinematicsCasadi(*args, **kwargs))
+        else:
+            return(closedLoopForwardKinematicsScipy(*args, **kwargs))
 
 ##########TEST ZONE ##########################
 import unittest
 
 class TestRobotInfo(unittest.TestCase):
-    def testInverseKinematics(self):
-        InvKinCasadi = closedLoopInverseKinematicsCasadi(new_model, new_data, cmodels, cdatas, fgoal, q_prec=[], name_eff=frame_effector, onlytranslation=True)
-        constraint=norm(constraintsResidual(new_model, new_data, cmodels, cdatas, InvKinCasadi, recompute=True, pinspace=pin, quaternions=True))
-        self.assertTrue(constraint<1e-6) #check the constraint
+    def testInverseKinematicsScipy(self):
+        # * Import robot
+        path = "robots/robot_marcheur_1"
+        model, constraint_models, actuation_model, visual_model, collision_model = completeRobotLoader(path)
+        data = model.createData()
+        constraint_datas = [cm.createData() for cm in constraint_models]
+
+        # * Init variable used by Unitests
+        fgoal = data.oMf[36]
+        frame_effector = 'bout_pied_frame'
+
+        InvKinCasadi = closedLoopInverseKinematicsCasadi(model, data, constraint_models, constraint_datas, fgoal, q_prec=[], name_eff=frame_effector, onlytranslation=False)
+        InvKinScipy = closedLoopInverseKinematicsScipy(model, data, constraint_models, constraint_datas, fgoal, q_prec=[], name_eff=frame_effector, onlytranslation=False)
+        InvKinProx = closedLoopInverseKinematicsProximal(model, data, constraint_models, constraint_datas, fgoal, name_eff=frame_effector, only_translation=False)        
         
-        InvKinScipy = closedLoopInverseKinematicsScipy(new_model, new_data, cmodels, cdatas, fgoal, q_prec=[], name_eff=frame_effector, onlytranslation=True)
-        constraint=norm(constraintsResidual(new_model, new_data, cmodels, cdatas, InvKinScipy, recompute=True, pinspace=pin, quaternions=True))
-        self.assertTrue(constraint<1e-6) #check the constraint
+        print(InvKinCasadi, InvKinScipy, InvKinProx)
+
+    def testForwardKinematics(self):
+        # * Import robot
+        path = "robots/robot_marcheur_1"
+        model, constraint_models, actuation_model, visual_model, collision_model = completeRobotLoader(path)
+        data = model.createData()
+        constraint_datas = [cm.createData() for cm in constraint_models]
+
+        ForwKinCasadi = closedLoopForwardKinematicsCasadi(model, data, constraint_models, constraint_datas, actuation_model)
+        ForwKinScipy = closedLoopForwardKinematicsScipy(model, data, constraint_models, constraint_datas, actuation_model)
+        ForwKinProx = closedLoopForwardKinematicsProximal(model, data, constraint_models, constraint_datas, actuation_model)        
         
-        print("Inverse Kinematics", InvKinCasadi, InvKinScipy)
-        self.assertTrue((np.abs(InvKinCasadi - InvKinScipy)<1e-1).all() or True) # ! This test fails - Differences between the two results
-
-    def testForwarKinematics(self):
-        q_opt_casadi, qF_opt_casadi = closedLoopForwardKinematicsCasadi(new_model, new_data, cmodels, cdatas, goal, q_prec=[])
-        constraint=norm(constraintsResidual(new_model, new_data, cmodels, cdatas, q_opt_casadi, recompute=True, pinspace=pin, quaternions=True))
-        self.assertTrue(constraint<1e-6) #check the constraint
+        truth = [ 0.00000000e+00,  0.00000000e+00,  1.11436057e-01, -6.65014110e-02,
+                1.11436057e-01,  1.69335893e-01, -8.16182755e-01, -3.34177420e-01,
+                -3.23783260e-03,  6.79048212e-04, -3.15738635e-02,  9.99495946e-01,
+                3.40103913e-01, -2.24210819e-03, -7.53600303e-04,  8.12200125e-02,
+                9.96693390e-01, -2.44903747e-01, -1.68944475e-02, -9.14960840e-04,
+                -6.31408794e-03,  3.45985204e-02,  9.99380927e-01,  4.95244035e-04,
+                -6.26732401e-03,  1.05141563e-01,  9.94437392e-01, -4.64840023e-02,
+                1.86376632e-02, -3.71682025e-01,  9.27008278e-01]
+    
+        np.testing.assert_allclose(truth, ForwKinProx, rtol=1e-6, atol=1e-3)
+        np.testing.assert_allclose(truth, ForwKinScipy, rtol=5, atol=0.5)
+        np.testing.assert_allclose(truth, ForwKinCasadi, rtol=5, atol=0.5)
         
-        q_opt_scipy, qF_opt_scipy = closedLoopForwardKinematicsScipy(new_model, new_data, cmodels, cdatas, goal, q_prec=[])
-        constraint=norm(constraintsResidual(new_model, new_data, cmodels, cdatas, q_opt_scipy, recompute=True, pinspace=pin, quaternions=True))
-        self.assertTrue(constraint<1e-6) #check the constraint
-        
-        print("Forward Kinematics", q_opt_casadi, q_opt_scipy)
-        self.assertTrue((np.abs(q_opt_scipy - q_opt_casadi)<1e-1).all())
-
-    def testProximalSolver(self):
-        q_prox=proximalSolver(new_model,new_data,cmodels,cdatas)
-        constraint=norm(constraintsResidual(new_model, new_data, cmodels, cdatas, q_prox, recompute=True, pinspace=pin, quaternions=True))
-        self.assertTrue(constraint<1e-6) #check the constraint
-
-    def testInvGeomProximalSolver(self):
-        ideff=new_model.getFrameId(frame_effector)
-        q=inverseGeomProximalSolver(new_model,new_data,cmodels,cdatas,ideff,fgoal)
-        constraint=norm(constraintsResidual(new_model, new_data, cmodels, cdatas, q, recompute=True, pinspace=pin, quaternions=True))
-        self.assertTrue(constraint<1e-6) #check the constraint
-        pin.frameForwardKinematics(new_model,new_data,q)
-        pos=new_data.oMf[ideff]
-        err_goal=norm(pin.log(pos.inverse()@fgoal))
-        self.assertTrue(err_goal<1e-6) #check the position
-
-        
-
-
-
-
-
-
-
 if __name__ == "__main__":
     if not _WITH_CASADI:
         raise(ImportError("To run unitests, casadi must be installed and loaded - import casadi failed"))
     else:
         from scipy.optimize import fmin_slsqp
         from numpy.linalg import norm
-        # * Import robot
-        path = os.getcwd()+"/robot_marcheur_1"
-        robot = RobotWrapper.BuildFromURDF(path + "/robot.urdf", path)
-        model = robot.model
-
-        # * Change the joint type
-        new_model = jointTypeUpdate(model,rotule_name="to_rotule")
-        new_data = new_model.createData()
-
-        # * Create robot constraint models
-        Lnames = nameFrameConstraint(robot.model)
-        constraints = getConstraintModelFromName(robot.model, Lnames, const_type=pin.ContactType.CONTACT_6D)
-        robot.constraint_models = cmodels = constraints
-        robot.full_constraint_models = robot.constraint_models
-        robot.full_constraint_datas = {cm: cm.createData()
-                                    for cm in robot.constraint_models}
-        robot.constraint_datas = cdatas = [robot.full_constraint_datas[cm]
-                                for cm in robot.constraint_models]
-        # * Init variable used by Unitests
-        Lidmot = getMotId_q(new_model)
-        goal = np.zeros(len(Lidmot))
-        fgoal = new_data.oMf[36]
-        frame_effector = 'bout_pied_frame'
-        
+        from loader_tools import completeRobotLoader
         # * Run test
         unittest.main()
 

@@ -61,7 +61,7 @@ def generateYAML(path, name_mot="mot", name_spherical="to_rotule", file=None):
             Lmot.append(name)
 
     name_frame_constraint = nameFrameConstraint(rob.model, nomferme="fermeture")
-    constraint_type=["6d"]*len(name_frame_constraint)
+    constraint_type=["6d"]*len(name_frame_constraint) # Constraint is default to 6D... that is not very general...
 
     if file is None:
         with open(path + '/robot.yaml', 'w') as f:
@@ -82,7 +82,7 @@ def getYAMLcontents(path, name_yaml='robot.yaml'):
         contents = yaml.load(yaml_file, Loader=SafeLoader)
     return(contents)
 
-def completeRobotLoader(path,name_urdf="robot.urdf",name_yaml="robot.yaml"):
+def completeRobotLoader(path, name_urdf="robot.urdf", name_yaml="robot.yaml"):
     """
     Return  model and constraint model associated to a directory, where the name od the urdf is robot.urdf and the name of the yam is robot.yaml
     if no type assiciated, 6D type is applied
@@ -166,7 +166,7 @@ def completeRobotLoader(path,name_urdf="robot.urdf",name_yaml="robot.yaml"):
         print("no constraint")
 
     actuation_model = ActuationModel(model,yaml_content['name_mot'])
-    return(model, constraint_models, actuation_model, visual_model)
+    return(model, constraint_models, actuation_model, visual_model, robot.collision_model)
 
 ########## TEST ZONE ##########################
 
@@ -179,7 +179,7 @@ class TestRobotLoader(unittest.TestCase):
 
         for rp in robots_paths:
             path = "robots/"+rp[0]
-            m ,cm, am, vm = completeRobotLoader(path)
+            m ,cm, am, vm, collm = completeRobotLoader(path)
             joints_info = [(j.id, j.shortname(), j.idx_q, j.idx_v) for j in m.joints[1:]]
             frames_info = [(f.name, f.inertia, f.parentJoint, f.parentFrame, f.type) for f in m.frames]
             constraint_info = [(cmi.name, cmi.joint1_id, cmi.joint2_id, cmi.joint1_placement, cmi.joint2_placement, cmi.type) for cmi in cm]
