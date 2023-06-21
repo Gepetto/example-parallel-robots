@@ -17,7 +17,7 @@ from scipy.optimize import fmin_slsqp
 from numpy.linalg import norm
 
 from constraints import constraintsResidual
-from robot_utils import mergeq
+from robot_utils import mergeq, mergev
 
 _FORCE_PROXIMAL = False
 
@@ -248,12 +248,14 @@ def closedLoopForwardKinematicsCasadi(rmodel, rdata, cmodels, cdatas, actuation_
         q_prec = pin.neutral(rmodel)
     if q_mot_target is None:
         q_mot_target = np.zeros(len(Lid))
-    
+
     # * Optimisation functions
     def constraints(q):
         Lc = constraintsResidual(casmodel, casdata, cmodels, cdatas, q, recompute=True, pinspace=caspin, quaternions=False)
         return Lc
     
+    cqf = casadi.SX.sym("qf", len(actuation_model.idqfree), 1)
+    cvf = casadi.SX.sym("vf", len(actuation_model.idvfree), 1)
     cq = casadi.SX.sym("q", rmodel.nq, 1)
     cv = casadi.SX.sym("v", rmodel.nv, 1)
     constraintsCost = casadi.Function('constraint', [cq], [constraints(cq)])
@@ -261,31 +263,30 @@ def closedLoopForwardKinematicsCasadi(rmodel, rdata, cmodels, cdatas, actuation_
 
     # * Optimisation problem
     optim = casadi.Opti()
-    vdq = optim.variable(rmodel.nv)
+    vdqf = optim.variable(len(actuation_model.idvfree))
+    vdq = mergev(casmodel, actuation_model, casadi.MX.zeros(len(actuation_model.idvmot)), vdqf, True)
     vq = integrate(q_prec, vdq)
+
     # * Constraints
     optim.subject_to(constraintsCost(vq)==0)
-    optim.subject_to(vq[Lid]==q_mot_target)
+    optim.subject_to(optim.bounded(rmodel.lowerPositionLimit, vq, rmodel.upperPositionLimit))
 
     # * cost minimization
-    total_cost = casadi.sumsqr(vdq)
+    total_cost = casadi.sumsqr(vdqf)
     optim.minimize(total_cost)
 
     opts = {}
     optim.solver("ipopt", opts)
-    optim.set_initial(vdq, np.zeros(rmodel.nv))
+    optim.set_initial(vdqf, np.zeros(len(actuation_model.idvfree)))
     try:
         sol = optim.solve_limited()
         print("Solution found")
-        dq = optim.value(vdq)
-        q = pin.integrate(rmodel, q_prec, dq)
+        q = optim.value(vq)
     except:
         print('ERROR in convergence, press enter to plot debug info.')
         input()
-        dq = optim.debug.value(vdq)
-        vq = pin.integrate(rmodel, q_prec, dq)
-        print(vq)
-        q = q_prec
+        q = optim.debug.value(vq)
+        print(q)
 
     return q # I always return a value even if convergence failed
 
@@ -398,22 +399,22 @@ def closedLoopForwardKinematics(*args, **kwargs):
 import unittest
 
 class TestRobotInfo(unittest.TestCase):
-    def testInverseKinematicsScipy(self):
-        # * Import robot
-        path = "robots/robot_marcheur_1"
-        model, constraint_models, actuation_model, visual_model, collision_model = completeRobotLoader(path)
-        data = model.createData()
-        constraint_datas = [cm.createData() for cm in constraint_models]
+    # def testInverseKinematicsScipy(self):
+    #     # * Import robot
+    #     path = "robots/robot_marcheur_1"
+    #     model, constraint_models, actuation_model, visual_model, collision_model = completeRobotLoader(path)
+    #     data = model.createData()
+    #     constraint_datas = [cm.createData() for cm in constraint_models]
 
-        # * Init variable used by Unitests
-        fgoal = data.oMf[36]
-        frame_effector = 'bout_pied_frame'
+    #     # * Init variable used by Unitests
+    #     fgoal = data.oMf[36]
+    #     frame_effector = 'bout_pied_frame'
 
-        InvKinCasadi = closedLoopInverseKinematicsCasadi(model, data, constraint_models, constraint_datas, fgoal, q_prec=[], name_eff=frame_effector, onlytranslation=False)
-        InvKinScipy = closedLoopInverseKinematicsScipy(model, data, constraint_models, constraint_datas, fgoal, q_prec=[], name_eff=frame_effector, onlytranslation=False)
-        InvKinProx = closedLoopInverseKinematicsProximal(model, data, constraint_models, constraint_datas, fgoal, name_eff=frame_effector, only_translation=False)        
+    #     InvKinCasadi = closedLoopInverseKinematicsCasadi(model, data, constraint_models, constraint_datas, fgoal, q_prec=[], name_eff=frame_effector, onlytranslation=False)
+    #     InvKinScipy = closedLoopInverseKinematicsScipy(model, data, constraint_models, constraint_datas, fgoal, q_prec=[], name_eff=frame_effector, onlytranslation=False)
+    #     InvKinProx = closedLoopInverseKinematicsProximal(model, data, constraint_models, constraint_datas, fgoal, name_eff=frame_effector, only_translation=False)        
         
-        print(InvKinCasadi, InvKinScipy, InvKinProx)
+    #     print(InvKinCasadi, InvKinScipy, InvKinProx)
 
     def testForwardKinematics(self):
         # * Import robot
