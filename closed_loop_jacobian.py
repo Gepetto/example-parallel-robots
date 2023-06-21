@@ -44,38 +44,51 @@ def jacobianFinitDiffClosedLoop(model, idframe: int, idref: int, qmot: np.array,
 
 def sepJc(model,actuation_model,Jn):
     """
-    Jmot,Jfree=sepJc(model,Jn)
-
-    take a constraint Jacobian, and separate it into Jcmot and Jcfree , the constrant jacobian associate to motor and free joint
+    Jmot,Jfree=sepJc(model,actuation_model,Jn)
     
+    Separate a constraint Jacobian `Jn` into Jcmot and Jcfree, the constraint Jacobians associated with the motor joints and free joints.
+
+    Args:
+        model (pinocchio.Model): Pinocchio model.
+        actuation_model (ActuationModelFreeFlyer): Actuation model.
+        Jn (np.array): Constraint Jacobian.
+
+    Returns:
+        tuple: A tuple containing:
+            - Jmot (np.array): Constraint Jacobian associated with the motor joints.
+            - Jfree (np.array): Constraint Jacobian associated with the free joints.
     """
     Lidmot=actuation_model.idvmot
-    LJT=Jn.T.tolist()
-    Jmot=np.zeros((6,len(Lidmot)))
-    Jfree=np.zeros((6,model.nv-len(Lidmot)))
-    imot=0
-    ifree=0
-    for i,col in enumerate(LJT):
-        if i in Lidmot:
-            Jmot[:,imot]=col
-            imot+=1
-        else:
-            Jfree[:,ifree]=col
-            ifree+=1
+    Lidfree=actuation_model.idvfree
+
+
+    Smot=np.zeros((model.nv,len(Lidmot)))
+    Smot[Lidmot,range(len(Lidmot))]=1
+
+    Sfree=np.zeros((model.nv,model.nv-len(Lidmot)))
+    Sfree[Lidfree,range(len(Lidfree))]=1
+
+
+    Jmot=Jn@Smot
+    Jfree=Jn@Sfree
     return(Jmot,Jfree)
 
 def dqRowReorder(model,actuation_model,dq):
     """
-    q=dqRowReorder(model,dq)
-    take a voector/matrix organisate as [dqmot dqfree]
-    return q reorganized in accordance with the model
+    q=dqRowReorder(model,actuation_model,dq)
+    
+    Reorganize the vector/matrix `dq` in accordance with the model.
+
+    Args:
+        model (pinocchio.Model): Pinocchio model.
+        actuation_model (ActuationModelFreeFlyer): Actuation model.
+        dq (np.array): Vector/matrix organized as [dqmot dqfree].
+
+    Returns:
+        np.array: Reorganized `dq` vector/matrix.
     """
-    nJ=dq.copy()
     Lidmot=actuation_model.idvmot
-    Lidfree=[]
-    for i in range(model.nq):
-        if not(i in Lidmot):
-            Lidfree.append(i)
+    Lidfree=actuation_model.idvfree
     imot=0
     ifree=0
     for i,dq in enumerate(dq.tolist()):
@@ -90,8 +103,17 @@ def dqRowReorder(model,actuation_model,dq):
 
 def dq_dqmot(model,actuation_model,LJ):
     """
-    take J the constraint Jacobian and return dq/dqmot
-    
+    dq=dq_dq_mot(model,actuation_model,LJ)
+
+    Compute the derivative `dq/dqmot` of the joint to the motor joint.
+
+    Args:
+        model (pinocchio.Model): Pinocchio model.
+        actuation_model (ActuationModelFreeFlyer): Actuation model.
+        LJ (list): List of constraint Jacobians.
+
+    Returns:
+        np.array: Derivative `dq/dqmot`.
     """
     Lidmot=actuation_model.idvmot
     Jmot=np.zeros((0,len(Lidmot)))
@@ -108,42 +130,94 @@ def dq_dqmot(model,actuation_model,LJ):
     return(dq)
 
 
+
 def inverseConstraintKinematicsSpeed(model,data,constraint_model,constraint_data,actuation_model,q0,ideff,veff):
     """
-    vq,Jf_closed=inverseConstraintKinematics(model,data,constraint_model,constraint_data,q0,ideff,veff,name_mot="mot")
+    vq,Jf_cloesd=inverseConstraintKinematicsSpeedOptimized(model,data,constraint_model,constraint_data,actuation_model,q0,ideff,veff)
+    
+    Compute the joint velocity `vq` that generates the speed `veff` on frame `ideff`.
+    Return also `Jf_closed`, the closed loop Jacobian on the frame `ideff`.
 
-    compute the joint velocity vq that generate the speed veff on frame ideff.
-    return also the closed loop jacobian of this frame 
+    Args:
+        model (pinocchio.Model): Pinocchio model.
+        data (pinocchio.Data): Pinocchio data associated with the model.
+        constraint_model (list): List of constraint models.
+        constraint_data (list): List of constraint data associated with the constraint models.
+        actuation_model (ActuationModelFreeFlyer): Actuation model.
+        q0 (np.array): Initial configuration.
+        ideff (int): Frame index for which the joint velocity is computed.
+        veff (np.array): Desired speed on frame `ideff`.
 
-
+    Returns:
+        tuple: A tuple containing:
+            - vq (np.array): Joint velocity that generates the desired speed on frame `ideff`.
+            - Jf_closed (np.array): Closed loop Jacobian on frame `ideff`.
     """
+    #update of the jacobian an constraint model
     pin.computeJointJacobians(model,data,q0)
-    LJ=[]
-    for (cm,cd) in zip(constraint_model,constraint_data):
-        Jc=pin.getConstraintJacobian(model,data,cm,cd)
-        LJ.append(Jc)
+    LJ=[np.array(())]*len(constraint_model)
+    for (cm,cd,i) in zip(constraint_model,constraint_data,range(len(LJ))):
+        LJ[i]=pin.getConstraintJacobian(model,data,cm,cd)
+        
 
+    #init of constant
     Lidmot=actuation_model.idvmot
-    dq_dmot=dq_dqmot(model,actuation_model,LJ)
+    Lidfree=actuation_model.idvfree
+    nv=model.nv
+    nv_mot=len(Lidmot)
+    Lnc=[J.shape[0] for J in LJ]
+    nc=np.sum(Lnc)
+    
+    
+    Jmot=np.zeros((nc,len(Lidmot)))
+    Jfree=np.zeros((nc,nv-nv_mot))
+    
 
+
+    #separation between Jmot and Jfree
+    
+    nprec=0
+    for J,n in zip(LJ,Lnc):
+        Smot=np.zeros((model.nv,len(Lidmot)))
+        Smot[Lidmot,range(nv_mot)]=1
+        Sfree=np.zeros((model.nv,model.nv-len(Lidmot)))
+        Sfree[Lidfree,range(len(Lidfree))]=1
+
+        mot=J@Smot
+        free=J@Sfree
+
+        Jmot[nprec:nprec+n,:]=mot
+        Jfree[nprec:nprec+n,:]=free
+
+        nprec=nprec+n
+
+    # computation of dq/dqmot
+    I=np.identity(len(Lidmot))
+    pinvJfree=np.linalg.pinv(Jfree)
+    dq_dmot_no=np.concatenate((I,-pinvJfree@Jmot))
+    
+    
+    #re order dq/dqmot
+    dq_dmot=dq_dmot_no.copy()
+    dq_dmot[Lidmot]=dq_dmot_no[:nv_mot,:]
+    dq_dmot[Lidfree]=dq_dmot_no[nv_mot:,:]
+
+    #computation of the closed-loop jacobian
     Jf=pin.computeFrameJacobian(model,data,q0,ideff,pin.LOCAL)
     Jf_closed=Jf@dq_dmot
+    
+    #computation of the kinematics
     vqmot=np.linalg.pinv(Jf_closed)@veff 
-
-    Jmot=np.zeros((0,len(Lidmot)))
-    Jfree=np.zeros((0,model.nv-len(Lidmot)))
-    for J in LJ:
-        [mot,free]=sepJc(model,actuation_model,J)
-        Jmot=np.concatenate((Jmot,mot))
-        Jfree=np.concatenate((Jfree,free))
-    vqfree=-np.linalg.pinv(Jfree)@Jmot@vqmot
+    vqfree=-pinvJfree@Jmot@vqmot
     vqmotfree=np.concatenate((vqmot,vqfree))  # qmotfree=[qmot qfree]
-    vq=dqRowReorder(model,actuation_model,vqmotfree)
+    
+    #reorder of vq
+    vq=vqmotfree.copy()
+    vq[Lidmot]=vqmotfree[:nv_mot]
+    vq[Lidfree]=vqmotfree[nv_mot:]
+
+    
     return(vq,Jf_closed)
-
-
-
-
 
 
 ##########TEST ZONE ##########################
