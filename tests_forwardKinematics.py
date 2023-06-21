@@ -8,6 +8,7 @@ if __name__ == "__main__":
     # * Load robot
     path = os.getcwd()+"/robots/robot_marcheur_4"
     model, constraint_models, actuation_model, visual_model, collision_model = completeRobotLoader(path)
+    model.lowerPositionLimit[32] = -1.5
     data = model.createData()
     constraint_datas = [cm.createData() for cm in constraint_models]
 
