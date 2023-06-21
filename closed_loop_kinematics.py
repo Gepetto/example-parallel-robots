@@ -130,7 +130,24 @@ def closedLoopInverseKinematicsProximal(rmodel, rdata, rconstraint_model, rconst
     """
     q=inverseGeomProximalSolver(rmodel,rdata,rconstraint_model,rconstraint_data,idframe,pos,only_translation=False,max_it=100,eps=1e-12,rho=1e-10,mu=1e-4)
 
-    make the inverse kinematics with a constraint on the frame idframe that must be placed on pos (on world coordinate)
+    Perform inverse kinematics with a proximal solver.
+
+    Args:
+        rmodel (pinocchio.Model): Pinocchio model.
+        rdata (pinocchio.Data): Pinocchio data.
+        rconstraint_model (list): List of constraint models.
+        rconstraint_data (list): List of constraint data.
+        target_pos (np.array): Target position.
+        name_eff (str, optional): Name of the frame. Defaults to "effecteur".
+        onlytranslation (bool, optional): Only consider translation. Defaults to False.
+        max_it (int, optional): Maximum number of iterations. Defaults to 100.
+        eps (float, optional): Convergence threshold for primal and dual feasibility. Defaults to 1e-12.
+        rho (float, optional): Scaling factor for the identity matrix. Defaults to 1e-10.
+        mu (float, optional): Penalty parameter. Defaults to 1e-4.
+
+    Returns:
+        np.array: Joint positions that achieve the desired target position.
+    
     raw here (L84-126):https://gitlab.inria.fr/jucarpen/pinocchio/-/blob/pinocchio-3x/examples/simulation-closed-kinematic-chains.py
     """
 
@@ -164,7 +181,7 @@ def closedLoopInverseKinematicsProximal(rmodel, rdata, rconstraint_model, rconst
         pin.computeJointJacobians(model,data,q)
         kkt_constraint.compute(model,data,constraint_model,constraint_data,mu)
 
-        constraint_value = np.concatenate([pin.log(cd.c1Mc2) for cd in constraint_data])
+        constraint_value=np.concatenate([(pin.log(cd.c1Mc2).np[:cm.size()]) for (cd,cm) in zip(constraint_data,constraint_model)])
 
         LJ=[]
         for (cm,cd) in zip(constraint_model,constraint_data):
@@ -305,20 +322,34 @@ def closedLoopForwardKinematicsScipy(rmodel, rdata, cmodels, cdatas, actuation_m
     q_goal = mergeq(rmodel, actuation_model, q_mot_target, free_q_goal)
     return q_goal
 
-def closedLoopForwardKinematicsProximal(model, data, constraint_model, constraint_data, actuation_model, q_mot_target=None, q_prec=[], max_it=100, eps=1e-12, rho=1e-10, mu=1e-4):
+def closedLoopProximalMount(model, data, constraint_model, constraint_data, actuation_model, q_prec=[], max_it=100, eps=1e-12, rho=1e-10, mu=1e-4):
     """
     q=proximalSolver(model,data,constraint_model,constraint_data,max_it=100,eps=1e-12,rho=1e-10,mu=1e-4)
-    build the robot in respect of the constraint with a proximal solver
+
+    Build the robot in respect to the constraints using a proximal solver.
+
+    Args:
+        model (pinocchio.Model): Pinocchio model.
+        data (pinocchio.Data): Pinocchio data.
+        constraint_model (list): List of constraint models.
+        constraint_data (list): List of constraint data.
+        actuation_model (ActuationModelFreeFlyer): Actuation model.
+        q_prec (list or np.array, optional): Initial guess for joint positions. Defaults to [].
+        max_it (int, optional): Maximum number of iterations. Defaults to 100.
+        eps (float, optional): Convergence threshold for primal and dual feasibility. Defaults to 1e-12.
+        rho (float, optional): Scaling factor for the identity matrix. Defaults to 1e-10.
+        mu (float, optional): Penalty parameter. Defaults to 1e-4.
+
+    Returns:
+        np.array: Joint positions of the robot respecting the constraints.
+    
     raw here (L84-126):https://gitlab.inria.fr/jucarpen/pinocchio/-/blob/pinocchio-3x/examples/simulation-closed-kinematic-chains.py
     """
 
     Lid = actuation_model.idqmot
     if q_prec is None or q_prec == []:
         q_prec = pin.neutral(model)
-    if q_mot_target is None:
-        q_mot_target = np.zeros(len(Lid))
     q = q_prec
-    q[Lid] = q_mot_target
       
     constraint_dim=0
     for cm in constraint_model:
@@ -332,7 +363,7 @@ def closedLoopForwardKinematicsProximal(model, data, constraint_model, constrain
         pin.computeJointJacobians(model,data,q)
         kkt_constraint.compute(model,data,constraint_model,constraint_data,mu)
 
-        constraint_value = np.concatenate([pin.log(cd.c1Mc2) for cd in constraint_data])
+        constraint_value=np.concatenate([(pin.log(cd.c1Mc2).np[:cm.size()]) for (cd,cm) in zip(constraint_data,constraint_model)])
 
         LJ=[]
         for (cm,cd) in zip(constraint_model,constraint_data):
@@ -358,13 +389,10 @@ def closedLoopForwardKinematicsProximal(model, data, constraint_model, constrain
     return(q)
 
 def closedLoopForwardKinematics(*args, **kwargs):
-    if _FORCE_PROXIMAL:
-        return(closedLoopForwardKinematicsProximal(*args, **kwargs))
+    if _WITH_CASADI:
+        return(closedLoopForwardKinematicsCasadi(*args, **kwargs))
     else:
-        if _WITH_CASADI:
-            return(closedLoopForwardKinematicsCasadi(*args, **kwargs))
-        else:
-            return(closedLoopForwardKinematicsScipy(*args, **kwargs))
+        return(closedLoopForwardKinematicsScipy(*args, **kwargs))
 
 ##########TEST ZONE ##########################
 import unittest
