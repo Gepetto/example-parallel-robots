@@ -78,30 +78,48 @@ def vfree(actuation_model, v):
     mask[Lidmot] = True
     return(v[mask])
 
-def mergeq(model, actuation_model, q_mot, q_free):
+def mergeq(model, actuation_model, q_mot, q_free, casadiVals=False):
     """
     completeq = (qmot,qfree)
     concatenate qmot qfree in respect with motor and free id
     """
-    q=np.zeros(model.nq)
-    for q_i, idqmot in zip(q_mot, actuation_model.idqmot):
-        q[idqmot] = q_i
+    if not casadiVals:
+        q=np.zeros(model.nq)
+        for q_i, idqmot in zip(q_mot, actuation_model.idqmot):
+            q[idqmot] = q_i
 
-    for q_i,idqfree in zip(q_free, actuation_model.idqfree):
-        q[idqfree] = q_i
+        for q_i,idqfree in zip(q_free, actuation_model.idqfree):
+            q[idqfree] = q_i
+    else:
+        import casadi
+        q = casadi.SX.zeros(model.nq)
+        for q_i, idqmot in enumerate(actuation_model.idqmot):
+            q[idqmot] = q_mot[q_i]
+
+        for q_i, idqfree in enumerate(actuation_model.idqfree):
+            q[idqfree] = q_free[q_i]
     return(q)
 
-def mergev(model, actuation_model, v_mot, v_free):
+def mergev(model, actuation_model, v_mot, v_free, casadiVals=False):
     """
     completeq = (qmot,qfree)
     concatenate qmot qfree in respect with motor and free id
     """
-    v = np.zeros(model.nv)
-    for v_i, idvmot in zip(v_mot, actuation_model.idvmot):
-        v[idvmot] = v_i
+    if not casadiVals:
+        v = np.zeros(model.nv)
+        for v_i, idvmot in zip(v_mot, actuation_model.idvmot):
+            v[idvmot] = v_i
 
-    for v_i, idvfree in zip(v_free, actuation_model.idvfree):
-        v[idvfree] = v_i
+        for v_i, idvfree in zip(v_free, actuation_model.idvfree):
+            v[idvfree] = v_i
+    else:
+        import casadi
+        v = casadi.MX.zeros(model.nv)
+        for v_i, idvmot in enumerate(actuation_model.idvmot):
+            v[idvmot] = v_mot[v_i]
+
+        for v_i, idvfree in enumerate(actuation_model.idvfree):
+            v[idvfree] = v_free[v_i]
     return(v)
             
 
