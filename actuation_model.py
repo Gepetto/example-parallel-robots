@@ -14,6 +14,7 @@ class ActuationModel():
     """
     def __init__(self, model, names):
         self.motname = names
+        self.idMotJoints = []
         self.getMotId_q(model)
         self.getFreeId_q(model)
         self.getMotId_v(model)
@@ -37,6 +38,7 @@ class ActuationModel():
         Lidq = []
         for i, name in enumerate(model.names):
             if name in self.motname:
+                self.idMotJoints.append(i)
                 idq=model.joints[i].idx_q
                 nq=model.joints[i].nq
                 for j in range(nq):
