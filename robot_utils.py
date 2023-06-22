@@ -7,6 +7,8 @@ Tools to load and parse a urdf file with closed loop
 """
 import unittest
 import numpy as np
+import pinocchio as pin
+from actuation_model import ActuationModel
 # from pinocchio import casadi as caspin
 
 
@@ -121,6 +123,67 @@ def mergev(model, actuation_model, v_mot, v_free, casadiVals=False):
         for v_i, idvfree in enumerate(actuation_model.idvfree):
             v[idvfree] = v_free[v_i]
     return(v)
+
+def freezeJoints(model, constraint_models, actuation_model, visual_model, collision_model, indexToLock, reference=None):
+    '''
+    Reduce the model by freezing all joint whose name contain the key string.
+    robot: a robot wrapper where the result is stored (destructive mode)
+    indexToLock: indexes of the joints to lock
+    '''
+    if reference is None:
+        reference = pin.neutral(model)
+    print('Reducing the model')
+    reduced_model, (reduced_visual_model, reduced_collision_model) = \
+        pin.buildReducedModel(
+            model, [visual_model, collision_model], indexToLock, reference)
+
+    if constraint_models is not None:
+        print('Reducing the constraint models')
+        toremove = []
+        for cm in constraint_models:
+            print(cm.name)
+            n1 = model.names[cm.joint1_id]
+            n2 = model.names[cm.joint2_id]
+
+            # The reference joints might have been frozen
+            # Then seek for the corresponding frame, that might be either a joint frame
+            # or a op frame.
+            idf1 = reduced_model.getFrameId(n1)
+            f1 = reduced_model.frames[idf1]
+            idf2 = reduced_model.getFrameId(n2)
+            f2 = reduced_model.frames[idf2]
+
+            # Make the new reference joints the parent of the frame.
+            cm.joint1_id = f1.parentJoint
+            cm.joint2_id = f2.parentJoint
+            # In the best case, the joint still exist, then it corresponds to a joint frame.
+            if f1.type != pin.JOINT:
+                assert (f1.type == pin.FIXED_JOINT)
+                # If the joint has be freezed, the contact now should be referenced with respect
+                # to the new joint, which was a parent of the previous.
+                cm.joint1_placement = f1.placement*cm.joint1_placement
+                # ! We assume here that the parent of the fixed joint is not also fixed
+            # Same for the second joint
+            if f2.type != pin.JOINT:
+                assert (f2.type == pin.FIXED_JOINT)
+                cm.joint2_placement = f2.placement*cm.joint2_placement
+
+            if cm.joint1_id == cm.joint2_id:
+                toremove.append(cm)
+                print(f'Remove constraint {n1}//{n2} (during freeze)')
+
+        reduced_constraint_models = [
+            cm for cm in constraint_models if cm not in toremove]
+    
+    if actuation_model is not None:
+        print('Reducing the actuation model')
+        list_names = [model.names[idMot] for idMot in actuation_model.idMotJoints]
+        reduced_actuation_model = ActuationModel(reduced_model,list_names)
+
+    return(reduced_model, reduced_constraint_models, reduced_actuation_model, reduced_visual_model, reduced_collision_model)
+            
+
+            
             
 
 ########## TEST ZONE ##########################
@@ -161,6 +224,15 @@ class TestRobotInfo(unittest.TestCase):
             assert (vmot(am, v)==results[i][0]).all()
             assert (vfree(am, v)==results[i][1]).all()
             assert (mergev(m, am, vmot(am, v), vfree(am, v)) == v).all()
+        
+    def test_freeze_joints(self):
+        robot_path = "robots/robot_simple_iso3D"
+        m ,cm, am, vm, collm = completeRobotLoader(robot_path)
+        print("Trying to fix some joints")
+        id_tofix = [2]
+        rm ,rcm, ram, rvm, rcollm = freezeJoints(m, cm, am, vm, collm, id_tofix, None)
+        assert (len(ram.idqmot)==1 and len(ram.idqfree)==3)
+        assert (len(rcm)==1)
 
 
 
