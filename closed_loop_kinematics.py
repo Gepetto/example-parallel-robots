@@ -399,22 +399,22 @@ def closedLoopForwardKinematics(*args, **kwargs):
 import unittest
 
 class TestRobotInfo(unittest.TestCase):
-    # def testInverseKinematicsScipy(self):
-    #     # * Import robot
-    #     path = "robots/robot_marcheur_1"
-    #     model, constraint_models, actuation_model, visual_model, collision_model = completeRobotLoader(path)
-    #     data = model.createData()
-    #     constraint_datas = [cm.createData() for cm in constraint_models]
+    def testInverseKinematicsScipy(self):
+        # * Import robot
+        path = "robots/robot_marcheur_1"
+        model, constraint_models, actuation_model, visual_model, collision_model = completeRobotLoader(path)
+        data = model.createData()
+        constraint_datas = [cm.createData() for cm in constraint_models]
 
-    #     # * Init variable used by Unitests
-    #     fgoal = data.oMf[36]
-    #     frame_effector = 'bout_pied_frame'
+        # * Init variable used by Unitests
+        fgoal = data.oMf[36]
+        frame_effector = 'bout_pied_frame'
 
-    #     InvKinCasadi = closedLoopInverseKinematicsCasadi(model, data, constraint_models, constraint_datas, fgoal, q_prec=[], name_eff=frame_effector, onlytranslation=False)
-    #     InvKinScipy = closedLoopInverseKinematicsScipy(model, data, constraint_models, constraint_datas, fgoal, q_prec=[], name_eff=frame_effector, onlytranslation=False)
-    #     InvKinProx = closedLoopInverseKinematicsProximal(model, data, constraint_models, constraint_datas, fgoal, name_eff=frame_effector, only_translation=False)        
+        InvKinCasadi = closedLoopInverseKinematicsCasadi(model, data, constraint_models, constraint_datas, fgoal, q_prec=[], name_eff=frame_effector, onlytranslation=False)
+        InvKinScipy = closedLoopInverseKinematicsScipy(model, data, constraint_models, constraint_datas, fgoal, q_prec=[], name_eff=frame_effector, onlytranslation=False)
+        InvKinProx = closedLoopInverseKinematicsProximal(model, data, constraint_models, constraint_datas, fgoal, name_eff=frame_effector, onlytranslation=False)        
         
-    #     print(InvKinCasadi, InvKinScipy, InvKinProx)
+        print(InvKinCasadi, InvKinScipy, InvKinProx)
 
     def testForwardKinematics(self):
         # * Import robot
@@ -425,7 +425,7 @@ class TestRobotInfo(unittest.TestCase):
 
         ForwKinCasadi = closedLoopForwardKinematicsCasadi(model, data, constraint_models, constraint_datas, actuation_model)
         ForwKinScipy = closedLoopForwardKinematicsScipy(model, data, constraint_models, constraint_datas, actuation_model)
-        ForwKinProx = closedLoopForwardKinematicsProximal(model, data, constraint_models, constraint_datas, actuation_model)        
+        ForwKinProx = closedLoopProximalMount(model, data, constraint_models, constraint_datas, actuation_model)        
         
         truth = [ 0.00000000e+00,  0.00000000e+00,  1.11436057e-01, -6.65014110e-02,
                 1.11436057e-01,  1.69335893e-01, -8.16182755e-01, -3.34177420e-01,
