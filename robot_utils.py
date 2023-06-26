@@ -94,7 +94,7 @@ def mergeq(model, actuation_model, q_mot, q_free, casadiVals=False):
             q[idqfree] = q_i
     else:
         import casadi
-        q = casadi.SX.zeros(model.nq)
+        q = casadi.MX.zeros(model.nq)
         for q_i, idqmot in enumerate(actuation_model.idqmot):
             q[idqmot] = q_mot[q_i]
 
