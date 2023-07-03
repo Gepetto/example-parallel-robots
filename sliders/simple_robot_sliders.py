@@ -7,46 +7,40 @@ Create a Tkinter interface to move some joints in the robots while satisfying th
 """
 
 import tkinter as tk
-from Obsolete.tk_configuration import RobotFrame
+from sliders.tk_configuration import RobotFrame
 import pinocchio as pin
-import example_robot_data as robex
-from util_load_robots import addXYZAxisToJoints, replaceGeomByXYZAxis, addXYZAxisToConstraints
+from sliders.util_frames import addXYZAxisToJoints, replaceGeomByXYZAxis, addXYZAxisToConstraints
 from casadi_projection import ProjectConfig
 
-import sys
-sys.path.append('..')
-from closed_loop_utils.robot_info import completeRobotLoader
+from loader_tools import completeRobotLoader
 
 # * Load model
-urdf_path = "../closed_loop_utils/robots/robot_simple_iso6D"
-robot = completeRobotLoader(urdf_path)
+robot_path = "../closed_loop_utils/robots/robot_simple_iso6D"
+model, constraint_models, actuation_model, visual_model, collision_model = completeRobotLoader(robot_path)
 
 # * Set a scale factor to handle too small and too big robots
 scale = 1
 
 # * Refresh the initial configuration
-robot.q0 = pin.neutral(robot.model)
+q0 = pin.neutral(model)
+
+# * Initialize the viewer
+Viewer = pin.visualize.MeshcatVisualizer
+viz = Viewer(model, collision_model, visual_model)
+viz.initViewer(loadModel=True, open=False)
 
 # * Adding constraints
-addXYZAxisToConstraints(robot.model, robot.visual_model, robot.constraint_models, scale=scale)
+addXYZAxisToConstraints(model, visual_model, constraint_models, scale=scale)
 
 # * Add frames to all joints
-addXYZAxisToJoints(robot.model, robot.visual_model, scale=scale)
-robot.rebuildData()
-
-# * Initialize visualizer
-viewer_type = 'Gepetto'
-if viewer_type == 'Gepetto':
-    robot.initViewer(loadModel=True)
-elif viewer_type == 'Meshcat': # ! Not working yet
-    mv = pin.visualize.meshCatVisualizer()
-    robot.initViewer(mv, loadModel=True)
+addXYZAxisToJoints(model, visual_model, scale=scale)
+data = model.rebuildData()
 
 # * Add axis to the frames
-replaceGeomByXYZAxis(robot.visual_model, robot.viz, scale=scale)
+replaceGeomByXYZAxis(visual_model, viz, scale=scale)
 
 # * Display initial configuration (This one does not satisfies the constraints)
-robot.display(robot.q0)
+viz.display(q0)
 
 class ConstraintsManager:
     def __init__(self, robotConstraintFrame):
@@ -60,7 +54,7 @@ class ConstraintsManager:
         self.robotConstraintFrame.display()
 
     def resetAndDisp(self): # Self-explanatory
-        self.robotConstraintFrame.resetConfiguration(robot.q0)
+        self.robotConstraintFrame.resetConfiguration(q0)
         self.robotConstraintFrame.display()
 
 class RobotConstraintFrame(RobotFrame):

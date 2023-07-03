@@ -30,17 +30,15 @@ class ProjectConfig:
       q_iv = qref_iv  # The commanded joint iv should move exactly
     '''
 
-    def __init__(self,robot):
-
-        self.robot = robot
-        robot.casmodel = caspin.Model(robot.model)
-        robot.casdata = robot.casmodel.createData()
+    def __init__(self, model):
+        casmodel = caspin.Model(model)
+        casdata = casmodel.createData()
         
-        cq = self.cq = casadi.SX.sym("q", robot.casmodel.nq, 1)
-        cv = self.cv = casadi.SX.sym("v", robot.casmodel.nv, 1)
-        caspin.forwardKinematics(robot.casmodel, robot.casdata, cq)
+        cq = self.cq = casadi.SX.sym("q", casmodel.nq, 1)
+        cv = self.cv = casadi.SX.sym("v", casmodel.nv, 1)
+        caspin.forwardKinematics(casmodel, casdata, cq)
 
-        self.integrate = casadi.Function('integrate', [cq, cv],[ caspin.integrate(robot.casmodel,cq,cv) ])
+        self.integrate = casadi.Function('integrate', [cq, cv],[ caspin.integrate(casmodel,cq,cv) ])
         self.recomputeConstraints()
         self.verbose = True
         
@@ -50,8 +48,8 @@ class ProjectConfig:
         This will force the recomputation of the computation graph of the constraint function.
         '''
         robot = self.robot
-        constraint = constraintsResidual(robot.casmodel, robot.casdata,
-                                         robot.constraint_models, robot.constraint_datas, self.cq,
+        constraint = constraintsResidual(self.casmodel, self.casdata,
+                                         self.constraint_models, self.constraint_datas, self.cq,
                                          False, caspin)
         self.constraint = casadi.Function('constraint', [self.cq], [ constraint ])
 
