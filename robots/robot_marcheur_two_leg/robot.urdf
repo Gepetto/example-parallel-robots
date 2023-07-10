@@ -1160,7 +1160,7 @@
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="to_rotule_servo_gauche_1" type="revolute">
+<joint name="to_rotule_servo_gauche_2" type="revolute">
 <origin xyz="2.2204460492503130808e-16 0.057000000000000494715 0.0025000000000004185541" rpy="-1.570796326794896558 -1.866329740155221443e-16 1.5707963267948970021" />
 <parent link="molet_4" />
 <child link="toe_b_1/2_4" />

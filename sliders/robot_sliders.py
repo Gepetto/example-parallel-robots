@@ -15,7 +15,7 @@ from sliders.casadi_projection import ProjectConfig
 from loader_tools import completeRobotLoader
 
 # * Load model
-robot_path = "robots/robot_marcheur_1"
+robot_path = "robots/robot_marcheur_two_leg"
 model, full_constraint_models, actuation_model, visual_model, collision_model = completeRobotLoader(robot_path)
 full_constraint_datas = [cm.createData() for cm in full_constraint_models]
 
