@@ -254,8 +254,6 @@ def closedLoopForwardKinematicsCasadi(rmodel, rdata, cmodels, cdatas, actuation_
         Lc = constraintsResidual(casmodel, casdata, cmodels, cdatas, q, recompute=True, pinspace=caspin, quaternions=False)
         return Lc
     
-    cqf = casadi.SX.sym("qf", len(actuation_model.idqfree), 1)
-    cvf = casadi.SX.sym("vf", len(actuation_model.idvfree), 1)
     cq = casadi.SX.sym("q", rmodel.nq, 1)
     cv = casadi.SX.sym("v", rmodel.nv, 1)
     constraintsCost = casadi.Function('constraint', [cq], [constraints(cq)])
@@ -264,7 +262,7 @@ def closedLoopForwardKinematicsCasadi(rmodel, rdata, cmodels, cdatas, actuation_
     # * Optimisation problem
     optim = casadi.Opti()
     vdqf = optim.variable(len(actuation_model.idvfree))
-    vdq = mergev(casmodel, actuation_model, casadi.MX.zeros(len(actuation_model.idvmot)), vdqf, True)
+    vdq = mergev(casmodel, actuation_model, q_mot_target, vdqf, True)
     vq = integrate(q_prec, vdq)
 
     # * Constraints

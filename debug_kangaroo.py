@@ -3,7 +3,6 @@ from pinocchio import casadi as caspin
 import casadi
 import os
 from loader_tools import completeRobotLoader
-from closed_loop_kinematics import closedLoopForwardKinematicsScipy, closedLoopForwardKinematicsCasadi, closedLoopForwardKinematicsProximal, closedLoopInverseKinematicsCasadi, closedLoopInverseKinematicsScipy, closedLoopInverseKinematicsProximal
 import numpy as np
 from constraints import constraintsResidual
 from itertools import combinations
