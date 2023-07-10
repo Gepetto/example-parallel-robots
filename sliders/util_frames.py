@@ -4,16 +4,6 @@ import hppfcl
 import example_robot_data as robex
 import numpy as np
 
-
-def defRootName(model, name):
-    '''
-    Change the name of the root joint (to avoid ambiguities when merging two free-flyer robots
-    '''
-    assert (model.names[1] == 'root_joint')
-    model.names[1] = f'root_{name}'
-    model.frames[1].name = f'root_{name}'
-
-
 def addXYZAxisToFrames(rm, vm, basename='XYZ', scale=1, world=False):
     '''
     Add a sphere object to each joint in the visual model.
@@ -63,16 +53,16 @@ def replaceGeomByXYZAxis(vm, viz, prefix='XYZ_', visible='OFF', scale=1):
     to replace some geometry objects with proper prefix by XYZAxis visuals.
     rm: robot model
     vm: visual model
-    viz: a gepetto-viewer client (typically found in robot.viewer)
+    viz: a viewer client
     prefix: the prefix of the geometry objects to replace
     '''
-    gv = viz.viewer.gui
     for g in vm.geometryObjects:
         if g.name[:len(prefix)] == prefix:
+            print(g.name)
             gname = viz.getViewerNodeName(g, pin.VISUAL)
-            gv.deleteNode(gname, True)
-            gv.addXYZaxis(gname, [1., 1, 1., 1.], .01*scale, .2*scale)
-            gv.setVisibility(gname, visible)
+            viz.delete(g, pin.VISUAL)
+            # gv.addXYZaxis(gname, [1., 1, 1., 1.], .01*scale, .2*scale)
+            # gv.setVisibility(gname, visible)
 
 
 def freeze(robot, indexToLock, referenceConfigurationName=None, rebuildData=True):
@@ -156,13 +146,3 @@ def renameConstraints(robot):
         cm.name = f'{robot.model.names[cm.joint1_id]},{robot.model.names[cm.joint2_id]}'
 
 # Necessary to load some of the robot Virgile created and that are not in example robot data
-
-
-def load_from_path(path, type='urdf'):
-    if type == 'urdf':
-        rob = RobotWrapper.BuildFromURDF(path + "/robot.urdf", path)
-    elif type == 'sdf':
-        raise NotImplementedError("SDF is not supported yet")
-    else:
-        raise AttributeError("Type choice must be 'sdf' or 'urdf'")
-    return (rob)

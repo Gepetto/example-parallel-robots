@@ -20,18 +20,19 @@ class RobotFrame:
     '''
     NROW = 14 # Number of sliders per row
     
-    def __init__(self,robotModel,q0,viz,motors = []):
+    def __init__(self, model, constraint_model, actuation_model, q0, viz):
         '''
         motors is a list of joint names that must be highlighted in blue
         '''
-        self.rmodel = robotModel
+        self.rmodel = model
+        self.constraint_model = constraint_model
+        self.actuation_model = actuation_model
         self.viz = viz
         self.auto_refresh = True
         self.q0 = q0.copy()
-        self.motors = motors
         self.slider_vars = []
 
-    def resetConfiguration(self,qref=None):
+    def resetConfiguration(self, qref=None):
         if qref is not None:
             dq_ref = pin.difference(self.rmodel, self.q0, qref)
         for i, s in enumerate(self.slider_vars):
@@ -60,14 +61,14 @@ class RobotFrame:
 
         # Création des sliders verticaux
         iq = 0
-        for j,name in enumerate(self.rmodel.names):
+        for j, name in enumerate(self.rmodel.names):
             if j==0: continue
             for iv in range(self.rmodel.joints[j].nv):
                 var = tk.DoubleVar(value=0)
                 self.slider_vars.append(var)
                 slider_frame = tk.Frame(self.slidersFrame,
                                         highlightbackground="blue",
-                                        highlightthickness=2 if name in self.motors else 0)
+                                        highlightthickness=2 if self.rmodel.joints[j].idx_q in self.actuation_model.idqmot else 0)
                 row  =  iq // self.NROW
                 slider_frame.grid(row=row*2, column=iq-self.NROW*row, padx=2, pady=2)
                 name_i = name if self.rmodel.joints[j].nv==1 else name+f'{iv}'
@@ -80,13 +81,13 @@ class RobotFrame:
         
             class VisibilityChanger:
                 def __init__(self, viz, name,var):
-                    self.gv = viz.viewer.gui
+                    # self.gv = viz.viewer.gui
                     self.name = name
                     self.var = var
                     self()
                 def __call__(self):
                     gname = f'world/pinocchio/visuals/XYZ_{self.name}'
-                    self.gv.setVisibility(gname,'ON'  if self.var.get() else 'OFF')
+                    # self.gv.setVisibility(gname,'ON'  if self.var.get() else 'OFF')
                     print(gname,'ON'  if self.var.get() else 'OFF', self.var, self.var.get())
             XYZon = tk.BooleanVar(value=False)
             tk.Checkbutton(slider_frame, text="",variable=XYZon,

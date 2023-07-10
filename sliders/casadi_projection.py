@@ -30,26 +30,29 @@ class ProjectConfig:
       q_iv = qref_iv  # The commanded joint iv should move exactly
     '''
 
-    def __init__(self, model):
-        casmodel = caspin.Model(model)
-        casdata = casmodel.createData()
-        
-        cq = self.cq = casadi.SX.sym("q", casmodel.nq, 1)
-        cv = self.cv = casadi.SX.sym("v", casmodel.nv, 1)
-        caspin.forwardKinematics(casmodel, casdata, cq)
+    def __init__(self, model, constraint_models):
+        self.casmodel = caspin.Model(model)
+        self.casdata = self.casmodel.createData()
 
-        self.integrate = casadi.Function('integrate', [cq, cv],[ caspin.integrate(casmodel,cq,cv) ])
-        self.recomputeConstraints()
+        cq = self.cq = casadi.SX.sym("q", self.casmodel.nq, 1)
+        cv = self.cv = casadi.SX.sym("v", self.casmodel.nv, 1)
+        
+        caspin.forwardKinematics(self.casmodel, self.casdata, cq)
+
+        self.integrate = casadi.Function('integrate', [cq, cv],[ caspin.integrate(self.casmodel,cq,cv) ])
+        self.recomputeConstraints(constraint_models)
         self.verbose = True
         
-    def recomputeConstraints(self):
+    def recomputeConstraints(self, constraint_models):
         '''
         Call this function when the constraint activation changes. 
         This will force the recomputation of the computation graph of the constraint function.
         '''
-        robot = self.robot
+        self.cas_constraint_models = [caspin.RigidConstraintModel(cm) for cm in constraint_models]
+        self.cas_constraint_datas = [m.createData() for m in self.cas_constraint_models]
+
         constraint = constraintsResidual(self.casmodel, self.casdata,
-                                         self.constraint_models, self.constraint_datas, self.cq,
+                                         self.cas_constraint_models, self.cas_constraint_datas, self.cq,
                                          False, caspin)
         self.constraint = casadi.Function('constraint', [self.cq], [ constraint ])
 
@@ -57,25 +60,19 @@ class ProjectConfig:
         '''
         Project an input configuration <qref> to the nearby feasible configuration
         If <iv> is not null, then the DOF #iv is set as hard constraints, while the other are moved.
-        '''
-        robot = self.robot
-        if len(robot.constraint_models)==0:
-            return qref
-       
+        '''       
         self.opti = opti = casadi.Opti()
 
         # Decision variables
-        self.vdq = vdq = opti.variable(robot.model.nv)
-        self.vq = vq = self.integrate(robot.q0, vdq)
+        self.vdq = vdq = opti.variable(self.casmodel.nv)
+        self.vq = vq = self.integrate(qref, vdq)
 
         # Cost and constraints
-        totalcost = casadi.sumsqr(vq-qref)
-        opti.subject_to( self.constraint(vq) == 0 )
+        totalcost = casadi.sumsqr(vdq)
+        opti.subject_to(self.constraint(vq)==0)
 
         if iv is not None:
-            dqref = pin.difference(robot.model, robot.q0, qref)
-            opti.subject_to( vdq[iv]==dqref[iv] )
-            # opti.subject_to(vq[iv] == qref[iv])
+            opti.subject_to( vdq[iv]==0 )
 
         # Solve
         if self.verbose:

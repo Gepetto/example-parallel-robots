@@ -5,19 +5,21 @@ Ludovic DE MATTEIS - May 2023
 Create a Tkinter interface to move some joints in the robots while satisfying the desired closed loop constraints
 
 """
-
+import meshcat
 import tkinter as tk
 from sliders.tk_configuration import RobotFrame
 import pinocchio as pin
 from sliders.util_frames import addXYZAxisToJoints, replaceGeomByXYZAxis, addXYZAxisToConstraints
-from casadi_projection import ProjectConfig
+from sliders.casadi_projection import ProjectConfig
 
 from loader_tools import completeRobotLoader
 
 # * Load model
-robot_path = "../closed_loop_utils/robots/robot_simple_iso6D"
-model, constraint_models, actuation_model, visual_model, collision_model = completeRobotLoader(robot_path)
+robot_path = "robots/robot_marcheur_1"
+model, full_constraint_models, actuation_model, visual_model, collision_model = completeRobotLoader(robot_path)
+full_constraint_datas = [cm.createData() for cm in full_constraint_models]
 
+constraint_models, constraint_datas = full_constraint_models.copy(), full_constraint_datas.copy()
 # * Set a scale factor to handle too small and too big robots
 scale = 1
 
@@ -27,20 +29,26 @@ q0 = pin.neutral(model)
 # * Initialize the viewer
 Viewer = pin.visualize.MeshcatVisualizer
 viz = Viewer(model, collision_model, visual_model)
-viz.initViewer(loadModel=True, open=False)
+viz.viewer = meshcat.Visualizer(zmq_url="tcp://127.0.0.1:6000")
+viz.clean()
+viz.loadViewerModel(rootNodeName="universe")
+viz.display(q0)
+print("Display q0")
 
-# * Adding constraints
-addXYZAxisToConstraints(model, visual_model, constraint_models, scale=scale)
+# # * Adding constraints
+# addXYZAxisToConstraints(model, visual_model, constraint_models, scale=scale)
 
-# * Add frames to all joints
-addXYZAxisToJoints(model, visual_model, scale=scale)
-data = model.rebuildData()
+# # * Add frames to all joints
+# addXYZAxisToJoints(model, visual_model, scale=scale)
+data = model.createData()
 
 # * Add axis to the frames
 replaceGeomByXYZAxis(visual_model, viz, scale=scale)
 
 # * Display initial configuration (This one does not satisfies the constraints)
+print("Done with replace")
 viz.display(q0)
+print("Display q0")
 
 class ConstraintsManager:
     def __init__(self, robotConstraintFrame):
@@ -58,12 +66,14 @@ class ConstraintsManager:
         self.robotConstraintFrame.display()
 
 class RobotConstraintFrame(RobotFrame):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, model, constraint_models, actuation_model, q0, viz):
+        super().__init__(model, constraint_models, actuation_model, q0, viz)
+        self.model = model
+        self.constraint_models = constraint_models
         self.setProjector()
 
     def setProjector(self):
-        self.project = ProjectConfig(robot)
+        self.project = ProjectConfig(self.model, self.constraint_models)
 
     def slider_display(self, i, v): # Overwrites the parent function
         qref = robotFrame.getConfiguration(self.boolVar.get())
@@ -82,8 +92,7 @@ class RobotConstraintFrame(RobotFrame):
 root = tk.Tk()
 root.bind('<Escape>', lambda ev: root.destroy())
 root.title("Simple Robot Sliders")
-robotFrame = RobotConstraintFrame(robot.model, robot.q0, robot,
-                                  motors=[n for n in robot.model.names if 'mot' in n])
+robotFrame = RobotConstraintFrame(model, constraint_models, actuation_model, q0, viz)
 robotFrame.createSlider(root)       # Creating sliders, main projection functions are called when the sliders are moved
 robotFrame.createRefreshButons(root)
 
@@ -117,35 +126,31 @@ class CheckboxConstraintCmd:
     def __call__(self):
         if self.boolVar.get():
             print(f'Activate {self.cm.name}')
-            assert (self.cm not in robot.constraint_models)
-            robot.constraint_models.append(self.cm)
-            robot.constraint_datas = [
-                robot.full_constraint_datas[cm] for cm in robot.constraint_models]
+            assert (self.cm not in constraint_models)
+            constraint_models.append(self.cm)
         else:
             print(f'Deactivate {self.cm.name}')
-            assert (self.cm in robot.constraint_models)
-            robot.constraint_models.remove(self.cm)
-        robot.constraint_datas = [robot.full_constraint_datas[cm]
-                                  for cm in robot.constraint_models]
-        self.project.recomputeConstraints()
+            assert (self.cm in constraint_models)
+            constraint_models.remove(self.cm)
+        self.project.recomputeConstraints(constraint_models)
 
 # * Interface to display or hide constraints on the robot
-class CheckboxDisplayConstraintCmd:
-    def __init__(self, boolVar, cm, vm, viz):
-        self.boolVar = boolVar
-        self.cm = cm
-        self.viz = viz
-        # Get viewer object names with pinocchio convention
-        idxs = [vm.getGeometryId(f'XYZ_cst_{cm.name}_1'),
-                vm.getGeometryId(f'XYZ_cst_{cm.name}_2')]
-        self.gname = [viz.getViewerNodeName(vm.geometryObjects[idx], pin.VISUAL)
-                      for idx in idxs]
+# class CheckboxDisplayConstraintCmd:
+#     def __init__(self, boolVar, cm, vm, viz):
+#         self.boolVar = boolVar
+#         self.cm = cm
+#         self.viz = viz
+#         # Get viewer object names with pinocchio convention
+#         idxs = [vm.getGeometryId(f'XYZ_cst_{cm.name}_1'),
+#                 vm.getGeometryId(f'XYZ_cst_{cm.name}_2')]
+#         self.gname = [viz.getViewerNodeName(vm.geometryObjects[idx], pin.VISUAL)
+#                       for idx in idxs]
 
-    def __call__(self):
-        print(f'Set display {self.cm.name} to {self.boolVar.get()}')
-        for n in self.gname:
-            self.viz.viewer.gui.setVisibility(
-                n, 'ON' if self.boolVar.get() else 'OFF')
+#     def __call__(self):
+#         print(f'Set display {self.cm.name} to {self.boolVar.get()}')
+#         for n in self.gname:
+#             self.viz.viewer.gui.setVisibility(
+#                 n, 'ON' if self.boolVar.get() else 'OFF')
 
 
 # * Setting the positions of elements in the active/display constraints window
@@ -156,23 +161,23 @@ actLabel.grid(row=0, column=1)
 dispLabel = tk.Label(constraintFrame, text='display')
 dispLabel.grid(row=0, column=2)
 
-for i, cm in enumerate(robot.constraint_models):
+for i, cm in enumerate(full_constraint_models):
     cstLabel = tk.Label(constraintFrame, text=cm.name)
     cstLabel.grid(row=i+1, column=0)
 
-    active_constraint_var = tk.BooleanVar(value=cm in robot.constraint_models)
+    active_constraint_var = tk.BooleanVar(value=cm in full_constraint_models)
     active_constraint_cmd = CheckboxConstraintCmd(
         active_constraint_var, cm, robotFrame.project)
     constraint_checkbox = tk.Checkbutton(constraintFrame, variable=active_constraint_var,
                                          command=active_constraint_cmd)
     constraint_checkbox.grid(row=i+1, column=1)
 
-    display_constraint_var = tk.BooleanVar(value=cm in robot.constraint_models)
-    display_constraint_cmd = CheckboxDisplayConstraintCmd(
-        display_constraint_var, cm, robot.visual_model, robot.viz)
-    display_constraint_cmd()
-    display_constraint_checkbox = tk.Checkbutton(constraintFrame, variable=display_constraint_var,
-                                                 command=display_constraint_cmd)
-    display_constraint_checkbox.grid(row=i+1, column=2)
+    # display_constraint_var = tk.BooleanVar(value=cm in full_constraint_models)
+    # display_constraint_cmd = CheckboxDisplayConstraintCmd(
+    #     display_constraint_var, cm, visual_model, viz)
+    # display_constraint_cmd()
+    # display_constraint_checkbox = tk.Checkbutton(constraintFrame, variable=display_constraint_var,
+    #                                              command=display_constraint_cmd)
+    # display_constraint_checkbox.grid(row=i+1, column=2)
 
 root.mainloop()
