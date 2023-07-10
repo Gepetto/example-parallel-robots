@@ -88,7 +88,7 @@ def completeRobotLoader(path, name_urdf="robot.urdf", name_yaml="robot.yaml"):
     if no type assiciated, 6D type is applied
     """
     # Load the robot model using the pinocchio URDF parser
-    robot = RobotWrapper.BuildFromURDF(path + "/" + name_urdf, path)
+    robot = RobotWrapper.BuildFromURDF(path + "/" + name_urdf, path, root_joint=pin.JointModelFreeFlyer())
     model = robot.model
 
     yaml_content = getYAMLcontents(path, name_yaml)

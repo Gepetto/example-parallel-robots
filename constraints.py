@@ -18,13 +18,7 @@ def constraintResidual6d(model, data, cmodel, cdata, q, recompute=True, pinspace
         pinspace.forwardKinematics(model, data, q)
     oMc1 = data.oMi[cmodel.joint1_id]*pinspace.SE3(cmodel.joint1_placement)
     oMc2 = data.oMi[cmodel.joint2_id]*pinspace.SE3(cmodel.joint2_placement)
-    if pinspace is caspin:
-        tran_error = oMc1.translation - oMc2.translation
-        rot_error = casadi.diag(oMc1.rotation.T @ oMc2.rotation) - casadi.SX.ones(3)
-        return(casadi.vertcat(tran_error, rot_error))
-    else:
-        return(pin.log6(oMc1.inverse() * oMc2))
-    # return pinspace.log6(oMc1.inverse()*oMc2).vector
+    return(pinspace.log6(oMc1.inverse() * oMc2).vector)
 
 
 def constraintResidual3d(model, data, cmodel, cdata, q=None, recompute=True, pinspace=pin):
