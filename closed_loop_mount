@@ -10,36 +10,31 @@ from scipy.optimize import fmin_slsqp
 from numpy.linalg import norm
 
 from constraints import constraintsResidual
-from robot_utils import mergeq, mergev
+
+_FORCE_PROXIMAL = False
 
 def closedLoopMountCasadi(rmodel, rdata, cmodels, cdatas, q_prec=None):
     """
-        closedLoopMountCasadi(model, data, goal, q_prec=[], name_mot="mot", nom_fermeture="fermeture", type="6D"):
+        closedLoopMountCasadi(rmodel, rdata, cmodels, cdatas, q_prec=None):
 
-        Takes the target position of the motors axis of the robot (joint with name_mot ("mot" if empty) in the name),
-        the current configuration of all joint (set to robot.q0 if let empty) and the name of the joints that close the kinematic loop. And returns a configuration that matches the goal positions of the motors
+        This function takes the current configuration of the robot and projects it to the nearest feasible configuration - i.e. satisfying the constraints
         This function solves a minimization problem over q. q is actually defined as q0+dq (this removes the need for quaternion constraints and gives less decision variables)
         
         min || q - q_prec ||^2
-
         subject to:  f_c(q)=0              # Kinematics constraints are satisfied
-                     vq[motors]=q_motors    # The motors joints should be as commanded
 
         Argument:
-            model - Pinocchio robot model
-            data - Pinocchio robot data
-            target - Target configuration of the motors joints. Should be have size of the number of motors
+            rmodel - Pinocchio robot model
+            rdata - Pinocchio robot data
+            cmodels - Pinocchio constraint models
+            cdatas - Pinocchio constraint datas
             q_prec - Previous configuration of the free joints
-            n_mot - String contained in the motors joints names
-            nom_fermeture - String contained in the frame names that should be in contact
-            type - Constraint type
     """
     # * Defining casadi models
     casmodel = caspin.Model(rmodel)
     casdata = casmodel.createData()
 
     # * Getting ids of actuated and free joints
-    Lid = actuation_model.idqmot
     if q_prec is None:
         q_prec = pin.neutral(rmodel)
 
@@ -81,32 +76,35 @@ def closedLoopMountCasadi(rmodel, rdata, cmodels, cdatas, q_prec=None):
     return q # I always return a value even if convergence failed
 
 
-def closedLoopMountScipy(rmodel, rdata, cmodels, cdatas, q_mot_target=None, q_prec=[]):
-
+def closedLoopMountScipy(rmodel, rdata, cmodels, cdatas, q_prec=None):
     """
-        forwardgeom_parra(
-        model, data, goal, q_prec=[], name_mot="mot", nom_fermeture="fermeture", type="6D"):
+        closedLoopMountCasadi(rmodel, rdata, cmodels, cdatas, q_prec=None):
 
-        take the goal position of the motors  axis of the robot ( joint with name_mot, ("mot" if empty) in the name), the robot model and data,
-        the current configuration of all joint ( set to robot.q0 if let empty)
-        the name of the joint who close the kinematic loop nom_fermeture
+        This function takes the current configuration of the robot and projects it to the nearest feasible configuration - i.e. satisfying the constraints
+        This function solves a minimization problem over q. q is actually defined as q0+dq (this removes the need for quaternion constraints and gives less decision variables)
+        
+        min || q - q_prec ||^2
+        subject to:  f_c(q)=0              # Kinematics constraints are satisfied
 
-        return a configuration who match the goal position of the motor
+        Argument:
+            rmodel - Pinocchio robot model
+            rdata - Pinocchio robot data
+            cmodels - Pinocchio constraint models
+            cdatas - Pinocchio constraint datas
+            q_prec - Previous configuration of the free joints
     """
     if q_prec is None:
         q_prec = pin.neutral(rmodel)
 
-    def costnorm(qF):
-        c = norm(qF) ** 2
+    def costnorm(q):
+        c = norm(q) ** 2
         return c
 
-    def contraintesimp(qF):
-        q = mergeq(rmodel, actuation_model, q_mot_target, qF)
+    def contraintesimp(q):
         Lc = constraintsResidual(rmodel, rdata, cmodels, cdatas, q, recompute=True, pinspace=pin, quaternions=True)
         return Lc
 
-    free_q_goal = fmin_slsqp(costnorm, q_prec, f_eqcons=contraintesimp)
-    q_goal = mergeq(rmodel, actuation_model, q_mot_target, free_q_goal)
+    q_goal = fmin_slsqp(costnorm, q_prec, f_eqcons=contraintesimp)
     return q_goal
 
 def closedLoopMountProximal(model, data, constraint_model, constraint_data, q_prec=[], max_it=100, eps=1e-12, rho=1e-10, mu=1e-4):
@@ -120,7 +118,6 @@ def closedLoopMountProximal(model, data, constraint_model, constraint_data, q_pr
         data (pinocchio.Data): Pinocchio data.
         constraint_model (list): List of constraint models.
         constraint_data (list): List of constraint data.
-        actuation_model (ActuationModelFreeFlyer): Actuation model.
         q_prec (list or np.array, optional): Initial guess for joint positions. Defaults to [].
         max_it (int, optional): Maximum number of iterations. Defaults to 100.
         eps (float, optional): Convergence threshold for primal and dual feasibility. Defaults to 1e-12.
@@ -173,3 +170,12 @@ def closedLoopMountProximal(model, data, constraint_model, constraint_data, q_pr
         q = pin.integrate(model,q,-alpha*dq)
         y -= alpha*(-dy + y)
     return(q)
+
+def closedLoopInverseKinematics(*args, **kwargs):
+    if _FORCE_PROXIMAL:
+        return(closedLoopMountProximal(*args, **kwargs))
+    else:
+        if _WITH_CASADI:
+            return(closedLoopMountCasadi(*args, **kwargs))
+        else:
+            return(closedLoopMountScipy(*args, **kwargs))
