@@ -81,13 +81,16 @@ def getYAMLcontents(path, name_yaml='robot.yaml'):
         contents = yaml.load(yaml_file, Loader=SafeLoader)
     return(contents)
 
-def completeRobotLoader(path, name_urdf="robot.urdf", name_yaml="robot.yaml"):
+def completeRobotLoader(path, name_urdf="robot.urdf", name_yaml="robot.yaml", freeflyer=False):
     """
     Return  model and constraint model associated to a directory, where the name od the urdf is robot.urdf and the name of the yam is robot.yaml
     if no type assiciated, 6D type is applied
     """
     # Load the robot model using the pinocchio URDF parser
-    robot = RobotWrapper.BuildFromURDF(path + "/" + name_urdf, path, root_joint=pin.JointModelFreeFlyer())
+    if freeflyer:
+        robot = RobotWrapper.BuildFromURDF(path + "/" + name_urdf, path, root_joint=pin.JointModelFreeFlyer())
+    else:
+        robot = RobotWrapper.BuildFromURDF(path + "/" + name_urdf, path)
     model = robot.model
 
     yaml_content = getYAMLcontents(path, name_yaml)
