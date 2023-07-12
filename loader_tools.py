@@ -95,13 +95,11 @@ def completeRobotLoader(path, name_urdf="robot.urdf", name_yaml="robot.yaml"):
     # try to update model
     update_joint = yaml_content['joint_name']   
     joints_types = yaml_content['joint_type']
-    print(joints_types)
     LjointFixed=[]
     new_model = pin.Model() 
     visual_model = robot.visual_model
     for place, iner, name, parent, joint in list(zip(model.jointPlacements, model.inertias, model.names, model.parents,model.joints))[1:]:
         if name in update_joint:
-            print(name, update_joint.index(name))
             joint_type = joints_types[update_joint.index(name)]
             if joint_type=='SPHERICAL':
                 jm = pin.JointModelSpherical()
