@@ -6,7 +6,7 @@ import numpy as np
 
 if __name__ == "__main__":
     # * Load robot
-    path = os.getcwd()+"/robots/robot_marcheur_4"
+    path = os.getcwd()+"/robots/robot_marcheur_two_leg"
     model, constraint_models, actuation_model, visual_model, collision_model = completeRobotLoader(path)
     # model.lowerPositionLimit[32] = -1.5
     data = model.createData()
@@ -25,9 +25,9 @@ if __name__ == "__main__":
     viz.display(q0)
 
     # * Get initial feasible configuration
-    # q0 = closedLoopForwardKinematicsScipy(model, data, constraint_models, constraint_datas, actuation_model, goal, q_prec=q0)
+    # q0 = closedLoopMountScipy(model, data, constraint_models, constraint_datas, q_prec=q0)
+    # q0 = closedLoopMountProximal(model, data, constraint_models, constraint_datas, q_prec=q0)
     q0 = closedLoopMountProximal(model, data, constraint_models, constraint_datas, q_prec=q0)
-    # q0 = closedLoopForwardKinematicsProximal(model, data, constraint_models, constraint_datas, actuation_model, goal, q_prec=q0)
     print("Solution found, press enter to visualize")
     input()
 

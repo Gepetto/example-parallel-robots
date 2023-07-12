@@ -50,7 +50,7 @@ def closedLoopMountCasadi(rmodel, rdata, cmodels, cdatas, q_prec=None):
 
     # * Optimisation problem
     optim = casadi.Opti()
-    vdq = optim.variable(rmodel.nq)
+    vdq = optim.variable(rmodel.nv)
     vq = integrate(q_prec, vdq)
 
     # * Constraints
@@ -171,7 +171,7 @@ def closedLoopMountProximal(model, data, constraint_model, constraint_data, q_pr
         y -= alpha*(-dy + y)
     return(q)
 
-def closedLoopInverseKinematics(*args, **kwargs):
+def closedLoopMount(*args, **kwargs):
     if _FORCE_PROXIMAL:
         return(closedLoopMountProximal(*args, **kwargs))
     else:
