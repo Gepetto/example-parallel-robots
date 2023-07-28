@@ -16,10 +16,10 @@ class ActuationModel():
         self.motnames = names
         self.model = model
         self.idMotJoints = []
-        self.getMotId_q(model)
-        self.getFreeId_q(model)
-        self.getMotId_v(model)
-        self.getFreeId_v(model)
+        self.getMotId_q()
+        self.getFreeId_q()
+        self.getMotId_v()
+        self.getFreeId_v()
 
         
     def __str__(self):
@@ -67,7 +67,7 @@ class ActuationModel():
                         Lidv.append(idv+j)
         self.idvmot=Lidv
 
-    def getFreeId_q(self,model):
+    def getFreeId_q(self):
         """
         GetFreeId_q = (model)
         Return a list of ids corresponding to the configurations vector associated with motors joints
@@ -78,13 +78,13 @@ class ActuationModel():
             Lid - List of motors configuration velocity ids
         """
         Lidq=[]
-        for i in range(model.nq):
+        for i in range(self.model.nq):
             if not(i in self.idqmot):
                 Lidq.append(i)
         self.idqfree=Lidq
         return(Lidq)
     
-    def getFreeId_v(self,model):
+    def getFreeId_v(self):
         """
         GetFreeId_v = (model)
         Return a list of ids corresponding to the configurations velocity vector associated with motors joints
@@ -95,7 +95,7 @@ class ActuationModel():
             Lid - List of motors configuration velocity ids
         """
         Lidv=[]
-        for i in range(model.nv):
+        for i in range(self.model.nv):
             if not(i in self.idvmot):
                 Lidv.append(i)
         self.idvfree=Lidv
