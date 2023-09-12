@@ -1,3 +1,10 @@
+'''
+Virgile Batto & Ludovic De Matteis
+
+September 2023
+
+'''
+
 import pinocchio as pin
 from pinocchio.robot_wrapper import RobotWrapper
 import re
@@ -7,20 +14,20 @@ from warnings import warn
 
 from actuation_model import ActuationModel
 
-def nameFrameConstraint(model, nomferme="fermeture", Lid=[]):
+def nameFrameConstraint(model, name_loop="fermeture", Lid=[]):
     """
-    nameFrameConstraint(model, nomferme="fermeture", Lid=[])
+    nameFrameConstraint(model, name_loop="fermeture", Lid=[])
 
     Takes a robot model and returns a list of frame names that are constrained to be in contact: Ln=[['name_frame1_A','name_frame1_B'],['name_frame2_A','name_frame2_B'].....]
     where names_frameX_A and names_frameX_B are the frames in forced contact by the kinematic loop.
-    The frames must be named: "...nomfermeX_..." where X is the number of the corresponding kinematic loop.
+    The frames must be named: "...name_loopX..." where X is the number of the corresponding kinematic loop.
     The kinematics loop can be selectionned with Lid=[id_kinematcsloop1, id_kinematicsloop2 .....] = [1,2,...]
     if Lid = [] all the kinematics loop will be treated.
 
     Argument:
         model - Pinocchio robot model
-        nom_ferme - nom de la fermeture  
-        Lid - List of kinematic loop indexes to select
+        name_loop [Optionnal] - identifier of the names of the frame to set in contact for closing the loop - default: "fermeture"
+        Lid [Optionnal] - List of kinematic loop indexes to select - default: [] (select all)
     Return:
         Lnames - List of frame names that should be in contact
     """
@@ -32,7 +39,7 @@ def nameFrameConstraint(model, nomferme="fermeture", Lid=[]):
         pair_names = []
         for f in model.frames:
             name = f.name
-            match = re.search(nomferme + str(id), name)
+            match = re.search(name_loop + str(id), name)
             match2 = re.search("frame", f.name)
             if match and not (match2):
                 pair_names.append(name)
@@ -42,9 +49,24 @@ def nameFrameConstraint(model, nomferme="fermeture", Lid=[]):
 
 def generateYAML(path, name_mot="mot", name_spherical="to_rotule", file=None):
     """
-    if robot.urdf inside the path, write a yaml file associate to the the robot.
-    Write the name of the frame constrained, the type of the constraint, the presence of rotule articulation, 
-    the name of the motor, idq and idv (with the sphrical joint).
+    generateYAML(path, name_mot="mot", name_spherical="to_rotule", file=None)
+
+    Generate a YAML file to describe the robot constraints and actuation. If the YAML file exists and is specified, information is added to this file instead.
+    The generated file contains 
+    - contrained frames names
+    - constraints types
+    - Names of the motor joints
+    - Names of the specific joints (such as spherical)
+    - Type of the specific joints
+    The robot motor name should contain name_mot and the joints that are to be converted to spherical joints should contain name_spherical in their name.
+
+    Argument:
+        path - path to the folder containing the robot.urdf file and in which the yaml file will be generated
+        name_mot [Optionnal] - Identifier of the motors names - default: "mot"
+        name_spherical [Optionnal] - Identifier of the spherical joints names - default: "to_rotule"
+        file [Optionnal] - Existing YAML file to complete - default: None
+    Return:
+        None
     """
     rob = RobotWrapper.BuildFromURDF(path + "/robot.urdf", path)
     Ljoint=[]
@@ -59,7 +81,7 @@ def generateYAML(path, name_mot="mot", name_spherical="to_rotule", file=None):
         if match_mot:
             Lmot.append(name)
 
-    name_frame_constraint = nameFrameConstraint(rob.model, nomferme="fermeture")
+    name_frame_constraint = nameFrameConstraint(rob.model, name_loop="fermeture")
     constraint_type=["6d"]*len(name_frame_constraint) # Constraint is default to 6D... that is not very general...
 
     if file is None:
@@ -77,14 +99,32 @@ def generateYAML(path, name_mot="mot", name_spherical="to_rotule", file=None):
         file.write('joint_type: '+str(Ltype)+'\n')
 
 def getYAMLcontents(path, name_yaml='robot.yaml'):
+    """
+    Get the content of the given YAML file.
+    Argument:
+        path - Path to the folder containing the YAML file
+        name_yaml [Optionnal] - name of the file
+    Return:
+        Content of the file
+    """
     with open(path+"/"+name_yaml, 'r') as yaml_file:
         contents = yaml.load(yaml_file, Loader=SafeLoader)
     return(contents)
 
 def completeRobotLoader(path, name_urdf="robot.urdf", name_yaml="robot.yaml", freeflyer=False):
     """
-    Return  model and constraint model associated to a directory, where the name od the urdf is robot.urdf and the name of the yam is robot.yaml
-    if no type assiciated, 6D type is applied
+    Generate a robot complete model from the URDF and YAML files.
+    Argument:
+        path - Path to the folder containing the URDF and YAML files
+        name_urdf [Optionnal] - Name of the URDF file - default: "robot.urdf"
+        name_yaml [Optionnal] - Name of the YAML file - default: "robot.yaml"
+        freeflyer [Optionnal, Boolean] - Set weither the root joint should a free-flyer (True) or world fixed (False) - default: False 
+    Return:
+        model - Pinocchio robot model
+        constraint_models - Pinocchio robot constraint model
+        actuation_model - Robot actuation model - Custom object defined in the lib
+        visual_model - Pinocchio robot visual model
+        collision_model - Pinocchio robot collision model
     """
     # Load the robot model using the pinocchio URDF parser
     if freeflyer:
