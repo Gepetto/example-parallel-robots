@@ -1,3 +1,11 @@
+'''
+-*- coding: utf-8 -*-
+Virgile Batto & Ludovic De Matteis - September 2023
+
+Tools to mount a robot model, i.e. get a configuration that satisfies all contraints (both robot-robot constraints and robot-environment constraints)
+Contains three methods to solve this problem, methode selection is done by setting global variables or through imports
+'''
+
 import pinocchio as pin
 import numpy as np
 try:
@@ -19,16 +27,21 @@ def closedLoopMountCasadi(rmodel, rdata, cmodels, cdatas, q_prec=None):
 
         This function takes the current configuration of the robot and projects it to the nearest feasible configuration - i.e. satisfying the constraints
         This function solves a minimization problem over q. q is actually defined as q0+dq (this removes the need for quaternion constraints and gives less decision variables)
+        leading to an optimisation on Lie group.
         
         min || q - q_prec ||^2
         subject to:  f_c(q)=0              # Kinematics constraints are satisfied
 
+        The problem is solved using CasADi + IPOpt
+
         Argument:
             rmodel - Pinocchio robot model
             rdata - Pinocchio robot data
-            cmodels - Pinocchio constraint models
-            cdatas - Pinocchio constraint datas
-            q_prec - Previous configuration of the free joints
+            cmodels - Pinocchio constraint models list
+            cdatas - Pinocchio constraint datas list
+            q_prec [Optionnal] - Previous configuration of the free joints - default: None (set to neutral model pose)
+        Return:
+            q - Configuration vector satisfying constraints (if optimisation process succeded)
     """
     # * Defining casadi models
     casmodel = caspin.Model(rmodel)
@@ -78,79 +91,93 @@ def closedLoopMountCasadi(rmodel, rdata, cmodels, cdatas, q_prec=None):
 
 def closedLoopMountScipy(rmodel, rdata, cmodels, cdatas, q_prec=None):
     """
-        closedLoopMountCasadi(rmodel, rdata, cmodels, cdatas, q_prec=None):
+        closedLoopMountScipy(rmodel, rdata, cmodels, cdatas, q_prec=None):
 
         This function takes the current configuration of the robot and projects it to the nearest feasible configuration - i.e. satisfying the constraints
         This function solves a minimization problem over q. q is actually defined as q0+dq (this removes the need for quaternion constraints and gives less decision variables)
+        leading to an optimisation on Lie group.
         
         min || q - q_prec ||^2
         subject to:  f_c(q)=0              # Kinematics constraints are satisfied
 
+        The problem is solved using Scipy SLSQP solver
+
         Argument:
             rmodel - Pinocchio robot model
             rdata - Pinocchio robot data
-            cmodels - Pinocchio constraint models
-            cdatas - Pinocchio constraint datas
-            q_prec - Previous configuration of the free joints
+            cmodels - Pinocchio constraint models list
+            cdatas - Pinocchio constraint datas list
+            q_prec [Optionnal] - Previous configuration of the free joints - default: None (set to neutral model pose)
+        Return:
+            q - Configuration vector satisfying constraints (if optimisation process succeded)
     """
     if q_prec is None:
         q_prec = pin.neutral(rmodel)
 
-    def costnorm(q):
-        c = norm(q) ** 2
+    def costnorm(vq):
+        c = norm(vq) ** 2
         return c
 
-    def contraintesimp(q):
+    def contraintesimp(vq):
+        q = pin.integrate(rmodel, q_prec, vq)
         Lc = constraintsResidual(rmodel, rdata, cmodels, cdatas, q, recompute=True, pinspace=pin, quaternions=True)
         return Lc
 
-    q_goal = fmin_slsqp(costnorm, q_prec, f_eqcons=contraintesimp)
+    vq_goal = fmin_slsqp(costnorm, np.zeros(rmodel.nv), f_eqcons=contraintesimp)
+    q_goal = pin.integrate(rmodel, q_prec, vq_goal)
     return q_goal
 
-def closedLoopMountProximal(model, data, constraint_model, constraint_data, q_prec=[], max_it=100, eps=1e-12, rho=1e-10, mu=1e-4):
+def closedLoopMountProximal(rmodel, rdata, cmodels, cdatas, q_prec=None, max_it=100, eps=1e-12, rho=1e-10, mu=1e-4):
     """
-    q=proximalSolver(model,data,constraint_model,constraint_data,max_it=100,eps=1e-12,rho=1e-10,mu=1e-4)
+        closedLoopMountProximal(rmodel, rdata, cmodels, cdatas, q_prec=None, max_it=100, eps=1e-12, rho=1e-10, mu=1e-4):
 
-    Build the robot in respect to the constraints using a proximal solver.
+        This function takes the current configuration of the robot and projects it to the nearest feasible configuration - i.e. satisfying the constraints
+        This function solves a minimization problem over q. q is actually defined as q0+dq (this removes the need for quaternion constraints and gives less decision variables)
+        leading to an optimisation on Lie group.
+        
+        min || q - q_prec ||^2
+        subject to:  f_c(q)=0              # Kinematics constraints are satisfied
 
-    Args:
-        model (pinocchio.Model): Pinocchio model.
-        data (pinocchio.Data): Pinocchio data.
-        constraint_model (list): List of constraint models.
-        constraint_data (list): List of constraint data.
-        q_prec (list or np.array, optional): Initial guess for joint positions. Defaults to [].
-        max_it (int, optional): Maximum number of iterations. Defaults to 100.
-        eps (float, optional): Convergence threshold for primal and dual feasibility. Defaults to 1e-12.
-        rho (float, optional): Scaling factor for the identity matrix. Defaults to 1e-10.
-        mu (float, optional): Penalty parameter. Defaults to 1e-4.
+        The problem is solved using a proximal solver
 
-    Returns:
-        np.array: Joint positions of the robot respecting the constraints.
-    
+        Argument:
+            rmodel - Pinocchio robot model
+            rdata - Pinocchio robot data
+            cmodels - Pinocchio constraint models list
+            cdatas - Pinocchio constraint datas list
+            q_prec [Optionnal] - Previous configuration of the free joints - default: None (set to neutral model pose)
+            max_it [Optionnal] - Maximal number of proximal iterations - default: 100
+            eps [Optinnal] - Proximal parameter epsilon - default: 1e-12
+            rho [Optionnal] - Proximal parameter rho - default: 1e-10
+            mu [Optionnal] - Proximal parameter mu - default: 1e-4
+        Return:
+            q - Configuration vector satisfying constraints (if optimisation process succeded)
+
+    Initially written by Justin Carpentier    
     raw here (L84-126):https://gitlab.inria.fr/jucarpen/pinocchio/-/blob/pinocchio-3x/examples/simulation-closed-kinematic-chains.py
     """
 
-    if q_prec is None or q_prec == []:
-        q_prec = pin.neutral(model)
+    if q_prec is None:
+        q_prec = pin.neutral(rmodel)
     q = q_prec
       
     constraint_dim=0
-    for cm in constraint_model:
+    for cm in cmodels:
         constraint_dim += cm.size() 
 
     y = np.ones((constraint_dim))
-    data.M = np.eye(model.nv) * rho
-    kkt_constraint = pin.ContactCholeskyDecomposition(model,constraint_model)
+    rdata.M = np.eye(rmodel.nv) * rho
+    kkt_constraint = pin.ContactCholeskyDecomposition(rmodel,cmodels)
 
     for k in range(max_it):
-        pin.computeJointJacobians(model,data,q)
-        kkt_constraint.compute(model,data,constraint_model,constraint_data,mu)
+        pin.computeJointJacobians(rmodel,rdata,q)
+        kkt_constraint.compute(rmodel,rdata,cmodels,cdatas,mu)
 
-        constraint_value=np.concatenate([(pin.log(cd.c1Mc2).np[:cm.size()]) for (cd,cm) in zip(constraint_data,constraint_model)])
+        constraint_value=np.concatenate([(pin.log(cd.c1Mc2).np[:cm.size()]) for (cd,cm) in zip(cdatas,cmodels)])
 
         LJ=[]
-        for (cm,cd) in zip(constraint_model,constraint_data):
-            Jc=pin.getConstraintJacobian(model,data,cm,cd)
+        for (cm,cd) in zip(cmodels,cdatas):
+            Jc=pin.getConstraintJacobian(rmodel,rdata,cm,cd)
             LJ.append(Jc)
         J=np.concatenate(LJ)
 
@@ -160,14 +187,14 @@ def closedLoopMountProximal(model, data, constraint_model, constraint_data, q_pr
             print("Convergence achieved")
             break
         print("constraint_value:",np.linalg.norm(constraint_value))
-        rhs = np.concatenate([-constraint_value - y*mu, np.zeros(model.nv)])
+        rhs = np.concatenate([-constraint_value - y*mu, np.zeros(rmodel.nv)])
 
         dz = kkt_constraint.solve(rhs) 
         dy = dz[:constraint_dim]
         dq = dz[constraint_dim:]
 
         alpha = 1.
-        q = pin.integrate(model,q,-alpha*dq)
+        q = pin.integrate(rmodel,q,-alpha*dq)
         y -= alpha*(-dy + y)
     return(q)
 
@@ -179,3 +206,33 @@ def closedLoopMount(*args, **kwargs):
             return(closedLoopMountCasadi(*args, **kwargs))
         else:
             return(closedLoopMountScipy(*args, **kwargs))
+        
+########## TEST ZONE ##########################
+
+import unittest
+class TestRobotLoader(unittest.TestCase):
+    def test_mount(self):
+        import io
+        from loader_tools import completeRobotLoader
+        robots_paths = [['robot_marcheur_1', 'unittest_mount_marcheur_1.npy']]
+
+        for rp in robots_paths:
+            path = "robots/"+rp[0]
+            m ,cm, am, vm, collm = completeRobotLoader(path)
+            data = m.createData()
+            cdata = [cm0.createData() for cm0 in cm]
+            def constraints(q):
+                Lc = constraintsResidual(m, data, cm, cdata, q, recompute=True, pinspace=pin, quaternions=False)
+                return Lc
+            
+            truth = np.load("unittest/"+rp[1])
+            res_casadi = closedLoopMountCasadi(m, data, cm, cdata)
+            res_scipy = closedLoopMountScipy(m, data, cm, cdata)
+            res_prox = closedLoopMountProximal(m, data, cm, cdata)
+
+            assert np.max(constraints(res_casadi))<1e-7
+            assert np.max(constraints(res_scipy))<1e-7
+            assert np.max(constraints(res_prox))<1e-7
+        
+if __name__ == "__main__":
+    unittest.main()
