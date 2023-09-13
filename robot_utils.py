@@ -12,76 +12,77 @@ from actuation_model import ActuationModel
 
 def qfree(actuation_model, q):
     """
-    free_q = q2freeq(model, q, name_mot="mot")
-    Return the non-motor coordinate of q, i.e. the configuration of the non-actuated joints
+    qfree(actuation_model, q)
+    Return the non-actuated coordinates of q
 
     Arguments:
-        model - robot model from pinocchio
+        actuation_model - robot actuation model
         q - complete configuration vector
-        name_mot - string to be found in the motors joints names
     Return:
-        Lid - List of motors configuration velocity ids
+        q_free - non-actuated part of q, ordered as it was in q
     """
-    Lidmot = actuation_model.idqfree
     mask = np.zeros_like(q, bool)
-    mask[Lidmot] = True
+    mask[actuation_model.idqfree] = True
     return(q[mask])
 
 def qmot(actuation_model, q):
     """
-    free_q = qmot(model, q, name_mot="mot")
-    Return the non-motor coordinate of q, i.e. the configuration of the non-actuated joints
+    qmot(actuation_model, q)
+    Return the actuated coordinates of q
 
     Arguments:
-        model - robot model from pinocchio
+        actuation_model - robot actuation model
         q - complete configuration vector
-        name_mot - string to be found in the motors joints names
     Return:
-        Lid - List of motors configuration velocity ids
+        q_mot - actuated part of q, ordered as it was in q
     """
-    Lidmot = actuation_model.idqmot
     mask = np.zeros_like(q, bool)
-    mask[Lidmot] = True
+    mask[actuation_model.idqmot] = True
     return(q[mask])
 
 def vmot(actuation_model, v):
     """
-    free_q = qmot(model, q, name_mot="mot")
-    Return the non-motor coordinate of q, i.e. the configuration of the non-actuated joints
+    vmot(actuation_model, v)
+    Return the actuated coordinates of the articular velocity vector v
 
     Arguments:
-        model - robot model from pinocchio
-        q - complete configuration vector
-        name_mot - string to be found in the motors joints names
+        actuation_model - robot actuation model
+        v - complete articular velocity vector
     Return:
-        Lid - List of motors configuration velocity ids
+        v_mot - actuated part of v, ordered as it was in v
     """
-    Lidmot = actuation_model.idvmot
     mask = np.zeros_like(v, bool)
-    mask[Lidmot] = True
+    mask[actuation_model.idvmot] = True
     return(v[mask])
 
 def vfree(actuation_model, v):
     """
-    free_q = qmot(model, q, name_mot="mot")
-    Return the non-motor coordinate of q, i.e. the configuration of the non-actuated joints
+    vfree(actuation_model, v)
+    Return the non-actuated coordinates of the articular velocity vector v
 
     Arguments:
-        model - robot model from pinocchio
-        q - complete configuration vector
-        name_mot - string to be found in the motors joints names
+        actuation_model - robot actuation model
+        v - complete articular velocity vector
     Return:
-        Lid - List of motors configuration velocity ids
+        v_free - non-actuated part of v, ordered as it was in v
     """
-    Lidmot = actuation_model.idvfree
     mask = np.zeros_like(v, bool)
-    mask[Lidmot] = True
+    mask[actuation_model.idvfree] = True
     return(v[mask])
 
 def mergeq(model, actuation_model, q_mot, q_free, casadiVals=False):
     """
-    completeq = (qmot,qfree)
-    concatenate qmot qfree in respect with motor and free id
+    mergeq(model, actuation_model, q_mot, q_free, casadiVals=False)
+    Concatenate qmot and qfree to make a configuration vector q that corresponds to the robot structure. This function includes Casadi support
+
+    Arguments:
+        model - Pinocchio robot model
+        actuation_model - robot actuation model
+        q_mot - the actuated part of q
+        q_free - the non-actuated part of q
+        casadivals [Optionnal] - Set to use Casadi implementation or not - default: False
+    Return:
+        q - the merged articular configuration vector
     """
     if not casadiVals:
         q=np.zeros(model.nq)
@@ -102,8 +103,17 @@ def mergeq(model, actuation_model, q_mot, q_free, casadiVals=False):
 
 def mergev(model, actuation_model, v_mot, v_free, casadiVals=False):
     """
-    completeq = (qmot,qfree)
-    concatenate qmot qfree in respect with motor and free id
+    mergev(model, actuation_model, v_mot, v_free, casadiVals=False)
+    Concatenate qmot and qfree to make a configuration vector q that corresponds to the robot structure. This function includes Casadi support
+
+    Arguments:
+        model - Pinocchio robot model
+        actuation_model - robot actuation model
+        v_mot - the actuated part of v
+        v_free - the non-actuated part of v
+        casadivals [Optionnal] - Set to use Casadi implementation or not - default: False
+    Return:
+        v - the merged articular velocity vector
     """
     if not casadiVals:
         v = np.zeros(model.nv)
@@ -124,9 +134,21 @@ def mergev(model, actuation_model, v_mot, v_free, casadiVals=False):
 
 def freezeJoints(model, constraint_models, actuation_model, visual_model, collision_model, indexToLock, reference=None):
     '''
-    Reduce the model by freezing all joint whose name contain the key string.
-    robot: a robot wrapper where the result is stored (destructive mode)
-    indexToLock: indexes of the joints to lock
+    Reduce the model by freezing all joint needed.
+    Argument:
+        model - Pinocchio robot model
+        constraint_models - Pinocchio robot constraint models list
+        actuation_model - robot actuation model
+        visual_model - Pinocchio robot visual model
+        collision_model - Pinocchio robot collision model
+        indexToLock: indexes of the joints to lock
+        reference - reference configuration to reduce the model from, fixed joints will get their reference configuration fixed
+    Return:
+        reduced_model - Reduced Pinocchio robot model
+        reduced_constraint_models - Reduced Pinocchio robot constraint models list
+        reduced_actuation_model - Reduced robot actuation model
+        reduced_visual_model - Reduced Pinocchio robot visual model
+        reduced_collision_model - Reduced Pinocchio robot collision model
     '''
     if reference is None:
         reference = pin.neutral(model)
@@ -144,8 +166,7 @@ def freezeJoints(model, constraint_models, actuation_model, visual_model, collis
             n2 = model.names[cm.joint2_id]
 
             # The reference joints might have been frozen
-            # Then seek for the corresponding frame, that might be either a joint frame
-            # or a op frame.
+            # Then seek for the corresponding frame, that might be either a joint frame or a op frame.
             idf1 = reduced_model.getFrameId(n1)
             f1 = reduced_model.frames[idf1]
             idf2 = reduced_model.getFrameId(n2)
@@ -179,9 +200,6 @@ def freezeJoints(model, constraint_models, actuation_model, visual_model, collis
         reduced_actuation_model = ActuationModel(reduced_model,list_names)
 
     return(reduced_model, reduced_constraint_models, reduced_actuation_model, reduced_visual_model, reduced_collision_model)
-            
-
-            
             
 
 ########## TEST ZONE ##########################
