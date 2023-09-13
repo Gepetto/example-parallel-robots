@@ -1,8 +1,8 @@
 '''
-Virgile Batto & Ludovic De Matteis
+-*- coding: utf-8 -*-
+Virgile Batto & Ludovic De Matteis - September 2023
 
-September 2023
-
+Define an actuation model, usefull for closed kinematic loops robot or underactuated robots.
 '''
 
 import numpy as np

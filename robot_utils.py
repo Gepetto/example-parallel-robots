@@ -1,16 +1,14 @@
 """
 -*- coding: utf-8 -*-
-Virgile BATTO & Ludovic DE MATTEIS, April 2023
+Virgile BATTO & Ludovic DE MATTEIS - April 2023
 
-Tools to load and parse a urdf file with closed loop
-
+Tools to merge and split configuration into actuated and non-actuated parts. Also contains tools to freeze joints from a model
 """
+
 import unittest
 import numpy as np
 import pinocchio as pin
 from actuation_model import ActuationModel
-# from pinocchio import casadi as caspin
-
 
 def qfree(actuation_model, q):
     """
