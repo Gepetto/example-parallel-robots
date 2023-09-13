@@ -26,9 +26,9 @@ class ActuationModel():
     def __init__(self, model, names):
         self.idMotJoints = []
         self.getMotId_q(model, names)
-        self.getFreeId_q(model, names)
+        self.getFreeId_q(model)
         self.getMotId_v(model, names)
-        self.getFreeId_v(model, names)
+        self.getFreeId_v(model)
 
         
     def __str__(self):
