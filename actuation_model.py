@@ -1,101 +1,116 @@
+'''
+Virgile Batto & Ludovic De Matteis
+
+September 2023
+
+'''
+
 import numpy as np
 class ActuationModel():
     """
-    the actuation model of the robot,
-    robot_actuation_model(model,names)
-    argument :
+    Defines the actuation model of a robot
+    robot_actuation_model = ActuationModel(model, names)
+    Arguments:
         model - robot model
-        names - list of the name of motor joint name
-    contain :
-        self.nq, self.nv size of configuration/velocity space
-        self.idqmot , self.idvmot the id of the motor joint inside a configuration / velocity vector
-        self.idfree, self.idvfree the id of the free joint inside a configuration / velocity vector
+        names - list of the identifiers of motor joints names
+    Attributes:
+        self.idMotJoints - list of ids of the actuated joints
+        self.idqmot - list of the indexes of the articular configuration values corresponding to actuated joints
+        self.idvmot - list of the indexes of the articular velocities values corresponding to actuated joints
+        self.idqfree - list of the indexes of the articular configuration values corresponding to non-actuated joints
+        self.idvfree - list of the indexes of the articular velocities values corresponding to non-actuated joints
+    Methodes:
+        None outside those called during init
     
     """
     def __init__(self, model, names):
-        self.motnames = names
-        self.model = model
         self.idMotJoints = []
-        self.getMotId_q()
-        self.getFreeId_q()
-        self.getMotId_v()
-        self.getFreeId_v()
+        self.getMotId_q(model, names)
+        self.getFreeId_q(model, names)
+        self.getMotId_v(model, names)
+        self.getFreeId_v(model, names)
 
         
     def __str__(self):
         return(print("Id q motor: " + str(self.idqmot) + "\r" "Id v motor: " + str(self.idvmot) ))
     
 
-    def getMotId_q(self):
+    def getMotId_q(self, model, motnames):
         """
-        GetMotId_q = (model)
-        Return a list of ids corresponding to the configurations velocity associated with motors joints
+        getMotId_q(self[ActuationModel], model, motnames)
+        Return a list of ids corresponding to the configuration indexes associated with motors joints
 
         Arguments:
             model - robot model from pinocchio
+            motnames - list of the identifiers of actuated joints
         Return:
-            Lid - List of motors configuration velocity ids
+            None - Update self.idqmot
         """
         Lidq = []
-        for i, name in enumerate(self.model.names):
-            for motname in self.motnames:
+        for i, name in enumerate(model.names):
+            for motname in motnames:
                 if motname in name:
                     self.idMotJoints.append(i)
-                    idq = self.model.joints[i].idx_q
-                    nq = self.model.joints[i].nq
+                    idq = model.joints[i].idx_q
+                    nq = model.joints[i].nq
                     for j in range(nq):
                         Lidq.append(idq+j)
         self.idqmot=Lidq
 
-    def getMotId_v(self):
+    def getMotId_v(self, model, motnames):
         """
-        GetMotId_q = (model)
-        Return a list of ids corresponding to the configurations velocity associated with motors joints
+        getMotId_v(self[ActuationModel], model, motnames)
+        Return a list of ids corresponding to the articular velocity indexes associated with motors joints
 
         Arguments:
             model - robot model from pinocchio
+            motnames - list of the identifiers of actuated joints
         Return:
-            Lid - List of motors configuration velocity ids
+            None - Update self.idvmot
         """
         Lidv = []
-        for i, name in enumerate(self.model.names):
-            for motname in self.motnames:
+        for i, name in enumerate(model.names):
+            for motname in motnames:
                 if motname in name:
-                    idv = self.model.joints[i].idx_v
-                    nv = self.model.joints[i].nv
+                    idv = model.joints[i].idx_v
+                    nv = model.joints[i].nv
                     for j in range(nv):
                         Lidv.append(idv+j)
         self.idvmot=Lidv
 
-    def getFreeId_q(self):
+    def getFreeId_q(self, model):
         """
-        GetFreeId_q = (model)
-        Return a list of ids corresponding to the configurations vector associated with motors joints
+        getFreeId_q(self[ActuationModel], model)
+        Return a list of ids corresponding to the configuration indexes associated with non actuated joints
 
         Arguments:
             model - robot model from pinocchio
         Return:
-            Lid - List of motors configuration velocity ids
+            None - Update self.idqfree
         """
         Lidq=[]
-        for i in range(self.model.nq):
+        for i in range(model.nq):
             if not(i in self.idqmot):
                 Lidq.append(i)
         self.idqfree=Lidq
         return(Lidq)
     
-    def getFreeId_v(self):
+    def getFreeId_v(self, model):
         """
-        GetFreeId_v = (model)
-        Return a list of ids corresponding to the configurations velocity vector associated with motors joints
+        getFreeId_v(self[ActuationModel], model)
+        Return a list of ids corresponding to the articular velocity indexes associated with non actuated joints
 
         Arguments:
             model - robot model from pinocchio
         Return:
-            Lid - List of motors configuration velocity ids
+            None - Update self.idvfree
         """
         Lidv=[]
-        for i in range(self.model.nv):
+        for i in range(model.nv):
             if not(i in self.idvmot):
                 Lidv.append(i)
         self.idvfree=Lidv
+
+########## TEST ZONE ##########################
+
+# Unitary tests for actuation model are included in the ones of loader_tools
