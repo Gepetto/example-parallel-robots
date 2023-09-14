@@ -1,6 +1,6 @@
 """
 -*- coding: utf-8 -*-
-Ludovic DE MATTEIS & Virgile BATTO, April 2023
+Ludovic DE MATTEIS & Virgile BATTO, September 2023
 
 Tools to compute the forwark and inverse kinematics of a robot with  closed loop 
 
@@ -21,15 +21,32 @@ from robot_utils import mergeq, mergev
 
 _FORCE_PROXIMAL = False
 
-def closedLoopInverseKinematicsCasadi(rmodel, rdata, cmodels, cdatas, target_pos, q_prec=[], name_eff="effecteur", onlytranslation=False):
+### Inverse Kinematics
+def closedLoopInverseKinematicsCasadi(rmodel, rdata, cmodels, cdatas, target_pos, q_prec=None, name_eff="effecteur", onlytranslation=False):
     """
-        q=closedLoopInverseKinematics(model,data,fgoal,constraint_model,constraint_data,q_prec=[],name_eff="effecteur",nom_fermeture="fermeture",type="6D"):
+        closedLoopInverseKinematicsCasadi(rmodel, rdata, cmodels, cdatas, target_pos, q_prec=None, name_eff="effecteur", onlytranslation=False)
 
-        take the target position of the motors axis of the robot (joint with name_mot, ("mot" if empty) in the name), the robot model and data,
-        the current configuration of all joint ( set to robot.q0 if let empty)
-        the name of the joint who close the kinematic loop nom_fermeture
+        This function takes a target and an effector frame and finds a configuration of the robot such that the effector is as close as possible to the target 
+        and the robot constraints are satisfied. (It is actually a geometry problem)
+        This function solves a minimization problem over q. q is actually defined as q0+dq (this removes the need for quaternion constraints and gives less decision variables)
+        leading to an optimisation on Lie group. We denoted d(eff(q), target) a distance measure between the effector and the target
+        
+        min || d(eff(q), target) ||^2
+        subject to:  f_c(q)=0              # Kinematics constraints are satisfied
 
-        return a configuration that match the goal position of the effector
+        The problem is solved using Casadi + IpOpt
+
+        Argument:
+            rmodel - Pinocchio robot model
+            rdata - Pinocchio robot data
+            cmodels - Pinocchio constraint models list
+            cdatas - Pinocchio constraint datas list
+            target_pos - Target position
+            q_prec [Optionnal] - Previous configuration of the free joints - default: None (set to neutral model pose)
+            name_eff [Optionnal] - Name of the effector frame - default: "effecteur"
+            onlytranslation [Optionnal] - Set to true to choose only translation (3D) and to false to have 6D position - default: False (6D)
+        Return:
+            q - Configuration vector satisfying constraints (if optimisation process succeded)
     """
     # * Get effector frame id
     ideff = rmodel.getFrameId(name_eff)
@@ -39,7 +56,7 @@ def closedLoopInverseKinematicsCasadi(rmodel, rdata, cmodels, cdatas, target_pos
     casdata = casmodel.createData()
 
     # * Getting ids of actuated and free joints
-    if len(q_prec) != (rmodel.nq):
+    if q_prec is None:
         q_prec = pin.neutral(rmodel)
     q_prec = np.array(q_prec)
     nq = rmodel.nq
@@ -89,70 +106,94 @@ def closedLoopInverseKinematicsCasadi(rmodel, rdata, cmodels, cdatas, target_pos
         print('ERROR in convergence, press enter to plot debug info.')
     return qs
 
-def closedLoopInverseKinematicsScipy(rmodel, rdata, cmodels, cdatas, target_pos, q_prec=[], name_eff="effecteur", onlytranslation=False):
+def closedLoopInverseKinematicsScipy(rmodel, rdata, cmodels, cdatas, target_pos, q_prec=None, name_eff="effecteur", onlytranslation=False):
     """
-    q=invgeom_parra(model,data,fgoal,constraint_model,constraint_data,q_prec=[],name_eff="effecteur",nom_fermeture="fermeture",type="6D"):
+        closedLoopInverseKinematicsScipy(rmodel, rdata, cmodels, cdatas, target_pos, q_prec=None, name_eff="effecteur", onlytranslation=False)
 
-        take the goal position of the motors  axis of the robot ( joint with name_mot, ("mot" if empty) in the name), the robot model and data,
-        the current configuration of all joint ( set to robot.q0 if let empty)
-        the name of the joint who close the kinematic loop nom_fermeture
+        This function takes a target and an effector frame and finds a configuration of the robot such that the effector is as close as possible to the target 
+        and the robot constraints are satisfied. (It is actually a geometry problem)
+        This function solves a minimization problem over q. q is actually defined as q0+dq (this removes the need for quaternion constraints and gives less decision variables)
+        leading to an optimisation on Lie group. We denoted d(eff(q), target) a distance measure between the effector and the target
+        
+        min || d(eff(q), target) ||^2
+        subject to:  f_c(q)=0              # Kinematics constraints are satisfied
 
-        return a configuration who match the goal position of the effector
+        The problem is solved using Scipy
+
+        Argument:
+            rmodel - Pinocchio robot model
+            rdata - Pinocchio robot data
+            cmodels - Pinocchio constraint models list
+            cdatas - Pinocchio constraint datas list
+            target_pos - Target position
+            q_prec [Optionnal] - Previous configuration of the free joints - default: None (set to neutral model pose)
+            name_eff [Optionnal] - Name of the effector frame - default: "effecteur"
+            onlytranslation [Optionnal] - Set to true to choose only translation (3D) and to false to have 6D position - default: False (6D)
+        Return:
+            q - Configuration vector satisfying constraints (if optimisation process succeded)
     """
 
     ideff = rmodel.getFrameId(name_eff)
 
-    if len(q_prec) < rmodel.nq:
+    if q_prec is None:
         q_prec = pin.neutral(rmodel)
     q_prec = np.array(q_prec)
 
-    def costnorm(q):
-        cdata = rmodel.createData()
-        pin.forwardKinematics(rmodel, rdata, q)
-        pin.updateFramePlacements(rmodel, rdata)
+    def costnorm(vq):
+        q = pin.integrate(rmodel, q_prec, vq)
+        pin.framesForwardKinematics(rmodel, rdata, q)
         if onlytranslation:
-            terr = (target_pos.translation - cdata.oMf[ideff].translation)
+            terr = (target_pos.translation - rdata.oMf[ideff].translation)
             c = (norm(terr)) ** 2
         else:
-            err = pin.log(target_pos.inverse() * cdata.oMf[ideff]).vector
+            err = pin.log(target_pos.inverse() * rdata.oMf[ideff]).vector
             c = (norm(err)) ** 2 
         return c 
 
-    def contraintesimp(q):
+    def contraintesimp(vq):
+        q = pin.integrate(rmodel, q_prec, vq)
         Lc = constraintsResidual(rmodel, rdata, cmodels, cdatas, q, recompute=True, pinspace=pin, quaternions=True)
         return Lc
 
-    L = fmin_slsqp(costnorm, q_prec, f_eqcons=contraintesimp)
+    vq_sol = fmin_slsqp(costnorm, np.zeros(rmodel.nv), f_eqcons=contraintesimp)
+    q_sol = pin.integrate(rmodel, q_prec, vq_sol)
+    return q_sol
 
-    return L
-
-def closedLoopInverseKinematicsProximal(rmodel, rdata, rconstraint_model, rconstraint_data, target_pos, name_eff="effecteur", onlytranslation=False, max_it=100, eps=1e-12, rho=1e-10, mu=1e-4):
+def closedLoopInverseKinematicsProximal(rmodel, rdata, cmodels, cdatas, target_pos, name_eff="effecteur", onlytranslation=False, max_it=100, eps=1e-12, rho=1e-5, mu=1e-4):
     """
-    q=inverseGeomProximalSolver(rmodel,rdata,rconstraint_model,rconstraint_data,idframe,pos,only_translation=False,max_it=100,eps=1e-12,rho=1e-10,mu=1e-4)
+        closedLoopInverseKinematicsProximal(rmodel, rdata, cmodels, cdatas, target_pos, q_prec=None, name_eff="effecteur", onlytranslation=False)
 
-    Perform inverse kinematics with a proximal solver.
+        This function takes a target and an effector frame and finds a configuration of the robot such that the effector is as close as possible to the target 
+        and the robot constraints are satisfied. (It is actually a geometry problem)
+        This function solves a minimization problem over q. q is actually defined as q0+dq (this removes the need for quaternion constraints and gives less decision variables)
+        leading to an optimisation on Lie group. We denoted d(eff(q), target) a distance measure between the effector and the target
+        
+        min || d(eff(q), target) ||^2
+        subject to:  f_c(q)=0              # Kinematics constraints are satisfied
 
-    Args:
-        rmodel (pinocchio.Model): Pinocchio model.
-        rdata (pinocchio.Data): Pinocchio data.
-        rconstraint_model (list): List of constraint models.
-        rconstraint_data (list): List of constraint data.
-        target_pos (np.array): Target position.
-        name_eff (str, optional): Name of the frame. Defaults to "effecteur".
-        onlytranslation (bool, optional): Only consider translation. Defaults to False.
-        max_it (int, optional): Maximum number of iterations. Defaults to 100.
-        eps (float, optional): Convergence threshold for primal and dual feasibility. Defaults to 1e-12.
-        rho (float, optional): Scaling factor for the identity matrix. Defaults to 1e-10.
-        mu (float, optional): Penalty parameter. Defaults to 1e-4.
+        The problem is solved using proximal method
 
-    Returns:
-        np.array: Joint positions that achieve the desired target position.
-    
-    raw here (L84-126):https://gitlab.inria.fr/jucarpen/pinocchio/-/blob/pinocchio-3x/examples/simulation-closed-kinematic-chains.py
+        Argument:
+            rmodel - Pinocchio robot model
+            rdata - Pinocchio robot data
+            cmodels - Pinocchio constraint models list
+            cdatas - Pinocchio constraint datas list
+            target_pos - Target position
+            name_eff [Optionnal] - Name of the effector frame - default: "effecteur"
+            onlytranslation [Optionnal] - Set to true to choose only translation (3D) and to false to have 6D position - default: False (6D)
+            max_it [Optionnal] - Maximal number of proximal iterations - default: 100
+            eps [Optinnal] - Proximal parameter epsilon - default: 1e-12
+            rho [Optionnal] - Proximal parameter rho - default: 1e-10
+            mu [Optionnal] - Proximal parameter mu - default: 1e-4
+        Return:
+            q - Configuration vector satisfying constraints (if optimisation process succeded)
+
+        Initially written by Justin Carpentier    
+        raw here (L84-126):https://gitlab.inria.fr/jucarpen/pinocchio/-/blob/pinocchio-3x/examples/simulation-closed-kinematic-chains.py
     """
 
     model=rmodel.copy()
-    constraint_model=rconstraint_model.copy()
+    constraint_model=cmodels.copy()
     #add a contact constraint
     ideff = rmodel.getFrameId(name_eff)
     frame_constraint=model.frames[ideff]
@@ -216,28 +257,36 @@ def closedLoopInverseKinematics(*args, **kwargs):
         else:
             return(closedLoopInverseKinematicsScipy(*args, **kwargs))
 
+### Forward Kinematics
+
 def closedLoopForwardKinematicsCasadi(rmodel, rdata, cmodels, cdatas, actuation_model, q_mot_target=None, q_prec=None):
     """
-        closedLoopForwardKinematics(model, data, goal, q_prec=[], name_mot="mot", nom_fermeture="fermeture", type="6D"):
+        closedLoopForwardKinematicsCasadi(rmodel, rdata, cmodels, cdatas, actuation_model, q_mot_target=None, q_prec=None)
 
-        Takes the target position of the motors axis of the robot (joint with name_mot ("mot" if empty) in the name),
-        the current configuration of all joint (set to robot.q0 if let empty) and the name of the joints that close the kinematic loop. And returns a configuration that matches the goal positions of the motors
-        This function solves a minimization problem over q. q is actually defined as q0+dq (this removes the need for quaternion constraints and gives less decision variables)
+        Takes the target position of the motors axis of the robot (following the actuation model), the current configuration of all joint (set to robot.q0 if let empty). 
+        And returns a configuration that matches the goal positions of the motors and satisfies constraints
+        This function solves a minimization problem over q but q is actually defined as q0+dq (this removes the need for quaternion constraints and gives less decision variables)
         
         min || q - q_prec ||^2
 
         subject to:  f_c(q)=0              # Kinematics constraints are satisfied
                      vq[motors]=q_motors    # The motors joints should be as commanded
 
+        The problem is solved using Casadi + IpOpt
+
         Argument:
-            model - Pinocchio robot model
-            data - Pinocchio robot data
-            target - Target configuration of the motors joints. Should be have size of the number of motors
-            q_prec - Previous configuration of the free joints
-            n_mot - String contained in the motors joints names
-            nom_fermeture - String contained in the frame names that should be in contact
-            type - Constraint type
+            rmodel - Pinocchio robot model
+            rdata - Pinocchio robot data
+            cmodels - Pinocchio constraint models list
+            cdatas - Pinocchio constraint datas list
+            target_pos - Target position
+            q_prec [Optionnal] - Previous configuration of the free joints - default: None (set to neutral model pose)
+            name_eff [Optionnal] - Name of the effector frame - default: "effecteur"
+            onlytranslation [Optionnal] - Set to true to choose only translation (3D) and to false to have 6D position - default: False (6D)
+        Return:
+            q - Configuration vector satisfying constraints (if optimisation process succeded)
     """
+    
     # * Defining casadi models
     casmodel = caspin.Model(rmodel)
     casdata = casmodel.createData()
@@ -290,16 +339,31 @@ def closedLoopForwardKinematicsCasadi(rmodel, rdata, cmodels, cdatas, actuation_
 
 
 def closedLoopForwardKinematicsScipy(rmodel, rdata, cmodels, cdatas, actuation_model, q_mot_target=None, q_prec=[]):
-
     """
-        forwardgeom_parra(
-        model, data, goal, q_prec=[], name_mot="mot", nom_fermeture="fermeture", type="6D"):
+    closedLoopForwardKinematicsScipy(rmodel, rdata, cmodels, cdatas, actuation_model, q_mot_target=None, q_prec=None)
 
-        take the goal position of the motors  axis of the robot ( joint with name_mot, ("mot" if empty) in the name), the robot model and data,
-        the current configuration of all joint ( set to robot.q0 if let empty)
-        the name of the joint who close the kinematic loop nom_fermeture
+    Takes the target position of the motors axis of the robot (following the actuation model), the current configuration of all joint (set to robot.q0 if let empty). 
+    And returns a configuration that matches the goal positions of the motors and satisfies constraints
+    This function solves a minimization problem over q but q is actually defined as q0+dq (this removes the need for quaternion constraints and gives less decision variables)
+    
+    min || q - q_prec ||^2
 
-        return a configuration who match the goal position of the motor
+    subject to:  f_c(q)=0              # Kinematics constraints are satisfied
+                    vq[motors]=q_motors    # The motors joints should be as commanded
+
+    The problem is solved using Scipy SLSQP
+
+    Argument:
+        rmodel - Pinocchio robot model
+        rdata - Pinocchio robot data
+        cmodels - Pinocchio constraint models list
+        cdatas - Pinocchio constraint datas list
+        target_pos - Target position
+        q_prec [Optionnal] - Previous configuration of the free joints - default: None (set to neutral model pose)
+        name_eff [Optionnal] - Name of the effector frame - default: "effecteur"
+        onlytranslation [Optionnal] - Set to true to choose only translation (3D) and to false to have 6D position - default: False (6D)
+    Return:
+        q - Configuration vector satisfying constraints (if optimisation process succeded)
     """
     Lid = actuation_model.idqmot
     if q_prec is None or q_prec == []:
@@ -331,6 +395,7 @@ def closedLoopForwardKinematics(*args, **kwargs):
 import unittest
 
 class TestRobotInfo(unittest.TestCase):
+    
     def testInverseKinematicsScipy(self):
         # * Import robot
         path = "robots/robot_marcheur_1"
@@ -338,15 +403,27 @@ class TestRobotInfo(unittest.TestCase):
         data = model.createData()
         constraint_datas = [cm.createData() for cm in constraint_models]
 
+        def constraints(q):
+            Lc = constraintsResidual(model, data, constraint_models, constraint_datas, q, recompute=True, pinspace=pin, quaternions=False)
+            return Lc
+
         # * Init variable used by Unitests
-        fgoal = data.oMf[36]
+        Mgoal = pin.SE3(pin.utils.rotate('x', 0), np.array([-0.5, 0, -0.6]))
         frame_effector = 'bout_pied_frame'
 
-        InvKinCasadi = closedLoopInverseKinematicsCasadi(model, data, constraint_models, constraint_datas, fgoal, q_prec=[], name_eff=frame_effector, onlytranslation=False)
-        InvKinScipy = closedLoopInverseKinematicsScipy(model, data, constraint_models, constraint_datas, fgoal, q_prec=[], name_eff=frame_effector, onlytranslation=False)
-        InvKinProx = closedLoopInverseKinematicsProximal(model, data, constraint_models, constraint_datas, fgoal, name_eff=frame_effector, onlytranslation=False)        
-        
-        print(InvKinCasadi, InvKinScipy, InvKinProx)
+        InvKinCasadi = closedLoopInverseKinematicsCasadi(model, data, constraint_models, constraint_datas, Mgoal, q_prec=None, name_eff=frame_effector, onlytranslation=False)
+        assert np.max(np.abs(constraints(InvKinCasadi)))<1e-7   # constraints satisfied
+        pin.framesForwardKinematics(model, data, InvKinCasadi)
+        assert np.max(np.abs(pin.log(data.oMf[36].inverse() * Mgoal).vector))<1e-7 # goal reached
+        InvKinScipy = closedLoopInverseKinematicsScipy(model, data, constraint_models, constraint_datas, Mgoal, q_prec=None, name_eff=frame_effector, onlytranslation=False)
+        assert np.max(np.abs(constraints(InvKinScipy)))<1e-7   # constraints satisfied
+        pin.framesForwardKinematics(model, data, InvKinScipy)
+        assert np.max(np.abs(pin.log(data.oMf[36].inverse() * Mgoal).vector))<5e-2 # goal reached
+        InvKinProx = closedLoopInverseKinematicsProximal(model, data, constraint_models, constraint_datas, Mgoal, name_eff=frame_effector, onlytranslation=False)        
+        print(np.max(np.abs(constraints(InvKinProx))))
+        assert np.max(np.abs(constraints(InvKinProx)))<1e-7   # constraints satisfied
+        pin.framesForwardKinematics(model, data, InvKinProx)
+        assert np.max(np.abs(pin.log(data.oMf[36].inverse() * Mgoal).vector))<1e-7 # goal reached
 
     def testForwardKinematics(self):
         # * Import robot
@@ -357,7 +434,6 @@ class TestRobotInfo(unittest.TestCase):
 
         ForwKinCasadi = closedLoopForwardKinematicsCasadi(model, data, constraint_models, constraint_datas, actuation_model)
         ForwKinScipy = closedLoopForwardKinematicsScipy(model, data, constraint_models, constraint_datas, actuation_model)
-        ForwKinProx = closedLoopProximalMount(model, data, constraint_models, constraint_datas, actuation_model)        
         
         truth = [ 0.00000000e+00,  0.00000000e+00,  1.11436057e-01, -6.65014110e-02,
                 1.11436057e-01,  1.69335893e-01, -8.16182755e-01, -3.34177420e-01,
@@ -368,7 +444,6 @@ class TestRobotInfo(unittest.TestCase):
                 -6.26732401e-03,  1.05141563e-01,  9.94437392e-01, -4.64840023e-02,
                 1.86376632e-02, -3.71682025e-01,  9.27008278e-01]
     
-        np.testing.assert_allclose(truth, ForwKinProx, rtol=1e-6, atol=1e-3)
         np.testing.assert_allclose(truth, ForwKinScipy, rtol=5, atol=0.5)
         np.testing.assert_allclose(truth, ForwKinCasadi, rtol=5, atol=0.5)
         
