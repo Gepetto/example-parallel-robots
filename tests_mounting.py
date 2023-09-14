@@ -3,11 +3,11 @@ import meshcat
 import example_robot_data as robex
 
 from loader_tools import completeRobotLoader
-from closed_loop_mount import closedLoopMount
+from closed_loop_mount import closedLoopMountScipy, closedLoopMountCasadi, closedLoopMountProximal
 
 ## Get model and usefull variables
 # * Load model
-path = "../closed_loop_utils/robots/robot_delta"
+path = "../closed_loop_utils/robots/robot_marcheur_1"
 model, robot_constraint_models, actuation_model, visual_model, collision_model = completeRobotLoader(path, freeflyer=False)
 
 # * Initialize data
@@ -24,5 +24,14 @@ viz.loadViewerModel(rootNodeName="universe")
 viz.display(q0)
 
 input()
-q_mounted = closedLoopMount(model, data, robot_constraint_models, robot_constraint_datas, q_prec=q0)
+q_mounted = closedLoopMountCasadi(model, data, robot_constraint_models, robot_constraint_datas, q_prec=q0)
 viz.display(q_mounted)
+print(q_mounted)
+input()
+q_mounted = closedLoopMountScipy(model, data, robot_constraint_models, robot_constraint_datas, q_prec=q0)
+viz.display(q_mounted)
+print(q_mounted)
+input()
+q_mounted = closedLoopMountProximal(model, data, robot_constraint_models, robot_constraint_datas, q_prec=q0)
+viz.display(q_mounted)
+print(q_mounted)

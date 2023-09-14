@@ -230,9 +230,9 @@ class TestRobotLoader(unittest.TestCase):
             res_scipy = closedLoopMountScipy(m, data, cm, cdata)
             res_prox = closedLoopMountProximal(m, data, cm, cdata)
 
-            assert np.max(constraints(res_casadi))<1e-7
-            assert np.max(constraints(res_scipy))<1e-7
-            assert np.max(constraints(res_prox))<1e-7
+            assert np.max(np.abs(constraints(res_casadi)))<1e-7
+            assert np.max(np.abs(constraints(res_scipy)))<1e-7
+            assert np.max(np.abs(constraints(res_prox)))<1e-7
         
 if __name__ == "__main__":
     unittest.main()
