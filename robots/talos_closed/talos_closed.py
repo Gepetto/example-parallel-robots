@@ -7,11 +7,11 @@ import meshcat
 from pinocchio.visualize import MeshcatVisualizer  
 import hppfcl
 import re
+from actuation_model import ActuationModel
 
 def TalosClosed():
     robot=robex.load("talos")  
     model=robot.model 
-    data=robot.data 
     visual_model=robot.visual_model  
 
 
@@ -169,6 +169,25 @@ def TalosClosed():
     # )
     # visual_model.addGeometryObject(sphere_pin)
 
+    contactConstraint_right = pin.RigidConstraintModel(
+        pin.ContactType.CONTACT_6D,
+        model,
+        fermeture_droite_A.parentJoint,
+        fermeture_droite_A.placement,
+        fermeture_droite_B.parentJoint, # To the world
+        fermeture_droite_B.placement,
+        pin.ReferenceFrame.LOCAL,
+        )
+    contactConstraint_left = pin.RigidConstraintModel(
+        pin.ContactType.CONTACT_6D,
+        model,
+        fermeture_gauche_A.parentJoint,
+        fermeture_gauche_A.placement,
+        fermeture_gauche_B.parentJoint, # To the world
+        fermeture_gauche_B.placement,
+        pin.ReferenceFrame.LOCAL,
+        )
+    constraint_models = [contactConstraint_right, contactConstraint_left]
 
     #change of name
     new_model = pin.Model() 
@@ -198,15 +217,28 @@ def TalosClosed():
         frame = pin.Frame(name, parent_joint, placement, pin.BODY)
         _ = new_model.addFrame(frame, False)
 
+    Ljoint=[]
+    Ltype=[]
+    Lmot=[]
+    name_mot="mot"
+    name_spherical="to_rotule"
+    for name in model.names:
+        match = re.search(name_spherical, name)
+        match_mot= re.search(name_mot,name)
+        if match :
+            Ljoint.append(name)
+            Ltype.append("SPHERICAL")
+        if match_mot:
+            Lmot.append(name)
+        
+    actuation_model = ActuationModel(new_model, ["mot"])
 
+    return(new_model, constraint_models, actuation_model, visual_model, robot.collision_model)
 
-    return(new_model,new_model.createData(),visual_model)
-
-model,data,visual_model=TalosClosed()
-q0=np.zeros(model.nq)
-viz = MeshcatVisualizer(model, visual_model, visual_model) 
-viz.viewer = meshcat.Visualizer(zmq_url="tcp://127.0.0.1:6000") 
-viz.loadViewerModel(rootNodeName="number 1") 
-viz.display(q0)
-
-print()
+if __name__ == "__main__":
+    model,data,visual_model=TalosClosed()
+    q0=np.zeros(model.nq)
+    viz = MeshcatVisualizer(model, visual_model, visual_model) 
+    viz.viewer = meshcat.Visualizer(zmq_url="tcp://127.0.0.1:6000") 
+    viz.loadViewerModel(rootNodeName="number 1") 
+    viz.display(q0)

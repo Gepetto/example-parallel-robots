@@ -1,0 +1,5 @@
+closed_loop: []
+type: []
+name_mot: ['mot_hanche1_droite', 'mot_hanche2_droit', 'mot_hanche3_droite', 'mot_genoux_droite', 'mot_pied_droit', 'mot_cheville_droite', 'mot_hanche1_gauche', 'mot_hanche2_gauche', 'mot_hanche3_gauche', 'mot_genoux_gauche', 'mot_pied_gauche', 'mot_cheville_gauche']
+joint_name: []
+joint_type: []
