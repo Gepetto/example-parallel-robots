@@ -69,7 +69,8 @@ class ProjectConfig:
 
         # Cost and constraints
         totalcost = casadi.sumsqr(vdq)
-        opti.subject_to(self.constraint(vq)==0)
+        if self.cas_constraint_models != []:
+            opti.subject_to(self.constraint(vq)==0)
 
         if iv is not None:
             opti.subject_to( vdq[iv]==0 )
