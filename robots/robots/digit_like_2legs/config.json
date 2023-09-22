@@ -1,0 +1,8 @@
+{
+    "documentId": "1e0747dc504df5f011bc52ce",
+    "outputFormat": "urdf",
+    "assemblyName":"robot_bipede",
+    "ignore":[
+        "Fram1e","sphere"
+    ]
+}

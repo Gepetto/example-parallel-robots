@@ -1,5 +1,0 @@
-closed_loop: [['fermeture1_B', 'fermeture1_A'], ['fermeture2_B', 'fermeture2_A'], ['fermeture3_B', 'fermeture3_A']]
-type: ['6d', '6d', '6d']
-name_mot: ['mot_hanche_1', 'mot_hanche_2', 'mot_cuisse2', 'mot_cuisse_3', 'mot_servo_molet_1', 'mot_servo_molet_2']
-joint_name: ['to_rotule_molet_2', 'to_rotule_molet_1', 'to_rotule_molet_pied_1', 'to_rotule_molet_pied_2', 'to_rotule_barre_cuisse_2']
-joint_type: ['SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL']
