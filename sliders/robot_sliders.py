@@ -18,7 +18,7 @@ from robots.talos_closed.talos_closed import TalosClosed
 # * Load model
 # robot_path = "robots/talos_like_2legs"
 # model, full_constraint_models, actuation_model, visual_model, collision_model = completeRobotLoader(robot_path)
-model, full_constraint_models, actuation_model, visual_model, collision_model = TalosClosed()
+model, full_constraint_models, actuation_model, visual_model, collision_model = TalosClosed(closed_loop=False)
 full_constraint_datas = [cm.createData() for cm in full_constraint_models]
 
 constraint_models, constraint_datas = full_constraint_models.copy(), full_constraint_datas.copy()
