@@ -1,5 +1,0 @@
-closed_loop: [['fermeture1_B_3D', 'fermeture1_A_3D'], ['fermeture2_A_3D', 'fermeture2_B_3D'], ['fermeture3_A_3D', 'fermeture3_B_3D'], ['fermeture4_A_6D', 'fermeture4_B_6D']]
-type: ['3d', '3d', '3d', '6d']
-name_mot: ['motor_2', 'motor_5', 'motor_6', 'motor_1', 'motor_3', 'motor_4']
-joint_name: ['to_rotule_2', 'to_rotule_3', 'to_rotule_4', 'to_rotule_5', 'to_rotule_1']
-joint_type: ['SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL']

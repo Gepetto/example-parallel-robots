@@ -162,30 +162,34 @@ def freezeJoints(model, constraint_models, actuation_model, visual_model, collis
         toremove = []
         for cm in constraint_models:
             print(cm.name)
+
+            # In this function we make the huge assumption that if the parent joint of a constrained frame is fixed is grand-parent is not
             n1 = model.names[cm.joint1_id]
             n2 = model.names[cm.joint2_id]
-
-            # The reference joints might have been frozen
-            # Then seek for the corresponding frame, that might be either a joint frame or a op frame.
             idf1 = reduced_model.getFrameId(n1)
-            f1 = reduced_model.frames[idf1]
             idf2 = reduced_model.getFrameId(n2)
-            f2 = reduced_model.frames[idf2]
+            print(idf1, idf2)
 
-            # Make the new reference joints the parent of the frame.
-            cm.joint1_id = f1.parentJoint
-            cm.joint2_id = f2.parentJoint
-            # In the best case, the joint still exist, then it corresponds to a joint frame.
-            if f1.type != pin.JOINT:
-                assert (f1.type == pin.FIXED_JOINT)
-                # If the joint has be freezed, the contact now should be referenced with respect
-                # to the new joint, which was a parent of the previous.
-                cm.joint1_placement = f1.placement*cm.joint1_placement
-                # ! We assume here that the parent of the fixed joint is not also fixed
-            # Same for the second joint
-            if f2.type != pin.JOINT:
-                assert (f2.type == pin.FIXED_JOINT)
-                cm.joint2_placement = f2.placement*cm.joint2_placement
+            # Looking for corresponding new frame (ie is the joint fixed ?)
+            if idf1 < reduced_model.nframes:
+                # The frame has been found
+                f1 = reduced_model.frames[idf1]
+                cm.joint1_id = f1.parentJoint
+                cm.joint1_placement = f1.placement*cm.joint1_placement # Update placement
+            else:
+                # The joint has not been freezed
+                idj1 = reduced_model.getJointId(n1)
+                cm.joint1_id = idj1
+            # Same for j2
+            if idf2 < reduced_model.nframes:
+                # The frame has been found
+                f2 = reduced_model.frames[idf2]
+                cm.joint2_id = f2.parentJoint
+                cm.joint2_placement = f2.placement*cm.joint2_placement # Update placement
+            else:
+                # The joint has not been freezed
+                idj2 = reduced_model.getJointId(n2)
+                cm.joint2_id = idj2
 
             if cm.joint1_id == cm.joint2_id:
                 toremove.append(cm)
@@ -207,8 +211,8 @@ def freezeJoints(model, constraint_models, actuation_model, visual_model, collis
 class TestRobotInfo(unittest.TestCase):
     
     def test_q_splitting(self):
-        robots_paths = [['robot_simple_iso3D'],
-                        ['robot_simple_iso6D'],
+        robots_paths = [['5bar_linkage_iso3d'],
+                        ['5bar_linkage_iso6d'],
                         ['robot_delta']]
         
         results = [[[1, 2],[0, 3, 4]],
@@ -224,8 +228,8 @@ class TestRobotInfo(unittest.TestCase):
             assert (mergeq(m, am, qmot(am, q), qfree(am, q)) == q).all()
 
     def test_v_splitting(self):
-        robots_paths = [['robot_simple_iso3D'],
-                        ['robot_simple_iso6D'],
+        robots_paths = [['5bar_linkage_iso3d'],
+                        ['5bar_linkage_iso6d'],
                         ['robot_delta']]
         
         results = [[[1, 2],[0, 3, 4]],
@@ -242,7 +246,7 @@ class TestRobotInfo(unittest.TestCase):
             assert (mergev(m, am, vmot(am, v), vfree(am, v)) == v).all()
         
     def test_freeze_joints(self):
-        robot_path = "robots/robot_simple_iso3D"
+        robot_path = "robots/5bar_linkage_iso3d"
         m ,cm, am, vm, collm = completeRobotLoader(robot_path)
         print("Trying to fix some joints")
         id_tofix = [2]

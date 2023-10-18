@@ -1,8 +1,0 @@
-{
-    "documentId": "cbb9cecee6acb564ce07d9c9",
-    "outputFormat": "urdf",
-    "assemblyName":"jambe_isole",
-    "ignore":[
-        "Fram1e","sphere"
-    ]
-}

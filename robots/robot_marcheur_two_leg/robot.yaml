@@ -1,5 +1,0 @@
-closed_loop: [['fermeture1_B', 'fermeture1_A'], ['fermeture2_B', 'fermeture2_A'], ['fermeture3_B', 'fermeture3_A'], ['fermeture4_A', 'fermeture4_B'], ['fermeture5_A', 'fermeture5_B'], ['fermeture6_A', 'fermeture6_B']]
-type: ['6d', '6d', '6d', '6d', '6d', '6d']
-name_mot: ['mot_hanche_left_x', 'mot_hanche_left_z', 'mot_hanche_left_y', 'mot_genoux_left', 'mot_servo1_left', 'mot_servo2_left', 'mot_hanche_x', 'mot_hanche_z', 'mot_hanche_y', 'mot_genoux', 'mot_servo1', 'mot_servo2']
-joint_name: ['to_rotule_pied_gauche_1', 'to_rotule_pied_gauche_2', 'to_rotule_servo_gauche_1', 'to_rotule_servo_gauche_2', 'to_rotule_libre_hanche_left', 'to_rotule_libre_hanche2_left', 'to_rotule_libre_pied1', 'to_rotule_libre_pied2', 'to_rotule_libre_molet2', 'to_rotule_libre_molet1', 'to_rotule_libre_genoux', 'to_rotule_libre_hanche']
-joint_type: ['SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL']
