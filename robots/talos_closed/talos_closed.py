@@ -297,14 +297,14 @@ def TalosClosed(closed_loop=True, only_legs=True):
         )
 
         ## Define contact Ids for control problems - these are floor contacts
-        contactIds = [i for i, f in enumerate(model.frames) if "sole_link" in f.name]
+        contactIds = [i for i, f in enumerate(new_model.frames) if "sole_link" in f.name]
         ankleToTow = 0.1
         ankleToHeel = -0.1
 
         ## Adding new frames for control problems
         for cid in contactIds:
-            f = model.frames[cid]
-            model.addFrame(
+            f = new_model.frames[cid]
+            new_model.addFrame(
                 pin.Frame(
                     f"{f.name}_tow",
                     f.parentJoint,
@@ -313,7 +313,7 @@ def TalosClosed(closed_loop=True, only_legs=True):
                     pin.FrameType.OP_FRAME,
                 )
             )
-            model.addFrame(
+            new_model.addFrame(
                 pin.Frame(
                     f"{f.name}_heel",
                     f.parentJoint,
