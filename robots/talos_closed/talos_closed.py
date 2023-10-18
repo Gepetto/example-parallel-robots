@@ -20,7 +20,7 @@ def TalosClosed(closed_loop=True, only_legs=True):
     # creation of inertia and I4
 
     I4 = pin.SE3.Identity()
-    Inertie = pin.Inertia(
+    Inertia = pin.Inertia(
         1e-3, np.array([0.0, 0.0, 0.0]), np.eye(3) * 1e-3**2
     ) # Inertie d'une sphere de 1g
 
@@ -44,6 +44,8 @@ def TalosClosed(closed_loop=True, only_legs=True):
         id_genoux_gauche, pin.JointModelRY(), genouxMmoletgauche, "mot_molet_gauche"
     )  
 
+    model.appendBodyToJoint(mot_molet_droit,Inertia,I4)
+    model.appendBodyToJoint(mot_molet_gauche,Inertia,I4)
 
 
     longueur_bar_mot=8e-2
@@ -89,7 +91,8 @@ def TalosClosed(closed_loop=True, only_legs=True):
         id_cheville_gauche, pin.JointModelSpherical(), chevilleMtendongauche, "free_tendon_gauche"
     )  
 
-
+    model.appendBodyToJoint(tendon_droit,Inertia,I4)
+    model.appendBodyToJoint(tendon_gauche,Inertia,I4)
 
     longueur_bar_free=10e-2
     largeur_bar_free=1.5e-2
@@ -131,13 +134,12 @@ def TalosClosed(closed_loop=True, only_legs=True):
         mot_molet_gauche, pin.JointModelSpherical(), moletMfreejointgauche, "free_molet_gauche"
     )  
 
+    model.appendBodyToJoint(free_molet_droit,Inertia,I4)
+    model.appendBodyToJoint(free_molet_gauche,Inertia,I4)
 
     demi_tendon_molet_droit = pin.GeometryObject(
         "demi_tendon_molet_droit", free_molet_droit, jMbarre , bar_free
     )
-
-
-
 
     demi_tendon_molet_gauche = pin.GeometryObject(
         "demi_tendon_molet_gauche", free_molet_gauche, jMbarre , bar_free
@@ -226,6 +228,7 @@ def TalosClosed(closed_loop=True, only_legs=True):
             
     # Freeze joints if required
     if not closed_loop:
+        print('Freezing closed loop joints')
         jointToLock =   [
             mot_molet_droit,
             mot_molet_gauche,
