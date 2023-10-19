@@ -196,6 +196,7 @@ def TalosClosed(closed_loop=True, only_legs=True):
 
     # Create New model
     new_model = pin.Model()
+    new_model.name = "talos_closed"
     first = True
     i = 0
     for jp, iner, name, i, jm in zip(
@@ -226,6 +227,7 @@ def TalosClosed(closed_loop=True, only_legs=True):
 
     # Freeze joints if required
     if not closed_loop:
+        new_model.name = "talos_open"
         print("Freezing closed loop joints")
         jointToLock = [
             mot_molet_droit,
