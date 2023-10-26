@@ -310,8 +310,8 @@ def TalosClosed(closed_loop=True, only_legs=True):
 
     ## Define contact Ids for control problems - these are floor contacts
     contactIds = [i for i, f in enumerate(new_model.frames) if "sole_link" in f.name]
-    ankleToTow = 0.1
-    ankleToHeel = -0.1
+    footSizeX = 0.1
+    footSizeY = 0.05
 
     ## Adding new frames for control problems
     for cid in contactIds:
@@ -323,7 +323,7 @@ def TalosClosed(closed_loop=True, only_legs=True):
                     f"{rootName}_tow_{side}",
                     f.parentJoint,
                     f.parentFrame,
-                    f.placement * pin.SE3(np.eye(3), np.array([ankleToTow, 0, 0])),
+                    f.placement * pin.SE3(np.eye(3), np.array([footSizeX, footSizeY*(1 if side=='left' else -1) , 0])),
                     pin.FrameType.OP_FRAME,
                 )
             )
@@ -332,7 +332,7 @@ def TalosClosed(closed_loop=True, only_legs=True):
                     f"{rootName}_heel_{side}",
                     f.parentJoint,
                     f.parentFrame,
-                    f.placement * pin.SE3(np.eye(3), np.array([ankleToHeel, 0, 0])),
+                    f.placement * pin.SE3(np.eye(3), np.array([-footSizeX, footSizeY*(1 if side=='left' else -1), 0])),
                     pin.FrameType.OP_FRAME,
                 )
             )
