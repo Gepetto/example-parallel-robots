@@ -9,21 +9,32 @@ from actuation_model import ActuationModel
 from robot_utils import freezeJoints
 
 
-def TalosClosed(closed_loop=True, only_legs=True):
+def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
     robot = robex.load("talos")
     model = robot.model
     visual_model = robot.visual_model
     collision_model = robot.collision_model
-
+    if not free_flyer:
+        model, [visual_model, collision_model] = pin.buildReducedModel(model, [visual_model, collision_model], [1], pin.neutral(model))
+        id_genoux_gauche = 4
+        id_genoux_droite = 10
+        id_cheville_gauche = 5
+        id_cheville_droite = 11
+    else:
+        id_genoux_gauche = 5
+        id_genoux_droite = 11
+        id_cheville_gauche = 6
+        id_cheville_droite = 12
+        
     I4 = pin.SE3.Identity()
     Inertia = pin.Inertia(
         1e-3, np.array([0.0, 0.0, 0.0]), np.eye(3) * 1e-3**2
     )  # Inertia of a 1g sphere
 
+
+
     ## Adding new joints and links for the parallel actuation
     # * Creation of the motor bar
-    id_genoux_gauche = 5
-    id_genoux_droite = 11
     # Defining SE3 placements of new joints wrt parent joints
     genouxMmoletdroit = I4.copy()
     genouxMmoletdroit.translation = np.array([-0.015, -0.105, -0.11])
@@ -61,8 +72,6 @@ def TalosClosed(closed_loop=True, only_legs=True):
 
     # * Creation of free bar on foot
     # Defining placement wrt to the parent joints
-    id_cheville_gauche = 6
-    id_cheville_droite = 12
     chevilleMtendondroit = I4.copy()
     chevilleMtendondroit.translation = np.array([-0.08, -0.105, 0.02])
     chevilleMtendongauche = I4.copy()
@@ -199,6 +208,7 @@ def TalosClosed(closed_loop=True, only_legs=True):
         print("Freezing upper body")
         jointToLockNames = [
             # "universe",
+            # "root_joint",
             "mot_arm_left_1_joint",
             "mot_arm_left_2_joint",
             "mot_arm_left_3_joint",
