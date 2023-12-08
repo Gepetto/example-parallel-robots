@@ -1,0 +1,5 @@
+closed_loop: [['fermeture1_B', 'fermeture1_A'], ['fermeture2_A', 'fermeture2_B']]
+type: ['6d', '6d']
+name_mot: ['mot_hanche1', 'mot_hanche2', 'mot_cuisse', 'mot_genoux', 'mot_cheville']
+joint_name: ['to_rotule_free_pied', 'to_rotule_free_molet', 'to_rotule_free_genoux', 'to_rotule_free_hanche']
+joint_type: ['SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL']

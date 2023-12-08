@@ -1,0 +1,5 @@
+closed_loop: [['fermeture1_A', 'fermeture1_B'], ['fermeture2_B', 'fermeture2_A'], ['fermeture3_A', 'fermeture3_B']]
+type: ['6d', '6d', '6d']
+name_mot: ['mot1_bras1', 'mot1_bras2']
+joint_name: []
+joint_type: []

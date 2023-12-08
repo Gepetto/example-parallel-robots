@@ -1,0 +1,5 @@
+closed_loop: [['fermeture3D_1B', 'fermeture3D_1A']]
+type: ['3d']
+name_mot: ['mot2', 'mot1']
+joint_name: []
+joint_type: []

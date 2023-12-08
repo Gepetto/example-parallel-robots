@@ -1,0 +1,13 @@
+{
+    "configuration": "default",
+    "documentId": "0ddcc2f008bab85822da13ce",
+    "documentMicroversion": "ce948aa8ca726a88cd6cd09e",
+    "elementId": "58c094e3dff56780fe78c9ca",
+    "fullConfiguration": "default",
+    "id": "MQz+/vcwu5SthHsVw",
+    "isStandardContent": false,
+    "name": "actuator_knee_foot <1>",
+    "partId": "J/D",
+    "suppressed": false,
+    "type": "Part"
+}

@@ -1,0 +1,5 @@
+closed_loop: [['fermeture6D_1B', 'fermeture6D_1A']]
+type: ['6d']
+name_mot: ['mot2', 'mot1']
+joint_name: ['to_rotule_libre3']
+joint_type: ['SPHERICAL']
