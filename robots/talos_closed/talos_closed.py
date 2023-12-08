@@ -7,141 +7,68 @@ import hppfcl
 import re
 from actuation_model import ActuationModel
 from robot_utils import freezeJoints
-from numpy import random
-from numpy.linalg import norm
 
-def create_visual(model):
-    Lframeinterest=[145, 146, 147, 148]
-    Lframeinterest.append(40)
-    Lframeinterest.append(54)
-    # Lframeinterest.append(idcentre)
-    
-    ### GENERATION OF VISUAL MODEL
-    import hppfcl
-    gmodel=pin.GeometryModel()
-
-    #generation of the joint :
-
-    for j in range(len(model.joints[2:])): #exclude the root joint, exclude the two first joint when freeflyer base
-        i=j+2
-        geom_cylinder_robot = pin.GeometryObject(
-            "cylinder_robot"+str(i), i, pin.SE3.Identity(), hppfcl.Cylinder(2e-2, 5e-2)
-        )
-
-        if i==0:
-            color = [0, 0, 0, 0.01]
-            geom_cylinder_robot = pin.GeometryObject(
-            "cylinder_robot"+str(i), i, pin.SE3.Identity(), hppfcl.Sphere(2e-2)
-        )
+def reorganizeModelDepthFirst(model):
+    def propagate(stack, new_model, i):
+        # print(f'Current stack state {stack}')
+        # Stack contains tuples with the child id in the old model along with the parent id in the new model
+        # print(f'Current model {new_model}')
+        if len(stack)==0:
+            return(new_model)
+        if i==500:
+            raise(RecursionError("Reached max depth when reorganizing the model"))
         else:
-            color = [0, 0, 1, 1]
+            (jointId, parentId) = stack.pop()
+            jId = new_model.addJoint(parentId, #
+                                     model.joints[jointId], #
+                                     model.jointPlacements[jointId], #
+                                     model.names[jointId]) #
+            new_model.appendBodyToJoint(jId, #
+                                        model.inertias[jointId], #
+                                        pin.SE3.Identity()) #
+            children = model.children[jointId]
+            for c in children:
+                stack.append((c, jId))
+        propagate(stack, new_model, i+1)
+    new_model = pin.Model()
+    new_model.name = model.name
+    propagate([(1, 0)], new_model, 0)
+    return(new_model)
 
-        if "mot" in model.names[i]:
-            color = [1,0,0,1]
+def reorganizeModels(old_model, old_geometry_models, constraint_models):
+    # Model
+    model = reorganizeModelDepthFirst(old_model)
+    # Frames
+    for frame in old_model.frames[1:]:
+        name = frame.name
+        parent_joint = model.getJointId(old_model.names[frame.parentJoint]) # Should be a joint Id
+        placement = frame.placement
+        frame = pin.Frame(name, parent_joint, placement, pin.BODY)
+        model.addFrame(frame, False)
+    # Geometry model
+    geometry_models = []
+    for old_geom_model in old_geometry_models:
+        geom_model = old_geom_model.copy()
+        for gm in geom_model.geometryObjects:
+            gm.parentJoint = model.getJointId(old_model.names[gm.parentJoint])
+            gm.parentFrame = model.getFrameId(old_model.frames[gm.parentFrame].name)
+        geometry_models.append(geom_model)
+    # Constraint models
+    new_constraint_models = []
+    for cm in constraint_models:
+        new_constraint_models.append(pin.RigidConstraintModel(
+                cm.type,
+                model,
+                model.getJointId(old_model.names[cm.joint1_id]),
+                cm.joint1_placement,
+                model.getJointId(old_model.names[cm.joint2_id]),  # To the world
+                cm.joint2_placement,
+                pin.ReferenceFrame.LOCAL,
+        ) )
+    # Actuation models
+    actuation_model = ActuationModel(model, ["mot"])
 
-        if "to_rotule" in model.names[i]:
-            geom_cylinder_robot = pin.GeometryObject(
-            "cylinder_robot"+str(i), i, pin.SE3.Identity(), hppfcl.Sphere(2e-2)
-        )
-            color = [1,0,0,1]
-        geom_cylinder_robot.meshColor = np.array(color)
-        gmodel.addGeometryObject(geom_cylinder_robot)
-        print('Generate joint')
-    
-    Lposparent=[]
-    for f in model.frames:
-        if "frame" not in f.name:
-            Lposparent.append(f.placement.translation.tolist()+[f.parentJoint])
-    for idparent,Lchild in enumerate(model.children):
-        for i in Lchild:
-            Lposparent.append(model.jointPlacements[i].translation.tolist()+[idparent])
-    Lposparent=np.array(Lposparent)
-
-
-    Lcolor=[]
-    nj=model.njoints
-    for i in range(nj):
-        Lcolor.append(np.array([1/nj*i,1/nj*i,1/nj*i,1]))
-    random.shuffle(Lcolor)
-
-
-#generation of the bar
-    for parent in range(model.njoints):
-        Lpos_joint=[] # pos of parent joint
-        bx=0
-        by=0
-        bz=0
-        for L in Lposparent:
-            if L[3]==parent:
-                Lpos_joint.append(np.array(L[0:3]))
-                bx+=L[0]
-                by+=L[1]
-                bz+=L[2]
-
-        barricentre=np.array([bx/len(Lpos_joint),by/len(Lpos_joint),bz/len(Lpos_joint)])
-
-
-
-        se3barricentre=pin.SE3.Identity()
-        se3barricentre.translation=barricentre
-        # se3barricentre.rotation=np.array([x.tolist(),y.tolist(),z.tolist()]).T
-
-        for pos in Lpos_joint:
-            dpos=pos-barricentre
-            d=norm(dpos)
-            dir=pin.SE3.Identity()
-            dir.translation=dpos/2
-            z=dpos/norm(dpos)
-            x=np.array([z[1],-z[0],0])
-            if norm(x)<1e-8:
-                x=np.array([z[2],0,0])
-            x=x/norm(x)
-            y=np.cross(x,z)
-
-            dir.rotation=np.array([x.tolist(),y.tolist(),z.tolist()]).T
-            # dir.rotation=np.array([[0,0,1],[0,1,0],[1,0,0]])
-            geom_cylinder_robot = pin.GeometryObject("cylinder_robotdv"+str(np.random.rand()), parent, se3barricentre*dir, hppfcl.Cylinder(1e-2,d))
-            # color = [0, 1, 0, 1]
-            # if parent == 0:
-            #     color=[1,1,1,1]
-            geom_cylinder_robot.meshColor = np.array(Lcolor[parent])
-            gmodel.addGeometryObject(geom_cylinder_robot)
-        
-    for idf in Lframeinterest:
-        frame=model.frames[idf]
-        i=frame.parentJoint
-        if "3d" in frame.name or "3D" in frame.name:
-            geom_cylinder_robot = pin.GeometryObject(
-                "cylinder_robotdv"+str(np.random.rand()), i, frame.placement, hppfcl.Sphere(2e-2)
-            )
-        else:
-            geom_cylinder_robot = pin.GeometryObject(
-                "cylinder_robotdv"+str(np.random.rand()), i, frame.placement, hppfcl.Box(2e-2,2e-2,2e-2)
-            )
-        color = [0, 0, 1, 1]
-        if "pied" in frame.name :
-            geom_cylinder_robot = pin.GeometryObject(
-                "cylinder_robotdv"+str(np.random.rand()), i, frame.placement, hppfcl.Box(10e-2,5e-2,2e-2)
-            )
-            color = [0, 1, 1, 1]
-
-        if "hanche" in frame.name :
-            geom_cylinder_robot = pin.GeometryObject(
-                "cylinder_robotdv"+str(np.random.rand()), i, frame.placement, hppfcl.Box(2e-2,2e-2,2e-2)
-            )
-            color = [0, 1, 0, 1]
-
-        geom_cylinder_robot.meshColor = np.array(Lcolor[i])
-        gmodel.addGeometryObject(geom_cylinder_robot)
-
-    from pinocchio.visualize import MeshcatVisualizer
-    import meshcat
-    return(gmodel)
-    # viz = MeshcatVisualizer(model, gmodel, gmodel)
-    # viz.viewer = meshcat.Visualizer(zmq_url="tcp://127.0.0.1:6000")
-    # viz.clean()
-    # viz.loadViewerModel(rootNodeName="number 1")
-    # viz.display(q0)
+    return(model, geometry_models, new_constraint_models, actuation_model)
 
 def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
     robot = robex.load("talos")
@@ -307,45 +234,19 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
     new_model = pin.Model()
     new_model.name = "talos_closed" # Defining the model name
     # Renaming the non-actuated joints
-    id_corres = {}
-    for part in ['root', 'arm_left', 'arm_right', 'left', 'right']:
-        for jp, iner, name, i, jm, vgm, cgm in zip(
-            model.jointPlacements[1:], model.inertias[1:], model.names[1:], model.parents[1:], model.joints[1:],
-            visual_model.geometryObjects[1:], collision_model.geometryObjects[1:]
-        ):
-            side_left = re.search("left", name)
-            side_right = re.search("right", name)
-            side_arm_left = re.search('arm_left', name) 
-            side_arm_right = re.search('arm_right', name)
-            if part=='root' and (side_left or side_right or side_arm_left or side_arm_right): 
-                # If root, ignore arms and legs
-                continue
-            if (part=='arm_right' and not side_arm_right) or (part=='arm_left' and not side_arm_left): 
-                # If arm_right, ignore all but right arm part, same for arm_left
-                continue
-            elif (part=='left' and (not side_left or side_arm_left)) or (part=='right' and (not side_right or side_arm_right)):
-                # If leg_left, ignore all but left leg parts, same for leg_right
-                continue
-            match1 = re.search("leg", name)
-            match2 = re.search("5", name)
-            match3 = re.search("mot", name)
-            match4 = re.search("free", name)
-            if match1 and match2:
-                name = "free_" + name
-            elif not (match3) and not (match4):
-                name = "mot_" + name
-            # To find the parent, look from their names in the new model from their names in the old model
-            parent = int(np.min([
-                        new_model.getJointId('mot_'+model.names[i]), 
-                        new_model.getJointId('free_'+model.names[i]),
-                        new_model.getJointId(model.names[i])]))    # TODO This should really be done in a better way
-            id_corres[i] = parent # Create a correspondance between model ids and new_models_ids (will only containt)
-            jid = new_model.addJoint(parent, jm, jp, name)
-            new_model.appendBodyToJoint(jid, iner, pin.SE3.Identity())
-    
-    # print(id_corres, model)
-    # for gm in visual_model.geometryObjects:
-    #     gm.parentJoint = id_corres[gm.parentJoint]
+    for jp, iner, name, i, jm in zip(
+        model.jointPlacements[1:], model.inertias[1:], model.names[1:], model.parents[1:], model.joints[1:]
+    ):
+        match1 = re.search("leg", name)
+        match2 = re.search("5", name)
+        match3 = re.search("mot", name)
+        match4 = re.search("free", name)
+        if match1 and match2:
+            name = "free_" + name
+        elif not (match3) and not (match4):
+            name = "mot_" + name
+        jid = new_model.addJoint(i, jm, jp, name)
+        new_model.appendBodyToJoint(jid, iner, pin.SE3.Identity())
 
     # Adding new frames
     # ? Is this really necessary or can we just frame.copy() ?
@@ -427,8 +328,8 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
             new_model,
             constraint_models,
             actuation_model,
-            new_visual_model,
-            new_collision_model,
+            visual_model,
+            collision_model,
         ) = freezeJoints(
             new_model,
             constraint_models,
@@ -504,9 +405,14 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
                     pin.FrameType.OP_FRAME,
                 )
             )
+    for cm in constraint_models:
+        print(cm.colwise_span_indexes, cm.joint1_id, cm.joint2_id)
+    
+    new_model, geometry_models, constraint_models, actuation_model = reorganizeModels(new_model, [visual_model, collision_model], constraint_models)
+    visual_model, collision_model = geometry_models[0], geometry_models[1]
 
-    visual_model = collision_model = create_visual(new_model)
-
+    for cm in constraint_models:
+        print(cm.colwise_span_indexes, cm.joint1_id, cm.joint2_id)
     return (
         new_model,
         constraint_models,
@@ -516,12 +422,21 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
     )
 
 if __name__ == "__main__":
-    model, cm, am, visual_model, collision_model = TalosClosed(closed_loop=False, only_legs=True)
+    model, cm, am, visual_model, collision_model = TalosClosed(closed_loop=True, only_legs=True)
+    # new_model, geometry_models, cm, am = reorganizeModels(model, [visual_model, collision_model], cm)
+    # new_visual_model, new_collision_model = geometry_models[0], geometry_models[1]
+    #
     q0 = pin.neutral(model)
     viz = MeshcatVisualizer(model, visual_model, visual_model)
     viz.viewer = meshcat.Visualizer(zmq_url="tcp://127.0.0.1:6000")
     viz.clean()
-    viz.loadViewerModel(rootNodeName="number 1")
+    viz.loadViewerModel(rootNodeName="universe")
     viz.display(q0)
-
-    print(model)
+    #
+    # input()
+    # q0 = pin.neutral(new_model)
+    # viz = MeshcatVisualizer(new_model, new_visual_model, new_visual_model)
+    # viz.viewer = meshcat.Visualizer(zmq_url="tcp://127.0.0.1:6000")
+    # viz.clean()
+    # viz.loadViewerModel(rootNodeName="universe")
+    # viz.display(q0)

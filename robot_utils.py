@@ -194,10 +194,18 @@ def freezeJoints(model, constraint_models, actuation_model, visual_model, collis
             if cm.joint1_id == cm.joint2_id:
                 toremove.append(cm)
                 print(f'Remove constraint {n1}//{n2} (during freeze)')
-
         reduced_constraint_models = [
-            cm for cm in constraint_models if cm not in toremove]
-    
+            pin.RigidConstraintModel(
+                cm.type,
+                model,
+                cm.joint1_id,
+                cm.joint1_placement,
+                cm.joint2_id,  # To the world
+                cm.joint2_placement,
+                pin.ReferenceFrame.LOCAL,
+            )
+            for cm in constraint_models if cm not in toremove]
+
     if actuation_model is not None:
         print('Reducing the actuation model')
         list_names = [model.names[idMot] for idMot in actuation_model.idMotJoints]
