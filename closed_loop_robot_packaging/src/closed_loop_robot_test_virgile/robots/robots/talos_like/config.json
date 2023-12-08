@@ -1,8 +1,0 @@
-{
-    "documentId": "0ddcc2f008bab85822da13ce",
-    "outputFormat": "urdf",
-    "assemblyName":"robot_v2",
-    "ignore":[
-        "Fram1e","sphere"
-    ]
-}
