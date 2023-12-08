@@ -55,7 +55,7 @@ class ActuationModel():
                     nq = model.joints[i].nq
                     for j in range(nq):
                         Lidq.append(idq+j)
-        self.idqmot=Lidq
+        self.idqmot=np.unique(Lidq)
 
     def getMotId_v(self, model, motnames):
         """
@@ -76,7 +76,7 @@ class ActuationModel():
                     nv = model.joints[i].nv
                     for j in range(nv):
                         Lidv.append(idv+j)
-        self.idvmot=Lidv
+        self.idvmot=np.unique(Lidv)
 
     def getFreeId_q(self, model):
         """
