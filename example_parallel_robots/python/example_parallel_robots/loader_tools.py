@@ -211,9 +211,9 @@ def completeRobotLoader(path, name_urdf="robot.urdf", name_yaml="robot.yaml", fr
     return(model, constraint_models, actuation_model, visual_model, robot.collision_model)
 
 
-def load(robot_name):
-    path= "${PROJECT_SOURCE_DIR}/robots/"+robot_name
-    return(completeRobotLoader(path))
+# def load(robot_name):
+#     path= "${PROJECT_SOURCE_DIR}/robots/"+robot_name
+#     return(completeRobotLoader(path))
    
 ########## TEST ZONE ##########################
 
