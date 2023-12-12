@@ -13,6 +13,7 @@ from yaml.loader import SafeLoader
 from warnings import warn
 import os 
 from .actuation_model import ActuationModel
+from .robot_options import ROBOTS
 
 def nameFrameConstraint(model, name_loop="fermeture", Lid=[]):
     """
@@ -211,10 +212,31 @@ def completeRobotLoader(path, name_urdf="robot.urdf", name_yaml="robot.yaml", fr
     return(model, constraint_models, actuation_model, visual_model, robot.collision_model)
 
 
-# def load(robot_name):
-#     path= "${PROJECT_SOURCE_DIR}/robots/"+robot_name
-#     return(completeRobotLoader(path))
-   
+def load(robot_name, free_flyer=None, only_legs=None):
+    '''
+    Loads a model of a robot and return models objects containing all information on the robot
+    Arguments :
+        robot_name - Name of the robot, see [to be implemented] to see possible options
+        free_flyer [Optionnal, Boolean] - Load the robot with a free flyer base - Use robot's default setting if not specified
+        only_legs [Optionnal, Boolean] - Freeze all joints outside of the legs, only used for full body models - Use robot's default setting if not specified
+    Returns:
+        model - Pinocchio robot model
+        constraint_models - List of Pinocchio robot constraint model
+        actuation_model - Robot actuation model - Custom object defined in the lib
+        visual_model - Pinocchio robot visual model
+        collision_model - Pinocchio robot collision model
+    '''
+    robot = ROBOTS[robot_name]
+    if robot.urdf_file is not None:
+        ff = robot.free_flyer if free_flyer is None else free_flyer
+        models_stack = completeRobotLoader(robot.path, robot.urdf_file, robot.yaml_file, ff)
+        return(models_stack)
+    else: # This concerns full body models
+        ff = robot.free_flyer if free_flyer is None else free_flyer
+        ol = robot.only_legs if only_legs is None else only_legs
+        models_stack = robot.exec(robot.closed_loop, ol, ff)
+        return(models_stack)
+
 ########## TEST ZONE ##########################
 
 import unittest
