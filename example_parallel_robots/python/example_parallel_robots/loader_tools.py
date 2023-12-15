@@ -11,9 +11,12 @@ import re
 import yaml
 from yaml.loader import SafeLoader
 from warnings import warn
-import os 
+from os.path import dirname, exists, join
+import sys
+
 from .actuation_model import ActuationModel
 from .robot_options import ROBOTS
+from .path import EXAMPLE_PARALLEL_ROBOTS_MODEL_DIR, EXAMPLE_PARALLEL_ROBOTS_SOURCE_DIR
 
 def nameFrameConstraint(model, name_loop="fermeture", Lid=[]):
     """
@@ -211,6 +214,32 @@ def completeRobotLoader(path, name_urdf="robot.urdf", name_yaml="robot.yaml", fr
     actuation_model = ActuationModel(model,yaml_content['name_mot'])
     return(model, constraint_models, actuation_model, visual_model, robot.collision_model)
 
+def getModelPath(subpath, verbose=True):
+    source = dirname(dirname(dirname(__file__)))  # top level source directory
+    paths = [
+        # function called from "make release" in build/ dir
+        join(dirname(dirname(dirname(source))), "robots"),
+        # function called from a build/ dir inside top level source
+        join(dirname(source), "robots"),
+        # function called from top level source dir
+        join(source, "robots"),
+    ]
+    print(EXAMPLE_PARALLEL_ROBOTS_MODEL_DIR, EXAMPLE_PARALLEL_ROBOTS_SOURCE_DIR)
+    try:
+        # function called from installed project
+        paths.append(EXAMPLE_PARALLEL_ROBOTS_MODEL_DIR)
+        # function called from off-tree build dir
+        paths.append(EXAMPLE_PARALLEL_ROBOTS_SOURCE_DIR)
+    except NameError:
+        pass
+    paths += [join(p, "../../../share/example-robot-data/robots") for p in sys.path]
+    for path in paths:
+        print(f"Checkin {join(path, subpath.strip('/'))}")
+        if exists(join(path, subpath.strip("/"))):
+            if verbose:
+                print("using %s as modelPath" % path)
+            return join(path, subpath.strip("/"))
+    raise IOError("%s not found" % subpath)
 
 def load(robot_name, free_flyer=None, only_legs=None):
     '''
@@ -226,16 +255,21 @@ def load(robot_name, free_flyer=None, only_legs=None):
         visual_model - Pinocchio robot visual model
         collision_model - Pinocchio robot collision model
     '''
+    if robot_name not in ROBOTS.keys():
+        raise(f"Name {robot_name} does not exists.\n Call method 'models' to see the list of available models")
     robot = ROBOTS[robot_name]
     if robot.urdf_file is not None:
         ff = robot.free_flyer if free_flyer is None else free_flyer
-        models_stack = completeRobotLoader(robot.path, robot.urdf_file, robot.yaml_file, ff)
+        models_stack = completeRobotLoader(getModelPath(robot.path), robot.urdf_file, robot.yaml_file, ff)
         return(models_stack)
     else: # This concerns full body models
         ff = robot.free_flyer if free_flyer is None else free_flyer
         ol = robot.only_legs if only_legs is None else only_legs
         models_stack = robot.exec(robot.closed_loop, ol, ff)
         return(models_stack)
+
+def models():
+    print(f"Available models are: \n {ROBOTS.keys()}\n Generate model with method load")
 
 ########## TEST ZONE ##########################
 

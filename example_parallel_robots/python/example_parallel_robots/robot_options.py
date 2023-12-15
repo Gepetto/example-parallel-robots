@@ -53,20 +53,20 @@ class Delta():
     free_flyer = False
 
 class TalosClosed():
-    from robots.talos_closed import talos_closed
+    from .talos_closed import TalosClosed
     path = "talos_closed"
     urdf_file = None
     free_flyer = True
     closed_loop = True
-    exec = talos_closed
+    exec = TalosClosed
 
 class Talos():
-    from robots.talos_closed import talos_closed
+    from .talos_closed import TalosClosed
     path = "talos_closed"
     urdf_file = None
     free_flyer = True
     closed_loop = False
-    exec = talos_closed
+    exec = TalosClosed
 
 class TalosLeg():
     path = "talos_like"
