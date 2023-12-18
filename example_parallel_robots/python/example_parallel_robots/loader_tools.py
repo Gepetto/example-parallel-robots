@@ -1,6 +1,6 @@
 '''
 -*- coding: utf-8 -*-
-Virgile Batto & Ludovic De Matteis - September 2023
+Virgile Batto & Ludovic De Matteis - December 2023
 
 Tools to load and parse URDF and YAML robot files. Can also generate YANL file from an URDF with naming conventions
 '''
@@ -215,6 +215,7 @@ def completeRobotLoader(path, name_urdf="robot.urdf", name_yaml="robot.yaml", fr
     return(model, constraint_models, actuation_model, visual_model, robot.collision_model)
 
 def getModelPath(subpath, verbose=True):
+    '''Looks for robot directory subpath based on installation path'''
     source = dirname(dirname(dirname(__file__)))  # top level source directory
     paths = [
         # function called from "make release" in build/ dir
@@ -269,6 +270,7 @@ def load(robot_name, free_flyer=None, only_legs=None):
         return(models_stack)
 
 def models():
+    '''Displays the list of available robot names'''
     print(f"Available models are: \n {ROBOTS.keys()}\n Generate model with method load")
 
 ########## TEST ZONE ##########################

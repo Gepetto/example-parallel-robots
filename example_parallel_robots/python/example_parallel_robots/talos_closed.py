@@ -10,9 +10,6 @@ from .robot_utils import freezeJoints
 
 def reorganizeModelDepthFirst(model):
     def propagate(stack, new_model, i):
-        # print(f'Current stack state {stack}')
-        # Stack contains tuples with the child id in the old model along with the parent id in the new model
-        # print(f'Current model {new_model}')
         if len(stack)==0:
             return(new_model)
         if i==500:
