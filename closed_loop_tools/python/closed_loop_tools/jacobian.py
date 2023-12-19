@@ -7,11 +7,7 @@ tools to compute of jacobian inside closed loop
 """
 import pinocchio as pin
 import numpy as np
-import os
-from numpy.linalg import norm
-from loader_tools import completeRobotLoader
-from closed_loop_kinematics import closedLoopForwardKinematics
-from closed_loop_mount import closedLoopMountProximal
+from .forward_kinematics import closedLoopForwardKinematics
 
 def jacobianFinitDiffClosedLoop(model,actuation_model,constraint_model, idframe: int, idref: int, qmot: np.array,q_prec, dq=1e-6,name_mot='mot',fermeture='fermeture'):
     """
@@ -74,64 +70,6 @@ def sepJc(model,actuation_model,Jn):
     Jfree=Jn@Sfree
     return(Jmot,Jfree)
 
-# def dqRowReorder(model,actuation_model,dq):
-    """
-    q=dqRowReorder(model,actuation_model,dq)
-    
-    Reorganize the vector/matrix `dq` in accordance with the model.
-
-    Args:
-        model (pinocchio.Model): Pinocchio model.
-        actuation_model (ActuationModelFreeFlyer): Actuation model.
-        dq (np.array): Vector/matrix organized as [dqmot dqfree].
-
-    Returns:
-        np.array: Reorganized `dq` vector/matrix.
-    """
-#     Lidmot=actuation_model.idvmot
-#     Lidfree=actuation_model.idvfree
-#     imot=0
-#     ifree=0
-#     for i,dq in enumerate(dq.tolist()):
-#         if i<len(Lidmot):
-#             nJ[Lidmot[imot]]=dq
-#             imot+=1
-#         else:
-#             nJ[Lidfree[ifree]]=dq
-#             ifree+=1
-#     return(nJ)
-
-
-# def dq_dqmot(model,actuation_model,LJ):
-    """
-    dq=dq_dq_mot(model,actuation_model,LJ)
-
-    Compute the derivative `dq/dqmot` of the joint to the motor joint.
-
-    Args:
-        model (pinocchio.Model): Pinocchio model.
-        actuation_model (ActuationModelFreeFlyer): Actuation model.
-        LJ (list): List of constraint Jacobians.
-
-    Returns:
-        np.array: Derivative `dq/dqmot`.
-    """
-    # Lidmot=actuation_model.idvmot
-    # Jmot=np.zeros((0,len(Lidmot)))
-    # Jfree=np.zeros((0,model.nv-len(Lidmot)))
-    # for J in LJ:
-    #     [mot,free]=sepJc(model,actuation_model,J)
-    #     Jmot=np.concatenate((mot,Jmot))
-    #     Jfree=np.concatenate((free,Jfree))
-    
-    # I=np.identity(len(Lidmot))
-    # pinvJfree=np.linalg.pinv(Jfree)
-    # dq=np.concatenate((I,-pinvJfree@Jmot))
-    # dq=dqRowReorder(model,actuation_model,dq)
-    # return(dq)
-
-
-
 def inverseConstraintKinematicsSpeed(model,data,constraint_model,constraint_data,actuation_model,q0,ideff,veff):
     """
     vq,Jf_cloesd=inverseConstraintKinematicsSpeedOptimized(model,data,constraint_model,constraint_data,actuation_model,q0,ideff,veff)
@@ -160,7 +98,6 @@ def inverseConstraintKinematicsSpeed(model,data,constraint_model,constraint_data
     for (cm,cd,i) in zip(constraint_model,constraint_data,range(len(LJ))):
         LJ[i]=pin.getConstraintJacobian(model,data,cm,cd)
         
-
     #init of constant
     Lidmot=actuation_model.idvmot
     Lidfree=actuation_model.idvfree
@@ -169,13 +106,8 @@ def inverseConstraintKinematicsSpeed(model,data,constraint_model,constraint_data
     Lnc=[J.shape[0] for J in LJ]
     nc=np.sum(Lnc)
     
-    
     Jmot=np.zeros((nc,len(Lidmot)))
     Jfree=np.zeros((nc,nv-nv_mot))
-    
-
-
-    #separation between Jmot and Jfree
     
     nprec=0
     for J,n in zip(LJ,Lnc):
@@ -193,9 +125,9 @@ def inverseConstraintKinematicsSpeed(model,data,constraint_model,constraint_data
         nprec=nprec+n
 
     # computation of dq/dqmot
-    I=np.identity(len(Lidmot))
+    inertia=np.identity(len(Lidmot))
     pinvJfree=np.linalg.pinv(Jfree)
-    dq_dmot_no=np.concatenate((I,-pinvJfree@Jmot))
+    dq_dmot_no=np.concatenate((inertia, -pinvJfree@Jmot))
     
     
     #re order dq/dqmot
@@ -219,31 +151,4 @@ def inverseConstraintKinematicsSpeed(model,data,constraint_model,constraint_data
 
     
     return(vq,Jf_closed)
-
-
-##########TEST ZONE ##########################
-import unittest
-
-class TestRobotInfo(unittest.TestCase):
-    #only test inverse constraint kineatics because it runs all precedent code
-    def test_inverseConstraintKinematics(self):
-        vapply=np.array([0,0,1,0,0,0])
-        vq, Jq = inverseConstraintKinematicsSpeed(model,data,constraint_models,constraint_datas,actuation_model,q0,34,vapply)
-        pin.computeAllTerms(model,data,q0,vq)
-        vcheck=data.v[13].np #frame 34 is center on joint 13
-        #check that the computing vq give the good speed 
-        self.assertTrue(norm(vcheck-vapply)<1e-6)
-
-
-if __name__ == "__main__":
-    #load robot
-    path = os.getcwd()+"/robots/digit_like"
-    model, constraint_models, actuation_model, visual_model, collision_model = completeRobotLoader(path)
-    data=model.createData()
-    constraint_datas=[cm.createData() for cm in constraint_models]
-    q0=closedLoopMountProximal(model,data,constraint_models,constraint_datas)
-    
-    
-    #test
-    unittest.main()
 

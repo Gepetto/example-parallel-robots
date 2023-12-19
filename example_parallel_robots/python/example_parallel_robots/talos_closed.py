@@ -6,7 +6,7 @@ from pinocchio.visualize import MeshcatVisualizer
 import hppfcl
 import re
 from .actuation_model import ActuationModel
-from .robot_utils import freezeJoints
+from .freeze_joints import freezeJoints
 
 def reorganizeModelDepthFirst(model):
     def propagate(stack, new_model, i):

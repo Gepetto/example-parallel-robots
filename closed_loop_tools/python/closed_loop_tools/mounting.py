@@ -12,7 +12,7 @@ try:
     from pinocchio import casadi as caspin
     import casadi
     _WITH_CASADI = True
-except:
+except ImportError:
     _WITH_CASADI = False
 from scipy.optimize import fmin_slsqp
 from numpy.linalg import norm
@@ -77,10 +77,11 @@ def closedLoopMountCasadi(rmodel, rdata, cmodels, cdatas, q_prec=None):
     opts = {}
     optim.solver("ipopt", opts)
     try:
-        sol = optim.solve_limited()
+        optim.solve_limited()
         print("Solution found")
         q = optim.value(vq)
-    except:
+    except AttributeError as e:
+        print(e)
         print('ERROR in convergence, press enter to plot debug info.')
         input()
         q = optim.debug.value(vq)
@@ -206,33 +207,3 @@ def closedLoopMount(*args, **kwargs):
             return(closedLoopMountCasadi(*args, **kwargs))
         else:
             return(closedLoopMountScipy(*args, **kwargs))
-        
-########## TEST ZONE ##########################
-
-import unittest
-class TestRobotLoader(unittest.TestCase):
-    def test_mount(self):
-        import io
-        from loader_tools import completeRobotLoader
-        robots_paths = [['robot_marcheur_1', 'unittest_mount_marcheur_1.npy']]
-
-        for rp in robots_paths:
-            path = "robots/"+rp[0]
-            m ,cm, am, vm, collm = completeRobotLoader(path)
-            data = m.createData()
-            cdata = [cm0.createData() for cm0 in cm]
-            def constraints(q):
-                Lc = constraintsResidual(m, data, cm, cdata, q, recompute=True, pinspace=pin, quaternions=False)
-                return Lc
-            
-            truth = np.load("unittest/"+rp[1])
-            res_casadi = closedLoopMountCasadi(m, data, cm, cdata)
-            res_scipy = closedLoopMountScipy(m, data, cm, cdata)
-            res_prox = closedLoopMountProximal(m, data, cm, cdata)
-
-            assert np.max(np.abs(constraints(res_casadi)))<1e-7
-            assert np.max(np.abs(constraints(res_scipy)))<1e-7
-            assert np.max(np.abs(constraints(res_prox)))<1e-7
-        
-if __name__ == "__main__":
-    unittest.main()

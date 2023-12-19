@@ -208,7 +208,7 @@ def completeRobotLoader(path, name_urdf="robot.urdf", name_yaml="robot.yaml", fr
             Lconstraintmodel.append(constraint)
         
         constraint_models = Lconstraintmodel
-    except:
+    except RuntimeError:
         print("no constraint")
 
     actuation_model = ActuationModel(model,yaml_content['name_mot'])
@@ -273,50 +273,3 @@ def models():
     '''Displays the list of available robot names'''
     print(f"Available models are: \n {ROBOTS.keys()}\n Generate model with method load")
 
-########## TEST ZONE ##########################
-
-import unittest
-class TestRobotLoader(unittest.TestCase):
-    def test_complete_loader(self):
-        import io
-        robots_paths = [['robot_simple_iso3D', 'unittest_iso3D.txt'],
-                        ['robot_simple_iso6D', 'unittest_iso6D.txt']]
-
-        for rp in robots_paths:
-            path = "robots/"+rp[0]
-            m ,cm, am, vm, collm = completeRobotLoader(path)
-            joints_info = [(j.id, j.shortname(), j.idx_q, j.idx_v) for j in m.joints[1:]]
-            frames_info = [(f.name, f.inertia, f.parentJoint, f.parentFrame, f.type) for f in m.frames]
-            constraint_info = [(cmi.name, cmi.joint1_id, cmi.joint2_id, cmi.joint1_placement, cmi.joint2_placement, cmi.type) for cmi in cm]
-            mot_info = [(am.idqfree, am.idqmot, am.idvfree, am.idvmot)]
-            
-            results = io.StringIO()
-            results.write('\n'.join(f'{x[0]} {x[1]} {x[2]} {x[3]}' for x in joints_info))
-            results.write('\n'.join(f'{x[0]} {x[1]} {x[2]} {x[3]} {x[4]}' for x in frames_info))
-            results.write('\n'.join(f'{x[0]} {x[1]} {x[2]} {x[3]} {x[4]} {x[5]}' for x in constraint_info))
-            results.write('\n'.join(f'{x[0]} {x[1]} {x[2]} {x[3]}' for x in mot_info))
-            results.seek(0)
-
-            # Ground truth is defined from a known good result
-            with open('unittest/'+rp[1], 'r') as truth:
-                assert truth.read() == results.read()
-    
-    def test_generate_yaml(self):
-        import io
-        robots_paths = [['robot_simple_iso3D', 'unittest_iso3D_yaml.txt'],
-                        ['robot_simple_iso6D', 'unittest_iso6D_yaml.txt'],
-                        ['robot_delta', 'unittest_delta_yaml.txt']]
-
-        for rp in robots_paths:
-            path = "robots/"+rp[0]
-            results = io.StringIO()
-            generateYAML(path, file=results)
-            results.seek(0)
-
-            # Ground truth is defined from a known good result
-            with open('unittest/'+rp[1], 'r') as truth:
-                assert truth.read() == results.read()
-
-        
-if __name__ == "__main__":
-    unittest.main()
