@@ -6,6 +6,7 @@ mounting.py
 constraints.py 
 forward_kinematics.py
 inverse_kinematics.py 
+inverse_dynamics.py
 )
 
 foreach(python ${${PROJECT_NAME}_PYTHON_FILES})

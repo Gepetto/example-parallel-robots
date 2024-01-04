@@ -17,11 +17,11 @@ except ImportError:
 from scipy.optimize import fmin_slsqp
 from numpy.linalg import norm
 
-from .constraints import constraintsResidual
+from .constraints import constraintsResidual, derivativeConstraintsResidual
 
 _FORCE_PROXIMAL = False
 
-def closedLoopMountCasadi(rmodel, rdata, cmodels, cdatas, q_prec=None):
+def closedLoopMountCasadi(rmodel, rdata, cmodels, cdatas, q_prec=None, W=None):
     """
         closedLoopMountCasadi(rmodel, rdata, cmodels, cdatas, q_prec=None):
 
@@ -31,6 +31,7 @@ def closedLoopMountCasadi(rmodel, rdata, cmodels, cdatas, q_prec=None):
         
         min || q - q_prec ||^2
         subject to:  f_c(q)=0              # Kinematics constraints are satisfied
+                     dq[mots] = 0
 
         The problem is solved using CasADi + IPOpt
 
@@ -40,6 +41,7 @@ def closedLoopMountCasadi(rmodel, rdata, cmodels, cdatas, q_prec=None):
             cmodels - Pinocchio constraint models list
             cdatas - Pinocchio constraint datas list
             q_prec [Optionnal] - Previous configuration of the free joints - default: None (set to neutral model pose)
+            mots [Optionnal] - Ids to fixed fixed (i.e equals to q_prec), this typically corresponds to motors ids
         Return:
             q - Configuration vector satisfying constraints (if optimisation process succeded)
     """
@@ -55,23 +57,24 @@ def closedLoopMountCasadi(rmodel, rdata, cmodels, cdatas, q_prec=None):
     def constraints(q):
         Lc = constraintsResidual(casmodel, casdata, cmodels, cdatas, q, recompute=True, pinspace=caspin, quaternions=False)
         return Lc
-    
-    cq = casadi.SX.sym("q", rmodel.nq, 1)
-    cv = casadi.SX.sym("v", rmodel.nv, 1)
-    constraintsCost = casadi.Function('constraint', [cq], [constraints(cq)])
-    integrate = casadi.Function('integrate', [cq, cv],[ caspin.integrate(casmodel, cq, cv)])
+
+    sym_dq = casadi.SX.sym("dq", rmodel.nv, 1)
+    cq = caspin.integrate(casmodel, casadi.SX(q_prec), sym_dq)
+    constraintsCost = casadi.Function('constraint', [sym_dq], [constraints(cq)])
 
     # * Optimisation problem
     optim = casadi.Opti()
     vdq = optim.variable(rmodel.nv)
-    vq = integrate(q_prec, vdq)
 
     # * Constraints
-    optim.subject_to(constraintsCost(vq)==0)
-    optim.subject_to(optim.bounded(rmodel.lowerPositionLimit, vq, rmodel.upperPositionLimit))
+    optim.subject_to(constraintsCost(vdq)==0)
 
     # * cost minimization
-    total_cost = casadi.sumsqr(vdq)
+    if W is None:
+        W = np.eye(rmodel.nv)
+    print(W, np.shape(W))
+
+    total_cost = casadi.dot(vdq, W@vdq)
     optim.minimize(total_cost)
 
     opts = {}
@@ -79,14 +82,14 @@ def closedLoopMountCasadi(rmodel, rdata, cmodels, cdatas, q_prec=None):
     try:
         optim.solve_limited()
         print("Solution found")
-        q = optim.value(vq)
-    except AttributeError as e:
+        dq = optim.value(vdq)
+    except RuntimeError as e:
         print(e)
         print('ERROR in convergence, press enter to plot debug info.')
         input()
-        q = optim.debug.value(vq)
-        print(q)
-
+        dq = optim.debug.value(vdq)
+        print(dq)
+    q = pin.integrate(rmodel, q_prec, dq)
     return q # I always return a value even if convergence failed
 
 
@@ -199,11 +202,80 @@ def closedLoopMountProximal(rmodel, rdata, cmodels, cdatas, q_prec=None, max_it=
         y -= alpha*(-dy + y)
     return(q)
 
-def closedLoopMount(*args, **kwargs):
-    if _FORCE_PROXIMAL:
-        return(closedLoopMountProximal(*args, **kwargs))
-    else:
-        if _WITH_CASADI:
-            return(closedLoopMountCasadi(*args, **kwargs))
-        else:
-            return(closedLoopMountScipy(*args, **kwargs))
+# def closedLoopMount(*args, **kwargs):
+#     if _FORCE_PROXIMAL:
+#         return(closedLoopMountProximal(*args, **kwargs))
+#     else:
+#         if _WITH_CASADI:
+#             return(closedLoopMountCasadi(*args, **kwargs))
+#         else:
+#             return(closedLoopMountScipy(*args, **kwargs))
+
+def configurationProjection(model, data, constraint_models, constraint_datas, q_ref, fixed_joints_ids):
+    """
+        closedLoopProjection(model, data, constraint_models, constraint_datas, q_ref, open_loop_ids):
+
+        This function takes the reference configuration of the robot and returns a configuration that satisfies the constraints while keeping some joints at the same configuration
+        This function solves a minimization problem over q where q is defined as q_ref+dq (this removes the need for quaternion constraints and gives less decision variables)
+        
+        min || f_c(q) ||^2
+        subject to: dq[fixed_joints] = 0
+
+        The problem is solved using CasADi + IPOpt
+
+        Argument:
+            TODO
+        Return:
+            TODO
+    """
+    # * Defining casadi models
+    casmodel = caspin.Model(model)
+    casdata = casmodel.createData()
+
+    casconstraint_models = [caspin.RigidConstraintModel(cm) for cm in constraint_models]
+    casconstraint_datas = [cm.createData() for cm in casconstraint_models]
+
+    # * Optimisation functions
+    def constraints(q):
+        Lc = constraintsResidual(casmodel, casdata, casconstraint_models, casconstraint_datas, q, recompute=True, pinspace=caspin, quaternions=False)
+        return Lc
+    # def derivativesConstraints(q):
+    #     jac = derivativeConstraintsResidual(casmodel, casdata, casconstraint_models, casconstraint_datas, q, recompute=True, pinspace=caspin, quaternions=False)
+    #     return jac
+
+    # nc = np.sum([cm.size() for cm in casconstraint_models])
+    sym_dq = casadi.SX.sym("dq", model.nv, 1)
+    sym_cost = casadi.SX.sym("dq", 1, 1)
+    cq = caspin.integrate(casmodel, casadi.SX(q_ref), sym_dq)
+    constraintsRes = casadi.Function('constraint', [sym_dq], [constraints(cq)])
+
+    jac_cost = casadi.Function('jac_cost', [sym_dq, sym_cost], 
+        [2*constraintsRes(sym_dq).T@constraintsRes.jacobian()(sym_dq, constraintsRes(sym_dq))])
+    cost = casadi.Function('cost', [sym_dq], [casadi.sumsqr(constraintsRes(sym_dq))],
+                        {"custom_jacobian": jac_cost, "jac_penalty":0})
+
+    # * Optimisation problem
+    optim = casadi.Opti()
+    vdq = optim.variable(model.nv)
+
+    # * Problem
+    total_cost = cost(vdq)
+    optim.minimize(total_cost)
+    optim.subject_to(vdq[fixed_joints_ids]==0)
+
+    opts = {}
+    optim.solver("ipopt", opts)
+    try:
+        optim.solve_limited()
+        print("Solution found")
+        dq = optim.value(vdq)
+    except RuntimeError as e:
+        print(e)
+        print('ERROR in convergence, press enter to plot debug info.')
+        input()
+        dq = optim.debug.value(vdq)
+        print(dq)
+
+    assert(optim.value(total_cost)<1e-6)
+    q = pin.integrate(model, q_ref, dq)
+    return q # I always return a value even if convergence failed
