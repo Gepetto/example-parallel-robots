@@ -2,8 +2,9 @@ set(${PROJECT_NAME}_PYTHON_FILES
 __init__.py 
 actuation.py
 jacobian.py
-mounting.py 
-constraints.py 
+projections.py 
+constraints.py
+closures.py 
 forward_kinematics.py
 inverse_kinematics.py 
 inverse_dynamics.py

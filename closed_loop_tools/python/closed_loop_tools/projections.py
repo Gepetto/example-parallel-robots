@@ -131,17 +131,17 @@ def configurationProjection(rmodel, rdata, cmodels, cdatas, q_prec=None, W=None)
     cq = caspin.integrate(casmodel, casadi.SX(q_prec), sym_dq)
 
     constraintsCost = casadi.Function('constraint', [sym_dq], [constraints(cq)])
-    jac_cost = casadi.Function('jac_constraint_cost', [sym_dq, sym_cost], 
+    jac_residual = casadi.Function('jac_constraint_residual', [sym_dq, sym_cost], 
         [2*constraintsCost(sym_dq).T@constraintsCost.jacobian()(sym_dq, constraintsCost(sym_dq))])
-    cost = casadi.Function('cost', [sym_dq], [casadi.sumsqr(constraintsCost(sym_dq))],
-                        {"custom_jacobian": jac_cost, "jac_penalty":0})
+    residual = casadi.Function('constraint_residual', [sym_dq], [casadi.sumsqr(constraintsCost(sym_dq))],
+                        {"custom_jacobian": jac_residual, "jac_penalty":0})
 
     # * Optimisation problem
     optim = casadi.Opti()
     vdq = optim.variable(rmodel.nv)
 
     # * Constraints
-    optim.subject_to(cost(vdq)==0)
+    optim.subject_to(residual(vdq)==0)
 
     # * cost minimization
     total_cost = casadi.dot(vdq, W@vdq)
@@ -163,7 +163,7 @@ def configurationProjection(rmodel, rdata, cmodels, cdatas, q_prec=None, W=None)
     return q
 
 ## Velocity projections
-def closedLoopVelocityProjection(model, data, q, v_ref, constraint_models, constraint_datas):
+def velocityProjection(model, data, q, v_ref, constraint_models, constraint_datas):
     nx = len(v_ref)
     pin.computeAllTerms(model, data, q, np.zeros(model.nv))
     Jac = pin.getConstraintsJacobian(model, data, constraint_models, constraint_datas)
@@ -177,7 +177,7 @@ def closedLoopVelocityProjection(model, data, q, v_ref, constraint_models, const
     return(x)
 
 ## Acceleration projections
-def closedLoopAccelerationProjection(model, data, q, v, a_ref, constraint_models, constraint_datas):
+def accelerationProjection(model, data, q, v, a_ref, constraint_models, constraint_datas):
     nx = len(a_ref)
     pin.computeAllTerms(model, data, q, np.zeros(model.nv))
     Jac = pin.getConstraintsJacobian(model, data, constraint_models, constraint_datas)
