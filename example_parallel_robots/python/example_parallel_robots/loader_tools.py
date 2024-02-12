@@ -139,29 +139,52 @@ def completeRobotLoader(path, name_urdf="robot.urdf", name_yaml="robot.yaml", fr
 
     yaml_content = getYAMLcontents(path, name_yaml)
 
-    # try to update model
-    update_joint = yaml_content['joint_name']   
+    # Update model
+    update_joint = yaml_content['joint_name']
     joints_types = yaml_content['joint_type']
     LjointFixed=[]
     new_model = pin.Model() 
-    visual_model = robot.visual_model
-    for place, iner, name, parent, joint in list(zip(model.jointPlacements, model.inertias, model.names, model.parents,model.joints))[1:]:
+    for place, iner, name, parent_old, joint in list(zip(model.jointPlacements, model.inertias, model.names, model.parents,model.joints))[1:]:
+        parent = new_model.getJointId(model.names[parent_old])
         if name in update_joint:
             joint_type = joints_types[update_joint.index(name)]
             if joint_type=='SPHERICAL':
                 jm = pin.JointModelSpherical()
-            if joint_type=="FIXED":
+            elif joint_type=="FIXED":
                 jm = joint
                 LjointFixed.append(joint.id)
+            elif joint_type=="CARDAN":
+                parent = new_model.addJoint(parent, pin.JointModelRX(), place, name+"_X")
+                jm = pin.JointModelRY()
+                place = pin.SE3.Identity()
+                name = name + "_Y"
         else:
             jm = joint
         jid = new_model.addJoint(parent, jm, place, name)
         new_model.appendBodyToJoint(jid, iner, pin.SE3.Identity())
-    
+    # Frames
     for f in model.frames:
-        n, parent, placement = f.name, f.parentJoint, f.placement
+        n, parent_old, placement = f.name, f.parentJoint, f.placement
+        if model.names[parent_old] in update_joint and joints_types[update_joint.index(model.names[parent_old])]=="CARDAN":
+            parent = new_model.getJointId(model.names[parent_old]+"_Y")
+        else:
+            parent = new_model.getJointId(model.names[parent_old])
+            # print(parent)
         frame = pin.Frame(n, parent, placement, f.type)
         new_model.addFrame(frame, False)
+
+    # Geometry models
+    geometry_models = []
+    for old_geom_model in [robot.visual_model, robot.collision_model]:
+        geom_model = old_geom_model.copy()
+        for gm in geom_model.geometryObjects:
+            if model.names[gm.parentJoint] in update_joint and joints_types[update_joint.index(model.names[gm.parentJoint])]=="CARDAN":
+                gm.parentJoint = new_model.getJointId(model.names[gm.parentJoint]+"_Y")
+            else:
+                gm.parentJoint = new_model.getJointId(model.names[gm.parentJoint])
+            gm.parentFrame = new_model.getFrameId(model.frames[gm.parentFrame].name)
+        geometry_models.append(geom_model)
+    visual_model, collision_model = geometry_models[0], geometry_models[1]
 
     new_model.frames.__delitem__(0)
     new_model, visual_model = pin.buildReducedModel(new_model,visual_model,LjointFixed,pin.neutral(new_model))
@@ -212,7 +235,7 @@ def completeRobotLoader(path, name_urdf="robot.urdf", name_yaml="robot.yaml", fr
         print("no constraint")
 
     actuation_model = ActuationModel(model,yaml_content['name_mot'])
-    return(model, constraint_models, actuation_model, visual_model, robot.collision_model)
+    return(model, constraint_models, actuation_model, visual_model, collision_model)
 
 def getModelPath(subpath, verbose=True):
     '''Looks for robot directory subpath based on installation path'''
@@ -242,9 +265,10 @@ def getModelPath(subpath, verbose=True):
             return join(path, subpath.strip("/"))
     raise IOError("%s not found" % subpath)
 
+
 def load(robot_name, free_flyer=None, only_legs=None):
     '''
-    Loads a model of a robot and return models objects containing all information on the robot
+    Load a model of a robot and return models objects containing all information on the robot
     Arguments :
         robot_name - Name of the robot, see [to be implemented] to see possible options
         free_flyer [Optionnal, Boolean] - Load the robot with a free flyer base - Use robot's default setting if not specified
