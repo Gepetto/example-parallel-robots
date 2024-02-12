@@ -10,6 +10,7 @@ import pinocchio as pin
 import numpy as np
 import casadi
 
+## Constraints residuals
 def constraintResidual6d(model, data, cmodel, cdata, q, recompute=True, pinspace=pin):
     assert (cmodel.type == pin.ContactType.CONTACT_6D)
     if recompute:
