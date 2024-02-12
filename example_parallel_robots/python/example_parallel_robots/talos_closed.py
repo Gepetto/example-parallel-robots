@@ -58,7 +58,7 @@ def reorganizeModels(old_model, old_geometry_models, constraint_models):
                 model,
                 model.getJointId(old_model.names[cm.joint1_id]),
                 cm.joint1_placement,
-                model.getJointId(old_model.names[cm.joint2_id]),  # To the world
+                model.getJointId(old_model.names[cm.joint2_id]), 
                 cm.joint2_placement,
                 pin.ReferenceFrame.LOCAL,
         ) )
@@ -96,21 +96,33 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
     chevilleMtendonleft = I4.copy()
     chevilleMtendonleft.translation = np.array([-0.08, 0.105, 0.02])
     # Adding the joints
-    tendon_right = model.addJoint(
-    id_cheville_right,
-    pin.JointModelSpherical(),
-    chevilleMtendonright,
-    "free_tendon_right",
+    tendon_right_X = model.addJoint(
+        id_cheville_right,
+        pin.JointModelRX(),
+        chevilleMtendonright,
+        "free_tendon_right_X",
     )
-    tendon_left = model.addJoint(
-    id_cheville_left,
-    pin.JointModelSpherical(),
-    chevilleMtendonleft,
-    "free_tendon_left",
+    tendon_right_Y = model.addJoint(
+        tendon_right_X,
+        pin.JointModelRY(),
+        pin.SE3.Identity(),
+        "free_tendon_right_Y",
+    )
+    tendon_left_X = model.addJoint(
+        id_cheville_left,
+        pin.JointModelRX(),
+        chevilleMtendonleft,
+        "free_tendon_left_X",
+    )
+    tendon_left_Y = model.addJoint(
+        tendon_left_X,
+        pin.JointModelRY(),
+        pin.SE3.Identity(),
+        "free_tendon_left_Y",
     )
     # Adding bodies to joints with no displacement
-    model.appendBodyToJoint(tendon_right, Inertia, I4)
-    model.appendBodyToJoint(tendon_left, Inertia, I4)
+    model.appendBodyToJoint(tendon_right_Y, Inertia, I4)
+    model.appendBodyToJoint(tendon_left_Y, Inertia, I4)
     # Adding corresponding visual and collision models
     longueur_bar_free = 10e-2
     largeur_bar_free = 1.5e-2
@@ -119,12 +131,12 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
     jMbarre = I4.copy()
     jMbarre.translation = np.array([0, 0, longueur_bar_free / 2])
     demi_tendon_right = pin.GeometryObject(
-        "demi_tendon_right", tendon_right, jMbarre, bar_free
+        "demi_tendon_right", tendon_right_Y, jMbarre, bar_free
     )
     color = [1, 0, 0, 1]
     demi_tendon_right.meshColor = np.array(color)
     demi_tendon_left = pin.GeometryObject(
-        "demi_tendon_left", tendon_left, jMbarre, bar_free
+        "demi_tendon_left", tendon_left_Y, jMbarre, bar_free
     )
     color = [0, 1, 0, 1]
     demi_tendon_left.meshColor = np.array(color)
@@ -215,10 +227,10 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
         "fermeture_left_A", free_molet_left, fplacement * Rx, pin.OP_FRAME
     )
     fermeture_right_B = pin.Frame(
-        "fermeture_right_B", tendon_right, fplacement, pin.OP_FRAME
+        "fermeture_right_B", tendon_right_Y, fplacement, pin.OP_FRAME
     )
     fermeture_left_B = pin.Frame(
-        "fermeture_left_B", tendon_left, fplacement, pin.OP_FRAME
+        "fermeture_left_B", tendon_left_Y, fplacement, pin.OP_FRAME
     )
     model.addFrame(fermeture_right_A)
     model.addFrame(fermeture_right_B)
@@ -313,8 +325,10 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
         jointToLock = [
             'mot_molet_right',
             'mot_molet_left',
-            'free_tendon_right',
-            'free_tendon_left',
+            'free_tendon_right_X',
+            'free_tendon_right_Y',
+            'free_tendon_left_X',
+            'free_tendon_left_Y',
             'free_molet_right',
             'free_molet_left',
         ]
