@@ -1,0 +1,3 @@
+[submodule "example_parallel_robots/cmake"]
+	path = example_parallel_robots/cmake
+	url = https://github.com/jrl-umi3218/jrl-cmakemodules.git
