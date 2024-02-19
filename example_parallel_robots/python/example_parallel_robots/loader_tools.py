@@ -18,9 +18,9 @@ from .actuation_model import ActuationModel
 from .robot_options import ROBOTS
 from .path import EXAMPLE_PARALLEL_ROBOTS_MODEL_DIR, EXAMPLE_PARALLEL_ROBOTS_SOURCE_DIR
 
-def nameFrameConstraint(model, name_loop="fermeture", Lid=[]):
+def getgetNameFrameConstraint(model, name_loop="fermeture", Lid=[]):
     """
-    nameFrameConstraint(model, name_loop="fermeture", Lid=[])
+    getNameFrameConstraint(model, name_loop="fermeture", Lid=[])
 
     Takes a robot model and returns a list of frame names that are constrained to be in contact: Ln=[['name_frame1_A','name_frame1_B'],['name_frame2_A','name_frame2_B'].....]
     where names_frameX_A and names_frameX_B are the frames in forced contact by the kinematic loop.
@@ -35,7 +35,7 @@ def nameFrameConstraint(model, name_loop="fermeture", Lid=[]):
     Return:
         Lnames - List of frame names that should be in contact
     """
-    warn("Function nameFrameConstraint depreceated - prefer using a YAML file as complement to the URDF. Should only be used to generate a YAML file")
+    warn("Function getNameFrameConstraint depreceated - prefer using a YAML file as complement to the URDF. Should only be used to generate a YAML file")
     if Lid == []:
         Lid = range(len(model.frames) // 2)
     Lnames = []
@@ -85,7 +85,7 @@ def generateYAML(path, name_mot="mot", name_spherical="to_rotule", file=None):
         if match_mot:
             Lmot.append(name)
 
-    name_frame_constraint = nameFrameConstraint(rob.model, name_loop="fermeture")
+    name_frame_constraint = getNameFrameConstraint(rob.model, name_loop="fermeture")
     constraint_type=["6d"]*len(name_frame_constraint) # Constraint is default to 6D... that is not very general...
 
     if file is None:
