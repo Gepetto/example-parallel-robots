@@ -13,6 +13,7 @@ from yaml.loader import SafeLoader
 from warnings import warn
 from os.path import dirname, exists, join
 import sys
+import numpy as np
 
 from .actuation_model import ActuationModel
 from .robot_options import ROBOTS
@@ -296,4 +297,49 @@ def load(robot_name, free_flyer=None, only_legs=None):
 def models():
     '''Displays the list of available robot names'''
     print(f"Available models are: \n {ROBOTS.keys()}\n Generate model with method load")
+
+def simplifyModel(model,viual_model):
+    '''
+    check if any revolute can be replaced with spherical 
+    '''
+    data=model.createData()
+    pin.framesForwardKinematics(model,data,pin.neutral(model))
+    new_model=model.copy()
+    Ltofix=[]
+    for jid,place, iner, name, parent_old, jtype in list(zip(range(len(model.joint)),model.jointPlacements, model.inertias, model.names, model.parents,model.joints)):
+        Lvec=[]
+        Lmass=[]
+        Lpoint=[]
+        parent = new_model.getJointId(model.names[parent_old])
+        for jid2,jtype in zip(range(3),model.joints[jid:jid+3]):
+            joint_id=jid+jid2
+            oMi=data.oMi[joint_id]
+            if 'RX' in jtype.shortname():
+                vec=oMi.rotation[0,:]
+            elif 'RY' in jtype.shortname():
+                vec=oMi.rotation[1,:]
+            elif 'RZ' in jtype.shortname():
+                vec=oMi.rotation[2,:]
+            else:
+                break
+            mass=model.inertias[joint_id].mass
+            Lmass.append(mass)
+            Lvec.append(vec)
+            Lpoint.append(oMi.translation)
+        if len(Lvec)==3:
+            if Lmass[-1]<1e-3 and Lmass[-2]<1e-3:
+                if np.linalg.norm(np.cross(Lvec[0],Lvec[1]))>1e-6 and np.linalg.norm(np.cross(Lvec[0],Lvec[2]))>1e-6  and np.linalg.norm(np.cross(Lvec[2],Lvec[1]))>1e-6 :
+                    if abs(np.dot(np.cross(Lvec[0],Lvec[1]),Lpoint[0]-Lpoint[1]))<1e-5 and    abs(np.dot(np.cross(Lvec[0],Lvec[2]),Lpoint[0]-Lpoint[2]))<1e-5   and abs(np.dot(np.cross(Lvec[2],Lvec[1]),Lpoint[2]-Lpoint[1]))<1e-5 : 
+                        jtype = pin.JointModelSpherical()
+                        Ltofix+=[jid+1,jid+2]
+        
+    if jid !=0 :
+        jid = new_model.addJoint(parent, jtype, place, name)
+        new_model.appendBodyToJoint(jid, iner, pin.SE3.Identity())
+
+    new_model, visual_model = pin.buildReducedModel(new_model,visual_model,Ltofix,pin.neutral(new_model))
+    return(new_model,visual_model)
+        
+       
+
 
