@@ -298,15 +298,17 @@ def models():
     '''Displays the list of available robot names'''
     print(f"Available models are: \n {ROBOTS.keys()}\n Generate model with method load")
 
-def simplifyModel(model,viual_model):
+
+
+def simplifyModel(model,visual_model):
     '''
     check if any revolute can be replaced with spherical 
     '''
     data=model.createData()
-    pin.framesForwardKinematics(model,data,pin.neutral(model))
-    new_model=model.copy()
+    pin.framesForwardKinematics(model,data,pin.randomConfiguration(model))
+    new_model=pin.Model()
     Ltofix=[]
-    for jid,place, iner, name, parent_old, jtype in list(zip(range(len(model.joint)),model.jointPlacements, model.inertias, model.names, model.parents,model.joints)):
+    for jid,place, iner, name, parent_old, jtype in list(zip(range(len(model.joints)),model.jointPlacements, model.inertias, model.names, model.parents,model.joints)):
         Lvec=[]
         Lmass=[]
         Lpoint=[]
@@ -315,11 +317,11 @@ def simplifyModel(model,viual_model):
             joint_id=jid+jid2
             oMi=data.oMi[joint_id]
             if 'RX' in jtype.shortname():
-                vec=oMi.rotation[0,:]
+                vec=oMi.rotation[:,0]
             elif 'RY' in jtype.shortname():
-                vec=oMi.rotation[1,:]
+                vec=oMi.rotation[:,1]
             elif 'RZ' in jtype.shortname():
-                vec=oMi.rotation[2,:]
+                vec=oMi.rotation[:,2]
             else:
                 break
             mass=model.inertias[joint_id].mass
@@ -330,16 +332,66 @@ def simplifyModel(model,viual_model):
             if Lmass[-1]<1e-3 and Lmass[-2]<1e-3:
                 if np.linalg.norm(np.cross(Lvec[0],Lvec[1]))>1e-6 and np.linalg.norm(np.cross(Lvec[0],Lvec[2]))>1e-6  and np.linalg.norm(np.cross(Lvec[2],Lvec[1]))>1e-6 :
                     if abs(np.dot(np.cross(Lvec[0],Lvec[1]),Lpoint[0]-Lpoint[1]))<1e-5 and    abs(np.dot(np.cross(Lvec[0],Lvec[2]),Lpoint[0]-Lpoint[2]))<1e-5   and abs(np.dot(np.cross(Lvec[2],Lvec[1]),Lpoint[2]-Lpoint[1]))<1e-5 : 
+                        print(jid)
+                        a=Lvec[0]
+                        b=Lvec[1]
+                        A=Lpoint[0]
+                        B=Lpoint[1]
+                        
+                        numerateur=(A[0]-B[0]-((A[1]-B[1])/b[1])*b[0])
+                        denominateur=((a[1]/b[1])*b[0]-a[0]) # intersection point 
+                        if numerateur <1e-5:
+                            t=0
+                        elif denominateur != 0:
+                            t=numerateur/denominateur
+                        else :
+                            t = 0
+                            print("INVALID POSITION COMPUTED")
+                            
+                            break
+
+                        pos=A+t*a
+                        newoMi=pin.SE3.Identity()
+                        newoMi.translation=pos
+
+                        place=data.oMi[max(jid-1,0)].inverse*newoMi
                         jtype = pin.JointModelSpherical()
                         Ltofix+=[jid+1,jid+2]
-        
-    if jid !=0 :
-        jid = new_model.addJoint(parent, jtype, place, name)
-        new_model.appendBodyToJoint(jid, iner, pin.SE3.Identity())
+        if jid !=0 :
+            print(jid)
+            test = new_model.addJoint(parent, jtype, place, name)
+            new_model.appendBodyToJoint(test, iner, pin.SE3.Identity())
 
-    new_model, visual_model = pin.buildReducedModel(new_model,visual_model,Ltofix,pin.neutral(new_model))
-    return(new_model,visual_model)
+    new_model, new_visual_model = pin.buildReducedModel(new_model,visual_model,Ltofix,pin.neutral(new_model))
+    return(new_model,new_visual_model)
         
        
 
 
+def unitest_SimplifyModel():
+    import example_robot_data as robex
+    from pinocchio.visualize import MeshcatVisualizer
+    import meshcat
+
+    robot=robex.load('panda')
+    model=robot.model
+    visual_model=robot.visual_model
+
+    model.inertias[2].mass=0
+    model.inertias[3].mass=0
+
+
+    new_model,new_visual_model=simplifyModel(model,visual_model)
+
+    viz = MeshcatVisualizer(new_model, new_visual_model, new_visual_model)
+    viz.viewer = meshcat.Visualizer(zmq_url="tcp://127.0.0.1:6000")
+    viz.clean()
+    viz.loadViewerModel(rootNodeName="number 1"+str(np.random.rand()))
+    viz.display(pin.randomConfiguration(new_model))
+
+
+    viz = MeshcatVisualizer(model, visual_model, visual_model)
+    viz.viewer = meshcat.Visualizer(zmq_url="tcp://127.0.0.1:6000")
+    viz.clean()
+    viz.loadViewerModel(rootNodeName="number 1"+str(np.random.rand()))
+    viz.display(pin.randomConfiguration(model))
