@@ -339,11 +339,11 @@ def simplifyModel(model,visual_model):
                         B=Lpoint[1]
                         
                         numerateur=(A[0]-B[0]-((A[1]-B[1])/b[1])*b[0])
-                        denominateur=((a[1]/b[1])*b[0]-a[0]) # intersection point 
+                        denominateur=((a[1]/b[1])*b[0]-a[0]) 
                         if numerateur <1e-5:
                             t=0
                         elif denominateur != 0:
-                            t=numerateur/denominateur
+                            t=numerateur/denominateur # intersection point 
                         else :
                             t = 0
                             print("INVALID POSITION COMPUTED")
@@ -354,7 +354,7 @@ def simplifyModel(model,visual_model):
                         newoMi=pin.SE3.Identity()
                         newoMi.translation=pos
 
-                        place=data.oMi[max(jid-1,0)].inverse*newoMi
+                        place=data.oMi[max(jid-1,0)].inverse()*newoMi
                         jtype = pin.JointModelSpherical()
                         Ltofix+=[jid+1,jid+2]
         if jid !=0 :
@@ -390,8 +390,3 @@ def unitest_SimplifyModel():
     viz.display(pin.randomConfiguration(new_model))
 
 
-    viz = MeshcatVisualizer(model, visual_model, visual_model)
-    viz.viewer = meshcat.Visualizer(zmq_url="tcp://127.0.0.1:6000")
-    viz.clean()
-    viz.loadViewerModel(rootNodeName="number 1"+str(np.random.rand()))
-    viz.display(pin.randomConfiguration(model))
