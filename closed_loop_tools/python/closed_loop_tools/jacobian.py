@@ -128,9 +128,6 @@ def inverseConstraintKinematicsSpeed(model,data,constraint_model,constraint_data
     nv_mot=len(mot_ids_v)
     constraints_sizes=actuation_data.constraints_sizes
 
-    
-
-    
     nprec=0
     for J,n in zip(LJ,constraints_sizes):
         actuation_data.Jmot[nprec:nprec+n,:]=J@actuation_data.Smot
