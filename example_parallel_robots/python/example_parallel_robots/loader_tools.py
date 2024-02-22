@@ -191,7 +191,7 @@ def completeRobotLoader(path, name_urdf="robot.urdf", name_yaml="robot.yaml", fr
     new_model, visual_model = pin.buildReducedModel(new_model,visual_model,fixed_joints_names,pin.neutral(new_model))
 
     model = new_model
-
+    constraints_models = []
     #check if type is associated,else 6D is used
     try :
         name_frame_constraint = yaml_content['closed_loop']
