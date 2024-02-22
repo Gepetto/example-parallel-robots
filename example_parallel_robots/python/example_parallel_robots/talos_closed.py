@@ -74,168 +74,168 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
     collision_model = robot.collision_model
     if not free_flyer:
         model, [visual_model, collision_model] = pin.buildReducedModel(model, [visual_model, collision_model], [1], pin.neutral(model))
-        id_genoux_left = 4
-        id_genoux_right = 10
-        id_cheville_left = 5
-        id_cheville_right = 11
+        id_knee_left = 4
+        id_knee_right = 10
+        id_ankle_left = 5
+        id_ankle_right = 11
     else:
-        id_genoux_left = 5
-        id_genoux_right = 11
-        id_cheville_left = 6
-        id_cheville_right = 12
+        id_knee_left = 5
+        id_knee_right = 11
+        id_ankle_left = 6
+        id_ankle_right = 12
         
     I4 = pin.SE3.Identity()
-    Inertia = pin.Inertia(
+    inertia = pin.Inertia(
         1e-3, np.array([0.0, 0.0, 0.0]), np.eye(3) * 1e-3**2
-    )  # Inertia of a 1g sphere
+    )  # inertia of a 1g sphere
 
     # * Creation of free bar on foot
     # Defining placement wrt to the parent joints
-    chevilleMtendonright = I4.copy()
-    chevilleMtendonright.translation = np.array([-0.08, -0.105, 0.02])
-    chevilleMtendonleft = I4.copy()
-    chevilleMtendonleft.translation = np.array([-0.08, 0.105, 0.02])
+    ankleMrodright = I4.copy()
+    ankleMrodright.translation = np.array([-0.08, -0.105, 0.02])
+    ankleMrodleft = I4.copy()
+    ankleMrodleft.translation = np.array([-0.08, 0.105, 0.02])
     # Adding the joints
-    tendon_right_X = model.addJoint(
-        id_cheville_right,
+    rod_right_X = model.addJoint(
+        id_ankle_right,
         pin.JointModelRX(),
-        chevilleMtendonright,
-        "free_tendon_right_X",
+        ankleMrodright,
+        "free_rod_right_X",
     )
-    tendon_right_Y = model.addJoint(
-        tendon_right_X,
+    rod_right_Y = model.addJoint(
+        rod_right_X,
         pin.JointModelRY(),
         pin.SE3.Identity(),
-        "free_tendon_right_Y",
+        "free_rod_right_Y",
     )
-    tendon_left_X = model.addJoint(
-        id_cheville_left,
+    rod_left_X = model.addJoint(
+        id_ankle_left,
         pin.JointModelRX(),
-        chevilleMtendonleft,
-        "free_tendon_left_X",
+        ankleMrodleft,
+        "free_rod_left_X",
     )
-    tendon_left_Y = model.addJoint(
-        tendon_left_X,
+    rod_left_Y = model.addJoint(
+        rod_left_X,
         pin.JointModelRY(),
         pin.SE3.Identity(),
-        "free_tendon_left_Y",
+        "free_rod_left_Y",
     )
     # Adding bodies to joints with no displacement
-    model.appendBodyToJoint(tendon_right_Y, Inertia, I4)
-    model.appendBodyToJoint(tendon_left_Y, Inertia, I4)
+    model.appendBodyToJoint(rod_right_Y, inertia, I4)
+    model.appendBodyToJoint(rod_left_Y, inertia, I4)
     # Adding corresponding visual and collision models
-    longueur_bar_free = 10e-2
-    largeur_bar_free = 1.5e-2
-    epaisseur = 1e-2
-    bar_free = hppfcl.Box(epaisseur, largeur_bar_free, longueur_bar_free)
-    jMbarre = I4.copy()
-    jMbarre.translation = np.array([0, 0, longueur_bar_free / 2])
-    demi_tendon_right = pin.GeometryObject(
-        "demi_tendon_right", tendon_right_Y, jMbarre, bar_free
+    free_bar_length = 10e-2
+    free_bar_width = 1.5e-2
+    thickness = 1e-2
+    bar_free = hppfcl.Box(thickness, free_bar_width, free_bar_length)
+    jMbar = I4.copy()
+    jMbar.translation = np.array([0, 0, free_bar_length / 2])
+    half_rod_right = pin.GeometryObject(
+        "half_rod_right", rod_right_Y, jMbar, bar_free
     )
     color = [1, 0, 0, 1]
-    demi_tendon_right.meshColor = np.array(color)
-    demi_tendon_left = pin.GeometryObject(
-        "demi_tendon_left", tendon_left_Y, jMbarre, bar_free
+    half_rod_right.meshColor = np.array(color)
+    half_rod_left = pin.GeometryObject(
+        "half_rod_left", rod_left_Y, jMbar, bar_free
     )
     color = [0, 1, 0, 1]
-    demi_tendon_left.meshColor = np.array(color)
-    visual_model.addGeometryObject(demi_tendon_right)
-    visual_model.addGeometryObject(demi_tendon_left)
+    half_rod_left.meshColor = np.array(color)
+    visual_model.addGeometryObject(half_rod_right)
+    visual_model.addGeometryObject(half_rod_left)
 
     ## Adding new joints and links for the parallel actuation
     # * Creation of the motor bar
     # Defining SE3 placements of new joints wrt parent joints
-    genouxMmoletright = I4.copy()
-    genouxMmoletright.translation = np.array([-0.015, -0.105, -0.11])
-    genouxMmoletleft = I4.copy()
-    genouxMmoletleft.translation = np.array([-0.015, 0.105, -0.11])
+    kneeMcalfright = I4.copy()
+    kneeMcalfright.translation = np.array([-0.015, -0.105, -0.11])
+    kneeMcalfleft = I4.copy()
+    kneeMcalfleft.translation = np.array([-0.015, 0.105, -0.11])
     # Adding new joints
-    mot_molet_right = model.addJoint(
-        id_genoux_right, pin.JointModelRY(), genouxMmoletright, "mot_molet_right"
+    mot_calf_right = model.addJoint(
+        id_knee_right, pin.JointModelRY(), kneeMcalfright, "mot_calf_right"
     )
-    mot_molet_left = model.addJoint(
-        id_genoux_left, pin.JointModelRY(), genouxMmoletleft, "mot_molet_left"
+    mot_calf_left = model.addJoint(
+        id_knee_left, pin.JointModelRY(), kneeMcalfleft, "mot_calf_left"
     )
     # Adding bodies to new joints with no displacement
-    model.appendBodyToJoint(mot_molet_right, Inertia, I4)
-    model.appendBodyToJoint(mot_molet_left, Inertia, I4)
+    model.appendBodyToJoint(mot_calf_right, inertia, I4)
+    model.appendBodyToJoint(mot_calf_left, inertia, I4)
     # Adding corresponding Geometry objects using hpp-fcl
-    longueur_bar_mot = 8e-2
-    largeur_bar_mot = 1.5e-2
-    epaisseur = 1e-2
-    bar_mot = hppfcl.Box(epaisseur, largeur_bar_mot, longueur_bar_mot)
-    jMbarre = I4.copy()
-    jMbarre.translation = np.array([0, 0, longueur_bar_mot / 2])
-    barre_mot_right = pin.GeometryObject(
-        "mot_molet_right", mot_molet_right, jMbarre, bar_mot
+    mot_bar_length = 8e-2
+    mot_bar_width = 1.5e-2
+    thickness = 1e-2
+    bar_mot = hppfcl.Box(thickness, mot_bar_width, mot_bar_length)
+    jMbar = I4.copy()
+    jMbar.translation = np.array([0, 0, mot_bar_length / 2])
+    bar_mot_right = pin.GeometryObject(
+        "mot_calf_right", mot_calf_right, jMbar, bar_mot
     )
     color = [1, 0, 0, 1]
-    barre_mot_right.meshColor = np.array(color)
-    barre_mot_left = pin.GeometryObject(
-        "mot_molet_left", mot_molet_left, jMbarre, bar_mot
+    bar_mot_right.meshColor = np.array(color)
+    bar_mot_left = pin.GeometryObject(
+        "mot_calf_left", mot_calf_left, jMbar, bar_mot
     )
     color = [0, 1, 0, 1]
-    barre_mot_left.meshColor = np.array(color)
-    visual_model.addGeometryObject(barre_mot_right)
-    visual_model.addGeometryObject(barre_mot_left)
+    bar_mot_left.meshColor = np.array(color)
+    visual_model.addGeometryObject(bar_mot_right)
+    visual_model.addGeometryObject(bar_mot_left)
 
     # * Create free joint linked to previous motor bar
     # Defining placements wrt parent joints
-    moletMfreejointright = I4.copy()
-    moletMfreejointright.translation = np.array([0, 0, longueur_bar_mot])
-    moletMfreejointleft = I4.copy()
-    moletMfreejointleft.translation = np.array([0, 0, longueur_bar_mot])
+    calfMfreejointright = I4.copy()
+    calfMfreejointright.translation = np.array([0, 0, mot_bar_length])
+    calfMfreejointleft = I4.copy()
+    calfMfreejointleft.translation = np.array([0, 0, mot_bar_length])
     # Adding joints
-    free_molet_right = model.addJoint(
-        mot_molet_right,
+    free_calf_right = model.addJoint(
+        mot_calf_right,
         pin.JointModelSpherical(),
-        moletMfreejointright,
-        "free_molet_right",
+        calfMfreejointright,
+        "free_calf_right",
     )
-    free_molet_left = model.addJoint(
-        mot_molet_left,
+    free_calf_left = model.addJoint(
+        mot_calf_left,
         pin.JointModelSpherical(),
-        moletMfreejointleft,
-        "free_molet_left",
+        calfMfreejointleft,
+        "free_calf_left",
     )
     # Adding bodies to joints with no displacement
-    model.appendBodyToJoint(free_molet_right, Inertia, I4)
-    model.appendBodyToJoint(free_molet_left, Inertia, I4)
+    model.appendBodyToJoint(free_calf_right, inertia, I4)
+    model.appendBodyToJoint(free_calf_left, inertia, I4)
     # Adding corresponding visual and collision model
-    longueur_bar_free = 10e-2
-    largeur_bar_free = 1.5e-2
-    epaisseur = 1e-2
-    bar_free = hppfcl.Box(epaisseur, largeur_bar_free, longueur_bar_free)
-    demi_tendon_molet_right = pin.GeometryObject(
-        "demi_tendon_molet_right", free_molet_right, jMbarre, bar_free
+    free_bar_length = 10e-2
+    free_bar_width = 1.5e-2
+    thickness = 1e-2
+    bar_free = hppfcl.Box(thickness, free_bar_width, free_bar_length)
+    half_rod_calf_right = pin.GeometryObject(
+        "half_rod_calf_right", free_calf_right, jMbar, bar_free
     )
-    demi_tendon_molet_left = pin.GeometryObject(
-        "demi_tendon_molet_left", free_molet_left, jMbarre, bar_free
+    half_rod_calf_left = pin.GeometryObject(
+        "half_rod_calf_left", free_calf_left, jMbar, bar_free
     )
-    visual_model.addGeometryObject(demi_tendon_molet_right)
-    visual_model.addGeometryObject(demi_tendon_molet_left)
+    visual_model.addGeometryObject(half_rod_calf_right)
+    visual_model.addGeometryObject(half_rod_calf_left)
 
     # * Create the frames corresponding to the closed loop contacts
     Rx = pin.SE3(pin.utils.rotate("x", np.pi), np.array([0, 0, 0]))
     fplacement = I4.copy()
-    fplacement.translation = np.array([0, 0, longueur_bar_free])
-    fermeture_right_A = pin.Frame(
-        "fermeture_right_A", free_molet_right, fplacement * Rx, pin.OP_FRAME
+    fplacement.translation = np.array([0, 0, free_bar_length])
+    closure_right_A = pin.Frame(
+        "closure_right_A", free_calf_right, fplacement * Rx, pin.OP_FRAME
     )
-    fermeture_left_A = pin.Frame(
-        "fermeture_left_A", free_molet_left, fplacement * Rx, pin.OP_FRAME
+    closure_left_A = pin.Frame(
+        "closure_left_A", free_calf_left, fplacement * Rx, pin.OP_FRAME
     )
-    fermeture_right_B = pin.Frame(
-        "fermeture_right_B", tendon_right_Y, fplacement, pin.OP_FRAME
+    closure_right_B = pin.Frame(
+        "closure_right_B", rod_right_Y, fplacement, pin.OP_FRAME
     )
-    fermeture_left_B = pin.Frame(
-        "fermeture_left_B", tendon_left_Y, fplacement, pin.OP_FRAME
+    closure_left_B = pin.Frame(
+        "closure_left_B", rod_left_Y, fplacement, pin.OP_FRAME
     )
-    model.addFrame(fermeture_right_A)
-    model.addFrame(fermeture_right_B)
-    model.addFrame(fermeture_left_A)
-    model.addFrame(fermeture_left_B)
+    model.addFrame(closure_right_A)
+    model.addFrame(closure_right_B)
+    model.addFrame(closure_left_A)
+    model.addFrame(closure_left_B)
 
     constraint_models = []
 
@@ -274,7 +274,7 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
     # Use only legs (ie freeze top joints)
     if only_legs:
         print("Freezing upper body")
-        jointToLockNames = [
+        names_joints_to_lock = [
             # "universe",
             # "root_joint",
             "mot_arm_left_1_joint",
@@ -298,8 +298,8 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
             "mot_torso_1_joint",
             "mot_torso_2_joint",
         ]
-        jointToLockIds = [
-            i for (i, n) in enumerate(new_model.names) if n in jointToLockNames
+        ids_joints_to_lock = [
+            i for (i, n) in enumerate(new_model.names) if n in names_joints_to_lock
         ]
         (
             new_model,
@@ -313,7 +313,7 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
             actuation_model,
             visual_model,
             collision_model,
-            jointToLockIds,
+            ids_joints_to_lock,
             q0,
         )
         q0 = pin.neutral(new_model)
@@ -322,18 +322,18 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
     if not closed_loop:     # If we want to consider the robot in open loop
         new_model.name = "talos_open"
         print("Freezing closed loop joints")
-        jointToLock = [
-            'mot_molet_right',
-            'mot_molet_left',
-            'free_tendon_right_X',
-            'free_tendon_right_Y',
-            'free_tendon_left_X',
-            'free_tendon_left_Y',
-            'free_molet_right',
-            'free_molet_left',
+        names_joints_to_lock = [
+            'mot_calf_right',
+            'mot_calf_left',
+            'free_rod_right_X',
+            'free_rod_right_Y',
+            'free_rod_left_X',
+            'free_rod_left_Y',
+            'free_calf_right',
+            'free_calf_left',
         ]
-        jointToLockIds = [
-            i for (i, n) in enumerate(new_model.names) if n in jointToLock
+        ids_joints_to_lock = [
+            i for (i, n) in enumerate(new_model.names) if n in names_joints_to_lock
         ]
         (
             new_model,
@@ -347,7 +347,7 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
             actuation_model,
             visual_model,
             collision_model,
-            jointToLockIds,
+            ids_joints_to_lock,
             q0,
         )
         q0 = pin.neutral(new_model)
@@ -362,39 +362,39 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
     
     else: # if we consider closed loop
         # Create constraint models
-        fermeture_right_A = new_model.frames[new_model.getFrameId("fermeture_right_A")]
-        fermeture_right_B = new_model.frames[new_model.getFrameId("fermeture_right_B")]
-        fermeture_left_A = new_model.frames[new_model.getFrameId("fermeture_left_A")]
-        fermeture_left_B = new_model.frames[new_model.getFrameId("fermeture_left_B")]
-        contactConstraint_right = pin.RigidConstraintModel(
+        closure_right_A = new_model.frames[new_model.getFrameId("closure_right_A")]
+        closure_right_B = new_model.frames[new_model.getFrameId("closure_right_B")]
+        closure_left_A = new_model.frames[new_model.getFrameId("closure_left_A")]
+        closure_left_B = new_model.frames[new_model.getFrameId("closure_left_B")]
+        constraint_right = pin.RigidConstraintModel(
             pin.ContactType.CONTACT_6D,
             new_model,
-            fermeture_right_A.parentJoint,
-            fermeture_right_A.placement,
-            fermeture_right_B.parentJoint, 
-            fermeture_right_B.placement,
+            closure_right_A.parentJoint,
+            closure_right_A.placement,
+            closure_right_B.parentJoint, 
+            closure_right_B.placement,
             pin.ReferenceFrame.LOCAL,
         )
-        contactConstraint_right.name = "Ankle_loop_right"
-        contactConstraint_left = pin.RigidConstraintModel(
+        constraint_right.name = "Ankle_loop_right"
+        constraint_left = pin.RigidConstraintModel(
             pin.ContactType.CONTACT_6D,
             new_model,
-            fermeture_left_A.parentJoint,
-            fermeture_left_A.placement,
-            fermeture_left_B.parentJoint, 
-            fermeture_left_B.placement,
+            closure_left_A.parentJoint,
+            closure_left_A.placement,
+            closure_left_B.parentJoint, 
+            closure_left_B.placement,
             pin.ReferenceFrame.LOCAL,
         )
-        contactConstraint_left.name = "Ankle_loop_left"
-        constraint_models = [contactConstraint_right, contactConstraint_left]
+        constraint_left.name = "Ankle_loop_left"
+        constraint_models = [constraint_right, constraint_left]
 
     ## Define contact Ids for control problems - these are floor contacts
-    contactIds = [i for i, f in enumerate(new_model.frames) if "sole_link" in f.name]
-    footSizeX = 0.1
-    footSizeY = 0.05
+    contact_ids = [i for i, f in enumerate(new_model.frames) if "sole_link" in f.name]
+    soot_size_X = 0.1
+    soot_size_Y = 0.05
 
     ## Adding new frames for control problems
-    for cid in contactIds:
+    for cid in contact_ids:
         f = new_model.frames[cid]
         rootName = f.name.partition('sole_link')[0]
         for side in {'left', 'right'}:
@@ -403,7 +403,7 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
                     f"{rootName}tow_{side}",
                     f.parentJoint,
                     f.parentFrame,
-                    f.placement * pin.SE3(np.eye(3), np.array([footSizeX, footSizeY*(1 if side=='left' else -1) , 0])),
+                    f.placement * pin.SE3(np.eye(3), np.array([soot_size_X, soot_size_Y*(1 if side=='left' else -1) , 0])),
                     pin.FrameType.OP_FRAME,
                 )
             )
@@ -412,18 +412,13 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
                     f"{rootName}heel_{side}",
                     f.parentJoint,
                     f.parentFrame,
-                    f.placement * pin.SE3(np.eye(3), np.array([-footSizeX, footSizeY*(1 if side=='left' else -1), 0])),
+                    f.placement * pin.SE3(np.eye(3), np.array([-soot_size_X, soot_size_Y*(1 if side=='left' else -1), 0])),
                     pin.FrameType.OP_FRAME,
                 )
-            )
-    for cm in constraint_models:
-        print(cm.colwise_span_indexes, cm.joint1_id, cm.joint2_id)
-    
+            )   
     new_model, geometry_models, constraint_models, actuation_model = reorganizeModels(new_model, [visual_model, collision_model], constraint_models)
     visual_model, collision_model = geometry_models[0], geometry_models[1]
 
-    for cm in constraint_models:
-        print(cm.colwise_span_indexes, cm.joint1_id, cm.joint2_id)
     return (
         new_model,
         constraint_models,

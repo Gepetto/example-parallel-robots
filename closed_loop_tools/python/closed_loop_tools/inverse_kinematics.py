@@ -48,7 +48,7 @@ def closedLoopInverseKinematicsCasadi(rmodel, rdata, cmodels, cdatas, target_pos
             q - Configuration vector satisfying constraints (if optimisation process succeded)
     """
     # * Get effector frame id
-    ideff = rmodel.getFrameId(name_eff)
+    id_eff = rmodel.getFrameId(name_eff)
 
     # * Defining casadi models
     casmodel = caspin.Model(rmodel)
@@ -67,8 +67,8 @@ def closedLoopInverseKinematicsCasadi(rmodel, rdata, cmodels, cdatas, target_pos
     # * Optimisation functions
     cq = casadi.SX.sym("q", nq, 1)
     caspin.framesForwardKinematics(casmodel, casdata, cq)
-    tip_translation = casadi.Function('tip_trans', [cq], [casdata.oMf[ideff].translation])
-    log6 = casadi.Function('log6', [cq], [caspin.log6(casdata.oMf[ideff].inverse() * caspin.SE3(target_pos)).vector])
+    tip_translation = casadi.Function('tip_trans', [cq], [casdata.oMf[id_eff].translation])
+    log6 = casadi.Function('log6', [cq], [caspin.log6(casdata.oMf[id_eff].inverse() * caspin.SE3(target_pos)).vector])
 
     def cost(q):
         if onlytranslation:
@@ -83,13 +83,13 @@ def closedLoopInverseKinematicsCasadi(rmodel, rdata, cmodels, cdatas, target_pos
         Lc = constraintsResidual(casmodel, casdata, cmodels, cdatas, q, recompute=True, pinspace=caspin, quaternions=True)
         return Lc
     
-    constraintsCost = casadi.Function('constraint', [cq], [constraints(cq)])
+    constraint_cost = casadi.Function('constraint', [cq], [constraints(cq)])
 
     # * Optimisation problem
     optim = casadi.Opti()
     q = optim.variable(nq)
     # * Constraints
-    optim.subject_to(constraintsCost(q)==0)
+    optim.subject_to(constraint_cost(q)==0)
     # * cost minimization
     total_cost = cost(q)
     optim.minimize(total_cost)
@@ -132,7 +132,7 @@ def closedLoopInverseKinematicsScipy(rmodel, rdata, cmodels, cdatas, target_pos,
             q - Configuration vector satisfying constraints (if optimisation process succeded)
     """
 
-    ideff = rmodel.getFrameId(name_eff)
+    id_eff = rmodel.getFrameId(name_eff)
 
     if q_prec is None:
         q_prec = pin.neutral(rmodel)
@@ -142,10 +142,10 @@ def closedLoopInverseKinematicsScipy(rmodel, rdata, cmodels, cdatas, target_pos,
         q = pin.integrate(rmodel, q_prec, vq)
         pin.framesForwardKinematics(rmodel, rdata, q)
         if onlytranslation:
-            terr = (target_pos.translation - rdata.oMf[ideff].translation)
+            terr = (target_pos.translation - rdata.oMf[id_eff].translation)
             c = (norm(terr)) ** 2
         else:
-            err = pin.log(target_pos.inverse() * rdata.oMf[ideff]).vector
+            err = pin.log(target_pos.inverse() * rdata.oMf[id_eff]).vector
             c = (norm(err)) ** 2 
         return c 
 
@@ -194,8 +194,8 @@ def closedLoopInverseKinematicsProximal(rmodel, rdata, cmodels, cdatas, target_p
     model=rmodel.copy()
     constraint_model=cmodels.copy()
     #add a contact constraint
-    ideff = rmodel.getFrameId(name_eff)
-    frame_constraint=model.frames[ideff]
+    id_eff = rmodel.getFrameId(name_eff)
+    frame_constraint=model.frames[id_eff]
     parent_joint=frame_constraint.parentJoint
     placement=frame_constraint.placement
     if onlytranslation:

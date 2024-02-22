@@ -36,10 +36,10 @@ def partialLoopClosure(model, data, constraint_models, constraint_datas, fixed_j
 
     integrate = casadi.Function("integrate", [sym_dq], [cq])
 
-    constraintsRes = casadi.Function('constraint', [sym_dq], [constraints(cq)])
+    constraints_res = casadi.Function('constraint', [sym_dq], [constraints(cq)])
     jac_cost = casadi.Function('jac_cost', [sym_dq, sym_cost], 
-        [2*constraintsRes(sym_dq).T@constraintsRes.jacobian()(sym_dq, constraintsRes(sym_dq))])
-    cost = casadi.Function('cost', [sym_dq], [casadi.sumsqr(constraintsRes(sym_dq))],
+        [2*constraints_res(sym_dq).T@constraints_res.jacobian()(sym_dq, constraints_res(sym_dq))])
+    cost = casadi.Function('cost', [sym_dq], [casadi.sumsqr(constraints_res(sym_dq))],
                         {"custom_jacobian": jac_cost, "jac_penalty":0})
     
     rotations = {ids: casadi.Function('rots_'+str(ids), [sym_dq], [caspin.exp3(sym_dq[ids:ids+3])[1,0]]) 
@@ -107,10 +107,10 @@ def partialLoopClosureFrames(model, data, constraint_models, constraint_datas, f
 
     integrate = casadi.Function("integrate", [sym_dq], [cq])
 
-    constraintsRes = casadi.Function('constraint', [sym_dq], [constraints(cq)])
+    constraints_res = casadi.Function('constraint', [sym_dq], [constraints(cq)])
     jac_cost = casadi.Function('jac_cost', [sym_dq, sym_cost], 
-        [2*constraintsRes(sym_dq).T@constraintsRes.jacobian()(sym_dq, constraintsRes(sym_dq))])
-    cost = casadi.Function('cost', [sym_dq], [casadi.sumsqr(constraintsRes(sym_dq))],
+        [2*constraints_res(sym_dq).T@constraints_res.jacobian()(sym_dq, constraints_res(sym_dq))])
+    cost = casadi.Function('cost', [sym_dq], [casadi.sumsqr(constraints_res(sym_dq))],
                         {"custom_jacobian": jac_cost, "jac_penalty":0})
     caspin.framesForwardKinematics(casmodel, casdata, cq)
     frames_compare = {fId: casadi.Function('SE3_'+str(fId), [sym_dq], [caspin.log6(frames_SE3[fId].actInv(casdata.oMf[fId])).vector]) 

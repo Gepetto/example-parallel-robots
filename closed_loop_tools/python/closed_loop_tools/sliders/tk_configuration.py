@@ -68,7 +68,7 @@ class RobotFrame:
                 self.slider_vars.append(var)
                 slider_frame = tk.Frame(self.slidersFrame,
                                         highlightbackground="blue",
-                                        highlightthickness=2 if self.rmodel.joints[j].idx_q in self.actuation_model.idqmot else 0)
+                                        highlightthickness=2 if self.rmodel.joints[j].idx_q in self.actuation_model.mot_ids_q else 0)
                 row  =  iq // self.NROW
                 slider_frame.grid(row=row*2, column=iq-self.NROW*row, padx=2, pady=2)
                 name_i = name if self.rmodel.joints[j].nv==1 else name+f'{iv}'

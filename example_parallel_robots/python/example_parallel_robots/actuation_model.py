@@ -15,16 +15,17 @@ class ActuationModel():
         names - list of the identifiers of motor joints names
     Attributes:
         self.idMotJoints - list of ids of the actuated joints
-        self.idqmot - list of the indexes of the articular configuration values corresponding to actuated joints
-        self.idvmot - list of the indexes of the articular velocities values corresponding to actuated joints
-        self.idqfree - list of the indexes of the articular configuration values corresponding to non-actuated joints
-        self.idvfree - list of the indexes of the articular velocities values corresponding to non-actuated joints
+        self.mot_ids_q - list of the indexes of the articular configuration values corresponding to actuated joints
+        self.mot_ids_v - list of the indexes of the articular velocities values corresponding to actuated joints
+        self.free_ids_q - list of the indexes of the articular configuration values corresponding to non-actuated joints
+        self.free_ids_v - list of the indexes of the articular velocities values corresponding to non-actuated joints
     Methodes:
         None outside those called during init
     
     """
     def __init__(self, model, names):
-        self.idMotJoints = []
+        self.model = model
+        self.mot_joints_ids = []
         self.getMotId_q(model, names)
         self.getFreeId_q(model)
         self.getMotId_v(model, names)
@@ -32,7 +33,7 @@ class ActuationModel():
 
         
     def __str__(self):
-        return(print("Id q motor: " + str(self.idqmot) + "\r" "Id v motor: " + str(self.idvmot) ))
+        return(print("Id q motor: " + str(self.mot_ids_q) + "\r" "Id v motor: " + str(self.mot_ids_v) ))
     
 
     def getMotId_q(self, model, motnames):
@@ -44,9 +45,9 @@ class ActuationModel():
             model - robot model from pinocchio
             motnames - list of the identifiers of actuated joints
         Return:
-            None - Update self.idqmot
+            None - Update self.mot_ids_q
         """
-        Lidq = []
+        ids_q = []
         for i, name in enumerate(model.names):
             for motname in motnames:
                 if motname in name:
@@ -54,8 +55,8 @@ class ActuationModel():
                     idq = model.joints[i].idx_q
                     nq = model.joints[i].nq
                     for j in range(nq):
-                        Lidq.append(idq+j)
-        self.idqmot=np.unique(Lidq)
+                        ids_q.append(idq+j)
+        self.mot_ids_q =np.unique(ids_q)
 
     def getMotId_v(self, model, motnames):
         """
@@ -66,17 +67,17 @@ class ActuationModel():
             model - robot model from pinocchio
             motnames - list of the identifiers of actuated joints
         Return:
-            None - Update self.idvmot
+            None - Update self.mot_ids_v
         """
-        Lidv = []
+        ids_v = []
         for i, name in enumerate(model.names):
             for motname in motnames:
                 if motname in name:
                     idv = model.joints[i].idx_v
                     nv = model.joints[i].nv
                     for j in range(nv):
-                        Lidv.append(idv+j)
-        self.idvmot=np.unique(Lidv)
+                        ids_v.append(idv+j)
+        self.mot_ids_v = np.unique(ids_v)
 
     def getFreeId_q(self, model):
         """
@@ -86,14 +87,12 @@ class ActuationModel():
         Arguments:
             model - robot model from pinocchio
         Return:
-            None - Update self.idqfree
+            None - Update self.free_ids_q
         """
-        Lidq=[]
+        self.free_ids_q = []
         for i in range(model.nq):
-            if not(i in self.idqmot):
-                Lidq.append(i)
-        self.idqfree=Lidq
-        return(Lidq)
+            if i not in self.mot_ids_q:
+                self.free_ids_q.append(i)
     
     def getFreeId_v(self, model):
         """
@@ -103,22 +102,20 @@ class ActuationModel():
         Arguments:
             model - robot model from pinocchio
         Return:
-            None - Update self.idvfree
+            None - Update self.free_ids_v
         """
-        Lidv=[]
+        self.free_ids_v = []
         for i in range(model.nv):
-            if not(i in self.idvmot):
-                Lidv.append(i)
-        self.idvfree=Lidv
-
+            if i not in self.mot_ids_v:
+                self.free_ids_v.append(i)
 
 import pinocchio as pin
 
 class ActuationData():
     def __init__(self, model, constraint_model,actuation_model):
 
-        Lidmot=actuation_model.idvmot
-        Lidfree=actuation_model.idvfree
+        Lidmot=actuation_model.mot_ids_v
+        free_ids_v=actuation_model.free_ids_v
         nv=model.nv
         nv_mot=actuation_model.nv_mot
         nv_free=actuation_model.nv_free
@@ -149,7 +146,7 @@ class ActuationData():
         self.Smot[:,:]=0
         self.Smot[Lidmot,range(nv_mot)]=1
         self.Sfree[:,:]=0
-        self.Sfree[Lidfree,range(nv_free)]=1
+        self.Sfree[free_ids_v,range(nv_free)]=1
 
 
         # to delete
@@ -163,7 +160,7 @@ class ActuationData():
         self.vqmotfree=np.zeros(nv-6)
 
         #list of constraint type
-        self.Lnc=[J.shape[0] for J in self.LJ]
+        self.constraints_sizes=[J.shape[0] for J in self.LJ]
 
 
         #to delete ?

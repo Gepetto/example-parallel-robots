@@ -19,28 +19,28 @@ from .actuation_model import ActuationModel
 from .robot_options import ROBOTS
 from .path import EXAMPLE_PARALLEL_ROBOTS_MODEL_DIR, EXAMPLE_PARALLEL_ROBOTS_SOURCE_DIR
 
-def getgetNameFrameConstraint(model, name_loop="fermeture", Lid=[]):
+def getNameFrameConstraint(model, name_loop="fermeture", cstr_frames_ids=[]):
     """
-    getNameFrameConstraint(model, name_loop="fermeture", Lid=[])
+    getNameFrameConstraint(model, name_loop="fermeture", cstr_frames_ids=[])
 
     Takes a robot model and returns a list of frame names that are constrained to be in contact: Ln=[['name_frame1_A','name_frame1_B'],['name_frame2_A','name_frame2_B'].....]
     where names_frameX_A and names_frameX_B are the frames in forced contact by the kinematic loop.
     The frames must be named: "...name_loopX..." where X is the number of the corresponding kinematic loop.
-    The kinematics loop can be selectionned with Lid=[id_kinematcsloop1, id_kinematicsloop2 .....] = [1,2,...]
-    if Lid = [] all the kinematics loop will be treated.
+    The kinematics loop can be selectionned with cstr_frames_ids=[id_kinematcsloop1, id_kinematicsloop2 .....] = [1,2,...]
+    if cstr_frames_ids = [] all the kinematics loop will be treated.
 
     Argument:
         model - Pinocchio robot model
         name_loop [Optionnal] - identifier of the names of the frame to set in contact for closing the loop - default: "fermeture"
-        Lid [Optionnal] - List of kinematic loop indexes to select - default: [] (select all)
+        cstr_frames_ids [Optionnal] - List of kinematic loop indexes to select - default: [] (select all)
     Return:
-        Lnames - List of frame names that should be in contact
+        cstr_frames_names - List of frame names that should be in contact
     """
     warn("Function getNameFrameConstraint depreceated - prefer using a YAML file as complement to the URDF. Should only be used to generate a YAML file")
-    if Lid == []:
-        Lid = range(len(model.frames) // 2)
-    Lnames = []
-    for id in Lid:
+    if cstr_frames_ids == []:
+        cstr_frames_ids = range(len(model.frames) // 2)
+    cstr_frames_names = []
+    for id in cstr_frames_ids:
         pair_names = []
         for f in model.frames:
             name = f.name
@@ -49,8 +49,8 @@ def getgetNameFrameConstraint(model, name_loop="fermeture", Lid=[]):
             if match and not (match2):
                 pair_names.append(name)
         if len(pair_names) == 2:
-            Lnames.append(pair_names)
-    return Lnames
+            cstr_frames_names.append(pair_names)
+    return cstr_frames_names
 
 def generateYAML(path, name_mot="mot", name_spherical="to_rotule", file=None):
     """
@@ -74,17 +74,17 @@ def generateYAML(path, name_mot="mot", name_spherical="to_rotule", file=None):
         None
     """
     rob = RobotWrapper.BuildFromURDF(path + "/robot.urdf", path)
-    Ljoint=[]
-    Ltype=[]
-    Lmot=[]
+    joint_names=[]
+    joint_types=[]
+    mot_joints_names=[]
     for name in rob.model.names:
         match = re.search(name_spherical, name)
         match_mot= re.search(name_mot,name)
         if match :
-            Ljoint.append(name)
-            Ltype.append("SPHERICAL")
+            joint_names.append(name)
+            joint_types.append("SPHERICAL")
         if match_mot:
-            Lmot.append(name)
+            mot_joints_names.append(name)
 
     name_frame_constraint = getNameFrameConstraint(rob.model, name_loop="fermeture")
     constraint_type=["6d"]*len(name_frame_constraint) # Constraint is default to 6D... that is not very general...
@@ -93,15 +93,15 @@ def generateYAML(path, name_mot="mot", name_spherical="to_rotule", file=None):
         with open(path + '/robot.yaml', 'w') as f:
             f.write('closed_loop: '+ str(name_frame_constraint)+'\n')
             f.write('type: '+str(constraint_type)+'\n')
-            f.write('name_mot: '+str(Lmot)+'\n')
-            f.write('joint_name: '+str(Ljoint)+'\n')
-            f.write('joint_type: '+str(Ltype)+'\n')
+            f.write('name_mot: '+str(mot_joints_names)+'\n')
+            f.write('joint_name: '+str(joint_names)+'\n')
+            f.write('joint_type: '+str(joint_types)+'\n')
     else:
         file.write('closed_loop: '+ str(name_frame_constraint)+'\n')
         file.write('type: '+str(constraint_type)+'\n')
-        file.write('name_mot: '+str(Lmot)+'\n')
-        file.write('joint_name: '+str(Ljoint)+'\n')
-        file.write('joint_type: '+str(Ltype)+'\n')
+        file.write('name_mot: '+str(mot_joints_names)+'\n')
+        file.write('joint_name: '+str(joint_names)+'\n')
+        file.write('joint_type: '+str(joint_types)+'\n')
 
 def getYAMLcontents(path, name_yaml='robot.yaml'):
     """
@@ -143,7 +143,7 @@ def completeRobotLoader(path, name_urdf="robot.urdf", name_yaml="robot.yaml", fr
     # Update model
     update_joint = yaml_content['joint_name']
     joints_types = yaml_content['joint_type']
-    LjointFixed=[]
+    fixed_joints_names=[]
     new_model = pin.Model() 
     for place, iner, name, parent_old, joint in list(zip(model.jointPlacements, model.inertias, model.names, model.parents,model.joints))[1:]:
         parent = new_model.getJointId(model.names[parent_old])
@@ -153,7 +153,7 @@ def completeRobotLoader(path, name_urdf="robot.urdf", name_yaml="robot.yaml", fr
                 jm = pin.JointModelSpherical()
             elif joint_type=="FIXED":
                 jm = joint
-                LjointFixed.append(joint.id)
+                fixed_joints_names.append(joint.id)
             elif joint_type=="CARDAN":
                 parent = new_model.addJoint(parent, pin.JointModelRX(), place, name+"_X")
                 jm = pin.JointModelRY()
@@ -188,7 +188,7 @@ def completeRobotLoader(path, name_urdf="robot.urdf", name_yaml="robot.yaml", fr
     visual_model, collision_model = geometry_models[0], geometry_models[1]
 
     new_model.frames.__delitem__(0)
-    new_model, visual_model = pin.buildReducedModel(new_model,visual_model,LjointFixed,pin.neutral(new_model))
+    new_model, visual_model = pin.buildReducedModel(new_model,visual_model,fixed_joints_names,pin.neutral(new_model))
 
     model = new_model
 
@@ -198,7 +198,7 @@ def completeRobotLoader(path, name_urdf="robot.urdf", name_yaml="robot.yaml", fr
         constraint_type = yaml_content['type']
     
         #construction of constraint model
-        Lconstraintmodel = []
+        constraints_models = []
         for L,ctype in zip(name_frame_constraint, constraint_type):
             name1, name2 = L
             id1 = model.getFrameId(name1)
@@ -229,14 +229,12 @@ def completeRobotLoader(path, name_urdf="robot.urdf", name_yaml="robot.yaml", fr
                     pin.ReferenceFrame.LOCAL,
                 )
                 constraint.name = name1+"C"+name2
-            Lconstraintmodel.append(constraint)
-        
-        constraint_models = Lconstraintmodel
+            constraints_models.append(constraint)
     except RuntimeError:
         print("no constraint")
 
     actuation_model = ActuationModel(model,yaml_content['name_mot'])
-    return(model, constraint_models, actuation_model, visual_model, collision_model)
+    return(model, constraints_models, actuation_model, visual_model, collision_model)
 
 def getModelPath(subpath, verbose=True):
     '''Looks for robot directory subpath based on installation path'''
@@ -298,8 +296,6 @@ def models():
     '''Displays the list of available robot names'''
     print(f"Available models are: \n {ROBOTS.keys()}\n Generate model with method load")
 
-
-
 def simplifyModel(model,visual_model):
     '''
     check if any revolute can be replaced with spherical 
@@ -307,11 +303,11 @@ def simplifyModel(model,visual_model):
     data=model.createData()
     pin.framesForwardKinematics(model,data,pin.randomConfiguration(model))
     new_model=pin.Model()
-    Ltofix=[]
+    fixed_joints_ids=[]
     for jid,place, iner, name, parent_old, jtype in list(zip(range(len(model.joints)),model.jointPlacements, model.inertias, model.names, model.parents,model.joints)):
-        Lvec=[]
-        Lmass=[]
-        Lpoint=[]
+        vectors=[]
+        joints_mass=[]
+        points=[]
         parent = new_model.getJointId(model.names[parent_old])
         for jid2,jtype in zip(range(3),model.joints[jid:jid+3]):
             joint_id=jid+jid2
@@ -325,18 +321,18 @@ def simplifyModel(model,visual_model):
             else:
                 break
             mass=model.inertias[joint_id].mass
-            Lmass.append(mass)
-            Lvec.append(vec)
-            Lpoint.append(oMi.translation)
-        if len(Lvec)==3:
-            if Lmass[-1]<1e-3 and Lmass[-2]<1e-3:
-                if np.linalg.norm(np.cross(Lvec[0],Lvec[1]))>1e-6 and np.linalg.norm(np.cross(Lvec[0],Lvec[2]))>1e-6  and np.linalg.norm(np.cross(Lvec[2],Lvec[1]))>1e-6 :
-                    if abs(np.dot(np.cross(Lvec[0],Lvec[1]),Lpoint[0]-Lpoint[1]))<1e-5 and    abs(np.dot(np.cross(Lvec[0],Lvec[2]),Lpoint[0]-Lpoint[2]))<1e-5   and abs(np.dot(np.cross(Lvec[2],Lvec[1]),Lpoint[2]-Lpoint[1]))<1e-5 : 
+            joints_mass.append(mass)
+            vectors.append(vec)
+            points.append(oMi.translation)
+        if len(vectors)==3:
+            if joints_mass[-1]<1e-3 and joints_mass[-2]<1e-3:
+                if np.linalg.norm(np.cross(vectors[0],vectors[1]))>1e-6 and np.linalg.norm(np.cross(vectors[0],vectors[2]))>1e-6  and np.linalg.norm(np.cross(vectors[2],vectors[1]))>1e-6 :
+                    if abs(np.dot(np.cross(vectors[0],vectors[1]),points[0]-points[1]))<1e-5 and    abs(np.dot(np.cross(vectors[0],vectors[2]),points[0]-points[2]))<1e-5   and abs(np.dot(np.cross(vectors[2],vectors[1]),points[2]-points[1]))<1e-5 : 
                         print(jid)
-                        a=Lvec[0]
-                        b=Lvec[1]
-                        A=Lpoint[0]
-                        B=Lpoint[1]
+                        a=vectors[0]
+                        b=vectors[1]
+                        A=points[0]
+                        B=points[1]
                         
                         numerateur=(A[0]-B[0]-((A[1]-B[1])/b[1])*b[0])
                         denominateur=((a[1]/b[1])*b[0]-a[0]) 
@@ -356,13 +352,13 @@ def simplifyModel(model,visual_model):
 
                         place=data.oMi[max(jid-1,0)].inverse()*newoMi
                         jtype = pin.JointModelSpherical()
-                        Ltofix+=[jid+1,jid+2]
+                        fixed_joints_ids+=[jid+1,jid+2]
         if jid !=0 :
             print(jid)
             test = new_model.addJoint(parent, jtype, place, name)
             new_model.appendBodyToJoint(test, iner, pin.SE3.Identity())
 
-    new_model, new_visual_model = pin.buildReducedModel(new_model,visual_model,Ltofix,pin.neutral(new_model))
+    new_model, new_visual_model = pin.buildReducedModel(new_model,visual_model,fixed_joints_ids,pin.neutral(new_model))
     return(new_model,new_visual_model)
         
        

@@ -23,7 +23,7 @@ if __name__ == "__main__":
     viz.loadViewerModel(rootNodeName="universe")
 
     # * Create variables 
-    Lidmot = actuation_model.idqmot
+    Lidmot = actuation_model.mot_ids_q
     goal = np.zeros(len(Lidmot))   
     q0 = pin.neutral(model)
 
