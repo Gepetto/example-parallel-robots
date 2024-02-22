@@ -10,14 +10,14 @@ import pinocchio as pin
 
 def qfree(actuation_model, q):
     """
-    qfree(actuation_model, q)
-    Return the non-actuated coordinates of q
+    Return the non-actuated coordinates of q.
 
-    Arguments:
-        actuation_model - robot actuation model
-        q - complete configuration vector
-    Return:
-        q_free - non-actuated part of q, ordered as it was in q
+    Args:
+        actuation_model (object): Robot actuation model.
+        q (numpy.ndarray): Complete configuration vector.
+
+    Returns:
+        numpy.ndarray: Non-actuated part of q, ordered as it was in q.
     """
     mask = np.zeros_like(q, bool)
     mask[actuation_model.free_ids_q] = True
@@ -25,14 +25,14 @@ def qfree(actuation_model, q):
 
 def qmot(actuation_model, q):
     """
-    qmot(actuation_model, q)
-    Return the actuated coordinates of q
+    Return the actuated coordinates of q.
 
-    Arguments:
-        actuation_model - robot actuation model
-        q - complete configuration vector
-    Return:
-        q_mot - actuated part of q, ordered as it was in q
+    Args:
+        actuation_model (object): Robot actuation model.
+        q (numpy.ndarray): Complete configuration vector.
+
+    Returns:
+        numpy.ndarray: Actuated part of q, ordered as it was in q.
     """
     mask = np.zeros_like(q, bool)
     mask[actuation_model.mot_ids_q] = True
@@ -40,14 +40,14 @@ def qmot(actuation_model, q):
 
 def vmot(actuation_model, v):
     """
-    vmot(actuation_model, v)
-    Return the actuated coordinates of the articular velocity vector v
+    Return the actuated coordinates of the articular velocity vector v.
 
-    Arguments:
-        actuation_model - robot actuation model
-        v - complete articular velocity vector
-    Return:
-        v_mot - actuated part of v, ordered as it was in v
+    Args:
+        actuation_model (object): Robot actuation model.
+        v (numpy.ndarray): Complete articular velocity vector.
+
+    Returns:
+        numpy.ndarray: Actuated part of v, ordered as it was in v.
     """
     mask = np.zeros_like(v, bool)
     mask[actuation_model.mot_ids_v] = True
@@ -55,14 +55,14 @@ def vmot(actuation_model, v):
 
 def vfree(actuation_model, v):
     """
-    vfree(actuation_model, v)
-    Return the non-actuated coordinates of the articular velocity vector v
+    Return the non-actuated coordinates of the articular velocity vector v.
 
-    Arguments:
-        actuation_model - robot actuation model
-        v - complete articular velocity vector
-    Return:
-        v_free - non-actuated part of v, ordered as it was in v
+    Args:
+        actuation_model (object): Robot actuation model.
+        v (numpy.ndarray): Complete articular velocity vector.
+
+    Returns:
+        numpy.ndarray: Non-actuated part of v, ordered as it was in v.
     """
     mask = np.zeros_like(v, bool)
     mask[actuation_model.free_ids_v] = True
@@ -70,16 +70,18 @@ def vfree(actuation_model, v):
 
 def mergeq(model, actuation_model, q_mot, q_free):
     """
-    mergeq(model, actuation_model, q_mot, q_free, casadi_vals=False)
-    Concatenate qmot and qfree to make a configuration vector q that corresponds to the robot structure. This function includes Casadi support
+    Concatenate q_mot and q_free to make a configuration vector q that corresponds to the robot structure.
+    This function includes Casadi support.
 
-    Arguments:
-        model - Pinocchio robot model
-        actuation_model - robot actuation model
-        q_mot - the actuated part of q
-        q_free - the non-actuated part of q
-    Return:
-        q - the merged articular configuration vector
+    Args:
+        model (Pinocchio.RobotModel): Pinocchio robot model.
+        actuation_model (object): Robot actuation model.
+        q_mot (numpy.ndarray): The actuated part of q.
+        q_free (numpy.ndarray): The non-actuated part of q.
+        casadi_vals (bool, optional): Whether Casadi values are used. Defaults to False.
+
+    Returns:
+        numpy.ndarray: The merged articular configuration vector.
     """
     casadi_vals = (type(model) == pin.casadi.Model)
     if not casadi_vals:
@@ -101,17 +103,18 @@ def mergeq(model, actuation_model, q_mot, q_free):
 
 def mergev(model, actuation_model, v_mot, v_free):
     """
-    mergev(model, actuation_model, v_mot, v_free, casadi_vals=False)
-    Concatenate qmot and qfree to make a configuration vector q that corresponds to the robot structure. This function includes Casadi support
+    Concatenate v_mot and v_free to make a velocity vector v that corresponds to the robot structure.
+    This function includes Casadi support.
 
-    Arguments:
-        model - Pinocchio robot model
-        actuation_model - robot actuation model
-        v_mot - the actuated part of v
-        v_free - the non-actuated part of v
-        casadivals [Optionnal] - Set to use Casadi implementation or not - default: False
-    Return:
-        v - the merged articular velocity vector
+    Args:
+        model (Pinocchio.RobotModel): Pinocchio robot model.
+        actuation_model (object): Robot actuation model.
+        v_mot (numpy.ndarray): The actuated part of v.
+        v_free (numpy.ndarray): The non-actuated part of v.
+        casadi_vals (bool, optional): Set to use Casadi implementation or not. Defaults to False.
+
+    Returns:
+        numpy.ndarray: The merged articular velocity vector.
     """
     casadi_vals = (type(model) == pin.casadi.Model)
     if not casadi_vals:

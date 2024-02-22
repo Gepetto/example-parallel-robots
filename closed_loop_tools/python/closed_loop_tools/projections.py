@@ -18,32 +18,40 @@ from .constraints import constraintsResidual
 ## Configuration projections
 def configurationProjectionProximal(rmodel, rdata, cmodels, cdatas, q_prec=None, max_it=100, eps=1e-12, rho=1e-10, mu=1e-4):
     """
-        closedLoopMountProximal(rmodel, rdata, cmodels, cdatas, q_prec=None, max_it=100, eps=1e-12, rho=1e-10, mu=1e-4):
+    Project the current configuration of the robot to the nearest feasible configuration satisfying kinematic constraints using a proximal solver.
 
-        This function takes the current configuration of the robot and projects it to the nearest feasible configuration - i.e. satisfying the constraints
-        This function solves a minimization problem over q. q is actually defined as q0+dq (this removes the need for quaternion constraints and gives less decision variables)
-        leading to an optimisation on Lie group.
-        
-        min || q - q_prec ||^2
-        subject to:  f_c(q)=0              # Kinematics constraints are satisfied
+    Args:
+        rmodel (pinocchio.Model): Pinocchio robot model.
+        rdata (pinocchio.Data): Pinocchio robot data associated with the model.
+        cmodels (list): List of Pinocchio constraint models.
+        cdatas (list): List of Pinocchio constraint data associated with the constraint models.
+        q_prec (np.array, optional): Previous configuration of the free joints. Defaults to None (set to neutral model pose).
+        max_it (int, optional): Maximum number of proximal iterations. Defaults to 100.
+        eps (float, optional): Proximal parameter epsilon. Defaults to 1e-12.
+        rho (float, optional): Proximal parameter rho. Defaults to 1e-10.
+        mu (float, optional): Proximal parameter mu. Defaults to 1e-4.
 
-        The problem is solved using a proximal solver
+    Returns:
+        np.array: Configuration vector satisfying constraints (if the optimization process succeeded).
 
-        Argument:
-            rmodel - Pinocchio robot model
-            rdata - Pinocchio robot data
-            cmodels - Pinocchio constraint models list
-            cdatas - Pinocchio constraint datas list
-            q_prec [Optionnal] - Previous configuration of the free joints - default: None (set to neutral model pose)
-            max_it [Optionnal] - Maximal number of proximal iterations - default: 100
-            eps [Optinnal] - Proximal parameter epsilon - default: 1e-12
-            rho [Optionnal] - Proximal parameter rho - default: 1e-10
-            mu [Optionnal] - Proximal parameter mu - default: 1e-4
-        Return:
-            q - Configuration vector satisfying constraints (if optimisation process succeded)
+    Notes:
+        This function solves a minimization problem over q, where q is defined as q0+dq. This representation removes the need for quaternion constraints and reduces decision variables, leading to optimization on the Lie group.
 
-    Initially written by Justin Carpentier    
-    raw here (L84-126):https://gitlab.inria.fr/jucarpen/pinocchio/-/blob/pinocchio-3x/examples/simulation-closed-kinematic-chains.py
+        The optimization problem aims to minimize the squared norm of (q - q_prec) subject to kinematic constraints (f_c(q) = 0), ensuring that the robot's motion complies with its physical constraints.
+
+        The problem is formulated as follows:
+        - Minimize the squared norm of (q - q_prec) subject to kinematic constraints (f_c(q) = 0).
+        - Kinematic constraints ensure that the robot's motion complies with its physical constraints.
+
+        The optimization process aims to find the nearest feasible configuration to the initial configuration q_prec.
+
+        If the optimization process fails to converge, it returns the current configuration q_prec.
+
+    References:
+        - Originally written by Justin Carpentier.
+
+    Example:
+        q = configurationProjectionProximal(rmodel, rdata, cmodels, cdatas, q_prec, max_it=100, eps=1e-12, rho=1e-10, mu=1e-4)
     """
 
     if q_prec is None:
@@ -89,27 +97,35 @@ def configurationProjectionProximal(rmodel, rdata, cmodels, cdatas, q_prec=None,
 
 def configurationProjection(rmodel, rdata, cmodels, cdatas, q_prec=None, W=None):
     """
-        configurationProjection(rmodel, rdata, cmodels, cdatas, q_prec=None):
+    Project the current robot configuration to the nearest feasible configuration satisfying constraints using CasADi + IPOpt.
 
-        This function takes the current configuration of the robot and projects it to the nearest feasible configuration - i.e. satisfying the constraints
-        This function solves a minimization problem over q. q is actually defined as q0+dq (this removes the need for quaternion constraints and gives less decision variables)
-        leading to an optimisation on Lie group.
-        
-        min || q - q_prec ||_W^2
-        subject to:  f_c(q)=0              # Kinematics constraints are satisfied
-                     dq[mots] = 0
+    Args:
+        rmodel (pinocchio.Model): Pinocchio robot model.
+        rdata (pinocchio.Data): Pinocchio robot data associated with the model.
+        cmodels (list): List of Pinocchio constraint models.
+        cdatas (list): List of Pinocchio constraint data associated with the constraint models.
+        q_prec (np.array, optional): Previous configuration of the free joints. Defaults to None (set to neutral model pose).
+        W (np.array, optional): Weighting matrix for the cost function. Defaults to None (identity matrix).
 
-        The problem is solved using CasADi + IPOpt
+    Returns:
+        np.array: Configuration vector satisfying constraints (if the optimization process succeeded).
 
-        Argument:
-            rmodel - Pinocchio robot model
-            rdata - Pinocchio robot data
-            cmodels - Pinocchio constraint models list
-            cdatas - Pinocchio constraint datas list
-            q_prec [Optionnal] - Previous configuration of the free joints - default: None (set to neutral model pose)
-            mots [Optionnal] - Ids to fixed fixed (i.e equals to q_prec), this typically corresponds to motors ids
-        Return:
-            q - Configuration vector satisfying constraints (if optimisation process succeded)
+    Notes:
+        This function solves a minimization problem over q, where q is defined as q0 + dq. This representation removes the need for quaternion constraints and reduces decision variables, leading to optimization on the Lie group.
+
+        The optimization problem aims to minimize the weighted squared norm of (q - q_prec) subject to kinematic constraints (f_c(q) = 0) and dq[mots] = 0, where mots are the motor ids.
+
+        The problem is formulated as follows:
+        - Minimize the weighted squared norm of (q - q_prec) subject to kinematic constraints (f_c(q) = 0) and dq[mots] = 0.
+        - Kinematic constraints ensure that the robot's motion complies with its physical constraints, while dq[mots] = 0 fixes the motor joints.
+        - The weighting matrix W allows adjusting the importance of different joint velocities in the cost function.
+
+        The optimization process aims to find the nearest feasible configuration to the initial configuration q_prec.
+
+        If the optimization process fails to converge, it returns the current configuration q_prec.
+
+    Example:
+        q = configurationProjection(rmodel, rdata, cmodels, cdatas, q_prec, W)
     """
     # * Getting ids of actuated and free joints
     if q_prec is None:
@@ -164,6 +180,34 @@ def configurationProjection(rmodel, rdata, cmodels, cdatas, q_prec=None, W=None)
 
 ## Velocity projections
 def velocityProjection(model, data, q, v_ref, constraint_models, constraint_datas):
+    """
+    Project the desired velocity `v_ref` onto the feasible velocity space subject to constraints using Quadratic Programming.
+
+    Args:
+        model (pinocchio.Model): Pinocchio robot model.
+        data (pinocchio.Data): Pinocchio robot data associated with the model.
+        q (np.array): Current configuration of the robot.
+        v_ref (np.array): Desired velocity to be projected.
+        constraint_models (list): List of Pinocchio constraint models.
+        constraint_datas (list): List of Pinocchio constraint data associated with the constraint models.
+
+    Returns:
+        np.array: Projected velocity satisfying constraints.
+
+    Notes:
+        This function projects the desired velocity `v_ref` onto the feasible velocity space subject to constraints. It uses Quadratic Programming (QP) to find the optimal solution.
+
+        The QP problem is formulated as follows:
+        - Minimize the quadratic cost function: (1/2) * ||x - v_ref||^2
+        - Subject to: A*x <= b, where A is the constraint Jacobian and b is a vector of constraint values.
+
+        The function uses the 'proxqp' solver for solving the QP problem.
+
+        If the solver fails to converge, it prints a warning message and returns the unprojected desired velocity `v_ref`.
+
+    Example:
+        v_projected = velocityProjection(model, data, q, v_ref, constraint_models, constraint_datas)
+    """
     nx = len(v_ref)
     pin.computeAllTerms(model, data, q, np.zeros(model.nv))
     Jac = pin.getConstraintsJacobian(model, data, constraint_models, constraint_datas)
@@ -178,6 +222,34 @@ def velocityProjection(model, data, q, v_ref, constraint_models, constraint_data
 
 ## Acceleration projections
 def accelerationProjection(model, data, q, v, a_ref, constraint_models, constraint_datas):
+    """
+    Project the desired acceleration `a_ref` onto the feasible acceleration space subject to constraints using Quadratic Programming.
+
+    Args:
+        model (pinocchio.Model): Pinocchio robot model.
+        data (pinocchio.Data): Pinocchio robot data associated with the model.
+        q (np.array): Current configuration of the robot.
+        v (np.array): Current velocity of the robot.
+        a_ref (np.array): Desired acceleration to be projected.
+        constraint_models (list): List of Pinocchio constraint models.
+        constraint_datas (list): List of Pinocchio constraint data associated with the constraint models.
+
+    Returns:
+        np.array: Projected acceleration satisfying constraints.
+
+    Notes:
+        This function projects the desired acceleration `a_ref` onto the feasible acceleration space subject to constraints. 
+        It uses Quadratic Programming (QP) to find the optimal solution.
+
+        The QP problem is formulated as follows:
+        - Minimize the quadratic cost function: (1/2) * ||x - a_ref||^2
+        - Subject to: A*x <= b, where A is the constraint Jacobian, b is a vector of constraint values, and gamma is a vector of contact acceleration drifts.
+
+        The function uses the 'proxqp' solver for solving the QP problem.
+
+        If the solver fails to converge, it prints a warning message and returns the unprojected desired acceleration `a_ref`.
+    """
+
     nx = len(a_ref)
     pin.computeAllTerms(model, data, q, np.zeros(model.nv))
     Jac = pin.getConstraintsJacobian(model, data, constraint_models, constraint_datas)

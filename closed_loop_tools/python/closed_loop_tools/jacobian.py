@@ -13,19 +13,18 @@ from example_parallel_robots.actuation_model import ActuationData
 
 def separateConstraintJacobian(actuation_data,Jn):
     """
-    Jmot,Jfree=sepJc(actuation_data,Jn)
-    
-    Separate a constraint Jacobian `Jn` into Jcmot and Jcfree, the constraint Jacobians associated with the motor joints and free joints.
+    Separate a constraint Jacobian into parts associated with motor and free joints.
 
     Args:
-        actuation_datal (ActuationModelFreeFlyer): Actuation data.
-        Jn (np.array): Constraint Jacobian.
+        actuation_data (ActuationModelFreeFlyer): Actuation data containing information about motor and free joints.
+        Jn (numpy.ndarray): Constraint Jacobian to be separated.
 
     Returns:
         tuple: A tuple containing:
-            - Jmot (np.array): Constraint Jacobian associated with the motor joints.
-            - Jfree (np.array): Constraint Jacobian associated with the free joints.
+            - Jmot (numpy.ndarray): Constraint Jacobian associated with the motor joints.
+            - Jfree (numpy.ndarray): Constraint Jacobian associated with the free joints.
     """
+
 
     Smot=actuation_data.Smot
     Sfree=actuation_data.Sfree
@@ -37,8 +36,6 @@ def separateConstraintJacobian(actuation_data,Jn):
 
 def computeDerivative_dq_dqmot(actuation_model,actuation_data,LJ):
     """
-    dq=dq_dq_mot(model,actuation_model,LJ)
-
     Compute the derivative `dq/dqmot` of the joint to the motor joint.
 
     Args:
@@ -69,9 +66,7 @@ def computeDerivative_dq_dqmot(actuation_model,actuation_data,LJ):
 
 def computeClosedLoopFrameJacobian(model,data,constraint_model,constraint_data,actuation_model,actuation_data,q0,idframe):
     """
-    Jf_closed=computeClosedLoopFrameJacobian(model,data,constraint_model,constraint_data,actuation_model,actuation_data,q0,idframe)
-    
-    Compute `Jf_closed`, the closed loop Jacobian on the frame `ideff`.
+    Compute the closed-loop Jacobian on the frame `idframe`.
 
     Args:
         model (pinocchio.Model): Pinocchio model.
@@ -79,12 +74,12 @@ def computeClosedLoopFrameJacobian(model,data,constraint_model,constraint_data,a
         constraint_model (list): List of constraint models.
         constraint_data (list): List of constraint data associated with the constraint models.
         actuation_model (ActuationModel): Actuation model.
-        actuation_data (ActuationData): Actuation data
+        actuation_data (ActuationData): Actuation data.
         q0 (np.array): Initial configuration.
         idframe (int): Frame index for which the joint velocity is computed.
 
     Returns:
-         Jf_closed (np.array): Closed loop Jacobian on frame `ideff`.
+        np.array: Closed-loop Jacobian on frame `idframe`.
     """
 
     pin.computeJointJacobians(model,data,q0)
@@ -97,10 +92,7 @@ def computeClosedLoopFrameJacobian(model,data,constraint_model,constraint_data,a
 
 def inverseConstraintKinematicsSpeed(model,data,constraint_model,constraint_data,actuation_model,actuation_data,q0,ideff,veff):
     """
-    vq,Jf_cloesd=inverseConstraintKinematicsSpeedOptimized(model,data,constraint_model,constraint_data,actuation_model,q0,ideff,veff)
-    
     Compute the joint velocity `vq` that generates the speed `veff` on frame `ideff`.
-    Return also `Jf_closed`, the closed loop Jacobian on the frame `ideff`.
 
     Args:
         model (pinocchio.Model): Pinocchio model.
@@ -113,8 +105,7 @@ def inverseConstraintKinematicsSpeed(model,data,constraint_model,constraint_data
         veff (np.array): Desired speed on frame `ideff`.
 
     Returns:
-        tuple: A tuple containing:
-            - vq (np.array): Joint velocity that generates the desired speed on frame `ideff`.
+        np.array: Joint velocity `vq` that generates the desired speed on frame `ideff`.
     """
     #update of the jacobian an constraint model
     pin.computeJointJacobians(model,data,q0)

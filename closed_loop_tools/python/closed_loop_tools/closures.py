@@ -10,7 +10,30 @@ from .constraints import constraintsResidual
 ## Configuration
 def partialLoopClosure(model, data, constraint_models, constraint_datas, fixed_joints_ids, fixed_rotations=[], q_ref=None, q_ws=None):
     """
-        # TODO Add docstring
+    Solves the partial loop closure optimization problem to satisfy constraints.
+
+    Args:
+        model (pinocchio.Model): Pinocchio robot model.
+        data (pinocchio.Data): Pinocchio data associated with the model.
+        constraint_models (list): List of Pinocchio robot constraint models.
+        constraint_datas (list): List of Pinocchio data associated with the constraint models.
+        fixed_joints_ids (list): List of fixed joint IDs.
+        fixed_rotations (list, optional): List of fixed rotation IDs. Defaults to [].
+        q_ref (numpy.ndarray, optional): Reference configuration vector. Defaults to None.
+        q_ws (numpy.ndarray, optional): Desired configuration vector. Defaults to None.
+
+    Returns:
+        numpy.ndarray: Optimized configuration vector.
+
+    Description:
+        This function solves the optimization problem:
+        min ||Δ𝑞||^2 
+        such that Φ(𝑞0⊕Δ𝑞)=0 and Δ𝑞[𝑗]=0, where:
+        - Φ represents the constraint function,
+        - 𝑞0 is the reference configuration,
+        - Δ𝑞 is the change in configuration,
+        - 𝑅𝑧 denotes the rotation of specified joints 𝑖,
+        - 𝑗 denotes joints to be fixed.
     """
     if q_ref is None:
         q_ref = pin.neutral(model)
@@ -82,6 +105,34 @@ def partialLoopClosure(model, data, constraint_models, constraint_datas, fixed_j
 
 ## Frames
 def partialLoopClosureFrames(model, data, constraint_models, constraint_datas, framesIds=[], fixed_rotations=[], q_ref=None, q_ws=None):
+
+    """
+    Solves a partial loop closure optimization problem based on specific frames to satisfy constraints.
+
+    Args:
+        model (pinocchio.Model): Pinocchio robot model.
+        data (pinocchio.Data): Pinocchio data associated with the model.
+        constraint_models (list): List of Pinocchio robot constraint models.
+        constraint_datas (list): List of Pinocchio data associated with the constraint models.
+        framesIds (list, optional): List of frame IDs to consider for loop closure. Defaults to [].
+        fixed_rotations (list, optional): List of fixed rotation IDs. Defaults to [].
+        q_ref (numpy.ndarray, optional): Reference configuration vector. Defaults to None.
+        q_ws (numpy.ndarray, optional): Desired configuration vector. Defaults to None.
+
+    Returns:
+        numpy.ndarray: Optimized configuration vector.
+
+    Description:
+        This function solves the optimization problem:
+        min ||Δ𝑞||^2 
+        such that Φ(𝑞0⊕Δ𝑞)=0 and 𝑅𝑧[𝑖]=0 for specified frames 𝑖, where:
+        - Φ represents the constraint function,
+        - 𝑞0 is the reference configuration,
+        - Δ𝑞 is the change in configuration,
+        - 𝑅𝑧 denotes the rotation of selected frames.
+    """
+
+
     if q_ref is None:
         q_ref = pin.neutral(model)
     if q_ws is not None:

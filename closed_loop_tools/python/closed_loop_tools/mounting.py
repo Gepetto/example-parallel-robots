@@ -23,25 +23,36 @@ _FORCE_PROXIMAL = False
 
 def closedLoopMountCasadi(rmodel, rdata, cmodels, cdatas, q_prec=None):
     """
-        closedLoopMountCasadi(rmodel, rdata, cmodels, cdatas, q_prec=None):
+    Perform closed-loop mounting using CasADi and IPOpt to find the nearest feasible configuration satisfying the kinematics constraints.
 
-        This function takes the current configuration of the robot and projects it to the nearest feasible configuration - i.e. satisfying the constraints
-        This function solves a minimization problem over q. q is actually defined as q0+dq (this removes the need for quaternion constraints and gives less decision variables)
-        leading to an optimisation on Lie group.
-        
-        min || q - q_prec ||^2
-        subject to:  f_c(q)=0              # Kinematics constraints are satisfied
+    Args:
+        rmodel (pinocchio.Model): Pinocchio robot model.
+        rdata (pinocchio.Data): Pinocchio robot data associated with the model.
+        cmodels (list): List of Pinocchio constraint models.
+        cdatas (list): List of Pinocchio constraint data associated with the constraint models.
+        q_prec (np.array, optional): Previous configuration of the free joints. Defaults to None (set to neutral model pose).
 
-        The problem is solved using CasADi + IPOpt
+    Returns:
+        np.array: Configuration vector satisfying constraints (if optimization process succeeded).
 
-        Argument:
-            rmodel - Pinocchio robot model
-            rdata - Pinocchio robot data
-            cmodels - Pinocchio constraint models list
-            cdatas - Pinocchio constraint datas list
-            q_prec [Optionnal] - Previous configuration of the free joints - default: None (set to neutral model pose)
-        Return:
-            q - Configuration vector satisfying constraints (if optimisation process succeded)
+    Raises:
+        AttributeError: If the optimization process encounters an attribute error.
+    
+    Notes:
+        This function solves a minimization problem over q, where q is defined as q0+dq, removing the need for quaternion constraints and reducing decision variables.
+        The optimization problem is set up using CasADi and IPOpt, subject to the kinematics constraints being satisfied.
+
+    The problem is formulated as follows:
+
+    - Minimize the squared norm of (q - q_prec) subject to kinematics constraints (f_c(q) = 0).
+    - Kinematics constraints ensure that the robot's motion complies with its physical constraints.
+    
+    The optimization process aims to find the nearest feasible configuration to the initial configuration q_prec.
+
+    If the optimization process fails to converge, it provides debug information for troubleshooting.
+
+    Example:
+        q = closedLoopMountCasadi(rmodel, rdata, cmodels, cdatas, q_prec)
     """
     # * Defining casadi models
     casmodel = caspin.Model(rmodel)
@@ -92,25 +103,33 @@ def closedLoopMountCasadi(rmodel, rdata, cmodels, cdatas, q_prec=None):
 
 def closedLoopMountScipy(rmodel, rdata, cmodels, cdatas, q_prec=None):
     """
-        closedLoopMountScipy(rmodel, rdata, cmodels, cdatas, q_prec=None):
+    Perform closed-loop mounting using the Scipy SLSQP solver to find the nearest feasible configuration satisfying kinematic constraints.
 
-        This function takes the current configuration of the robot and projects it to the nearest feasible configuration - i.e. satisfying the constraints
-        This function solves a minimization problem over q. q is actually defined as q0+dq (this removes the need for quaternion constraints and gives less decision variables)
-        leading to an optimisation on Lie group.
-        
-        min || q - q_prec ||^2
-        subject to:  f_c(q)=0              # Kinematics constraints are satisfied
+    Args:
+        rmodel (pinocchio.Model): Pinocchio robot model.
+        rdata (pinocchio.Data): Pinocchio robot data associated with the model.
+        cmodels (list): List of Pinocchio constraint models.
+        cdatas (list): List of Pinocchio constraint data associated with the constraint models.
+        q_prec (np.array, optional): Previous configuration of the free joints. Defaults to None (set to neutral model pose).
 
-        The problem is solved using Scipy SLSQP solver
+    Returns:
+        np.array: Configuration vector satisfying constraints (if the optimization process succeeded).
 
-        Argument:
-            rmodel - Pinocchio robot model
-            rdata - Pinocchio robot data
-            cmodels - Pinocchio constraint models list
-            cdatas - Pinocchio constraint datas list
-            q_prec [Optionnal] - Previous configuration of the free joints - default: None (set to neutral model pose)
-        Return:
-            q - Configuration vector satisfying constraints (if optimisation process succeded)
+    Notes:
+        This function solves a minimization problem over q, where q is defined as q0+dq. This representation removes the need for quaternion constraints and reduces decision variables, leading to optimization on the Lie group.
+
+        The optimization problem aims to minimize the squared norm of (q - q_prec) subject to kinematic constraints (f_c(q) = 0), ensuring that the robot's motion complies with its physical constraints.
+
+    The problem is formulated as follows:
+    - Minimize the squared norm of (q - q_prec) subject to kinematic constraints (f_c(q) = 0).
+    - Kinematic constraints ensure that the robot's motion complies with its physical constraints.
+
+    The optimization process aims to find the nearest feasible configuration to the initial configuration q_prec.
+
+    If the optimization process fails to converge, it returns the current configuration q_prec.
+
+    Example:
+        q = closedLoopMountScipy(rmodel, rdata, cmodels, cdatas, q_prec)
     """
     if q_prec is None:
         q_prec = pin.neutral(rmodel)
@@ -130,32 +149,40 @@ def closedLoopMountScipy(rmodel, rdata, cmodels, cdatas, q_prec=None):
 
 def closedLoopMountProximal(rmodel, rdata, cmodels, cdatas, q_prec=None, max_it=100, eps=1e-12, rho=1e-10, mu=1e-4):
     """
-        closedLoopMountProximal(rmodel, rdata, cmodels, cdatas, q_prec=None, max_it=100, eps=1e-12, rho=1e-10, mu=1e-4):
+    Compute the nearest feasible configuration of the robot satisfying kinematic constraints using a proximal solver.
 
-        This function takes the current configuration of the robot and projects it to the nearest feasible configuration - i.e. satisfying the constraints
-        This function solves a minimization problem over q. q is actually defined as q0+dq (this removes the need for quaternion constraints and gives less decision variables)
-        leading to an optimisation on Lie group.
-        
-        min || q - q_prec ||^2
-        subject to:  f_c(q)=0              # Kinematics constraints are satisfied
+    Args:
+        rmodel (pinocchio.Model): Pinocchio robot model.
+        rdata (pinocchio.Data): Pinocchio robot data associated with the model.
+        cmodels (list): List of Pinocchio constraint models.
+        cdatas (list): List of Pinocchio constraint data associated with the constraint models.
+        q_prec (np.array, optional): Previous configuration of the free joints. Defaults to None (set to neutral model pose).
+        max_it (int, optional): Maximum number of proximal iterations. Defaults to 100.
+        eps (float, optional): Proximal parameter epsilon. Defaults to 1e-12.
+        rho (float, optional): Proximal parameter rho. Defaults to 1e-10.
+        mu (float, optional): Proximal parameter mu. Defaults to 1e-4.
 
-        The problem is solved using a proximal solver
+    Returns:
+        np.array: Configuration vector satisfying constraints (if the optimization process succeeded).
 
-        Argument:
-            rmodel - Pinocchio robot model
-            rdata - Pinocchio robot data
-            cmodels - Pinocchio constraint models list
-            cdatas - Pinocchio constraint datas list
-            q_prec [Optionnal] - Previous configuration of the free joints - default: None (set to neutral model pose)
-            max_it [Optionnal] - Maximal number of proximal iterations - default: 100
-            eps [Optinnal] - Proximal parameter epsilon - default: 1e-12
-            rho [Optionnal] - Proximal parameter rho - default: 1e-10
-            mu [Optionnal] - Proximal parameter mu - default: 1e-4
-        Return:
-            q - Configuration vector satisfying constraints (if optimisation process succeded)
+    Notes:
+        This function solves a minimization problem over q, where q is defined as q0+dq. This representation removes the need for quaternion constraints and reduces decision variables, leading to optimization on the Lie group.
 
-    Initially written by Justin Carpentier    
-    raw here (L84-126):https://gitlab.inria.fr/jucarpen/pinocchio/-/blob/pinocchio-3x/examples/simulation-closed-kinematic-chains.py
+        The optimization problem aims to minimize the squared norm of (q - q_prec) subject to kinematic constraints (f_c(q) = 0), ensuring that the robot's motion complies with its physical constraints.
+
+        The problem is formulated as follows:
+        - Minimize the squared norm of (q - q_prec) subject to kinematic constraints (f_c(q) = 0).
+        - Kinematic constraints ensure that the robot's motion complies with its physical constraints.
+
+        The optimization process aims to find the nearest feasible configuration to the initial configuration q_prec.
+
+        If the optimization process fails to converge, it returns the current configuration q_prec.
+
+    References:
+        - Originally written by Justin Carpentier.
+
+    Example:
+        q = closedLoopMountProximal(rmodel, rdata, cmodels, cdatas, q_prec, max_it=100, eps=1e-12, rho=1e-10, mu=1e-4)
     """
 
     if q_prec is None:

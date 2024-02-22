@@ -23,29 +23,23 @@ _FORCE_PROXIMAL = False
 ### Inverse Kinematics
 def closedLoopInverseKinematicsCasadi(rmodel, rdata, cmodels, cdatas, target_pos, q_prec=None, name_eff="effecteur", onlytranslation=False):
     """
-        closedLoopInverseKinematicsCasadi(rmodel, rdata, cmodels, cdatas, target_pos, q_prec=None, name_eff="effecteur", onlytranslation=False)
+    Perform closed-loop inverse kinematics using Casadi and IpOpt optimization.
 
-        This function takes a target and an effector frame and finds a configuration of the robot such that the effector is as close as possible to the target 
-        and the robot constraints are satisfied. (It is actually a geometry problem)
-        This function solves a minimization problem over q. q is actually defined as q0+dq (this removes the need for quaternion constraints and gives less decision variables)
-        leading to an optimisation on Lie group. We denoted d(eff(q), target) a distance measure between the effector and the target
-        
-        min || d(eff(q), target) ||^2
-        subject to:  f_c(q)=0              # Kinematics constraints are satisfied
+    This function aims to find a robot configuration that minimizes the distance between
+    the effector and a target position while satisfying robot constraints.
 
-        The problem is solved using Casadi + IpOpt
+    Args:
+        rmodel (pinocchio.Model): Pinocchio robot model.
+        rdata (pinocchio.Data): Pinocchio data associated with the model.
+        cmodels (list): List of Pinocchio constraint models.
+        cdatas (list): List of Pinocchio data associated with the constraint models.
+        target_pos (numpy.ndarray): Target position of the effector.
+        q_prec (numpy.ndarray, optional): Previous configuration of the free joints. Defaults to None.
+        name_eff (str, optional): Name of the effector frame. Defaults to "effecteur".
+        onlytranslation (bool, optional): Set to True to consider only translation (3D) and False to consider 6D position. Defaults to False.
 
-        Argument:
-            rmodel - Pinocchio robot model
-            rdata - Pinocchio robot data
-            cmodels - Pinocchio constraint models list
-            cdatas - Pinocchio constraint datas list
-            target_pos - Target position
-            q_prec [Optionnal] - Previous configuration of the free joints - default: None (set to neutral model pose)
-            name_eff [Optionnal] - Name of the effector frame - default: "effecteur"
-            onlytranslation [Optionnal] - Set to true to choose only translation (3D) and to false to have 6D position - default: False (6D)
-        Return:
-            q - Configuration vector satisfying constraints (if optimisation process succeded)
+    Returns:
+        numpy.ndarray: Configuration vector satisfying constraints (if optimization process succeeded).
     """
     # * Get effector frame id
     id_eff = rmodel.getFrameId(name_eff)
@@ -107,29 +101,23 @@ def closedLoopInverseKinematicsCasadi(rmodel, rdata, cmodels, cdatas, target_pos
 
 def closedLoopInverseKinematicsScipy(rmodel, rdata, cmodels, cdatas, target_pos, q_prec=None, name_eff="effecteur", onlytranslation=False):
     """
-        closedLoopInverseKinematicsScipy(rmodel, rdata, cmodels, cdatas, target_pos, q_prec=None, name_eff="effecteur", onlytranslation=False)
+    Perform closed-loop inverse kinematics using Scipy optimization.
 
-        This function takes a target and an effector frame and finds a configuration of the robot such that the effector is as close as possible to the target 
-        and the robot constraints are satisfied. (It is actually a geometry problem)
-        This function solves a minimization problem over q. q is actually defined as q0+dq (this removes the need for quaternion constraints and gives less decision variables)
-        leading to an optimisation on Lie group. We denoted d(eff(q), target) a distance measure between the effector and the target
-        
-        min || d(eff(q), target) ||^2
-        subject to:  f_c(q)=0              # Kinematics constraints are satisfied
+    This function finds a robot configuration that minimizes the distance between
+    the effector and a target position while satisfying robot constraints.
 
-        The problem is solved using Scipy
+    Args:
+        rmodel (pinocchio.Model): Pinocchio robot model.
+        rdata (pinocchio.Data): Pinocchio data associated with the model.
+        cmodels (list): List of Pinocchio constraint models.
+        cdatas (list): List of Pinocchio data associated with the constraint models.
+        target_pos (numpy.ndarray): Target position of the effector.
+        q_prec (numpy.ndarray, optional): Previous configuration of the free joints. Defaults to None.
+        name_eff (str, optional): Name of the effector frame. Defaults to "effecteur".
+        onlytranslation (bool, optional): Set to True to consider only translation (3D), False for 6D position. Defaults to False.
 
-        Argument:
-            rmodel - Pinocchio robot model
-            rdata - Pinocchio robot data
-            cmodels - Pinocchio constraint models list
-            cdatas - Pinocchio constraint datas list
-            target_pos - Target position
-            q_prec [Optionnal] - Previous configuration of the free joints - default: None (set to neutral model pose)
-            name_eff [Optionnal] - Name of the effector frame - default: "effecteur"
-            onlytranslation [Optionnal] - Set to true to choose only translation (3D) and to false to have 6D position - default: False (6D)
-        Return:
-            q - Configuration vector satisfying constraints (if optimisation process succeded)
+    Returns:
+        numpy.ndarray: Configuration vector satisfying constraints (if optimization process succeeded).
     """
 
     id_eff = rmodel.getFrameId(name_eff)
@@ -160,35 +148,33 @@ def closedLoopInverseKinematicsScipy(rmodel, rdata, cmodels, cdatas, target_pos,
 
 def closedLoopInverseKinematicsProximal(rmodel, rdata, cmodels, cdatas, target_pos, name_eff="effecteur", onlytranslation=False, max_it=100, eps=1e-12, rho=1e-5, mu=1e-4):
     """
-        closedLoopInverseKinematicsProximal(rmodel, rdata, cmodels, cdatas, target_pos, q_prec=None, name_eff="effecteur", onlytranslation=False)
+    Perform closed-loop inverse kinematics using the proximal method.
 
-        This function takes a target and an effector frame and finds a configuration of the robot such that the effector is as close as possible to the target 
-        and the robot constraints are satisfied. (It is actually a geometry problem)
-        This function solves a minimization problem over q. q is actually defined as q0+dq (this removes the need for quaternion constraints and gives less decision variables)
-        leading to an optimisation on Lie group. We denoted d(eff(q), target) a distance measure between the effector and the target
-        
+    This function computes a robot configuration such that the effector closely matches the target position while satisfying robot constraints.
+
+    Args:
+        rmodel (pinocchio.Model): Pinocchio robot model.
+        rdata (pinocchio.Data): Pinocchio robot data.
+        cmodels (list): List of Pinocchio constraint models.
+        cdatas (list): List of Pinocchio data associated with the constraint models.
+        target_pos (numpy.ndarray): Target position of the effector.
+        name_eff (str, optional): Name of the effector frame. Defaults to "effecteur".
+        onlytranslation (bool, optional): True to consider only translation (3D), False for 6D position. Defaults to False.
+        max_it (int, optional): Maximum number of proximal iterations. Defaults to 100.
+        eps (float, optional): Proximal parameter epsilon. Defaults to 1e-12.
+        rho (float, optional): Proximal parameter rho. Defaults to 1e-5.
+        mu (float, optional): Proximal parameter mu. Defaults to 1e-4.
+
+    Returns:
+        numpy.ndarray: Configuration vector satisfying constraints (if optimization process succeeded).
+
+    Notes:
+        The proximal method solves the minimization problem:
         min || d(eff(q), target) ||^2
-        subject to:  f_c(q)=0              # Kinematics constraints are satisfied
+        subject to:  f_c(q)=0  # Kinematics constraints are satisfied
 
-        The problem is solved using proximal method
-
-        Argument:
-            rmodel - Pinocchio robot model
-            rdata - Pinocchio robot data
-            cmodels - Pinocchio constraint models list
-            cdatas - Pinocchio constraint datas list
-            target_pos - Target position
-            name_eff [Optionnal] - Name of the effector frame - default: "effecteur"
-            onlytranslation [Optionnal] - Set to true to choose only translation (3D) and to false to have 6D position - default: False (6D)
-            max_it [Optionnal] - Maximal number of proximal iterations - default: 100
-            eps [Optinnal] - Proximal parameter epsilon - default: 1e-12
-            rho [Optionnal] - Proximal parameter rho - default: 1e-10
-            mu [Optionnal] - Proximal parameter mu - default: 1e-4
-        Return:
-            q - Configuration vector satisfying constraints (if optimisation process succeded)
-
-        Initially written by Justin Carpentier    
-        raw here (L84-126):https://gitlab.inria.fr/jucarpen/pinocchio/-/blob/pinocchio-3x/examples/simulation-closed-kinematic-chains.py
+        Initially written by Justin Carpentier.
+        Original source: https://gitlab.inria.fr/jucarpen/pinocchio/-/blob/pinocchio-3x/examples/simulation-closed-kinematic-chains.py
     """
 
     model=rmodel.copy()
@@ -248,6 +234,23 @@ def closedLoopInverseKinematicsProximal(rmodel, rdata, cmodels, cdatas, target_p
     return(q)
 
 def closedLoopInverseKinematics(*args, **kwargs):
+    """
+    Perform closed-loop inverse kinematics based on available methods.
+
+    This function dynamically selects the appropriate closed-loop inverse kinematics method based on predefined settings.
+
+    Args:
+        *args: Positional arguments passed to the selected inverse kinematics function.
+        **kwargs: Keyword arguments passed to the selected inverse kinematics function.
+
+    Returns:
+        numpy.ndarray: Configuration vector satisfying constraints (if optimization process succeeded).
+
+    Notes:
+        - If _FORCE_PROXIMAL is set to True, the function uses the proximal method for inverse kinematics.
+        - If _WITH_CASADI is set to True and _FORCE_PROXIMAL is False, the function uses Casadi for inverse kinematics.
+        - If _WITH_CASADI is set to False and _FORCE_PROXIMAL is False, the function uses Scipy for inverse kinematics.
+    """
     if _FORCE_PROXIMAL:
         return(closedLoopInverseKinematicsProximal(*args, **kwargs))
     else:

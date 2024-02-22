@@ -14,30 +14,19 @@ from .actuation import mergeq, mergev
 
 def closedLoopForwardKinematicsCasadi(rmodel, rdata, cmodels, cdatas, actuation_model, q_mot_target=None, q_prec=None):
     """
-        closedLoopForwardKinematicsCasadi(rmodel, rdata, cmodels, cdatas, actuation_model, q_mot_target=None, q_prec=None)
+    Solve a minimization problem over the configuration vector 'q' to match the goal positions of the motors and satisfy constraints.
 
-        Takes the target position of the motors axis of the robot (following the actuation model), the current configuration of all joint (set to robot.q0 if let empty). 
-        And returns a configuration that matches the goal positions of the motors and satisfies constraints
-        This function solves a minimization problem over q but q is actually defined as q0+dq (this removes the need for quaternion constraints and gives less decision variables)
-        
-        min || q - q_prec ||^2
+    Arguments:
+        rmodel (pinocchio.Model): Pinocchio robot model.
+        rdata (pinocchio.Data): Pinocchio robot data.
+        cmodels (list): List of Pinocchio constraint models.
+        cdatas (list): List of Pinocchio data associated with the constraint models.
+        actuation_model: Robot actuation model.
+        q_mot_target (numpy.ndarray, optional): Target position of the motor joints. Defaults to None.
+        q_prec (numpy.ndarray, optional): Previous configuration of the free joints. Defaults to None.
 
-        subject to:  f_c(q)=0              # Kinematics constraints are satisfied
-                     vq[motors]=q_motors    # The motors joints should be as commanded
-
-        The problem is solved using Casadi + IpOpt
-
-        Argument:
-            rmodel - Pinocchio robot model
-            rdata - Pinocchio robot data
-            cmodels - Pinocchio constraint models list
-            cdatas - Pinocchio constraint datas list
-            target_pos - Target position
-            q_prec [Optionnal] - Previous configuration of the free joints - default: None (set to neutral model pose)
-            name_eff [Optionnal] - Name of the effector frame - default: "effecteur"
-            onlytranslation [Optionnal] - Set to true to choose only translation (3D) and to false to have 6D position - default: False (6D)
-        Return:
-            q - Configuration vector satisfying constraints (if optimisation process succeded)
+    Returns:
+        numpy.ndarray: Configuration vector satisfying constraints (if optimization process succeeded).
     """
     
     # * Defining casadi models
@@ -93,30 +82,19 @@ def closedLoopForwardKinematicsCasadi(rmodel, rdata, cmodels, cdatas, actuation_
 
 def closedLoopForwardKinematicsScipy(rmodel, rdata, cmodels, cdatas, actuation_model, q_mot_target=None, q_prec=[]):
     """
-    closedLoopForwardKinematicsScipy(rmodel, rdata, cmodels, cdatas, actuation_model, q_mot_target=None, q_prec=None)
-
-    Takes the target position of the motors axis of the robot (following the actuation model), the current configuration of all joint (set to robot.q0 if let empty). 
-    And returns a configuration that matches the goal positions of the motors and satisfies constraints
-    This function solves a minimization problem over q but q is actually defined as q0+dq (this removes the need for quaternion constraints and gives less decision variables)
+    Solve a minimization problem over the configuration vector 'q' to match the goal positions of the motors and satisfy constraints.
     
-    min || q - q_prec ||^2
+    Arguments:
+        rmodel (pinocchio.Model): Pinocchio robot model.
+        rdata (pinocchio.Data): Pinocchio robot data.
+        cmodels (list): List of Pinocchio constraint models.
+        cdatas (list): List of Pinocchio data associated with the constraint models.
+        actuation_model: Robot actuation model.
+        q_mot_target (numpy.ndarray, optional): Target position of the motor joints. Defaults to None.
+        q_prec (numpy.ndarray, optional): Previous configuration of the free joints. Defaults to [].
 
-    subject to:  f_c(q)=0              # Kinematics constraints are satisfied
-                    vq[motors]=q_motors    # The motors joints should be as commanded
-
-    The problem is solved using Scipy SLSQP
-
-    Argument:
-        rmodel - Pinocchio robot model
-        rdata - Pinocchio robot data
-        cmodels - Pinocchio constraint models list
-        cdatas - Pinocchio constraint datas list
-        target_pos - Target position
-        q_prec [Optionnal] - Previous configuration of the free joints - default: None (set to neutral model pose)
-        name_eff [Optionnal] - Name of the effector frame - default: "effecteur"
-        onlytranslation [Optionnal] - Set to true to choose only translation (3D) and to false to have 6D position - default: False (6D)
-    Return:
-        q - Configuration vector satisfying constraints (if optimisation process succeded)
+    Returns:
+        numpy.ndarray: Configuration vector satisfying constraints (if optimization process succeeded).
     """
     mot_ids_q = actuation_model.mot_ids_q
     if q_prec is None or q_prec == []:
@@ -139,6 +117,16 @@ def closedLoopForwardKinematicsScipy(rmodel, rdata, cmodels, cdatas, actuation_m
     return q_goal
 
 def closedLoopForwardKinematics(*args, **kwargs):
+    """
+    Wrapper function for closed-loop forward kinematics.
+
+    If Casadi library is available, it calls closedLoopForwardKinematicsCasadi.
+    Otherwise, it calls closedLoopForwardKinematicsScipy.
+
+    Returns:
+        numpy.ndarray: Configuration vector satisfying constraints (if optimization process succeeded).
+    """
+
     if _WITH_CASADI:
         return(closedLoopForwardKinematicsCasadi(*args, **kwargs))
     else:

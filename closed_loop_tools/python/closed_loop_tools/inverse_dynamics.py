@@ -5,18 +5,31 @@ from qpsolvers import solve_qp
 ### Inverse Kinematics
 def closedLoopInverseDynamicsCasadi(rmodel, cmodels, q, vq, aq, act_matrix, u0, tol=1e-6):
     """
-        closedLoopInversecDynamicsCasadi(rmodel, cmodels, q, vq, aq, act_matrix)
-        Computes the controls and contact forces that solves the following problem.
+    Computes the controls and contact forces that solve the following problem.
 
-        min (1/2) || u[k] - u_0||^2
-        subject to:  A u + J^T f = tau
+    min (1/2) || u[k] - u_0||^2
+    subject to:  A u + J^T f = tau
 
-        where A represents the actuation matrix, 
-        u_0 is a vector of reference controls and J is the contact Jacobian and tau is such that fwd(model, q, vq, tau) = aq
-        where fwd represents the integrated forward dynamics on a time dt
+    where A represents the actuation matrix, 
+    u_0 is a vector of reference controls, 
+    J is the contact Jacobian, and tau is such that fwd(model, q, vq, tau) = aq
+    where fwd represents the integrated forward dynamics on a time dt.
 
-        To do so, we use rnea to get the controls tau such that fwd(model, q, vq, tau) = aq
-        And then compute the minimization as a QP.
+    To do so, we use rnea to get the controls tau such that fwd(model, q, vq, tau) = aq
+    And then compute the minimization as a QP.
+
+    Args:
+        rmodel (Pinocchio.RobotModel): Pinocchio robot model.
+        cmodels (list): List of Pinocchio robot constraint models.
+        q (array-like): Configuration vector.
+        vq (array-like): Joint velocity vector.
+        aq (array-like): Joint acceleration vector.
+        act_matrix (array-like): Actuation matrix.
+        u0 (array-like): Vector of reference controls.
+        tol (float, optional): Tolerance for the solver. Defaults to 1e-6.
+
+    Returns:
+        tuple: A tuple containing the computed controls (u) and contact forces (f).
     """
     data = rmodel.createData()
     cdatas = [cm.createData() for cm in cmodels]
