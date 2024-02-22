@@ -8,7 +8,7 @@ Tools to merge and split configuration into actuated and non-actuated parts. Als
 import numpy as np
 import pinocchio as pin
 
-def freezeJoints(model, constraint_models, actuation_model, visual_model, collision_model, indexToLock, reference=None):
+def freezeJoints(model, constraint_models, actuation_model, visual_model, collision_model, index_to_lock, reference=None):
     '''
     Reduce the model by freezing all joint needed.
     Argument:
@@ -31,11 +31,11 @@ def freezeJoints(model, constraint_models, actuation_model, visual_model, collis
     print('Reducing the model')
     reduced_model, (reduced_visual_model, reduced_collision_model) = \
         pin.buildReducedModel(
-            model, [visual_model, collision_model], indexToLock, reference)
+            model, [visual_model, collision_model], index_to_lock, reference)
 
     if constraint_models is not None:
         print('Reducing the constraint models')
-        toremove = []
+        to_remove = []
         for cm in constraint_models:
             print(cm.name)
 
@@ -68,7 +68,7 @@ def freezeJoints(model, constraint_models, actuation_model, visual_model, collis
                 cm.joint2_id = idj2
 
             if cm.joint1_id == cm.joint2_id:
-                toremove.append(cm)
+                to_remove.append(cm)
                 print(f'Remove constraint {n1}//{n2} (during freeze)')
         reduced_constraint_models = [
             pin.RigidConstraintModel(
@@ -80,7 +80,7 @@ def freezeJoints(model, constraint_models, actuation_model, visual_model, collis
                 cm.joint2_placement,
                 pin.ReferenceFrame.LOCAL,
             )
-            for cm in constraint_models if cm not in toremove]
+            for cm in constraint_models if cm not in to_remove]
 
     if actuation_model is not None:
         from example_parallel_robots.actuation_model import ActuationModel

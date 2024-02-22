@@ -45,11 +45,11 @@ def closedLoopForwardKinematicsCasadi(rmodel, rdata, cmodels, cdatas, actuation_
     casdata = casmodel.createData()
 
     # * Getting ids of actuated and free joints
-    Lid = actuation_model.idqmot
+    mot_ids_q = actuation_model.mot_ids_q
     if q_prec is None or q_prec == []:
         q_prec = pin.neutral(rmodel)
     if q_mot_target is None:
-        q_mot_target = np.zeros(len(Lid))
+        q_mot_target = np.zeros(len(mot_ids_q))
 
     # * Optimisation functions
     def constraints(q):
@@ -58,17 +58,17 @@ def closedLoopForwardKinematicsCasadi(rmodel, rdata, cmodels, cdatas, actuation_
     
     cq = casadi.SX.sym("q", rmodel.nq, 1)
     cv = casadi.SX.sym("v", rmodel.nv, 1)
-    constraintsCost = casadi.Function('constraint', [cq], [constraints(cq)])
+    constraints_cost = casadi.Function('constraint', [cq], [constraints(cq)])
     integrate = casadi.Function('integrate', [cq, cv],[ caspin.integrate(casmodel, cq, cv)])
 
     # * Optimisation problem
     optim = casadi.Opti()
-    vdqf = optim.variable(len(actuation_model.idvfree))
+    vdqf = optim.variable(len(actuation_model.free_ids_v))
     vdq = mergev(casmodel, actuation_model, q_mot_target, vdqf, True)
     vq = integrate(q_prec, vdq)
 
     # * Constraints
-    optim.subject_to(constraintsCost(vq)==0)
+    optim.subject_to(constraints_cost(vq)==0)
     optim.subject_to(optim.bounded(rmodel.lowerPositionLimit, vq, rmodel.upperPositionLimit))
 
     # * cost minimization
@@ -77,7 +77,7 @@ def closedLoopForwardKinematicsCasadi(rmodel, rdata, cmodels, cdatas, actuation_
 
     opts = {}
     optim.solver("ipopt", opts)
-    optim.set_initial(vdqf, np.zeros(len(actuation_model.idvfree)))
+    optim.set_initial(vdqf, np.zeros(len(actuation_model.free_ids_v)))
     try:
         optim.solve_limited()
         print("Solution found")
@@ -118,12 +118,12 @@ def closedLoopForwardKinematicsScipy(rmodel, rdata, cmodels, cdatas, actuation_m
     Return:
         q - Configuration vector satisfying constraints (if optimisation process succeded)
     """
-    Lid = actuation_model.idqmot
+    mot_ids_q = actuation_model.mot_ids_q
     if q_prec is None or q_prec == []:
         q_prec = pin.neutral(rmodel)
     if q_mot_target is None:
-        q_mot_target = np.zeros(len(Lid))
-    q_free_prec = q_prec[actuation_model.idqfree]
+        q_mot_target = np.zeros(len(mot_ids_q))
+    q_free_prec = q_prec[actuation_model.free_ids_q]
 
     def costnorm(qF):
         c = norm(qF - q_free_prec) ** 2
