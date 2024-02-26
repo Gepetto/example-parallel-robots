@@ -8,33 +8,48 @@ Tools to merge and split configuration into actuated and non-actuated parts. Als
 import numpy as np
 import pinocchio as pin
 
-def freezeJoints(model, constraint_models, actuation_model, visual_model, collision_model, index_to_lock, reference=None):
-    '''
-    Reduce the model by freezing all joint needed.
-    Argument:
-        model - Pinocchio robot model
-        constraint_models - Pinocchio robot constraint models list
-        actuation_model - robot actuation model
-        visual_model - Pinocchio robot visual model
-        collision_model - Pinocchio robot collision model
-        indexToLock: indexes of the joints to lock
-        reference - reference configuration to reduce the model from, fixed joints will get their reference configuration fixed
-    Return:
-        reduced_model - Reduced Pinocchio robot model
-        reduced_constraint_models - Reduced Pinocchio robot constraint models list
-        reduced_actuation_model - Reduced robot actuation model
-        reduced_visual_model - Reduced Pinocchio robot visual model
-        reduced_collision_model - Reduced Pinocchio robot collision model
-    '''
+
+def freezeJoints(
+    model,
+    constraint_models,
+    actuation_model,
+    visual_model,
+    collision_model,
+    index_to_lock,
+    reference=None,
+):
+    """
+    Reduce the model by freezing specified joints.
+
+    Arguments:
+        model (pinocchio.Model): Pinocchio robot model.
+        constraint_models (list): List of Pinocchio robot constraint models.
+        actuation_model: Robot actuation model.
+        visual_model (pinocchio.VisualModel): Pinocchio robot visual model.
+        collision_model (pinocchio.CollisionModel): Pinocchio robot collision model.
+        index_to_lock (list): Indexes of the joints to lock.
+        reference (numpy.array): Reference configuration to reduce the model from. Fixed joints will have their reference configuration fixed. Default is None.
+
+    Returns:
+        tuple: A tuple containing:
+            - reduced_model (pinocchio.Model): Reduced Pinocchio robot model.
+            - reduced_constraint_models (list): Reduced Pinocchio robot constraint models list.
+            - reduced_actuation_model: Reduced robot actuation model.
+            - reduced_visual_model (pinocchio.VisualModel): Reduced Pinocchio robot visual model.
+            - reduced_collision_model (pinocchio.CollisionModel): Reduced Pinocchio robot collision model.
+    """
     if reference is None:
         reference = pin.neutral(model)
-    print('Reducing the model')
-    reduced_model, (reduced_visual_model, reduced_collision_model) = \
-        pin.buildReducedModel(
-            model, [visual_model, collision_model], index_to_lock, reference)
+    print("Reducing the model")
+    (
+        reduced_model,
+        (reduced_visual_model, reduced_collision_model),
+    ) = pin.buildReducedModel(
+        model, [visual_model, collision_model], index_to_lock, reference
+    )
 
     if constraint_models is not None:
-        print('Reducing the constraint models')
+        print("Reducing the constraint models")
         to_remove = []
         for cm in constraint_models:
             print(cm.name)
@@ -51,7 +66,9 @@ def freezeJoints(model, constraint_models, actuation_model, visual_model, collis
                 # The frame has been found
                 f1 = reduced_model.frames[idf1]
                 cm.joint1_id = f1.parentJoint
-                cm.joint1_placement = f1.placement*cm.joint1_placement # Update placement
+                cm.joint1_placement = (
+                    f1.placement * cm.joint1_placement
+                )  # Update placement
             else:
                 # The joint has not been freezed
                 idj1 = reduced_model.getJointId(n1)
@@ -61,7 +78,9 @@ def freezeJoints(model, constraint_models, actuation_model, visual_model, collis
                 # The frame has been found
                 f2 = reduced_model.frames[idf2]
                 cm.joint2_id = f2.parentJoint
-                cm.joint2_placement = f2.placement*cm.joint2_placement # Update placement
+                cm.joint2_placement = (
+                    f2.placement * cm.joint2_placement
+                )  # Update placement
             else:
                 # The joint has not been freezed
                 idj2 = reduced_model.getJointId(n2)
@@ -69,7 +88,7 @@ def freezeJoints(model, constraint_models, actuation_model, visual_model, collis
 
             if cm.joint1_id == cm.joint2_id:
                 to_remove.append(cm)
-                print(f'Remove constraint {n1}//{n2} (during freeze)')
+                print(f"Remove constraint {n1}//{n2} (during freeze)")
         reduced_constraint_models = [
             pin.RigidConstraintModel(
                 cm.type,
@@ -80,13 +99,21 @@ def freezeJoints(model, constraint_models, actuation_model, visual_model, collis
                 cm.joint2_placement,
                 pin.ReferenceFrame.LOCAL,
             )
-            for cm in constraint_models if cm not in to_remove]
+            for cm in constraint_models
+            if cm not in to_remove
+        ]
 
     if actuation_model is not None:
         from example_parallel_robots.actuation_model import ActuationModel
-        print('Reducing the actuation model')
-        list_names = [model.names[idMot] for idMot in actuation_model.idMotJoints]
-        reduced_actuation_model = ActuationModel(reduced_model,list_names)
 
-    return(reduced_model, reduced_constraint_models, reduced_actuation_model, reduced_visual_model, reduced_collision_model)
-            
+        print("Reducing the actuation model")
+        list_names = [model.names[idMot] for idMot in actuation_model.idMotJoints]
+        reduced_actuation_model = ActuationModel(reduced_model, list_names)
+
+    return (
+        reduced_model,
+        reduced_constraint_models,
+        reduced_actuation_model,
+        reduced_visual_model,
+        reduced_collision_model,
+    )
