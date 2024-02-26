@@ -30,8 +30,8 @@ def partialLoopClosure(
     It uses the Pinocchio library for the kinematics and dynamics computations and the CasADi/IpOPT library for the optimization.
 
     Args:
-        model (object): The robot model in Pinocchio.
-        data (object): The robot data in Pinocchio.
+        model (pinocchio.Model): The robot model in Pinocchio.
+        data (pinocchio.Data): The robot data in Pinocchio.
         constraint_models (list): List of constraint models.
         constraint_datas (list): List of constraint data.
         fixed_joints_ids (list): List of IDs for joints that are fixed.
@@ -162,11 +162,12 @@ def partialLoopClosureFrames(
     q_ws=None,
 ):
     """
-    This function performs a partial loop closure on frames of a given model.
+    This function minimizes the constraints residuals of a robot model under frames placements constraints.
+    It uses the Pinocchio library for the kinematics and dynamics computations and the CasADi/IpOPT library for the optimization.
 
     Args:
-        model (object): The model on which the operation is to be performed.
-        data (object): The data associated with the model.
+        model (pinocchio.Model): The model on which the operation is to be performed.
+        data (pinocchio.Data): The data associated with the model.
         constraint_models (list): A list of constraint models to be applied during the operation.
         constraint_datas (list): A list of data associated with each constraint model.
         framesIds (list, optional): A list of frame IDs to be considered in the operation. Defaults to an empty list.

@@ -330,6 +330,23 @@ def closedLoopInverseKinematicsProximal(
 
 
 def closedLoopInverseKinematics(*args, **kwargs):
+    """
+    Perform closed-loop inverse kinematics based on available methods.
+
+    This function dynamically selects the appropriate closed-loop inverse kinematics method based on predefined settings.
+
+    Args:
+        *args: Positional arguments passed to the selected inverse kinematics function.
+        **kwargs: Keyword arguments passed to the selected inverse kinematics function.
+
+    Returns:
+        numpy.ndarray: Configuration vector satisfying constraints (if optimization process succeeded).
+
+    Notes:
+        - If _FORCE_PROXIMAL is set to True, the function uses the proximal method for inverse kinematics.
+        - If _WITH_CASADI is set to True and _FORCE_PROXIMAL is False, the function uses Casadi for inverse kinematics.
+        - If _WITH_CASADI is set to False and _FORCE_PROXIMAL is False, the function uses Scipy for inverse kinematics.
+    """
     if _FORCE_PROXIMAL:
         return closedLoopInverseKinematicsProximal(*args, **kwargs)
     else:

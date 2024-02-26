@@ -22,24 +22,27 @@ from .path import EXAMPLE_PARALLEL_ROBOTS_MODEL_DIR, EXAMPLE_PARALLEL_ROBOTS_SOU
 
 def getNameFrameConstraint(model, name_loop="fermeture", cstr_frames_ids=[]):
     """
-    getNameFrameConstraint(model, name_loop="fermeture", cstr_frames_ids=[])
+    Extracts the names of constrained frames based on a kinematic loop in the robot model.
 
-    Takes a robot model and returns a list of frame names that are constrained to be in contact: Ln=[['name_frame1_A','name_frame1_B'],['name_frame2_A','name_frame2_B'].....]
-    where names_frameX_A and names_frameX_B are the frames in forced contact by the kinematic loop.
-    The frames must be named: "...name_loopX..." where X is the number of the corresponding kinematic loop.
-    The kinematics loop can be selectionned with cstr_frames_ids=[id_kinematcsloop1, id_kinematicsloop2 .....] = [1,2,...]
-    if cstr_frames_ids = [] all the kinematics loop will be treated.
+    Args:
+        model (Pinocchio.RobotModel): The Pinocchio robot model.
+        name_loop (str, optional): Identifier of the names of the frames to set in contact for closing the loop. 
+            This identifier is used to match specific frame names. By default, it is set to "fermeture".
+            The frames must be named using a convention where the identifier is followed by a numeric value
+            corresponding to the index of the kinematic loop. For example, if name_loop="fermeture" and
+            the index is 1, the frames would be named "fermeture1_frame_A" and "fermeture1_frame_B".
+        cstr_frames_ids (list, optional): List of kinematic loop indexes to select. Defaults to [] (select all).
 
-    Argument:
-        model - Pinocchio robot model
-        name_loop [Optionnal] - identifier of the names of the frame to set in contact for closing the loop - default: "fermeture"
-        cstr_frames_ids [Optionnal] - List of kinematic loop indexes to select - default: [] (select all)
-    Return:
-        cstr_frames_names - List of frame names that should be in contact
+    Returns:
+        list: A list of frame name pairs that should be in contact to close the kinematic loop. 
+            Each pair is represented as ['name_frame1_A', 'name_frame1_B'], ['name_frame2_A', 'name_frame2_B'], 
+            and so on, where names_frameX_A and names_frameX_B are frames in forced contact by the kinematic loop.
     """
     warn(
         "Function getNameFrameConstraint depreceated - prefer using a YAML file as complement to the URDF. Should only be used to generate a YAML file"
     )
+
+    warn("Function getNameFrameConstraint depreceated - prefer using a YAML file as complement to the URDF. Should only be used to generate a YAML file")
     if cstr_frames_ids == []:
         cstr_frames_ids = range(len(model.frames) // 2)
     cstr_frames_names = []
@@ -58,23 +61,20 @@ def getNameFrameConstraint(model, name_loop="fermeture", cstr_frames_ids=[]):
 
 def generateYAML(path, name_mot="mot", name_spherical="to_rotule", file=None):
     """
-    generateYAML(path, name_mot="mot", name_spherical="to_rotule", file=None)
+    Generates or updates a YAML file to describe robot constraints and actuation.
 
-    Generate a YAML file to describe the robot constraints and actuation. If the YAML file exists and is specified, information is added to this file instead.
-    The generated file contains
-    - contrained frames names
-    - constraints types
-    - Names of the motor joints
-    - Names of the specific joints (such as spherical)
-    - Type of the specific joints
-    The robot motor name should contain name_mot and the joints that are to be converted to spherical joints should contain name_spherical in their name.
+    This function generates a YAML file containing information about constrained frames, constraints types, motor joint names, specific joint names, and types.
+    If the YAML file exists and is specified, the function adds information to this file.
 
-    Argument:
-        path - path to the folder containing the robot.urdf file and in which the yaml file will be generated
-        name_mot [Optionnal] - Identifier of the motors names - default: "mot"
-        name_spherical [Optionnal] - Identifier of the spherical joints names - default: "to_rotule"
-        file [Optionnal] - Existing YAML file to complete - default: None
-    Return:
+    The robot motor name should contain `name_mot`, and the joints that are to be converted to spherical joints should contain `name_spherical` in their name.
+
+    Args:
+        path (str): Path to the folder containing the robot.urdf file and where the YAML file will be generated.
+        name_mot (str, optional): Identifier of the motors names. Defaults to "mot".
+        name_spherical (str, optional): Identifier of the spherical joints names. Defaults to "to_rotule".
+        file (file object, optional): Existing YAML file to append to. Defaults to None.
+
+    Returns:
         None
     """
     rob = RobotWrapper.BuildFromURDF(path + "/robot.urdf", path)
@@ -112,12 +112,14 @@ def generateYAML(path, name_mot="mot", name_spherical="to_rotule", file=None):
 
 def getYAMLcontents(path, name_yaml="robot.yaml"):
     """
-    Get the content of the given YAML file.
-    Argument:
-        path - Path to the folder containing the YAML file
-        name_yaml [Optionnal] - name of the file
-    Return:
-        Content of the file
+    Retrieves the content of the specified YAML file.
+
+    Args:
+        path (str): Path to the folder containing the YAML file.
+        name_yaml (str, optional): Name of the YAML file. Defaults to 'robot.yaml'.
+
+    Returns:
+        dict: Content of the YAML file.
     """
     with open(path + "/" + name_yaml, "r") as yaml_file:
         contents = yaml.load(yaml_file, Loader=SafeLoader)
@@ -128,18 +130,22 @@ def completeRobotLoader(
     path, name_urdf="robot.urdf", name_yaml="robot.yaml", freeflyer=False
 ):
     """
-    Generate a robot complete model from the URDF and YAML files.
-    Argument:
-        path - Path to the folder containing the URDF and YAML files
-        name_urdf [Optionnal] - Name of the URDF file - default: "robot.urdf"
-        name_yaml [Optionnal] - Name of the YAML file - default: "robot.yaml"
-        freeflyer [Optionnal, Boolean] - Set weither the root joint should a free-flyer (True) or world fixed (False) - default: False
-    Return:
-        model - Pinocchio robot model
-        constraint_models - Pinocchio robot constraint model
-        actuation_model - Robot actuation model - Custom object defined in the lib
-        visual_model - Pinocchio robot visual model
-        collision_model - Pinocchio robot collision model
+    Generates a complete robot model from URDF and YAML files.
+
+    This function builds a comprehensive robot model including constraints and actuation based on URDF and YAML files.
+
+    Args:
+        path (str): Path to the folder containing the URDF and YAML files.
+        name_urdf (str, optional): Name of the URDF file. Defaults to "robot.urdf".
+        name_yaml (str, optional): Name of the YAML file. Defaults to "robot.yaml".
+        freeflyer (bool, optional): Specifies whether the root joint should be a free-flyer (True) or world-fixed (False). Defaults to False.
+
+    Returns:
+        model (Pinocchio.RobotModel): Pinocchio robot model.
+        constraints_models (list): List of Pinocchio robot constraint model.
+        actuation_model (object): Robot actuation model (custom object defined in the library).
+        visual_model (Pinocchio.RobotVisualModel): Pinocchio robot visual model.
+        collision_model (Pinocchio.RobotCollisionModel): Pinocchio robot collision model.
     """
     # Load the robot model using the pinocchio URDF parser
     if freeflyer:
@@ -224,15 +230,15 @@ def completeRobotLoader(
     )
 
     model = new_model
-
-    # check if type is associated,else 6D is used
-    try:
-        name_frame_constraint = yaml_content["closed_loop"]
-        constraint_type = yaml_content["type"]
-
-        # construction of constraint model
-        constraints_models = []
-        for L, ctype in zip(name_frame_constraint, constraint_type):
+    constraints_models = []
+    #check if type is associated,else 6D is used
+    try :
+        name_frame_constraint = yaml_content['closed_loop']
+        constraint_type = yaml_content['type']
+    
+        #construction of constraint model
+        
+        for L,ctype in zip(name_frame_constraint, constraint_type):
             name1, name2 = L
             id1 = model.getFrameId(name1)
             id2 = model.getFrameId(name2)
@@ -300,19 +306,21 @@ def getModelPath(subpath, verbose=True):
 
 
 def load(robot_name, free_flyer=None, only_legs=None):
-    """
-    Load a model of a robot and return models objects containing all information on the robot
-    Arguments :
-        robot_name - Name of the robot, see [to be implemented] to see possible options
-        free_flyer [Optionnal, Boolean] - Load the robot with a free flyer base - Use robot's default setting if not specified
-        only_legs [Optionnal, Boolean] - Freeze all joints outside of the legs, only used for full body models - Use robot's default setting if not specified
+    '''
+    Load a model of a robot and return model objects containing all information about the robot.
+
+    Args:
+        robot_name (str): Name of the robot. See models to see possible options.
+        free_flyer (bool, optional): Load the robot with a free flyer base. Uses the robot's default setting if not specified.
+        only_legs (bool, optional): Freeze all joints outside of the legs, only used for full body models. Uses the robot's default setting if not specified.
+
     Returns:
-        model - Pinocchio robot model
-        constraint_models - List of Pinocchio robot constraint model
-        actuation_model - Robot actuation model - Custom object defined in the lib
-        visual_model - Pinocchio robot visual model
-        collision_model - Pinocchio robot collision model
-    """
+        model (Pinocchio.RobotModel): Pinocchio robot model.
+        constraint_models (list): List of Pinocchio robot constraint models.
+        actuation_model (object): Robot actuation model (custom object defined in the library).
+        visual_model (Pinocchio.RobotVisualModel): Pinocchio robot visual model.
+        collision_model (Pinocchio.RobotCollisionModel): Pinocchio robot collision model.
+    '''
     if robot_name not in ROBOTS.keys():
         raise (
             f"Name {robot_name} does not exists.\n Call method 'models' to see the list of available models"
@@ -335,28 +343,26 @@ def models():
     """Displays the list of available robot names"""
     print(f"Available models are: \n {ROBOTS.keys()}\n Generate model with method load")
 
+def simplifyModel(model,visual_model):
+    '''
+    Checks if any revolute joints can be replaced with spherical joints.
 
-def simplifyModel(model, visual_model):
-    """
-    check if any revolute can be replaced with spherical
-    """
-    data = model.createData()
-    pin.framesForwardKinematics(model, data, pin.randomConfiguration(model))
-    new_model = pin.Model()
-    fixed_joints_ids = []
-    for jid, place, iner, name, parent_old, jtype in list(
-        zip(
-            range(len(model.joints)),
-            model.jointPlacements,
-            model.inertias,
-            model.names,
-            model.parents,
-            model.joints,
-        )
-    ):
-        vectors = []
-        joints_mass = []
-        points = []
+    Args:
+        model (Pinocchio.RobotModel): Pinocchio robot model.
+        visual_model (Pinocchio.RobotVisualModel): Pinocchio robot visual model.
+
+    Returns:
+        Pinocchio.RobotModel: The simplified Pinocchio robot model.
+        Pinocchio.RobotVisualModel: The simplified Pinocchio robot visual model.
+    '''
+    data=model.createData()
+    pin.framesForwardKinematics(model,data,pin.randomConfiguration(model))
+    new_model=pin.Model()
+    fixed_joints_ids=[]
+    for jid,place, iner, name, parent_old, jtype in list(zip(range(len(model.joints)),model.jointPlacements, model.inertias, model.names, model.parents,model.joints)):
+        vectors=[]
+        joints_mass=[]
+        points=[]
         parent = new_model.getJointId(model.names[parent_old])
         for jid2, jtype in zip(range(3), model.joints[jid : jid + 3]):
             joint_id = jid + jid2

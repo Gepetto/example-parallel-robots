@@ -18,18 +18,17 @@ def closedLoopInverseDynamicsCasadi(
     Computes the controls and contact forces that solve the following problem:
 
     Args:
-        rmodel: The robot model.
-        cmodels: The contact models.
-        q: The joint positions.
-        vq: The joint velocities.
-        aq: The joint accelerations.
-        act_matrix: The actuation matrix.
-        tol: The tolerance for the QP solver.
+        rmodel (pinocchio.Model): The robot model.
+        cmodels (List[pinocchio.Model]): The contact models.
+        q (np.ndarray): The joint positions.
+        vq (np.ndarray): The joint velocities.
+        aq (np.ndarray): The joint accelerations.
+        act_matrix (np.ndarray): The actuation matrix.
+        u0 (np.ndarray): The vector of reference controls.
+        tol (float, optional): The tolerance for the QP solver. Defaults to 1e-6.
 
     Returns:
-        Tuple of two arrays:
-        - The optimized controls u[k].
-        - The contact forces f.
+        Tuple[np.ndarray, np.ndarray]: The optimized controls u[k] and the contact forces f.
 
     Raises:
         Exception: If there is an error in QP solving and the problem may be infeasible.

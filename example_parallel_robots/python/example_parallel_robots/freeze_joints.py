@@ -8,33 +8,27 @@ Tools to merge and split configuration into actuated and non-actuated parts. Als
 import numpy as np
 import pinocchio as pin
 
+def freezeJoints(model, constraint_models, actuation_model, visual_model, collision_model, index_to_lock, reference=None):
+    '''
+    Reduce the model by freezing specified joints.
 
-def freezeJoints(
-    model,
-    constraint_models,
-    actuation_model,
-    visual_model,
-    collision_model,
-    index_to_lock,
-    reference=None,
-):
-    """
-    Reduce the model by freezing all joint needed.
-    Argument:
-        model - Pinocchio robot model
-        constraint_models - Pinocchio robot constraint models list
-        actuation_model - robot actuation model
-        visual_model - Pinocchio robot visual model
-        collision_model - Pinocchio robot collision model
-        indexToLock: indexes of the joints to lock
-        reference - reference configuration to reduce the model from, fixed joints will get their reference configuration fixed
-    Return:
-        reduced_model - Reduced Pinocchio robot model
-        reduced_constraint_models - Reduced Pinocchio robot constraint models list
-        reduced_actuation_model - Reduced robot actuation model
-        reduced_visual_model - Reduced Pinocchio robot visual model
-        reduced_collision_model - Reduced Pinocchio robot collision model
-    """
+    Arguments:
+        model (pinocchio.Model): Pinocchio robot model.
+        constraint_models (list): List of Pinocchio robot constraint models.
+        actuation_model: Robot actuation model.
+        visual_model (pinocchio.VisualModel): Pinocchio robot visual model.
+        collision_model (pinocchio.CollisionModel): Pinocchio robot collision model.
+        index_to_lock (list): Indexes of the joints to lock.
+        reference (numpy.array): Reference configuration to reduce the model from. Fixed joints will have their reference configuration fixed. Default is None.
+
+    Returns:
+        tuple: A tuple containing:
+            - reduced_model (pinocchio.Model): Reduced Pinocchio robot model.
+            - reduced_constraint_models (list): Reduced Pinocchio robot constraint models list.
+            - reduced_actuation_model: Reduced robot actuation model.
+            - reduced_visual_model (pinocchio.VisualModel): Reduced Pinocchio robot visual model.
+            - reduced_collision_model (pinocchio.CollisionModel): Reduced Pinocchio robot collision model.
+    '''
     if reference is None:
         reference = pin.neutral(model)
     print("Reducing the model")
