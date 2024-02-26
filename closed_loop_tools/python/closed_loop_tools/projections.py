@@ -258,7 +258,9 @@ def velocityProjection(model, data, q, v_ref, constraint_models, constraint_data
 
 
 ## Acceleration projections
-def accelerationProjection(model, data, q, v, a_ref, constraint_models, constraint_datas):
+def accelerationProjection(
+    model, data, q, v, a_ref, constraint_models, constraint_datas
+):
     """
     Project the desired acceleration `a_ref` onto the feasible acceleration space subject to constraints using Quadratic Programming.
 
@@ -275,7 +277,7 @@ def accelerationProjection(model, data, q, v, a_ref, constraint_models, constrai
         np.array: Projected acceleration satisfying constraints.
 
     Notes:
-        This function projects the desired acceleration `a_ref` onto the feasible acceleration space subject to constraints. 
+        This function projects the desired acceleration `a_ref` onto the feasible acceleration space subject to constraints.
         It uses Quadratic Programming (QP) to find the optimal solution.
 
         The QP problem is formulated as follows:

@@ -7,7 +7,8 @@ Define an actuation model, usefull for closed kinematic loops robot or underactu
 
 import numpy as np
 
-class ActuationModel():
+
+class ActuationModel:
     """
     Defines the actuation model of a robot
     robot_actuation_model = ActuationModel(model, names)

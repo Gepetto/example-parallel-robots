@@ -40,7 +40,7 @@ def closedLoopMountCasadi(rmodel, rdata, cmodels, cdatas, q_prec=None):
 
     Raises:
         AttributeError: If the optimization process encounters an attribute error.
-    
+
     Notes:
         This function solves a minimization problem over q, where q is defined as q0+dq, removing the need for quaternion constraints and reducing decision variables.
         The optimization problem is set up using CasADi and IPOpt, subject to the kinematics constraints being satisfied.
@@ -49,7 +49,7 @@ def closedLoopMountCasadi(rmodel, rdata, cmodels, cdatas, q_prec=None):
 
     - Minimize the squared norm of (q - q_prec) subject to kinematics constraints (f_c(q) = 0).
     - Kinematics constraints ensure that the robot's motion complies with its physical constraints.
-    
+
     The optimization process aims to find the nearest feasible configuration to the initial configuration q_prec.
 
     If the optimization process fails to converge, it provides debug information for troubleshooting.

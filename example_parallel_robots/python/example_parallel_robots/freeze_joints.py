@@ -8,8 +8,17 @@ Tools to merge and split configuration into actuated and non-actuated parts. Als
 import numpy as np
 import pinocchio as pin
 
-def freezeJoints(model, constraint_models, actuation_model, visual_model, collision_model, index_to_lock, reference=None):
-    '''
+
+def freezeJoints(
+    model,
+    constraint_models,
+    actuation_model,
+    visual_model,
+    collision_model,
+    index_to_lock,
+    reference=None,
+):
+    """
     Reduce the model by freezing specified joints.
 
     Arguments:
@@ -28,7 +37,7 @@ def freezeJoints(model, constraint_models, actuation_model, visual_model, collis
             - reduced_actuation_model: Reduced robot actuation model.
             - reduced_visual_model (pinocchio.VisualModel): Reduced Pinocchio robot visual model.
             - reduced_collision_model (pinocchio.CollisionModel): Reduced Pinocchio robot collision model.
-    '''
+    """
     if reference is None:
         reference = pin.neutral(model)
     print("Reducing the model")

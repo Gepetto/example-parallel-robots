@@ -28,7 +28,6 @@ def separateConstraintJacobian(actuation_data, Jn):
         - Jfree is obtained by multiplying Jn with Sfree, which represents the selection matrix for the free joints.
     """
 
-
     Smot = actuation_data.Smot
     Sfree = actuation_data.Sfree
 
@@ -37,7 +36,7 @@ def separateConstraintJacobian(actuation_data, Jn):
     return (Jmot, Jfree)
 
 
-def computeDerivative_dq_dqmot(actuation_model,actuation_data,LJ):
+def computeDerivative_dq_dqmot(actuation_model, actuation_data, LJ):
     """
     Compute the derivative `dq/dqmot` of the joint to the motor joint.
 

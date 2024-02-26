@@ -26,7 +26,7 @@ def getNameFrameConstraint(model, name_loop="fermeture", cstr_frames_ids=[]):
 
     Args:
         model (Pinocchio.RobotModel): The Pinocchio robot model.
-        name_loop (str, optional): Identifier of the names of the frames to set in contact for closing the loop. 
+        name_loop (str, optional): Identifier of the names of the frames to set in contact for closing the loop.
             This identifier is used to match specific frame names. By default, it is set to "fermeture".
             The frames must be named using a convention where the identifier is followed by a numeric value
             corresponding to the index of the kinematic loop. For example, if name_loop="fermeture" and
@@ -34,15 +34,17 @@ def getNameFrameConstraint(model, name_loop="fermeture", cstr_frames_ids=[]):
         cstr_frames_ids (list, optional): List of kinematic loop indexes to select. Defaults to [] (select all).
 
     Returns:
-        list: A list of frame name pairs that should be in contact to close the kinematic loop. 
-            Each pair is represented as ['name_frame1_A', 'name_frame1_B'], ['name_frame2_A', 'name_frame2_B'], 
+        list: A list of frame name pairs that should be in contact to close the kinematic loop.
+            Each pair is represented as ['name_frame1_A', 'name_frame1_B'], ['name_frame2_A', 'name_frame2_B'],
             and so on, where names_frameX_A and names_frameX_B are frames in forced contact by the kinematic loop.
     """
     warn(
         "Function getNameFrameConstraint depreceated - prefer using a YAML file as complement to the URDF. Should only be used to generate a YAML file"
     )
 
-    warn("Function getNameFrameConstraint depreceated - prefer using a YAML file as complement to the URDF. Should only be used to generate a YAML file")
+    warn(
+        "Function getNameFrameConstraint depreceated - prefer using a YAML file as complement to the URDF. Should only be used to generate a YAML file"
+    )
     if cstr_frames_ids == []:
         cstr_frames_ids = range(len(model.frames) // 2)
     cstr_frames_names = []
@@ -231,14 +233,14 @@ def completeRobotLoader(
 
     model = new_model
     constraints_models = []
-    #check if type is associated,else 6D is used
-    try :
-        name_frame_constraint = yaml_content['closed_loop']
-        constraint_type = yaml_content['type']
-    
-        #construction of constraint model
-        
-        for L,ctype in zip(name_frame_constraint, constraint_type):
+    # check if type is associated,else 6D is used
+    try:
+        name_frame_constraint = yaml_content["closed_loop"]
+        constraint_type = yaml_content["type"]
+
+        # construction of constraint model
+
+        for L, ctype in zip(name_frame_constraint, constraint_type):
             name1, name2 = L
             id1 = model.getFrameId(name1)
             id2 = model.getFrameId(name2)
@@ -306,7 +308,7 @@ def getModelPath(subpath, verbose=True):
 
 
 def load(robot_name, free_flyer=None, only_legs=None):
-    '''
+    """
     Load a model of a robot and return model objects containing all information about the robot.
 
     Args:
@@ -320,7 +322,7 @@ def load(robot_name, free_flyer=None, only_legs=None):
         actuation_model (object): Robot actuation model (custom object defined in the library).
         visual_model (Pinocchio.RobotVisualModel): Pinocchio robot visual model.
         collision_model (Pinocchio.RobotCollisionModel): Pinocchio robot collision model.
-    '''
+    """
     if robot_name not in ROBOTS.keys():
         raise (
             f"Name {robot_name} does not exists.\n Call method 'models' to see the list of available models"
@@ -343,8 +345,9 @@ def models():
     """Displays the list of available robot names"""
     print(f"Available models are: \n {ROBOTS.keys()}\n Generate model with method load")
 
-def simplifyModel(model,visual_model):
-    '''
+
+def simplifyModel(model, visual_model):
+    """
     Checks if any revolute joints can be replaced with spherical joints.
 
     Args:
@@ -354,15 +357,24 @@ def simplifyModel(model,visual_model):
     Returns:
         Pinocchio.RobotModel: The simplified Pinocchio robot model.
         Pinocchio.RobotVisualModel: The simplified Pinocchio robot visual model.
-    '''
-    data=model.createData()
-    pin.framesForwardKinematics(model,data,pin.randomConfiguration(model))
-    new_model=pin.Model()
-    fixed_joints_ids=[]
-    for jid,place, iner, name, parent_old, jtype in list(zip(range(len(model.joints)),model.jointPlacements, model.inertias, model.names, model.parents,model.joints)):
-        vectors=[]
-        joints_mass=[]
-        points=[]
+    """
+    data = model.createData()
+    pin.framesForwardKinematics(model, data, pin.randomConfiguration(model))
+    new_model = pin.Model()
+    fixed_joints_ids = []
+    for jid, place, iner, name, parent_old, jtype in list(
+        zip(
+            range(len(model.joints)),
+            model.jointPlacements,
+            model.inertias,
+            model.names,
+            model.parents,
+            model.joints,
+        )
+    ):
+        vectors = []
+        joints_mass = []
+        points = []
         parent = new_model.getJointId(model.names[parent_old])
         for jid2, jtype in zip(range(3), model.joints[jid : jid + 3]):
             joint_id = jid + jid2

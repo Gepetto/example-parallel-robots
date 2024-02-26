@@ -269,7 +269,9 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
     # ? Is this really necessary or can we just frame.copy() ?
     for frame in model.frames[1:]:
         name = frame.name
-        parent_joint = frame.parentJoint  # Parent joints for frames may be incorrect dur to the changes in the joints order
+        parent_joint = (
+            frame.parentJoint
+        )  # Parent joints for frames may be incorrect dur to the changes in the joints order
         placement = frame.placement
         frame = pin.Frame(name, parent_joint, placement, pin.BODY)
         new_model.addFrame(frame, False)
@@ -360,12 +362,12 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
         )
         q0 = pin.neutral(new_model)
         # Retransform free joints into actuated joints
-        new_model.names[
-            new_model.getJointId("free_leg_right_5_joint")
-        ] = "mot_leg_right_5_joint"
-        new_model.names[
-            new_model.getJointId("free_leg_left_5_joint")
-        ] = "mot_leg_left_5_joint"
+        new_model.names[new_model.getJointId("free_leg_right_5_joint")] = (
+            "mot_leg_right_5_joint"
+        )
+        new_model.names[new_model.getJointId("free_leg_left_5_joint")] = (
+            "mot_leg_left_5_joint"
+        )
         actuation_model = ActuationModel(new_model, ["mot"])
 
     else:  # if we consider closed loop
