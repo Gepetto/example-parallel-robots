@@ -324,8 +324,8 @@ def load(robot_name, free_flyer=None, only_legs=None):
         collision_model (Pinocchio.RobotCollisionModel): Pinocchio robot collision model.
     """
     if robot_name not in ROBOTS.keys():
-        raise (
-            f"Name {robot_name} does not exists.\n Call method 'models' to see the list of available models"
+        raise ValueError(
+            f"Robot {robot_name} does not exist.\n Call 'models()' to see the list of available models"
         )
     robot = ROBOTS[robot_name]
     if robot.urdf_file is not None:
