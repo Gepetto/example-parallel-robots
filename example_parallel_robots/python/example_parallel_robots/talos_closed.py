@@ -26,7 +26,7 @@ def reorganizeModelDepthFirst(model):
             new_model.appendBodyToJoint(
                 jId,
                 model.inertias[jointId],
-                pin.SE3.Identity(),  #  #
+                pin.SE3.Identity(),  #
             )  #
             children = model.children[jointId]
             for c in children:

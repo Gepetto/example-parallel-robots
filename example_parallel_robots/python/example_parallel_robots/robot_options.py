@@ -53,6 +53,11 @@ class Kangaroo:
     yaml_file = "robot.yaml"
     free_flyer = False
 
+class KangarooBiped:
+    path = "kangaroo_like_2leg"
+    urdf_file = "robot.urdf"
+    yaml_file = "robot.yaml"
+    free_flyer = False
 
 class Delta:
     path = "robot_delta"
@@ -111,6 +116,7 @@ ROBOTS = {
     "digit_2legs": DigitBiped,
     "disney_leg": Disney,
     "kangaroo_leg": Kangaroo,
+    "kangaroo_2legs": KangarooBiped,
     "delta": Delta,
     "talos_full_closed": TalosClosed,
     "talos_full_open": Talos,
