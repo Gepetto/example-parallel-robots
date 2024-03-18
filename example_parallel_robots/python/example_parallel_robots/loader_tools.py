@@ -25,7 +25,7 @@ def getNameFrameConstraint(model, name_loop="fermeture", cstr_frames_ids=[]):
     Extracts the names of constrained frames based on a kinematic loop in the robot model.
 
     Args:
-        model (Pinocchio.RobotModel): The Pinocchio robot model.
+        model (pinocchio.Model): The Pinocchio robot model.
         name_loop (str, optional): Identifier of the names of the frames to set in contact for closing the loop.
             This identifier is used to match specific frame names. By default, it is set to "fermeture".
             The frames must be named using a convention where the identifier is followed by a numeric value
