@@ -80,7 +80,7 @@ def mergeq(model, actuation_model, q_mot, q_free):
     This function includes Casadi support.
 
     Args:
-        model (Pinocchio.RobotModel): Pinocchio robot model.
+        model (pinocchio.Model): Pinocchio robot model.
         actuation_model (object): Robot actuation model.
         q_mot (numpy.ndarray): The actuated part of q.
         q_free (numpy.ndarray): The non-actuated part of q.
@@ -115,7 +115,7 @@ def mergev(model, actuation_model, v_mot, v_free):
     This function includes Casadi support.
 
     Args:
-        model (Pinocchio.RobotModel): Pinocchio robot model.
+        model (pinocchio.Model): Pinocchio robot model.
         actuation_model (object): Robot actuation model.
         v_mot (numpy.ndarray): The actuated part of v.
         v_free (numpy.ndarray): The non-actuated part of v.

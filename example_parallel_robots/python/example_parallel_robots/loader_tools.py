@@ -143,11 +143,11 @@ def completeRobotLoader(
         freeflyer (bool, optional): Specifies whether the root joint should be a free-flyer (True) or world-fixed (False). Defaults to False.
 
     Returns:
-        model (Pinocchio.RobotModel): Pinocchio robot model.
+        model (pinocchio.Model): Pinocchio robot model.
         constraints_models (list): List of Pinocchio robot constraint model.
         actuation_model (object): Robot actuation model (custom object defined in the library).
-        visual_model (Pinocchio.RobotVisualModel): Pinocchio robot visual model.
-        collision_model (Pinocchio.RobotCollisionModel): Pinocchio robot collision model.
+        visual_model (pinocchio.GeometryModel): Pinocchio robot visual model.
+        collision_model (pinocchio.GeometryModel): Pinocchio robot collision model.
     """
     # Load the robot model using the pinocchio URDF parser
     if freeflyer:
@@ -317,7 +317,7 @@ def load(robot_name, free_flyer=None, only_legs=None):
         only_legs (bool, optional): Freeze all joints outside of the legs, only used for full body models. Uses the robot's default setting if not specified.
 
     Returns:
-        model (Pinocchio.RobotModel): Pinocchio robot model.
+        model (pinocchio.Model): Pinocchio robot model.
         constraint_models (list): List of Pinocchio robot constraint models.
         actuation_model (object): Robot actuation model (custom object defined in the library).
         visual_model (pinocchio.GeometryModel): Pinocchio robot visual model.
@@ -351,12 +351,12 @@ def simplifyModel(model, visual_model):
     Checks if any revolute joints can be replaced with spherical joints.
 
     Args:
-        model (Pinocchio.RobotModel): Pinocchio robot model.
-        visual_model (Pinocchio.RobotVisualModel): Pinocchio robot visual model.
+        model (pinocchio.Model): Pinocchio robot model.
+        visual_model (pinocchio.GeometryModel): Pinocchio robot visual model.
 
     Returns:
-        Pinocchio.RobotModel: The simplified Pinocchio robot model.
-        Pinocchio.RobotVisualModel: The simplified Pinocchio robot visual model.
+        pinocchio.Model: The simplified Pinocchio robot model.
+        pinocchio.GeometryModel: The simplified Pinocchio robot visual model.
     """
     data = model.createData()
     pin.framesForwardKinematics(model, data, pin.randomConfiguration(model))

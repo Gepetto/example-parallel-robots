@@ -150,8 +150,8 @@ def closedLoopInverseKinematicsScipy(
     Computes the inverse kinematics of a closed loop system using Scipy optimization.
 
     Args:
-        rmodel (pinocchio.RobotModel): Pinocchio robot model.
-        rdata (pinocchio.RobotData): Pinocchio robot data.
+        rmodel (pinocchio.Model): Pinocchio robot model.
+        rdata (pinocchio.Data): Pinocchio robot data.
         cmodels (list): Pinocchio constraint models list.
         cdatas (list): Pinocchio constraint datas list.
         target_pos (pinocchio.SE3): Target position.
