@@ -2,7 +2,7 @@
 -*- coding: utf-8 -*-
 Virgile Batto & Ludovic De Matteis - December 2023
 
-Tools to load and parse URDF and YAML robot files. Can also generate YANL file from an URDF with naming conventions
+Tools to load and parse URDF and YAML robot files. Can also generate YAML file from an URDF with naming conventions
 """
 
 import pinocchio as pin
