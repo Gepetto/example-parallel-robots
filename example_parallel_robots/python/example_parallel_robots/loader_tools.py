@@ -320,8 +320,8 @@ def load(robot_name, free_flyer=None, only_legs=None):
         model (Pinocchio.RobotModel): Pinocchio robot model.
         constraint_models (list): List of Pinocchio robot constraint models.
         actuation_model (object): Robot actuation model (custom object defined in the library).
-        visual_model (Pinocchio.RobotVisualModel): Pinocchio robot visual model.
-        collision_model (Pinocchio.RobotCollisionModel): Pinocchio robot collision model.
+        visual_model (pinocchio.GeometryModel): Pinocchio robot visual model.
+        collision_model (pinocchio.GeometryModel): Pinocchio robot collision model.
     """
     if robot_name not in ROBOTS.keys():
         raise ValueError(
