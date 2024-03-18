@@ -54,7 +54,7 @@ class Kangaroo:
     free_flyer = False
 
 class KangarooBiped:
-    path = "kangaroo_like_2leg"
+    path = "kangaroo_like_2legs"
     urdf_file = "robot.urdf"
     yaml_file = "robot.yaml"
     free_flyer = False
