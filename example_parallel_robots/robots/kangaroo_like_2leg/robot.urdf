@@ -18,7 +18,7 @@
 <inertial>
 <origin xyz="-0.0014786115366823837647 0.12234575313934131779 0.024304995635825332734" rpy="0 0 0"/>
 <mass value="1.5865591647149872578" />
-<inertia ixx="0.0088382827967695681143" ixy="-0.00027487762182023519958"  ixz="-2.9207645496747392612e-05" iyy="0.0025754201921632980006" iyz="-6.8858407992622973023e-05" izz="0.010752178054608367563" />
+<inertia ixx="0.0088382827967695681143" ixy="-0.00027487762182023525379"  ixz="-2.9207645496747392612e-05" iyy="0.0025754201921632980006" iyz="-6.8858407992622973023e-05" izz="0.010752178054608367563" />
 </inertial>
 </link>
 
@@ -41,7 +41,7 @@
 <inertial>
 <origin xyz="-4.802391351775570083e-09 -0.0030510712498241776558 -0.083365235886017852174" rpy="0 0 0"/>
 <mass value="0.14908820308432116364" />
-<inertia ixx="0.00035636864608480205976" ixy="1.5243715372071057407e-10"  ixz="3.208346058989832576e-10" iyy="0.00032228378845976208373" iyz="1.6655090320431488362e-05" izz="4.9201075862855858688e-05" />
+<inertia ixx="0.00035636864608480195134" ixy="1.5243715372074454017e-10"  ixz="3.2083460589902751176e-10" iyy="0.00032228378845976197531" iyz="1.6655090320431484974e-05" izz="4.9201075862855872241e-05" />
 </inertial>
 </link>
 
@@ -62,15 +62,15 @@
 </geometry>
 </collision>
 <inertial>
-<origin xyz="6.7228290681228184756e-09 -1.3877787807814456755e-17 -6.599327717093125649e-05" rpy="0 0 0"/>
-<mass value="0.0064135211594024193679" />
-<inertia ixx="3.3475011343990655066e-07" ixy="-2.8486583237315313981e-12"  ixz="4.18217495851782041e-25" iyy="4.3082408299805979528e-07" iyz="2.84865832377020088e-12" izz="3.3475011343990649772e-07" />
+<origin xyz="6.7228290681873046489e-09 -2.0816681711721685133e-17 -6.5993277170931446225e-05" rpy="0 0 0"/>
+<mass value="0.0064135211594024202353" />
+<inertia ixx="3.3475011343990655066e-07" ixy="-2.848658323731531802e-12"  ixz="4.18217495851782041e-25" iyy="4.3082408299805979528e-07" iyz="2.84865832377020088e-12" izz="3.3475011343990649772e-07" />
 </inertial>
 </link>
 
 <link name="part_1_gauche">
 <visual>
-<origin xyz="6.2450045135165055399e-17 5.5511151231257827021e-17 0.076999999999999985123" rpy="-1.570796326794896558 -1.570796326794896558 0" />
+<origin xyz="5.5511151231257827021e-17 2.7755575615628913511e-17 0.077000000000000012879" rpy="-1.570796326794896558 -1.570796326794896558 0" />
 <geometry>
 <mesh filename="package:///part_1_gauche.stl"/>
 </geometry>
@@ -79,35 +79,35 @@
 </material>
 </visual>
 <collision>
-<origin xyz="6.2450045135165055399e-17 5.5511151231257827021e-17 0.076999999999999985123" rpy="-1.570796326794896558 -1.570796326794896558 0" />
+<origin xyz="5.5511151231257827021e-17 2.7755575615628913511e-17 0.077000000000000012879" rpy="-1.570796326794896558 -1.570796326794896558 0" />
 <geometry>
 <mesh filename="package:///part_1_gauche.stl"/>
 </geometry>
 </collision>
 <inertial>
-<origin xyz="0.0067026040073146194234 -0.016607315579005080958 -0.045523329336489434804" rpy="0 0 0"/>
+<origin xyz="0.0067026040073146133519 -0.016607315579005108713 -0.045523329336489407049" rpy="0 0 0"/>
 <mass value="0.24432174482850427255" />
-<inertia ixx="0.00038002986506503223796" ixy="4.5343822748855145202e-05"  ixz="0.00019115477820551995567" iyy="0.00063262805487850645812" iyz="-7.0096671205036701637e-05" izz="0.00036002210136874590639" />
+<inertia ixx="0.00038002986506503223796" ixy="4.5343822748855138426e-05"  ixz="0.00019115477820551995567" iyy="0.00063262805487850645812" iyz="-7.0096671205036688084e-05" izz="0.00036002210136874568955" />
 </inertial>
 </link>
 
-<link name="fermeture13_B">
+<link name="closedloop13_B_3D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture13_B_frame" type="fixed">
-<origin xyz="0.083867056794542510501 0.0077119035015027481705 -0.071500000000000007994" rpy="1.570796326794896558 -8.1034820510223933949e-19 -3.141592653589793116" />
+<joint name="closedloop13_B_3D_frame" type="fixed">
+<origin xyz="0.083867056794542482745 0.0077119035015027481705 -0.071500000000000007994" rpy="1.570796326794896558 2.8360520648029955147e-19 -3.141592653589793116" />
 <parent link="part_1_gauche" />
-<child link="fermeture13_B" />
+<child link="closedloop13_B_3D" />
 <axis xyz="0 0 0"/>
 </joint>
 
 <link name="piston">
 <visual>
-<origin xyz="-0.10179556944408768571 0.15392457132099851558 -0.85799999999999987388" rpy="9.8395662918232367165e-20 4.153205327807035613e-18 3.1679281053893880665e-18" />
+<origin xyz="-0.10179556944408765795 0.15392457132099857109 -0.8579999999999999849" rpy="-3.1656865451889511115e-20 -2.3850006220383799507e-18 1.4320802785837140017e-18" />
 <geometry>
 <mesh filename="package:///piston.stl"/>
 </geometry>
@@ -116,34 +116,34 @@
 </material>
 </visual>
 <collision>
-<origin xyz="-0.10179556944408768571 0.15392457132099851558 -0.85799999999999987388" rpy="9.8395662918232367165e-20 4.153205327807035613e-18 3.1679281053893880665e-18" />
+<origin xyz="-0.10179556944408765795 0.15392457132099857109 -0.8579999999999999849" rpy="-3.1656865451889511115e-20 -2.3850006220383799507e-18 1.4320802785837140017e-18" />
 <geometry>
 <mesh filename="package:///piston.stl"/>
 </geometry>
 </collision>
 <inertial>
-<origin xyz="-4.1633363423443370266e-17 3.4506490364958626676e-19 -0.01100000000000000977" rpy="0 0 0"/>
+<origin xyz="-1.3877787807814456755e-17 5.5705445537144774065e-17 -0.011000000000000120792" rpy="0 0 0"/>
 <mass value="0.0047041422996690132607" />
-<inertia ixx="2.6977766073778920841e-07" ixy="9.4387203479054785511e-25"  ixz="-1.1220971277223109406e-24" iyy="2.6977766073778931429e-07" iyz="3.081343009018706465e-26" izz="1.6008784263561083015e-07" />
+<inertia ixx="2.6977766073778920841e-07" ixy="4.7576912976430433783e-25"  ixz="5.7761950872428089888e-25" iyy="2.6977766073778931429e-07" iyz="6.2927429588504482299e-28" izz="1.6008784263561083015e-07" />
 </inertial>
 </link>
 
-<link name="fermeture17_A_6D">
+<link name="closedloop17_A_6D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture17_A_6D_frame" type="fixed">
-<origin xyz="1.3877787807814456755e-17 2.168404344971008868e-17 -0.021999999999999991784" rpy="3.141592653589793116 -4.153205327807035613e-18 -3.141592653589793116" />
+<joint name="closedloop17_A_6D_frame" type="fixed">
+<origin xyz="1.3877787807814456755e-17 3.6429192995512948983e-17 -0.022000000000000075051" rpy="-3.141592653589793116 2.3850006220383799507e-18 -3.141592653589793116" />
 <parent link="piston" />
-<child link="fermeture17_A_6D" />
+<child link="closedloop17_A_6D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="to_rotule_free_cardan_xy_gauche1" type="revolute">
-<origin xyz="-0.060499999999999942712 2.7755575615628913511e-17 -0.038500000000000013378" rpy="1.570796326794896558 7.886878200436052733e-17 -6.6385471106577205628e-17" />
+<joint name="free_spherical_hip_xy_1_left" type="revolute">
+<origin xyz="-0.060499999999999970468 -2.7755575615628913511e-17 -0.038500000000000013378" rpy="1.570796326794896558 9.8397440977066039283e-15 -9.8885767237220441916e-16" />
 <parent link="part_1_gauche" />
 <child link="piston" />
 <axis xyz="0 0 1"/>
@@ -153,7 +153,7 @@
 
 <link name="piston_2">
 <visual>
-<origin xyz="-0.10179556944408767183 0.15392457132099851558 -0.85800000000000009592" rpy="3.364780622919586854e-20 -7.3844411070083645196e-18 1.532502779992136415e-18" />
+<origin xyz="-0.10179556944408768571 0.15392457132099851558 -0.8579999999999999849" rpy="3.7955060752504929268e-20 -8.5472555591560846729e-19 1.5313784291649802482e-18" />
 <geometry>
 <mesh filename="package:///piston.stl"/>
 </geometry>
@@ -162,34 +162,34 @@
 </material>
 </visual>
 <collision>
-<origin xyz="-0.10179556944408767183 0.15392457132099851558 -0.85800000000000009592" rpy="3.364780622919586854e-20 -7.3844411070083645196e-18 1.532502779992136415e-18" />
+<origin xyz="-0.10179556944408768571 0.15392457132099851558 -0.8579999999999999849" rpy="3.7955060752504929268e-20 -8.5472555591560846729e-19 1.5313784291649802482e-18" />
 <geometry>
 <mesh filename="package:///piston.stl"/>
 </geometry>
 </collision>
 <inertial>
-<origin xyz="-2.7755575615628913511e-17 1.4712219902496486521e-19 -0.011000000000000231815" rpy="0 0 0"/>
+<origin xyz="-2.7755575615628913511e-17 1.210568847405046729e-19 -0.011000000000000120792" rpy="0 0 0"/>
 <mass value="0.0047041422996690132607" />
-<inertia ixx="2.6977766073778920841e-07" ixy="6.8157961383038540325e-25"  ixz="2.2388233739286976218e-24" iyy="2.6977766073778931429e-07" iyz="7.3990945918912174454e-27" izz="1.6008784263561083015e-07" />
+<inertia ixx="2.6977766073778931429e-07" ixy="-2.5462583608141386913e-25"  ixz="-5.6807608842621988086e-25" iyy="2.6977766073778931429e-07" iyz="3.6562346635282140529e-27" izz="1.6008784263561083015e-07" />
 </inertial>
 </link>
 
-<link name="fermeture18_A_6D">
+<link name="closedloop18_A_6D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture18_A_6D_frame" type="fixed">
-<origin xyz="0 -4.1633363423443370266e-17 -0.022000000000000075051" rpy="-3.141592653589793116 -4.413020038614617084e-19 1.5323153881876255379e-18" />
+<joint name="closedloop18_A_6D_frame" type="fixed">
+<origin xyz="-2.7755575615628913511e-17 1.3877787807814456755e-17 -0.021999999999999964029" rpy="-3.141592653589793116 -7.7893742605831685744e-18 1.5311910373604695636e-18" />
 <parent link="piston_2" />
-<child link="fermeture18_A_6D" />
+<child link="closedloop18_A_6D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="to_rotule_free_cardan_xy_gauche2" type="revolute">
-<origin xyz="-0.060499999999999928835 2.7755575615628913511e-17 0.038499999999999978684" rpy="-1.57079632679489678 -4.5701545057535166807e-16 3.1415926535897917837" />
+<joint name="free_spherical_hipxy_2_left" type="revolute">
+<origin xyz="-0.060499999999999984346 1.1102230246251565404e-16 0.038500000000000013378" rpy="-1.57079632679489678 -1.021615604280151078e-14 3.1415926535897908956" />
 <parent link="part_1_gauche" />
 <child link="piston_2" />
 <axis xyz="0 0 1"/>
@@ -216,7 +216,7 @@
 <inertial>
 <origin xyz="-0.10353133038219138051 -0.14056766472890799835 -5.9850735478761407649e-13" rpy="0 0 0"/>
 <mass value="0.39806472503371786997" />
-<inertia ixx="0.0031977111359881458738" ixy="-0.001858846357492638943"  ixz="5.7043183100435970654e-15" iyy="0.0012912945788078693775" iyz="2.6363833129184605083e-14" izz="0.0044624680664483232229" />
+<inertia ixx="0.0031977111359881450064" ixy="-0.0018588463574926391599"  ixz="5.7043186541543685363e-15" iyy="0.0012912945788078693775" iyz="2.6363830470915874414e-14" izz="0.0044624680664483223555" />
 </inertial>
 </link>
 
@@ -238,8 +238,8 @@
 </collision>
 <inertial>
 <origin xyz="0.1060893883547637806 -0.17986935727287678422 -1.3877787807814456755e-17" rpy="0 0 0"/>
-<mass value="0.2021348089396567127" />
-<inertia ixx="0.0018459328059746535518" ixy="0.0012583807608323397537"  ixz="-1.9880712633219750961e-22" iyy="0.00088797005323680826966" iyz="3.7356998984883330555e-22" izz="0.0027204272052821516087" />
+<mass value="0.20213480893965668495" />
+<inertia ixx="0.0018459328059746537686" ixy="0.0012583807608323397537"  ixz="-1.9880712633219760365e-22" iyy="0.00088797005323680837808" iyz="3.7356998984883311747e-22" izz="0.0027204272052821520424" />
 </inertial>
 </link>
 
@@ -260,9 +260,9 @@
 </geometry>
 </collision>
 <inertial>
-<origin xyz="6.722829067784290674e-09 9.7144514654701197287e-17 6.6006722829076505676e-05" rpy="0 0 0"/>
-<mass value="0.0064135211594024193679" />
-<inertia ixx="3.3475011343990644478e-07" ixy="-2.8486583237202630817e-12"  ixz="5.2783708372310716773e-25" iyy="4.3082408299805979528e-07" iyz="2.8486583238102779423e-12" izz="3.3475011343990649772e-07" />
+<origin xyz="6.7228290678487768474e-09 9.0205620750793956583e-17 6.6006722829076302388e-05" rpy="0 0 0"/>
+<mass value="0.0064135211594024202353" />
+<inertia ixx="3.3475011343990644478e-07" ixy="-2.8486583237202634856e-12"  ixz="5.2783708372310716773e-25" iyy="4.3082408299805979528e-07" iyz="2.8486583238102779423e-12" izz="3.3475011343990649772e-07" />
 </inertial>
 </link>
 
@@ -283,55 +283,55 @@
 </geometry>
 </collision>
 <inertial>
-<origin xyz="-0.0036358817134152189229 0.024966449369929651081 9.0007330144244747043e-08" rpy="0 0 0"/>
+<origin xyz="-0.0036358817134152158872 0.024966449369929651081 9.0007330144457590541e-08" rpy="0 0 0"/>
 <mass value="0.3109129822293019707" />
-<inertia ixx="0.00026328612588329922692" ixy="-5.3028311481376195049e-05"  ixz="-1.7872776046532626754e-09" iyy="0.00071897520566115992978" iyz="-2.0903095188257978098e-10" izz="0.00052661427618999395381" />
+<inertia ixx="0.00026328612588329922692" ixy="-5.3028311481376188272e-05"  ixz="-1.7872776046435873506e-09" iyy="0.00071897520566115992978" iyz="-2.0903095188053607618e-10" izz="0.00052661427618999406223" />
 </inertial>
 </link>
 
-<link name="bout_pied_gauche">
+<link name="foot_left">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="bout_pied_gauche_frame" type="fixed">
+<joint name="foot_left_frame" type="fixed">
 <origin xyz="0.012016949221079764598 0.038499999999999923173 6.8117394363964578474e-09" rpy="1.5707963267948974462 -1.4061551475580533876e-17 1.3040345811105885313e-15" />
 <parent link="foot" />
-<child link="bout_pied_gauche" />
+<child link="foot_left" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<link name="fermeture0_A_gauche">
+<link name="closedloop21_A_3D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture0_A_gauche_frame" type="fixed">
-<origin xyz="-0.054999999999999993339 -0.01100000000000000977 0.038499999999999992562" rpy="1.570796326794896558 5.5775440709909559897e-17 -1.5707963267948958919" />
-<parent link="foot" />
-<child link="fermeture0_A_gauche" />
-<axis xyz="0 0 0"/>
-</joint>
-
-<link name="fermeture11_A_gauche">
-<inertial>
-<origin xyz="0 0 0" rpy="0 0 0" />
-<mass value="1e-9" />
-<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
-</inertial>
-</link>
-<joint name="fermeture11_A_gauche_frame" type="fixed">
+<joint name="closedloop21_A_3D_frame" type="fixed">
 <origin xyz="-0.054999999999999937828 -0.01100000000000000977 -0.038500000000000006439" rpy="1.570796326794896558 5.5775440709909559897e-17 -1.5707963267948958919" />
 <parent link="foot" />
-<child link="fermeture11_A_gauche" />
+<child link="closedloop21_A_3D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="free_cheville_cardanx_gauche" type="revolute">
+<link name="closedloop22_A_3D">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="closedloop22_A_3D_frame" type="fixed">
+<origin xyz="-0.054999999999999993339 -0.01100000000000000977 0.038499999999999992562" rpy="1.570796326794896558 5.5775440709909559897e-17 -1.5707963267948958919" />
+<parent link="foot" />
+<child link="closedloop22_A_3D" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<joint name="free_ankle_universal_x_left" type="revolute">
 <origin xyz="6.6000000000010494716e-05 2.2204460492503130808e-16 6.5999999999954983565e-05" rpy="-1.570796326794896558 -0.99367489314673695944 -1.57079632679489678" />
 <parent link="cardan_foot_2" />
 <child link="foot" />
@@ -340,7 +340,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="cardans_foot_haut_gauche" type="revolute">
+<joint name="free_universal_y_foot_left" type="revolute">
 <origin xyz="0.21747050071614942857 -0.33571800862966399981 -3.4694469519536141888e-18" rpy="-1.5707963267948958919 -1.4835298641951766285 1.5707963267949331954" />
 <parent link="part_3" />
 <child link="cardan_foot_2" />
@@ -372,21 +372,21 @@
 </inertial>
 </link>
 
-<link name="fermeture12_A">
+<link name="closedloop12_A_3D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture12_A_frame" type="fixed">
+<joint name="closedloop12_A_3D_frame" type="fixed">
 <origin xyz="5.5511151231257827021e-17 0 -0.42720000000000002416" rpy="-3.141592653589793116 -4.5932359763492642923e-17 -1.035331779239029349e-16" />
 <parent link="part_6" />
-<child link="fermeture12_A" />
+<child link="closedloop12_A_3D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="to_rotule_barres_tibias_gauche" type="revolute">
+<joint name="spherical_shin_left" type="revolute">
 <origin xyz="0.038967453687049735667 -0.092095263467496746301 -6.9388939039072283776e-18" rpy="-1.570796326794896558 0.34266875905739935249 1.5707963267948972241" />
 <parent link="part_3" />
 <child link="part_6" />
@@ -395,7 +395,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="genoux_bas_gauche" type="revolute">
+<joint name="lower_knee_left" type="revolute">
 <origin xyz="-0.2174705007161515935 -0.33571800862966272305 -3.4694469519536141888e-18" rpy="-3.6654208353707214918e-17 7.4236255477340962066e-17 0.89630439304597309125" />
 <parent link="part_2" />
 <child link="part_3" />
@@ -421,23 +421,23 @@
 </geometry>
 </collision>
 <inertial>
-<origin xyz="-0.033596086250149245767 -0.018380744757818923141 -0.014122199558543433937" rpy="0 0 0"/>
+<origin xyz="-0.033596086250149259644 -0.018380744757818923141 -0.014122199558543433937" rpy="0 0 0"/>
 <mass value="0.074310320490072731547" />
-<inertia ixx="4.1295450354366527806e-05" ixy="1.9886051938184646406e-06"  ixz="-2.0689202263474877483e-06" iyy="3.2625641947312127868e-05" iyz="-9.9798202174584486462e-06" izz="5.1310129727252677732e-05" />
+<inertia ixx="4.1295450354366527806e-05" ixy="1.9886051938184650641e-06"  ixz="-2.0689202263474873248e-06" iyy="3.2625641947312141421e-05" iyz="-9.9798202174584486462e-06" izz="5.1310129727252670956e-05" />
 </inertial>
 </link>
 
-<link name="fermeture10_B_gauche">
+<link name="closedloop23_B_3D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture10_B_gauche_frame" type="fixed">
+<joint name="closedloop23_B_3D_frame" type="fixed">
 <origin xyz="-0.035854717888628866163 -0.039206584673488142911 -0.051749999999999990452" rpy="-1.57079632679489678 -8.5717888844702030861e-19 3.3378249364540351951e-17" />
 <parent link="renvois_cheville_2_8" />
-<child link="fermeture10_B_gauche" />
+<child link="closedloop23_B_3D" />
 <axis xyz="0 0 0"/>
 </joint>
 
@@ -464,21 +464,21 @@
 </inertial>
 </link>
 
-<link name="fermeture0_B_gauche">
+<link name="closedloop22_B_3D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture0_B_gauche_frame" type="fixed">
+<joint name="closedloop22_B_3D_frame" type="fixed">
 <origin xyz="2.2204460492503130808e-16 -2.7755575615628913511e-17 -0.4000000000000000222" rpy="3.1415926535897913396 1.3112097711421770153e-15 -1.570796326794896558" />
 <parent link="part_7" />
-<child link="fermeture0_B_gauche" />
+<child link="closedloop22_B_3D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="to_rotule_renvois_pied2_gauche" type="revolute">
+<joint name="spherical_transmission_foot2_left" type="revolute">
 <origin xyz="-0.059494699261975370064 0.010983203527527130028 -0.02200000000000001607" rpy="-1.57079632679489678 0.26749612184641674562 -1.570796326794896558" />
 <parent link="renvois_cheville_2_8" />
 <child link="part_7" />
@@ -487,7 +487,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="renvois_genoux_1_gauche" type="revolute">
+<joint name="transmission_1_knee_left" type="revolute">
 <origin xyz="-0.21747050071615153799 -0.33571800862966272305 0.0099999999999999741873" rpy="3.1415926535897922278 2.5607839141882122881e-15 3.0182803045709212242" />
 <parent link="part_2" />
 <child link="renvois_cheville_2_8" />
@@ -513,23 +513,23 @@
 </geometry>
 </collision>
 <inertial>
-<origin xyz="-0.033596086592530952086 -0.018380744754187328116 0.014122199609931577677" rpy="0 0 0"/>
-<mass value="0.074310321213953575703" />
-<inertia ixx="4.1295450352451941965e-05" ixy="1.9886053203183261331e-06"  ixz="2.0689203249184054627e-06" iyy="3.2625642523550451148e-05" iyz="9.9798202218794591873e-06" izz="5.1310130219953345595e-05" />
+<origin xyz="-0.033596086592530965964 -0.018380744754187328116 0.014122199609931570738" rpy="0 0 0"/>
+<mass value="0.074310321213953547947" />
+<inertia ixx="4.1295450352451941965e-05" ixy="1.9886053203183269801e-06"  ixz="2.0689203249184067332e-06" iyy="3.2625642523550451148e-05" iyz="9.9798202218794608814e-06" izz="5.1310130219953359147e-05" />
 </inertial>
 </link>
 
-<link name="fermeture9_B_gauche">
+<link name="closedloop20_B_3D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture9_B_gauche_frame" type="fixed">
+<joint name="closedloop20_B_3D_frame" type="fixed">
 <origin xyz="-0.035854717888629046574 -0.041706584673488200643 0.052250000000000053346" rpy="1.570796326794896558 -7.9018780590913059168e-20 -3.1415926535897908956" />
 <parent link="renvois_cheville" />
-<child link="fermeture9_B_gauche" />
+<child link="closedloop20_B_3D" />
 <axis xyz="0 0 0"/>
 </joint>
 
@@ -556,21 +556,21 @@
 </inertial>
 </link>
 
-<link name="fermeture11_B_gauche">
+<link name="closedloop21_B_3D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture11_B_gauche_frame" type="fixed">
+<joint name="closedloop21_B_3D_frame" type="fixed">
 <origin xyz="-5.5511151231257827021e-17 0 -0.39999999999999996669" rpy="3.1415926535897895633 -3.6738326735530833518e-16 1.57079632679489678" />
 <parent link="part_7_2" />
-<child link="fermeture11_B_gauche" />
+<child link="closedloop21_B_3D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="to_rotule_renvois_pied1_gauche" type="revolute">
+<joint name="spherical_transmission_foot1_left" type="revolute">
 <origin xyz="-0.059494699261975619864 0.010983203527527019006 0.022000000000000040357" rpy="1.570796326794896558 -0.30096768397183631949 1.5707963267948978903" />
 <parent link="renvois_cheville" />
 <child link="part_7_2" />
@@ -579,7 +579,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="renvois_genoux_2_gauche" type="revolute">
+<joint name="transmission_2_knee_left" type="revolute">
 <origin xyz="-0.2174705007161515935 -0.33571800862966272305 -0.01000000000000001929" rpy="3.1415926535897926719 2.4170968488441313662e-15 3.0435251672843857129" />
 <parent link="part_2" />
 <child link="renvois_cheville" />
@@ -607,21 +607,21 @@
 <inertial>
 <origin xyz="0.019483726843524843547 -0.046047631733748289884 0" rpy="0 0 0"/>
 <mass value="0.011311035579799526632" />
-<inertia ixx="1.0009836990585406491e-05" ixy="4.1536946028868301987e-06"  ixz="7.3493848903332733137e-24" iyy="1.9505556032253759876e-06" iyz="-2.2602910710935861837e-23" izz="1.1771875334147455301e-05" />
+<inertia ixx="1.0009836990585406491e-05" ixy="4.1536946028868310457e-06"  ixz="7.349384890333274783e-24" iyy="1.9505556032253759876e-06" iyz="-2.2602910710935861837e-23" izz="1.1771875334147455301e-05" />
 </inertial>
 </link>
 
-<link name="fermeture12_B">
+<link name="closedloop12_B_3D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture12_B_frame" type="fixed">
+<joint name="closedloop12_B_3D_frame" type="fixed">
 <origin xyz="0.038967453687049735667 -0.09209526346749669079 -6.9388939039072283776e-18" rpy="-1.57079632679489678 -6.0039660859700073265e-22 -3.141592653589793116" />
 <parent link="part_4" />
-<child link="fermeture12_B" />
+<child link="closedloop12_B_3D" />
 <axis xyz="0 0 0"/>
 </joint>
 
@@ -648,21 +648,21 @@
 </inertial>
 </link>
 
-<link name="fermeture13_A">
+<link name="closedloop13_A_3D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture13_A_frame" type="fixed">
+<joint name="closedloop13_A_3D_frame" type="fixed">
 <origin xyz="-1.3877787807814456755e-17 -3.4694469519536141888e-18 -0.14141999999999999016" rpy="-3.141592653589793116 1.2734996606920880132e-19 8.5029346353481308663e-18" />
 <parent link="part_5" />
-<child link="fermeture13_A" />
+<child link="closedloop13_A_3D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="to_rotule_4barres_gauche" type="revolute">
+<joint name="spherical_4rod_left" type="revolute">
 <origin xyz="0.0194837268435249511 -0.046047631733748352334 -6.9388939039072283776e-18" rpy="1.57079632679489678 0.15824418733945430637 1.5707963267948952257" />
 <parent link="part_4" />
 <child link="part_5" />
@@ -671,7 +671,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="4barres_genoux_gauche" type="revolute">
+<joint name="4rof_knee_left" type="revolute">
 <origin xyz="0.046047631733746000049 -0.019483726843523313521 -1.7347234759768070944e-17" rpy="3.141592653589793116 4.5795419413634097813e-17 -0.96785189103621938056" />
 <parent link="part_2" />
 <child link="part_4" />
@@ -697,9 +697,9 @@
 </geometry>
 </collision>
 <inertial>
-<origin xyz="3.4489992683069300543e-18 -1.1102230246251565404e-16 -0.017243243243243264184" rpy="0 0 0"/>
-<mass value="0.19339251676417062997" />
-<inertia ixx="4.9207470246053547824e-05" ixy="-1.4090980805227680674e-21"  ixz="-6.5737888733283292613e-23" iyy="4.9207470246053574929e-05" iyz="-5.4178635252453858541e-20" izz="3.3697502678236647725e-05" />
+<origin xyz="3.4489992683069327506e-18 -2.2204460492503130808e-16 -0.017243243243243264184" rpy="0 0 0"/>
+<mass value="0.19339251676417060222" />
+<inertia ixx="4.9207470246053541048e-05" ixy="-1.4090980805227676913e-21"  ixz="-6.5737888733283339633e-23" iyy="4.9207470246053561377e-05" iyz="-5.4178635252453810392e-20" izz="3.3697502678236647725e-05" />
 </inertial>
 </link>
 
@@ -726,21 +726,21 @@
 </inertial>
 </link>
 
-<link name="fermeture16_B_6D">
+<link name="closedloop16_B_6D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture16_B_6D_frame" type="fixed">
+<joint name="closedloop16_B_6D_frame" type="fixed">
 <origin xyz="-2.7755575615628913511e-17 -2.7755575615628913511e-17 -0.022000000000000033418" rpy="3.141592653589793116 1.5080939153133216998e-16 -1.57079632679489678" />
 <parent link="piston_3" />
-<child link="fermeture16_B_6D" />
+<child link="closedloop16_B_6D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="mot_genoux_gauche" type="prismatic">
+<joint name="motor_knee_left" type="prismatic">
 <origin xyz="4.8572257327350598644e-17 -2.498001805406602216e-16 0.0086304170048060457887" rpy="3.141592653589793116 -2.5197765118340936491e-15 -2.1135107621004381678e-15" />
 <parent link="motteur_rotation" />
 <child link="piston_3" />
@@ -749,7 +749,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="free_moeur_gauche" type="revolute">
+<joint name="free_motor_knee_left" type="revolute">
 <origin xyz="-0.061655078133537488672 -0.018724201373191667885 4.2973298530757375602e-12" rpy="-1.570796326794896558 1.3873492000155343007 -0.60601731071219677727" />
 <parent link="part_2" />
 <child link="motteur_rotation" />
@@ -758,8 +758,8 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="genoux_haut_gauche" type="revolute">
-<origin xyz="4.8572257327350598644e-17 -0.046751999999999988011 -0.071500000000000007994" rpy="8.233997344750923008e-17 2.5762095530655465374e-17 -0.63853922414922226203" />
+<joint name="upper_knee_left" type="revolute">
+<origin xyz="2.0469737016526323714e-16 -0.046752000000000043523 -0.071499999999999980238" rpy="-5.7342617493489877044e-15 7.864783300419491944e-15 -0.63853922414920383233" />
 <parent link="part_1_gauche" />
 <child link="part_2" />
 <axis xyz="0 0 1"/>
@@ -769,7 +769,7 @@
 
 <link name="part_8">
 <visual>
-<origin xyz="0 -0.046752000000000015767 0.088000000000000008771" rpy="1.570796326794896558 1.570796326794896558 0" />
+<origin xyz="2.7755575615628913511e-17 -0.046752000000000001889 0.088000000000000008771" rpy="1.570796326794896558 1.570796326794896558 0" />
 <geometry>
 <mesh filename="package:///part_8.stl"/>
 </geometry>
@@ -778,21 +778,21 @@
 </material>
 </visual>
 <collision>
-<origin xyz="0 -0.046752000000000015767 0.088000000000000008771" rpy="1.570796326794896558 1.570796326794896558 0" />
+<origin xyz="2.7755575615628913511e-17 -0.046752000000000001889 0.088000000000000008771" rpy="1.570796326794896558 1.570796326794896558 0" />
 <geometry>
 <mesh filename="package:///part_8.stl"/>
 </geometry>
 </collision>
 <inertial>
-<origin xyz="0.031934770108260172872 0.010733820853410631913 -0.0056648401062836112319" rpy="0 0 0"/>
-<mass value="0.006204090388627271635" />
-<inertia ixx="9.1742111640422036546e-07" ixy="-1.6316603808924164326e-07"  ixz="2.2769789117187755014e-07" iyy="1.3280669465102740276e-06" iyz="-1.4783479338790849577e-07" izz="1.7548720440932142221e-06" />
+<origin xyz="0.031934770108260200627 0.010733820853410659668 -0.0056648401062835973541" rpy="0 0 0"/>
+<mass value="0.0062040903886272725024" />
+<inertia ixx="9.1742111640422068309e-07" ixy="-1.6316603808924156385e-07"  ixz="2.2769789117187741779e-07" iyy="1.3280669465102748746e-06" iyz="-1.4783479338790844283e-07" izz="1.7548720440932150692e-06" />
 </inertial>
 </link>
 
 <link name="piston_4">
 <visual>
-<origin xyz="-0.10179556944408764407 -0.15392457132099857109 0.83599999999999985434" rpy="3.141592653589793116 -6.205116987013423183e-18 -4.1131197249746217094e-19" />
+<origin xyz="-0.10179556944408767183 -0.15392457132099851558 0.83599999999999996536" rpy="-3.141592653589793116 1.729017174857427777e-18 -7.3393565422645404042e-18" />
 <geometry>
 <mesh filename="package:///piston.stl"/>
 </geometry>
@@ -801,34 +801,34 @@
 </material>
 </visual>
 <collision>
-<origin xyz="-0.10179556944408764407 -0.15392457132099857109 0.83599999999999985434" rpy="3.141592653589793116 -6.205116987013423183e-18 -4.1131197249746217094e-19" />
+<origin xyz="-0.10179556944408767183 -0.15392457132099851558 0.83599999999999996536" rpy="-3.141592653589793116 1.729017174857427777e-18 -7.3393565422645404042e-18" />
 <geometry>
 <mesh filename="package:///piston.stl"/>
 </geometry>
 </collision>
 <inertial>
-<origin xyz="0 -7.6784740816729213128e-17 -0.01100000000000000977" rpy="0 0 0"/>
+<origin xyz="-4.1633363423443370266e-17 4.0593190806305950242e-17 -0.011000000000000120792" rpy="0 0 0"/>
 <mass value="0.0047041422996690132607" />
-<inertia ixx="2.6977766073778920841e-07" ixy="-6.9509303634458165588e-24"  ixz="8.8892707688968810296e-25" iyy="2.6977766073778931429e-07" iyz="-4.628024679111711781e-25" izz="1.6008784263561083015e-07" />
+<inertia ixx="2.6977766073778920841e-07" ixy="1.3106852984997507412e-24"  ixz="3.164401275255547335e-24" iyy="2.6977766073778931429e-07" iyz="1.4890398336540349657e-23" izz="1.6008784263561088309e-07" />
 </inertial>
 </link>
 
-<link name="fermeture14_A_6D">
+<link name="closedloop14_A_6D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture14_A_6D_frame" type="fixed">
-<origin xyz="1.3877787807814456755e-17 -1.6653345369377348106e-16 -0.022000000000000047296" rpy="-3.141592653589793116 -1.1453453861851907319e-17 -1.570796326794896558" />
+<joint name="closedloop14_A_6D_frame" type="fixed">
+<origin xyz="-6.9388939039072283776e-18 0 -0.022000000000000033418" rpy="-3.141592653589793116 8.9294959238987079639e-17 -1.570796326794896558" />
 <parent link="piston_4" />
-<child link="fermeture14_A_6D" />
+<child link="closedloop14_A_6D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="to_rotule_renvois_hanche_moeur1_gauche" type="revolute">
-<origin xyz="0.043531328479973679935 0.003204656652241011372 -0.024999999999999990979" rpy="1.5707963267948970021 -1.3881446540757440555 -3.141592653589753148" />
+<joint name="spherical_motor_transmission_hip1_left" type="revolute">
+<origin xyz="0.043531328479973735446 0.0032046566522410946387 -0.025000000000000001388" rpy="1.5707963267948970021 -1.3881446540757400587 -3.1415926535897527039" />
 <parent link="part_8" />
 <child link="piston_4" />
 <axis xyz="0 0 1"/>
@@ -838,7 +838,7 @@
 
 <link name="part_7_3">
 <visual>
-<origin xyz="0.062087559207389841909 -0.15255026628033757641 -0.4000000000000000222" rpy="1.0588065137068347919e-17 2.7749733809459311865e-17 5.9626160247550883408e-17" />
+<origin xyz="0.062087559207389786398 -0.15255026628033763192 -0.4000000000000000222" rpy="-1.0950595030595913441e-17 -2.822674850981358798e-18 7.9670936357162291903e-17" />
 <geometry>
 <mesh filename="package:///part_7.stl"/>
 </geometry>
@@ -847,34 +847,34 @@
 </material>
 </visual>
 <collision>
-<origin xyz="0.062087559207389841909 -0.15255026628033757641 -0.4000000000000000222" rpy="1.0588065137068347919e-17 2.7749733809459311865e-17 5.9626160247550883408e-17" />
+<origin xyz="0.062087559207389786398 -0.15255026628033763192 -0.4000000000000000222" rpy="-1.0950595030595913441e-17 -2.822674850981358798e-18 7.9670936357162291903e-17" />
 <geometry>
 <mesh filename="package:///part_7.stl"/>
 </geometry>
 </collision>
 <inertial>
-<origin xyz="0 5.6337293869315755275e-17 -0.19999999999999998335" rpy="0 0 0"/>
+<origin xyz="-6.9388939039072283776e-17 -2.2544911738620224768e-17 -0.19999999999999992784" rpy="0 0 0"/>
 <mass value="0.031415926535897982508" />
-<inertia ixx="0.00041907537001948909697" ixy="6.3616918991648994346e-20"  ixz="-1.1648792640614486724e-20" iyy="0.00041907537001948931381" iyz="4.4460883863348173413e-21" izz="3.9269908169872559526e-07" />
+<inertia ixx="0.00041907537001948931381" ixy="3.156905280987031676e-20"  ixz="1.1905617978476637465e-21" iyy="0.00041907537001948909697" iyz="-4.5691809744889140158e-21" izz="3.9269908169872580702e-07" />
 </inertial>
 </link>
 
-<link name="fermeture10_A_gauche">
+<link name="closedloop23_A_3D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture10_A_gauche_frame" type="fixed">
-<origin xyz="0 2.7755575615628913511e-17 -0.4000000000000000222" rpy="2.2749572538126044886e-16 7.2746635295149875262e-16 -4.5867541028429652511e-16" />
+<joint name="closedloop23_A_3D_frame" type="fixed">
+<origin xyz="-5.5511151231257827021e-17 -5.5511151231257827021e-17 -0.39999999999999991118" rpy="2.0595706521359607965e-16 6.9689394429105795176e-16 -3.8311948294342778263e-16" />
 <parent link="part_7_3" />
-<child link="fermeture10_A_gauche" />
+<child link="closedloop23_A_3D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="to_rotule_renvois_hanche3_gauche" type="revolute">
-<origin xyz="0.041074543378118805181 0.036577067764912901682 -0.0049999999999999914305" rpy="-1.570796326794896558 0.67303436723392595642 3.1415926535897926719" />
+<joint name="spherical_transmission_hip3_left" type="revolute">
+<origin xyz="0.041074543378118943959 0.03657706776491291556 -0.0049999999999999888284" rpy="-1.570796326794896558 0.6730343672339298422 3.1415926535897922278" />
 <parent link="part_8" />
 <child link="part_7_3" />
 <axis xyz="0 0 1"/>
@@ -882,8 +882,8 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="renvois_cehville5_gauche" type="revolute">
-<origin xyz="6.5919492087118669588e-17 -0.046751999999999988011 -0.054999999999999993339" rpy="-3.1415926535897913396 3.5183626111913285348e-16 -1.2495340742674305723" />
+<joint name="transmission_ankle3_left" type="revolute">
+<origin xyz="6.2450045135165055399e-17 -0.046751999999999988011 -0.055000000000000014155" rpy="-3.1415926535897895633 -4.799310970213847672e-16 -1.2495340742674121426" />
 <parent link="part_1_gauche" />
 <child link="part_8" />
 <axis xyz="0 0 1"/>
@@ -908,9 +908,9 @@
 </geometry>
 </collision>
 <inertial>
-<origin xyz="0.031934770108260165933 -0.010733820853410619769 -0.0056648401062835904152" rpy="0 0 0"/>
-<mass value="0.0062040903886272699003" />
-<inertia ixx="9.174211164042338121e-07" ixy="1.6316603808924376084e-07"  ixz="2.2769789117187752367e-07" iyy="1.328066946510272757e-06" iyz="1.4783479338790931633e-07" izz="1.7548720440932267159e-06" />
+<origin xyz="0.031934770108260165933 -0.010733820853410618035 -0.0056648401062835904152" rpy="0 0 0"/>
+<mass value="0.0062040903886272707676" />
+<inertia ixx="9.174211164042338121e-07" ixy="1.6316603808924349615e-07"  ixz="2.2769789117187739132e-07" iyy="1.3280669465102731806e-06" iyz="1.4783479338790926339e-07" izz="1.7548720440932271394e-06" />
 </inertial>
 </link>
 
@@ -937,21 +937,21 @@
 </inertial>
 </link>
 
-<link name="fermeture15_B_6D">
+<link name="closedloop15_B_6D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture15_B_6D_frame" type="fixed">
+<joint name="closedloop15_B_6D_frame" type="fixed">
 <origin xyz="6.9388939039072283776e-18 0 -0.022000000000000047296" rpy="2.9668696099179873576e-15 -1.6282746472828449155e-16 1.570796326794896558" />
 <parent link="piston_5" />
-<child link="fermeture15_B_6D" />
+<child link="closedloop15_B_6D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="to_rotule_renvois_hanche_moeur2_gauche" type="revolute">
+<joint name="spherical_motor_transmission_hip2_left" type="revolute">
 <origin xyz="0.043531328479973624423 -0.0032046566522409697386 -0.025000000000000022204" rpy="1.570796326794896558 -1.0520766825141725231 -6.564748380207484938e-15" />
 <parent link="part_9" />
 <child link="piston_5" />
@@ -983,21 +983,21 @@
 </inertial>
 </link>
 
-<link name="fermeture9_A_gauche">
+<link name="closedloop20_A_3D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture9_A_gauche_frame" type="fixed">
+<joint name="closedloop20_A_3D_frame" type="fixed">
 <origin xyz="-8.3266726846886740532e-17 -5.5511151231257827021e-17 -0.4000000000000000222" rpy="-2.2514125294094559383e-15 -8.4956633181430522698e-16 -1.5707963267948974462" />
 <parent link="part_7_4" />
-<child link="fermeture9_A_gauche" />
+<child link="closedloop20_A_3D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="to_rotule_renvois_hanche4_gauche" type="revolute">
+<joint name="spherical_transmission_hip4_left" type="revolute">
 <origin xyz="0.04107454337811874967 -0.036577067764912860048 -0.004999999999999997502" rpy="1.57079632679489678 0.73924967494909110677 3.1415926535897900074" />
 <parent link="part_9" />
 <child link="part_7_4" />
@@ -1006,8 +1006,8 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="renvois_cheville_4_gauche" type="revolute">
-<origin xyz="4.8572257327350598644e-17 -0.046751999999999988011 -0.088000000000000022649" rpy="2.8425043664685418282e-16 2.0545114304024910518e-16 -1.2172645625817295478" />
+<joint name="transmission_ankle4_left" type="revolute">
+<origin xyz="4.5102810375396984455e-17 -0.046752000000000043523 -0.087999999999999981015" rpy="-8.8738167568813836499e-15 3.5840702149163616535e-15 -1.2172645625817111181" />
 <parent link="part_1_gauche" />
 <child link="part_9" />
 <axis xyz="0 0 1"/>
@@ -1017,7 +1017,7 @@
 
 <link name="piston_6">
 <visual>
-<origin xyz="-0.10179556944408760244 0.15392457132099851558 -0.85800000000000020695" rpy="6.7575064253293092172e-19 3.0973808830540785747e-19 7.2185401608800203223e-20" />
+<origin xyz="-0.10179556944408765795 0.15392457132099851558 -0.8579999999999999849" rpy="-1.1895523874973306693e-18 -8.670466646602893662e-20 -6.339097647909028305e-20" />
 <geometry>
 <mesh filename="package:///piston.stl"/>
 </geometry>
@@ -1026,34 +1026,34 @@
 </material>
 </visual>
 <collision>
-<origin xyz="-0.10179556944408760244 0.15392457132099851558 -0.85800000000000020695" rpy="6.7575064253293092172e-19 3.0973808830540785747e-19 7.2185401608800203223e-20" />
+<origin xyz="-0.10179556944408765795 0.15392457132099851558 -0.8579999999999999849" rpy="-1.1895523874973306693e-18 -8.670466646602893662e-20 -6.339097647909028305e-20" />
 <geometry>
 <mesh filename="package:///piston.stl"/>
 </geometry>
 </collision>
 <inertial>
-<origin xyz="4.1633363423443370266e-17 -2.8575570370890900141e-18 -0.011000000000000342837" rpy="0 0 0"/>
+<origin xyz="-1.3877787807814456755e-17 2.7797948334426820481e-17 -0.011000000000000120792" rpy="0 0 0"/>
 <mass value="0.0047041422996690132607" />
-<inertia ixx="2.6977766073778920841e-07" ixy="4.4629906055649725246e-26"  ixz="-8.895861785956063811e-26" iyy="2.6977766073778931429e-07" iyz="-3.5918103334455928667e-25" izz="1.6008784263561083015e-07" />
+<inertia ixx="2.6977766073778920841e-07" ixy="-2.5963264231247240457e-26"  ixz="8.1458446484490216416e-26" iyy="2.6977766073778920841e-07" iyz="-3.116863354320632873e-25" izz="1.6008784263561083015e-07" />
 </inertial>
 </link>
 
-<link name="fermeture16_A_6D">
+<link name="closedloop16_A_6D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture16_A_6D_frame" type="fixed">
-<origin xyz="2.7755575615628913511e-17 -3.4694469519536141888e-18 -0.021999999999999977907" rpy="6.7575064253334451518e-19 2.5386515027026555725e-18 7.2208825584346175793e-20" />
+<joint name="closedloop16_A_6D_frame" type="fixed">
+<origin xyz="0 3.1225022567582527699e-17 -0.022000000000000012601" rpy="-1.1895523874969165944e-18 2.1422087479376391186e-18 -6.3367552503614883775e-20" />
 <parent link="piston_6" />
-<child link="fermeture16_A_6D" />
+<child link="closedloop16_A_6D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="to_rotule_actuatipn_genoux" type="revolute">
-<origin xyz="-0.013749999999999897721 -0.0025000000000000022204 -0.070875000000000021316" rpy="1.570796326794896558 -7.680522224646724872e-17 1.5707963267948976682" />
+<joint name="spherical_actuation_knee_left" type="revolute">
+<origin xyz="-0.013749999999999866496 -0.0024999999999999467093 -0.070874999999999993561" rpy="1.570796326794896558 8.9605786434077115269e-17 1.570796326794896558" />
 <parent link="part_1_gauche" />
 <child link="piston_6" />
 <axis xyz="0 0 1"/>
@@ -1063,7 +1063,7 @@
 
 <link name="motteur_rotation_2">
 <visual>
-<origin xyz="0.033000000000000043188 0.8882500000000004281 -0.10449999999999906586" rpy="1.570796326794896558 1.5707963267948930053 0" />
+<origin xyz="0.033000000000000043188 0.8882500000000004281 -0.10449999999999909361" rpy="1.570796326794896558 1.5707963267948930053 0" />
 <geometry>
 <mesh filename="package:///motteur_rotation.stl"/>
 </geometry>
@@ -1072,21 +1072,21 @@
 </material>
 </visual>
 <collision>
-<origin xyz="0.033000000000000043188 0.8882500000000004281 -0.10449999999999906586" rpy="1.570796326794896558 1.5707963267948930053 0" />
+<origin xyz="0.033000000000000043188 0.8882500000000004281 -0.10449999999999909361" rpy="1.570796326794896558 1.5707963267948930053 0" />
 <geometry>
 <mesh filename="package:///motteur_rotation.stl"/>
 </geometry>
 </collision>
 <inertial>
-<origin xyz="6.6819130239960906918e-18 0 -0.017243243243243250307" rpy="0 0 0"/>
-<mass value="0.19339251676417062997" />
-<inertia ixx="4.9207470246053547824e-05" ixy="3.0954742825613505947e-24"  ixz="-8.4633166947006669378e-22" iyy="4.9207470246053574929e-05" iyz="-5.6973322379062014062e-20" izz="3.3697502678236634173e-05" />
+<origin xyz="6.7776551054426007923e-18 -1.1102230246251565404e-16 -0.017243243243243264184" rpy="0 0 0"/>
+<mass value="0.19339251676417060222" />
+<inertia ixx="4.9207470246053541048e-05" ixy="-8.7495559152149869836e-25"  ixz="-7.4366206771373923627e-22" iyy="4.9207470246053561377e-05" iyz="-5.6954716546359656641e-20" izz="3.3697502678236647725e-05" />
 </inertial>
 </link>
 
 <link name="piston_7">
 <visual>
-<origin xyz="-0.10179556944408771346 -0.15392457132099854333 0.83599999999999996536" rpy="-3.141592653589793116 -1.7519114479165284573e-17 5.503052188545563538e-20" />
+<origin xyz="-0.10179556944408765795 -0.15392457132099854333 0.83600000000000007638" rpy="-3.141592653589793116 -1.7519114479165284573e-17 1.0865763940504849066e-19" />
 <geometry>
 <mesh filename="package:///piston.stl"/>
 </geometry>
@@ -1095,34 +1095,34 @@
 </material>
 </visual>
 <collision>
-<origin xyz="-0.10179556944408771346 -0.15392457132099854333 0.83599999999999996536" rpy="-3.141592653589793116 -1.7519114479165284573e-17 5.503052188545563538e-20" />
+<origin xyz="-0.10179556944408765795 -0.15392457132099854333 0.83600000000000007638" rpy="-3.141592653589793116 -1.7519114479165284573e-17 1.0865763940504849066e-19" />
 <geometry>
 <mesh filename="package:///piston.stl"/>
 </geometry>
 </collision>
 <inertial>
-<origin xyz="-4.1633363423443370266e-17 -6.0569422847853338053e-19 -0.010999999999999898748" rpy="0 0 0"/>
+<origin xyz="-1.3877787807814456755e-17 -7.5631028023240160557e-19 -0.010999999999999787725" rpy="0 0 0"/>
 <mass value="0.0047041422996690132607" />
-<inertia ixx="2.6977766073778931429e-07" ixy="2.9091458244412176662e-26"  ixz="1.9810735666739355177e-24" iyy="2.6977766073778942017e-07" iyz="3.5506907036144042627e-25" izz="1.6008784263561083015e-07" />
+<inertia ixx="2.6977766073778931429e-07" ixy="3.1555968671790727877e-26"  ixz="6.2852674308455590666e-24" iyy="2.6977766073778942017e-07" iyz="3.1728214643463944243e-25" izz="1.6008784263561083015e-07" />
 </inertial>
 </link>
 
-<link name="fermeture15_A_6D">
+<link name="closedloop15_A_6D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture15_A_6D_frame" type="fixed">
-<origin xyz="-6.9388939039072283776e-17 -1.3877787807814456755e-17 -0.021999999999999991784" rpy="8.8788157379391315293e-19 -1.6649989410368488151e-17 6.5331843134349633765e-20" />
+<joint name="closedloop15_A_6D_frame" type="fixed">
+<origin xyz="-2.7755575615628913511e-17 -1.3877787807814456755e-17 -0.021999999999999964029" rpy="6.3846877427644474244e-19 -1.6649989410368488151e-17 1.05387434053115508e-20" />
 <parent link="piston_7" />
-<child link="fermeture15_A_6D" />
+<child link="closedloop15_A_6D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="mot_cheville2_gauche" type="prismatic">
-<origin xyz="-2.0816681711721685133e-16 -1.5265566588595902431e-16 0.036860927393518511108" rpy="-3.141592653589793116 1.5279389565423988333e-14 -3.1415926535897829019" />
+<joint name="motor_ankle2_left" type="prismatic">
+<origin xyz="-6.9388939039072283776e-16 -5.5511151231257827021e-17 0.036860927393517817219" rpy="-3.141592653589793116 -2.3101201183360073099e-15 -3.1415926535897829019" />
 <parent link="motteur_rotation_2" />
 <child link="piston_7" />
 <axis xyz="0 0 1"/>
@@ -1130,8 +1130,8 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="frame_moeur_cheville1_gauche" type="revolute">
-<origin xyz="0.054086706326755315533 -0.014047405294960763067 -0.11824999999999996625" rpy="1.570796326794896558 0.014238452528732865182 -0.28589337779933188255" />
+<joint name="frame_motor_ankle1_left" type="revolute">
+<origin xyz="0.054086706326755308594 -0.014047405294960818578 -0.11824999999999991074" rpy="1.570796326794896558 0.014238452528742229219 -0.28589337779933110539" />
 <parent link="part_1_gauche" />
 <child link="motteur_rotation_2" />
 <axis xyz="0 0 1"/>
@@ -1141,7 +1141,7 @@
 
 <link name="motteur_rotation_3">
 <visual>
-<origin xyz="0.033000000000000036249 0.88825000000000031708 -0.10449999999999906586" rpy="1.570796326794896558 1.5707963267948930053 0" />
+<origin xyz="0.03300000000000002931 0.88825000000000031708 -0.10449999999999906586" rpy="1.570796326794896558 1.5707963267948930053 0" />
 <geometry>
 <mesh filename="package:///motteur_rotation.stl"/>
 </geometry>
@@ -1150,21 +1150,21 @@
 </material>
 </visual>
 <collision>
-<origin xyz="0.033000000000000036249 0.88825000000000031708 -0.10449999999999906586" rpy="1.570796326794896558 1.5707963267948930053 0" />
+<origin xyz="0.03300000000000002931 0.88825000000000031708 -0.10449999999999906586" rpy="1.570796326794896558 1.5707963267948930053 0" />
 <geometry>
 <mesh filename="package:///motteur_rotation.stl"/>
 </geometry>
 </collision>
 <inertial>
-<origin xyz="9.5798985596005330656e-18 1.1102230246251565404e-16 -0.017243243243243250307" rpy="0 0 0"/>
-<mass value="0.19339251676417062997" />
-<inertia ixx="4.9207470246053534272e-05" ixy="5.4684194530709730968e-24"  ixz="-5.8420342578509261543e-22" iyy="4.9207470246053547824e-05" iyz="-5.6914086237756313822e-20" izz="3.3697502678236634173e-05" />
+<origin xyz="2.4864595424146665267e-18 0 -0.017243243243243236429" rpy="0 0 0"/>
+<mass value="0.19339251676417060222" />
+<inertia ixx="4.9207470246053527495e-05" ixy="-8.8802052300489174928e-25"  ixz="5.3479905312539600055e-22" iyy="4.9207470246053534272e-05" iyz="-5.6916377208839698039e-20" izz="3.3697502678236647725e-05" />
 </inertial>
 </link>
 
 <link name="piston_8">
 <visual>
-<origin xyz="-0.10179556944408772734 -0.15392457132099851558 0.83600000000000007638" rpy="3.141592653589793116 -1.0502118177591549609e-17 1.6081429666329725019e-19" />
+<origin xyz="-0.10179556944408765795 -0.15392457132099851558 0.83599999999999985434" rpy="-3.141592653589793116 -1.0116207585356170845e-17 4.4851798576174026014e-20" />
 <geometry>
 <mesh filename="package:///piston.stl"/>
 </geometry>
@@ -1173,34 +1173,34 @@
 </material>
 </visual>
 <collision>
-<origin xyz="-0.10179556944408772734 -0.15392457132099851558 0.83600000000000007638" rpy="3.141592653589793116 -1.0502118177591549609e-17 1.6081429666329725019e-19" />
+<origin xyz="-0.10179556944408765795 -0.15392457132099851558 0.83599999999999985434" rpy="-3.141592653589793116 -1.0116207585356170845e-17 4.4851798576174026014e-20" />
 <geometry>
 <mesh filename="package:///piston.stl"/>
 </geometry>
 </collision>
 <inertial>
-<origin xyz="-6.9388939039072283776e-17 1.4056292737029261798e-19 -0.010999999999999787725" rpy="0 0 0"/>
+<origin xyz="-4.1633363423443370266e-17 1.0027591844113009849e-18 -0.010999999999999898748" rpy="0 0 0"/>
 <mass value="0.0047041422996690132607" />
-<inertia ixx="2.6977766073778931429e-07" ixy="4.4784894286450227469e-26"  ixz="2.4966743270123960273e-24" iyy="2.6977766073778931429e-07" iyz="-6.106876061991048154e-26" izz="1.6008784263561083015e-07" />
+<inertia ixx="2.6977766073778931429e-07" ixy="-2.2934741445462381156e-26"  ixz="1.1000951998528327118e-23" iyy="2.6977766073778931429e-07" iyz="-1.3873998892925104301e-25" izz="1.6008784263561077721e-07" />
 </inertial>
 </link>
 
-<link name="fermeture14_B_6D">
+<link name="closedloop14_B_6D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture14_B_6D_frame" type="fixed">
-<origin xyz="-1.3877787807814456755e-17 -2.0816681711721685133e-17 -0.02199999999999976974" rpy="1.3935780210122258907e-19 -1.6384332369241171452e-17 -3.141592653589793116" />
+<joint name="closedloop14_B_6D_frame" type="fixed">
+<origin xyz="2.7755575615628913511e-17 0 -0.022000000000000047296" rpy="-1.8505714609404598692e-19 -1.6770242961476544053e-17 -3.141592653589793116" />
 <parent link="piston_8" />
-<child link="fermeture14_B_6D" />
+<child link="closedloop14_B_6D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="mot_cheville1_gauche" type="prismatic">
-<origin xyz="-2.0816681711721685133e-16 3.0184188481996443443e-16 0.041658869056534680864" rpy="3.141592653589793116 -6.7676469909195648846e-15 -3.1415926535897873428" />
+<joint name="motor_ankle1_left" type="prismatic">
+<origin xyz="-6.8001160258290838101e-16 1.249000902703301108e-16 0.041658869056533737174" rpy="3.141592653589793116 1.0794107117225389546e-14 -3.1415926535897873428" />
 <parent link="motteur_rotation_3" />
 <child link="piston_8" />
 <axis xyz="0 0 1"/>
@@ -1208,8 +1208,8 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="frame_moeur_cheville2_gauche" type="revolute">
-<origin xyz="0.054086706326755301655 -0.014047405294960818578 -0.024750000000000060146" rpy="-1.570796326794896558 -0.014238452528732922428 2.8556992757904859914" />
+<joint name="frame_motor_ankle2_left" type="revolute">
+<origin xyz="0.054086706326755280838 -0.014047405294960763067 -0.024750000000000119127" rpy="-1.570796326794896558 -0.014238452528742286465 2.8556992757904868796" />
 <parent link="part_1_gauche" />
 <child link="motteur_rotation_3" />
 <axis xyz="0 0 1"/>
@@ -1217,8 +1217,8 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="free_cardanc_hanchey_gauche" type="revolute">
-<origin xyz="-6.5999999999989678034e-05 -5.5511151231257827021e-17 -6.5999999999998351652e-05" rpy="-1.5707963267948901187 -1.5358146150087819137 1.5707963267948996666" />
+<joint name="free_universal_y_hip_left" type="revolute">
+<origin xyz="-6.5999999999961922459e-05 -2.7755575615628913511e-17 -6.5999999999998351652e-05" rpy="-1.5707963267951692288 -1.5358146150088003434 1.5707963267951787767" />
 <parent link="cardan_foot" />
 <child link="part_1_gauche" />
 <axis xyz="0 0 1"/>
@@ -1226,7 +1226,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="free_cardanx_hanche_gauche" type="revolute">
+<joint name="free_universal_x_hip_left" type="revolute">
 <origin xyz="0 -9.0205620750793968909e-17 -0.1649999999999999245" rpy="1.570796326794896558 8.3262389442822325955e-18 -1.570796326794896558" />
 <parent link="hanche_gauche" />
 <child link="cardan_foot" />
@@ -1258,21 +1258,21 @@
 </inertial>
 </link>
 
-<link name="fermeture19_B_6D">
+<link name="closedloop19_B_6D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture19_B_6D_frame" type="fixed">
+<joint name="closedloop19_B_6D_frame" type="fixed">
 <origin xyz="0 7.8062556418956319249e-18 -0.021999999999999908518" rpy="-3.1415926535897820138 1.3686361436822294661e-14 1.570796326794896558" />
 <parent link="piston_9" />
-<child link="fermeture19_B_6D" />
+<child link="closedloop19_B_6D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="to_rotule_free_hanche_gauche" type="revolute">
+<joint name="spherical_free_hip_left" type="revolute">
 <origin xyz="3.1537272793258352976e-15 -0.03850000000000006195 -0.046750000000000027645" rpy="2.1518574910359218682e-16 1.5707963267948954478 0" />
 <parent link="hanche_gauche" />
 <child link="piston_9" />
@@ -1323,7 +1323,7 @@
 <inertial>
 <origin xyz="-1.3877787807814456755e-17 -0.012713533519812081352 1.1283142564332789083e-18" rpy="0 0 0"/>
 <mass value="0.17794962537636810351" />
-<inertia ixx="3.4377373668620134326e-05" ixy="1.9874524933721430471e-23"  ixz="-9.8696794500999789462e-23" iyy="4.1215284105260629674e-05" iyz="6.9949651191078728165e-23" izz="3.4002456645612650764e-05" />
+<inertia ixx="3.4377373668620134326e-05" ixy="1.9874524933721336431e-23"  ixz="-9.8696794500999789462e-23" iyy="4.1215284105260622898e-05" iyz="6.994965119107871641e-23" izz="3.4002456645612650764e-05" />
 </inertial>
 </link>
 
@@ -1350,21 +1350,21 @@
 </inertial>
 </link>
 
-<link name="fermeture17_B_6D">
+<link name="closedloop17_B_6D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture17_B_6D_frame" type="fixed">
+<joint name="closedloop17_B_6D_frame" type="fixed">
 <origin xyz="-2.7755575615628913511e-17 2.7755575615628913511e-17 -0.02199999999999989464" rpy="5.9407647068876257037e-19 -1.5422740935228754604e-17 -3.141592653589793116" />
 <parent link="piston_10" />
-<child link="fermeture17_B_6D" />
+<child link="closedloop17_B_6D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="mot_hanchexy1_gauche" type="prismatic">
+<joint name="motor_hip_xy_1_left" type="prismatic">
 <origin xyz="1.3877787807814456755e-17 -0.049224876560801336667 1.3877787807814456755e-17" rpy="-1.570796326794896558 -8.4128073089814322834e-15 7.43963769432937431e-15" />
 <parent link="moteur_hanche1" />
 <child link="piston_10" />
@@ -1373,7 +1373,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="free_attache_moeur_hanchexy2_gauche" type="revolute">
+<joint name="free_motor_holder_hip_xy2_left" type="revolute">
 <origin xyz="5.2041704279304212832e-18 1.8041124150158793782e-16 -0.054999999999999993339" rpy="-1.570796326794896558 -1.4803191601263148147 1.5707963267948810149" />
 <parent link="cardan_hache" />
 <child link="moteur_hanche1" />
@@ -1382,7 +1382,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="free_attache_moeur_hanchexy_z_gauche" type="revolute">
+<joint name="free_motor_holder_1_left" type="revolute">
 <origin xyz="0.012500000000000007633 -0.037125000000000123179 -0.07700000000000006839" rpy="1.570796326794896558 -0.019211068168970831666 -1.5707963267948918951" />
 <parent link="hanche_gauche" />
 <child link="cardan_hache" />
@@ -1433,7 +1433,7 @@
 <inertial>
 <origin xyz="-6.9388939039072283776e-18 -0.012713533519811859307 -1.3595795281175873217e-17" rpy="0 0 0"/>
 <mass value="0.17794962537636810351" />
-<inertia ixx="3.4377373668620147878e-05" ixy="1.9709408393789730844e-22"  ixz="-7.1969398875580065713e-23" iyy="4.1215284105260629674e-05" iyz="1.6430845677865352059e-22" izz="3.4002456645612650764e-05" />
+<inertia ixx="3.4377373668620147878e-05" ixy="1.9709408393789730844e-22"  ixz="-7.1969398875580065713e-23" iyy="4.1215284105260622898e-05" iyz="1.6430845677865352059e-22" izz="3.4002456645612650764e-05" />
 </inertial>
 </link>
 
@@ -1460,21 +1460,21 @@
 </inertial>
 </link>
 
-<link name="fermeture18_B_6D">
+<link name="closedloop18_B_6D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture18_B_6D_frame" type="fixed">
+<joint name="closedloop18_B_6D_frame" type="fixed">
 <origin xyz="2.7755575615628913511e-17 2.7755575615628913511e-17 -0.021999999999999991784" rpy="2.8720513250545159028e-18 5.0069198964034734906e-17 -1.195602383648069109e-18" />
 <parent link="piston_11" />
-<child link="fermeture18_B_6D" />
+<child link="closedloop18_B_6D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="mot_hanchexy2_gauche" type="prismatic">
+<joint name="motor_hip_xy_2_left" type="prismatic">
 <origin xyz="0 -0.04333782624542449613 4.1633363423443370266e-17" rpy="-1.570796326794896558 2.612321956315469991e-15 2.3456370119822959644e-15" />
 <parent link="moteur_hanche1_2" />
 <child link="piston_11" />
@@ -1483,7 +1483,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="free_attache_moeur_hanchexy_gauche" type="revolute">
+<joint name="free_motor_holder_hip_xy1_left" type="revolute">
 <origin xyz="4.1633363423443370266e-17 4.1633363423443370266e-17 -0.054999999999999993339" rpy="-1.570796326794896558 1.4797294953454118716 1.5707963267949098807" />
 <parent link="cardan_hache_2" />
 <child link="moteur_hanche1_2" />
@@ -1492,7 +1492,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="free_cardanz_porte_moteur_hachexy_gauche" type="revolute">
+<joint name="free_motor_holder_2_left" type="revolute">
 <origin xyz="0.012500000000000007633 0.037124999999999908074 -0.076999999999999971245" rpy="-1.570796326794896558 -0.021147767637937589513 1.5707963267948983344" />
 <parent link="hanche_gauche" />
 <child link="cardan_hache_2" />
@@ -1501,7 +1501,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="free_hanche_gauche" type="revolute">
+<joint name="free_hip_left" type="revolute">
 <origin xyz="0.012500000000000019776 0.045000000000000095479 -0.0049999999999998934186" rpy="3.3570871694184550475e-17 -7.9158602963494340966e-16 -0.014698705078103748572" />
 <parent link="hanche_batis_gauche" />
 <child link="hanche_gauche" />
@@ -1527,23 +1527,23 @@
 </geometry>
 </collision>
 <inertial>
-<origin xyz="-0.0014786115366823976425 -0.00044500436417471695002 -0.12765424686065846016" rpy="0 0 0"/>
+<origin xyz="-0.001478611536682394173 -0.00044500436417471695002 -0.12765424686065846016" rpy="0 0 0"/>
 <mass value="1.5865591647149870358" />
-<inertia ixx="0.0088382827967695646448" ixy="-2.9207645496738725771e-05"  ixz="-0.00027487762182023731377" iyy="0.010752178054608365829" iyz="-6.8858407992621793953e-05" izz="0.0025754201921632993016" />
+<inertia ixx="0.0088382827967695646448" ixy="-2.920764549673867156e-05"  ixz="-0.00027487762182023731377" iyy="0.010752178054608365829" iyz="-6.8858407992621793953e-05" izz="0.0025754201921632984343" />
 </inertial>
 </link>
 
-<link name="centre_hanche">
+<link name="center_hip">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="centre_hanche_frame" type="fixed">
+<joint name="center_hip_frame" type="fixed">
 <origin xyz="-0.0047474699229011207979 -0.19725000000000003642 -0.28861143158344787496" rpy="-1.570796326794896558 -2.5144941353924022455e-29 -3.670158759091543729e-15" />
 <parent link="hanche_batis" />
-<child link="centre_hanche" />
+<child link="center_hip" />
 <axis xyz="0 0 0"/>
 </joint>
 
@@ -1566,7 +1566,7 @@
 <inertial>
 <origin xyz="3.4156793823902908969e-08 0.003051083573353055578 -0.08336523680757901289" rpy="0 0 0"/>
 <mass value="0.14908820646980494584" />
-<inertia ixx="0.00035636864137915792803" ixy="1.6418959534114397616e-10"  ixz="-6.6325805549025318648e-11" iyy="0.00032228379449719348924" iyz="-1.6655006554546130049e-05" izz="4.9201065872666315557e-05" />
+<inertia ixx="0.00035636864137915792803" ixy="1.641895953410355638e-10"  ixz="-6.6325805548959079576e-11" iyy="0.00032228379449719348924" iyz="-1.6655006554546126661e-05" izz="4.920106587266630878e-05" />
 </inertial>
 </link>
 
@@ -1587,9 +1587,9 @@
 </geometry>
 </collision>
 <inertial>
-<origin xyz="6.7228290681228184756e-09 -1.3877787807814456755e-17 -6.599327717093125649e-05" rpy="0 0 0"/>
-<mass value="0.0064135211594024193679" />
-<inertia ixx="3.3475011343990655066e-07" ixy="-2.8486583237315313981e-12"  ixz="-2.8685952759541640894e-38" iyy="4.3082408299805979528e-07" iyz="2.84865832377020088e-12" izz="3.3475011343990649772e-07" />
+<origin xyz="6.7228290681873046489e-09 -2.0816681711721685133e-17 -6.5993277170931446225e-05" rpy="0 0 0"/>
+<mass value="0.0064135211594024202353" />
+<inertia ixx="3.3475011343990655066e-07" ixy="-2.848658323731531802e-12"  ixz="-2.8685952759541640894e-38" iyy="4.3082408299805979528e-07" iyz="2.84865832377020088e-12" izz="3.3475011343990649772e-07" />
 </inertial>
 </link>
 
@@ -1610,23 +1610,23 @@
 </geometry>
 </collision>
 <inertial>
-<origin xyz="0.0067026039127809433973 0.016607315554245549727 -0.045523329198624416791" rpy="0 0 0"/>
+<origin xyz="0.006702603912780952071 0.016607315554245553196 -0.045523329198624416791" rpy="0 0 0"/>
 <mass value="0.24432174426363423292" />
-<inertia ixx="0.00038002986328721232194" ixy="-4.5343822480551150458e-05"  ixz="0.00019115477962150840305" iyy="0.00063262805206548201366" iyz="7.0096670808240458313e-05" izz="0.00036002210019491680607" />
+<inertia ixx="0.00038002986328721237615" ixy="-4.5343822480551184339e-05"  ixz="0.00019115477962150837594" iyy="0.0006326280520654822305" iyz="7.0096670808240417656e-05" izz="0.0003600221001949169687" />
 </inertial>
 </link>
 
-<link name="fermeture7_B">
+<link name="closedloop7_B_3D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture7_B_frame" type="fixed">
+<joint name="closedloop7_B_3D_frame" type="fixed">
 <origin xyz="0.083867056794542343967 -0.0077119035015027481705 -0.071500000000000063505" rpy="1.570796326794896558 -1.3655413196735760511e-30 -1.3856394439909555038e-14" />
 <parent link="part_1" />
-<child link="fermeture7_B" />
+<child link="closedloop7_B_3D" />
 <axis xyz="0 0 0"/>
 </joint>
 
@@ -1653,21 +1653,21 @@
 </inertial>
 </link>
 
-<link name="fermeture3_A">
+<link name="closedloop3_A_6D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture3_A_frame" type="fixed">
+<joint name="closedloop3_A_6D_frame" type="fixed">
 <origin xyz="-2.4286128663675299322e-17 0 -0.022000000000000158318" rpy="-3.141592653589793116 -8.9238004832296958299e-16 2.3469316244365445958e-17" />
 <parent link="piston_12" />
-<child link="fermeture3_A" />
+<child link="closedloop3_A_6D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="to_rotule_hanche_bas1" type="revolute">
+<joint name="spherical_lower_hip1" type="revolute">
 <origin xyz="-0.060500000000000137002 2.7755575615628913511e-17 -0.038499999999999978684" rpy="1.57079632679489678 -0.083114644637941520466 -3.1415926535897846783" />
 <parent link="part_1" />
 <child link="piston_12" />
@@ -1699,21 +1699,21 @@
 </inertial>
 </link>
 
-<link name="fermeture4_A">
+<link name="closedloop4_A_6D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture4_A_frame" type="fixed">
+<joint name="closedloop4_A_6D_frame" type="fixed">
 <origin xyz="1.7347234759768070944e-17 0 -0.02200000000000001954" rpy="-3.1415926535897895633 -5.8631330626161750329e-14 -2.5740459072486076896e-17" />
 <parent link="piston_13" />
-<child link="fermeture4_A" />
+<child link="closedloop4_A_6D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="to_rotule_hanche_bas2" type="revolute">
+<joint name="spherical_lower_hip2" type="revolute">
 <origin xyz="-0.060500000000000150879 2.7755575615628913511e-17 0.03850000000000006195" rpy="-1.57079632679489678 0.090109706454325047553 -5.2539072764179264277e-14" />
 <parent link="part_1" />
 <child link="piston_13" />
@@ -1741,7 +1741,7 @@
 <inertial>
 <origin xyz="-0.10353133038219143602 -0.14056766472890799835 -5.98493476999806363e-13" rpy="0 0 0"/>
 <mass value="0.39806472503371786997" />
-<inertia ixx="0.0031977111359881458738" ixy="-0.001858846357492638943"  ixz="5.7043161333344648304e-15" iyy="0.0012912945788078693775" iyz="2.6363837589087473414e-14" izz="0.0044624680664483249576" />
+<inertia ixx="0.0031977111359881450064" ixy="-0.0018588463574926391599"  ixz="5.7043164774452363012e-15" iyy="0.0012912945788078693775" iyz="2.6363834930818742746e-14" izz="0.0044624680664483240902" />
 </inertial>
 </link>
 
@@ -1762,9 +1762,9 @@
 </geometry>
 </collision>
 <inertial>
-<origin xyz="0.10608938835476373896 -0.17986935727287689524 -4.1633363423443370266e-17" rpy="0 0 0"/>
-<mass value="0.2021348089396567127" />
-<inertia ixx="0.0018459328059746531181" ixy="0.0012583807608323397537"  ixz="-1.053224961852036227e-35" iyy="0.0008879700532368084865" iyz="8.3651939008526289642e-35" izz="0.0027204272052821516087" />
+<origin xyz="0.10608938835476375284 -0.17986935727287689524 -4.1633363423443376429e-17" rpy="0 0 0"/>
+<mass value="0.20213480893965668495" />
+<inertia ixx="0.0018459328059746533349" ixy="0.0012583807608323397537"  ixz="-1.0532249618520339551e-35" iyy="0.00088797005323680859492" iyz="8.3651939008526278951e-35" izz="0.0027204272052821520424" />
 </inertial>
 </link>
 
@@ -1785,9 +1785,9 @@
 </geometry>
 </collision>
 <inertial>
-<origin xyz="6.7228290672610617134e-09 -1.3183898417423733918e-16 6.6006722829024965416e-05" rpy="0 0 0"/>
-<mass value="0.0064135211594024193679" />
-<inertia ixx="3.3475011343990665654e-07" ixy="-2.8486583237211431728e-12"  ixz="-7.3569067863775769189e-25" iyy="4.3082408299806000704e-07" iyz="2.8486583237600570123e-12" izz="3.3475011343990649772e-07" />
+<origin xyz="6.722829067325548714e-09 -1.3877787807814456755e-16 6.600672282902477568e-05" rpy="0 0 0"/>
+<mass value="0.0064135211594024202353" />
+<inertia ixx="3.3475011343990665654e-07" ixy="-2.8486583237211435767e-12"  ixz="-7.3569067863775769189e-25" iyy="4.3082408299806000704e-07" iyz="2.8486583237600570123e-12" izz="3.3475011343990649772e-07" />
 </inertial>
 </link>
 
@@ -1808,55 +1808,55 @@
 </geometry>
 </collision>
 <inertial>
-<origin xyz="-0.003635881713415108768 0.024966449369929651081 9.0007330185795339466e-08" rpy="0 0 0"/>
+<origin xyz="-0.0036358817134151065996 0.024966449369929651081 9.0007330186008182964e-08" rpy="0 0 0"/>
 <mass value="0.3109129822293019707" />
-<inertia ixx="0.00026328612588329933534" ixy="-5.3028311481376154391e-05"  ixz="-1.7872776046559088262e-09" iyy="0.00071897520566115971294" iyz="-2.0903095188934562725e-10" izz="0.00052661427618999395381" />
+<inertia ixx="0.00026328612588329933534" ixy="-5.3028311481376147615e-05"  ixz="-1.7872776046462335014e-09" iyy="0.00071897520566115971294" iyz="-2.0903095188730192245e-10" izz="0.00052661427618999406223" />
 </inertial>
 </link>
 
-<link name="bout_pied">
+<link name="foot_right">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="bout_pied_frame" type="fixed">
+<joint name="foot_right_frame" type="fixed">
 <origin xyz="0.01201694922107987562 0.038499999999999923173 6.8117393392519431927e-09" rpy="1.5707963267948972241 4.1530747501458917702e-18 1.4689606375488657859e-15" />
 <parent link="foot_2" />
-<child link="bout_pied" />
+<child link="foot_right" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<link name="fermeture0_A">
+<link name="closedloop0_A_3D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture0_A_frame" type="fixed">
+<joint name="closedloop0_A_3D_frame" type="fixed">
 <origin xyz="-0.054999999999999715783 -0.010999999999999843237 0.038500000000000006439" rpy="1.570796326794896558 6.2711683153062856565e-17 -1.5707963267948958919" />
 <parent link="foot_2" />
-<child link="fermeture0_A" />
+<child link="closedloop0_A_3D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<link name="fermeture11_A">
+<link name="closedloop11_A_3D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture11_A_frame" type="fixed">
+<joint name="closedloop11_A_3D_frame" type="fixed">
 <origin xyz="-0.054999999999999826805 -0.010999999999999954259 -0.038500000000000034195" rpy="1.570796326794896558 6.2711683153062856565e-17 -1.5707963267948958919" />
 <parent link="foot_2" />
-<child link="fermeture11_A" />
+<child link="closedloop11_A_3D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="free_cheville_cardanx" type="revolute">
+<joint name="free_ankle_universalx" type="revolute">
 <origin xyz="6.6000000007115922074e-05 -1.1102230246251565404e-16 6.6000000002341963068e-05" rpy="-1.570796326794896558 -0.95882611835293629632 -1.570796326794896558" />
 <parent link="cardan_foot_4" />
 <child link="foot_2" />
@@ -1865,7 +1865,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="cardans_foot_haut" type="revolute">
+<joint name="uneveral_foot1" type="revolute">
 <origin xyz="0.21747050071614926203 -0.33571800862966427736 0" rpy="-1.5707963267948958919 -1.4835298641951766285 1.5707963267949329733" />
 <parent link="part_3_2" />
 <child link="cardan_foot_4" />
@@ -1897,21 +1897,21 @@
 </inertial>
 </link>
 
-<link name="fermeture6_B">
+<link name="closedloop6_B_3D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture6_B_frame" type="fixed">
+<joint name="closedloop6_B_3D_frame" type="fixed">
 <origin xyz="-2.7755575615628913511e-17 0 -0.42720000000000007967" rpy="-3.1415926535897926719 4.3171515544792239751e-16 3.141592653589793116" />
 <parent link="part_6_2" />
-<child link="fermeture6_B" />
+<child link="closedloop6_B_3D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="to_rotule_barres_tibias" type="revolute">
+<joint name="spherical_shin_rod1" type="revolute">
 <origin xyz="0.038967453687049735667 -0.092095263467496524257 0" rpy="-1.57079632679489678 -1.3380503778517247593 1.5707963267948987784" />
 <parent link="part_3_2" />
 <child link="part_6_2" />
@@ -1920,7 +1920,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="genoux_bas" type="revolute">
+<joint name="lower_knee" type="revolute">
 <origin xyz="-0.21747050071615142697 -0.33571800862966272305 -5.5511151231257827021e-17" rpy="2.0331881193927353103e-17 3.4472918726955580133e-17 0.89630439304597731009" />
 <parent link="part_2_2" />
 <child link="part_3_2" />
@@ -1946,23 +1946,23 @@
 </geometry>
 </collision>
 <inertial>
-<origin xyz="-0.033596086250149523322 -0.018380744757819034163 -0.014122199558543407916" rpy="0 0 0"/>
+<origin xyz="-0.0335960862501495372 -0.018380744757819034163 -0.014122199558543407916" rpy="0 0 0"/>
 <mass value="0.074310320490072731547" />
-<inertia ixx="4.1295450354366527806e-05" ixy="1.9886051938184637935e-06"  ixz="-2.0689202263474873248e-06" iyy="3.2625641947312127868e-05" iyz="-9.9798202174584486462e-06" izz="5.1310129727252677732e-05" />
+<inertia ixx="4.1295450354366527806e-05" ixy="1.988605193818464217e-06"  ixz="-2.0689202263474869013e-06" iyy="3.2625641947312141421e-05" iyz="-9.9798202174584486462e-06" izz="5.1310129727252670956e-05" />
 </inertial>
 </link>
 
-<link name="fermeture10_B">
+<link name="closedloop10_B_3D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture10_B_frame" type="fixed">
+<joint name="closedloop10_B_3D_frame" type="fixed">
 <origin xyz="-0.035854717888629136779 -0.041706584673488200643 -0.052249999999999963141" rpy="-1.57079632679489678 4.2500725161430485751e-17 -2.5782405335516153514e-16" />
 <parent link="renvois_cheville_2_8_2" />
-<child link="fermeture10_B" />
+<child link="closedloop10_B_3D" />
 <axis xyz="0 0 0"/>
 </joint>
 
@@ -1989,21 +1989,21 @@
 </inertial>
 </link>
 
-<link name="fermeture0_B">
+<link name="closedloop0_B_3D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture0_B_frame" type="fixed">
+<joint name="closedloop0_B_3D_frame" type="fixed">
 <origin xyz="-1.1102230246251565404e-16 5.5511151231257827021e-17 -0.40000000000000007772" rpy="3.1415926535897913396 1.3110944058270872971e-15 -1.570796326794896558" />
 <parent link="part_7_5" />
-<child link="fermeture0_B" />
+<child link="closedloop0_B_3D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="to_rotule_renvois_pied2" type="revolute">
+<joint name="spherical_transmission_foot2" type="revolute">
 <origin xyz="-0.059494699261975703131 0.010983203527527130028 -0.021999999999999964029" rpy="-1.57079632679489678 0.2674961218464166901 -1.570796326794896558" />
 <parent link="renvois_cheville_2_8_2" />
 <child link="part_7_5" />
@@ -2012,7 +2012,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="renvois_genoux_1" type="revolute">
+<joint name="triangle_knee1" type="revolute">
 <origin xyz="-0.21747050071615148248 -0.33571800862966283407 0.010000000000000008882" rpy="3.1415926535897922278 2.5397996671417581801e-15 3.0532620163569994531" />
 <parent link="part_2_2" />
 <child link="renvois_cheville_2_8_2" />
@@ -2038,23 +2038,23 @@
 </geometry>
 </collision>
 <inertial>
-<origin xyz="-0.033596086592530882697 -0.018380744754187161583 0.014122199609931612371" rpy="0 0 0"/>
-<mass value="0.074310321213953575703" />
-<inertia ixx="4.1295450352451928413e-05" ixy="1.9886053203183223214e-06"  ixz="2.0689203249184041921e-06" iyy="3.2625642523550437595e-05" iyz="9.9798202218794574933e-06" izz="5.1310130219953345595e-05" />
+<origin xyz="-0.033596086592530896575 -0.018380744754187161583 0.014122199609931607167" rpy="0 0 0"/>
+<mass value="0.074310321213953547947" />
+<inertia ixx="4.1295450352451928413e-05" ixy="1.9886053203183231685e-06"  ixz="2.0689203249184054627e-06" iyy="3.2625642523550437595e-05" iyz="9.9798202218794591873e-06" izz="5.1310130219953359147e-05" />
 </inertial>
 </link>
 
-<link name="fermeture9_B">
+<link name="closedloop9_B_3D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture9_B_frame" type="fixed">
+<joint name="closedloop9_B_3D_frame" type="fixed">
 <origin xyz="-0.035854717888628991063 -0.041706584673488089621 0.052250000000000074163" rpy="1.570796326794896558 7.4525120443701586197e-31 -3.1415926535897908956" />
 <parent link="renvois_cheville_2" />
-<child link="fermeture9_B" />
+<child link="closedloop9_B_3D" />
 <axis xyz="0 0 0"/>
 </joint>
 
@@ -2081,21 +2081,21 @@
 </inertial>
 </link>
 
-<link name="fermeture11_B">
+<link name="closedloop11_B_3D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture11_B_frame" type="fixed">
+<joint name="closedloop11_B_3D_frame" type="fixed">
 <origin xyz="0 1.3877787807814456755e-17 -0.40000000000000013323" rpy="3.1415926535897895633 -3.5435748969399307641e-16 1.570796326794896558" />
 <parent link="part_7_6" />
-<child link="fermeture11_B" />
+<child link="closedloop11_B_3D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="to_rotule_renvois_pied1" type="revolute">
+<joint name="spherical_transmission_foot1" type="revolute">
 <origin xyz="-0.059494699261975536597 0.010983203527527130028 0.022000000000000047296" rpy="1.570796326794896558 -0.30096768397183631949 1.5707963267948981123" />
 <parent link="renvois_cheville_2" />
 <child link="part_7_6" />
@@ -2104,7 +2104,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="renvois_genoux_2" type="revolute">
+<joint name="triangle_knee2" type="revolute">
 <origin xyz="-0.21747050071615164901 -0.33571800862966283407 -0.010000000000000008882" rpy="3.1415926535897926719 2.3960728016627840815e-15 3.0785068790704639419" />
 <parent link="part_2_2" />
 <child link="renvois_cheville_2" />
@@ -2132,21 +2132,21 @@
 <inertial>
 <origin xyz="0.019483726843524840078 -0.046047631733748345395 -5.5511151231257827021e-17" rpy="0 0 0"/>
 <mass value="0.011311035579799526632" />
-<inertia ixx="1.0009836990585403103e-05" ixy="4.1536946028868301987e-06"  ixz="-5.4133420794259684742e-37" iyy="1.9505556032253768346e-06" iyz="-6.8590833697575051289e-37" izz="1.1771875334147455301e-05" />
+<inertia ixx="1.0009836990585403103e-05" ixy="4.1536946028868310457e-06"  ixz="-5.4133420794259684742e-37" iyy="1.9505556032253768346e-06" iyz="-6.8590833697575051289e-37" izz="1.1771875334147455301e-05" />
 </inertial>
 </link>
 
-<link name="fermeture6_A">
+<link name="closedloop6_A_3D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture6_A_frame" type="fixed">
+<joint name="closedloop6_A_3D_frame" type="fixed">
 <origin xyz="0.038967453687049735667 -0.092095263467496704668 -5.5511151231257827021e-17" rpy="1.570796326794896558 4.0264892381777355687e-23 -1.570796326794896336" />
 <parent link="part_4_2" />
-<child link="fermeture6_A" />
+<child link="closedloop6_A_3D" />
 <axis xyz="0 0 0"/>
 </joint>
 
@@ -2173,21 +2173,21 @@
 </inertial>
 </link>
 
-<link name="fermeture7_A">
+<link name="closedloop7_A_3D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture7_A_frame" type="fixed">
+<joint name="closedloop7_A_3D_frame" type="fixed">
 <origin xyz="2.7755575615628913511e-17 -5.5511151231257827021e-17 -0.14142000000000004567" rpy="-3.141592653589793116 -2.5701272669893044796e-16 1.5487482446605287392e-16" />
 <parent link="part_5_2" />
-<child link="fermeture7_A" />
+<child link="closedloop7_A_3D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="to_rotule_4barres" type="revolute">
+<joint name="spherical_4rod" type="revolute">
 <origin xyz="0.0194837268435249511 -0.046047631733748414784 0" rpy="1.57079632679489678 0.15824418733945430637 1.5707963267948958919" />
 <parent link="part_4_2" />
 <child link="part_5_2" />
@@ -2196,7 +2196,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="4barres_genoux" type="revolute">
+<joint name="4rod_knee" type="revolute">
 <origin xyz="0.046047631733745958416 -0.019483726843523313521 -1.1102230246251565404e-16" rpy="3.141592653589793116 2.0222300709208235426e-16 -1.2672660179279322534" />
 <parent link="part_2_2" />
 <child link="part_4_2" />
@@ -2222,9 +2222,9 @@
 </geometry>
 </collision>
 <inertial>
-<origin xyz="-9.7925111873787854339e-17 1.1102230246251565404e-16 -0.017243243243243222551" rpy="0 0 0"/>
-<mass value="0.19339251676417062997" />
-<inertia ixx="4.9207470246053574929e-05" ixy="9.2195496114233579387e-22"  ixz="1.6649633185126964814e-22" iyy="4.9207470246053534272e-05" iyz="-5.6408426651239407996e-20" izz="3.3697502678236661278e-05" />
+<origin xyz="-9.7925111873787854339e-17 0 -0.017243243243243222551" rpy="0 0 0"/>
+<mass value="0.19339251676417060222" />
+<inertia ixx="4.9207470246053568153e-05" ixy="9.2195496114233504155e-22"  ixz="1.6649633185126967165e-22" iyy="4.9207470246053520719e-05" iyz="-5.6408426651239359848e-20" izz="3.3697502678236661278e-05" />
 </inertial>
 </link>
 
@@ -2251,21 +2251,21 @@
 </inertial>
 </link>
 
-<link name="fermeture8_A">
+<link name="closedloop8_A_6D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture8_A_frame" type="fixed">
+<joint name="closedloop8_A_6D_frame" type="fixed">
 <origin xyz="-2.7755575615628913511e-17 -2.7755575615628913511e-17 -0.021999999999999991784" rpy="-3.141592653589793116 -7.5767938905805758326e-17 -1.570796326794896336" />
 <parent link="piston_14" />
-<child link="fermeture8_A" />
+<child link="closedloop8_A_6D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="mot_genoux" type="prismatic">
+<joint name="motor_knee" type="prismatic">
 <origin xyz="-8.2434059578417873126e-15 -1.8873791418627661187e-15 -0.0023309791397017609604" rpy="3.141592653589793116 1.4510931439305401901e-15 -4.1052068437918848451e-15" />
 <parent link="motteur_rotation_4" />
 <child link="piston_14" />
@@ -2274,7 +2274,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="frame_moeur_genoux" type="revolute">
+<joint name="frame_motor_knee" type="revolute">
 <origin xyz="-0.061655078133537336016 -0.018724201373191806663 4.297340261416593421e-12" rpy="-1.570796326794896558 1.2771385194773066107 -0.60601731071218278846" />
 <parent link="part_2_2" />
 <child link="motteur_rotation_4" />
@@ -2283,7 +2283,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="genoux_haut" type="revolute">
+<joint name="upper_knee" type="revolute">
 <origin xyz="-6.2450045135165055399e-17 0.046752000000000015767 -0.071500000000000007994" rpy="-3.1415926535897842342 -1.2696304357689524271e-15 0.22729525162017977236" />
 <parent link="part_1" />
 <child link="part_2_2" />
@@ -2309,9 +2309,9 @@
 </geometry>
 </collision>
 <inertial>
-<origin xyz="0.031934770108260138177 0.010733820853410624974 -0.0056648401062836528652" rpy="0 0 0"/>
-<mass value="0.006204090388627271635" />
-<inertia ixx="9.174211164042201537e-07" ixy="-1.6316603808924166973e-07"  ixz="2.2769789117187752367e-07" iyy="1.3280669465102740276e-06" iyz="-1.4783479338790849577e-07" izz="1.7548720440932142221e-06" />
+<origin xyz="0.031934770108260138177 0.010733820853410624974 -0.0056648401062836389874" rpy="0 0 0"/>
+<mass value="0.0062040903886272725024" />
+<inertia ixx="9.1742111640422047134e-07" ixy="-1.6316603808924151091e-07"  ixz="2.2769789117187739132e-07" iyy="1.3280669465102744511e-06" iyz="-1.4783479338790841636e-07" izz="1.7548720440932150692e-06" />
 </inertial>
 </link>
 
@@ -2338,21 +2338,21 @@
 </inertial>
 </link>
 
-<link name="fermeture1_B">
+<link name="closedloop1_B_6D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture1_B_frame" type="fixed">
+<joint name="closedloop1_B_6D_frame" type="fixed">
 <origin xyz="5.5511151231257827021e-17 -5.5511151231257827021e-17 -0.021999999999999964029" rpy="-3.1415926535897900074 2.0244592807192931317e-15 -1.570796326794896336" />
 <parent link="piston_15" />
-<child link="fermeture1_B" />
+<child link="closedloop1_B_6D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="to_rotule_renvois_hanche_moeur1" type="revolute">
+<joint name="spherical_transmission_motor_hip1" type="revolute">
 <origin xyz="0.043531328479973679935 0.0032046566522409558608 -0.025000000000000077716" rpy="1.5707963267948992225 -1.3881446540757451658 -3.1415926535897669147" />
 <parent link="part_8_2" />
 <child link="piston_15" />
@@ -2384,21 +2384,21 @@
 </inertial>
 </link>
 
-<link name="fermeture10_A">
+<link name="closedloop10_A_3D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture10_A_frame" type="fixed">
+<joint name="closedloop10_A_3D_frame" type="fixed">
 <origin xyz="-8.6736173798840354721e-17 -1.1102230246251565404e-16 -0.40000000000000007772" rpy="1.4121142989576800076e-16 6.455226355074138767e-16 -4.8615344150257609708e-16" />
 <parent link="part_7_7" />
-<child link="fermeture10_A" />
+<child link="closedloop10_A_3D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="to_rotule_renvois_hanche3" type="revolute">
+<joint name="spherical_transmission_hip3" type="revolute">
 <origin xyz="0.041074543378118832937 0.036577067764912832293 -0.005000000000000059952" rpy="-1.570796326794896558 0.67303436723393439411 3.141592653589793116" />
 <parent link="part_8_2" />
 <child link="part_7_7" />
@@ -2407,7 +2407,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="renvois_hanche_1" type="revolute">
+<joint name="transmission_hip1" type="revolute">
 <origin xyz="-6.2450045135165055399e-17 0.046752000000000015767 -0.087999999999999967137" rpy="9.4681397285287776746e-15 -4.9405061162797479416e-15 0.77974518790642721733" />
 <parent link="part_1" />
 <child link="part_8_2" />
@@ -2434,8 +2434,8 @@
 </collision>
 <inertial>
 <origin xyz="0.031934770108260165933 -0.010733820853410638851 -0.005664840106283604293" rpy="0 0 0"/>
-<mass value="0.0062040903886272699003" />
-<inertia ixx="9.174211164042338121e-07" ixy="1.6316603808924386672e-07"  ixz="2.2769789117187752367e-07" iyy="1.328066946510272757e-06" iyz="1.4783479338790936927e-07" izz="1.7548720440932267159e-06" />
+<mass value="0.0062040903886272707676" />
+<inertia ixx="9.174211164042338121e-07" ixy="1.6316603808924360203e-07"  ixz="2.2769789117187739132e-07" iyy="1.3280669465102731806e-06" iyz="1.4783479338790931633e-07" izz="1.7548720440932271394e-06" />
 </inertial>
 </link>
 
@@ -2462,21 +2462,21 @@
 </inertial>
 </link>
 
-<link name="fermeture2_B">
+<link name="closedloop2_B_6D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture2_B_frame" type="fixed">
+<joint name="closedloop2_B_6D_frame" type="fixed">
 <origin xyz="0 -8.3266726846886740532e-17 -0.021999999999999977907" rpy="3.1415926535897926719 3.2544751110174058161e-15 -1.570796326794896558" />
 <parent link="piston_16" />
-<child link="fermeture2_B" />
+<child link="closedloop2_B_6D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="to_rotule_renvois_hanche_moeur2" type="revolute">
+<joint name="spherical_transmission_motor_hip2" type="revolute">
 <origin xyz="0.043531328479973679935 -0.0032046566522410668831 -0.024999999999999938938" rpy="1.570796326794896558 -1.0520766825141583123 -1.2677408616997643214e-14" />
 <parent link="part_9_2" />
 <child link="piston_16" />
@@ -2508,21 +2508,21 @@
 </inertial>
 </link>
 
-<link name="fermeture9_A">
+<link name="closedloop9_A_3D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture9_A_frame" type="fixed">
+<joint name="closedloop9_A_3D_frame" type="fixed">
 <origin xyz="0 6.2450045135165055399e-17 -0.40000000000000013323" rpy="-2.3882228318976020147e-15 -1.0948393169349909809e-15 -1.5707963267948972241" />
 <parent link="part_7_8" />
-<child link="fermeture9_A" />
+<child link="closedloop9_A_3D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="to_rotule_renvois_hanche4" type="revolute">
+<joint name="spherical_transmission_hip4" type="revolute">
 <origin xyz="0.041074543378118888448 -0.036577067764912901682 -0.0050000000000000044409" rpy="1.570796326794896558 0.73924967494907445342 3.1415926535897851224" />
 <parent link="part_9_2" />
 <child link="part_7_8" />
@@ -2531,7 +2531,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="renvois_hanche_2" type="revolute">
+<joint name="transmission_hip2" type="revolute">
 <origin xyz="-6.2450045135165055399e-17 0.046752000000000015767 -0.054999999999999993339" rpy="-3.1415926535897837901 -5.6800076792079728017e-15 0.82801632278258496811" />
 <parent link="part_1" />
 <child link="part_9_2" />
@@ -2563,21 +2563,21 @@
 </inertial>
 </link>
 
-<link name="fermeture8_B">
+<link name="closedloop8_B_6D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture8_B_frame" type="fixed">
+<joint name="closedloop8_B_6D_frame" type="fixed">
 <origin xyz="0 -1.3877787807814456755e-17 -0.022000000000000047296" rpy="9.6232195658333659591e-16 -1.7756561743236490927e-16 1.5707963267948978903" />
 <parent link="piston_17" />
-<child link="fermeture8_B" />
+<child link="closedloop8_B_6D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="to_rotule_moeur_action_genoux" type="revolute">
+<joint name="spherical_motor_knee_holder" type="revolute">
 <origin xyz="-0.013749999999999956701 0.0024999999999999744649 -0.072000000000000008438" rpy="-1.57079632679489678 -0.99860729712136542258 -1.5707963267949036634" />
 <parent link="part_1" />
 <child link="piston_17" />
@@ -2603,9 +2603,9 @@
 </geometry>
 </collision>
 <inertial>
-<origin xyz="-8.0774250302767111022e-18 -2.2204460492503130808e-16 -0.017243243243243250307" rpy="0 0 0"/>
-<mass value="0.19339251676417062997" />
-<inertia ixx="4.9207470246053547824e-05" ixy="3.8466600980139597356e-22"  ixz="-2.2249546611953510428e-21" iyy="4.9207470246053574929e-05" iyz="-5.6540274243430499888e-20" izz="3.3697502678236647725e-05" />
+<origin xyz="-8.0774250302767111022e-18 -3.3306690738754696213e-16 -0.017243243243243250307" rpy="0 0 0"/>
+<mass value="0.19339251676417060222" />
+<inertia ixx="4.9207470246053541048e-05" ixy="3.8466600980139597356e-22"  ixz="-2.2249546611953510428e-21" iyy="4.9207470246053561377e-05" iyz="-5.654027424343045174e-20" izz="3.3697502678236647725e-05" />
 </inertial>
 </link>
 
@@ -2632,21 +2632,21 @@
 </inertial>
 </link>
 
-<link name="fermeture1_A">
+<link name="closedloop1_A_6D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture1_A_frame" type="fixed">
+<joint name="closedloop1_A_6D_frame" type="fixed">
 <origin xyz="-1.6653345369377348106e-16 -8.3266726846886740532e-17 -0.02200000000000001954" rpy="-3.5035493923141009984e-15 1.2814418519762241213e-14 7.7830227665322737198e-18" />
 <parent link="piston_18" />
-<child link="fermeture1_A" />
+<child link="closedloop1_A_6D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="mot_cheville2" type="prismatic">
+<joint name="motor_ankle2" type="prismatic">
 <origin xyz="4.2743586448068526806e-15 7.5772721430666933884e-15 0.021140168165682704515" rpy="3.1415926535897926719 1.8047950485096526647e-14 3.1415926535897802374" />
 <parent link="motteur_rotation_5" />
 <child link="piston_18" />
@@ -2655,7 +2655,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="frame_moeur_pied1" type="revolute">
+<joint name="frame_motor_ankle1" type="revolute">
 <origin xyz="0.054086706326755232266 0.014047405294960763067 -0.11825000000000002176" rpy="-1.570796326794896558 0.73498046737731748124 0.2858933777993256653" />
 <parent link="part_1" />
 <child link="motteur_rotation_5" />
@@ -2681,9 +2681,9 @@
 </geometry>
 </collision>
 <inertial>
-<origin xyz="4.0469824391873859958e-17 0 -0.017243243243243264184" rpy="0 0 0"/>
-<mass value="0.19339251676417062997" />
-<inertia ixx="4.9207470246053547824e-05" ixy="-8.0661246340587028051e-23"  ixz="-8.0293218502517168479e-21" iyy="4.9207470246053547824e-05" iyz="-5.6295438736135015396e-20" izz="3.3697502678236661278e-05" />
+<origin xyz="4.0469824391873859958e-17 -1.1102230246251565404e-16 -0.017243243243243264184" rpy="0 0 0"/>
+<mass value="0.19339251676417060222" />
+<inertia ixx="4.9207470246053541048e-05" ixy="-8.0661246340586886992e-23"  ixz="-8.0293218502517168479e-21" iyy="4.9207470246053534272e-05" iyz="-5.6295438736134967248e-20" izz="3.3697502678236661278e-05" />
 </inertial>
 </link>
 
@@ -2710,21 +2710,21 @@
 </inertial>
 </link>
 
-<link name="fermeture2_A">
+<link name="closedloop2_A_6D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture2_A_frame" type="fixed">
+<joint name="closedloop2_A_6D_frame" type="fixed">
 <origin xyz="-5.5511151231257827021e-17 -2.7755575615628913511e-17 -0.021999999999999964029" rpy="-1.3603990467924331356e-15 3.4203648913185160548e-15 4.0022067353557518153e-17" />
 <parent link="piston_19" />
-<child link="fermeture2_A" />
+<child link="closedloop2_A_6D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="mot_cheville1" type="prismatic">
+<joint name="motor_ankle1" type="prismatic">
 <origin xyz="3.0531133177191804862e-16 -2.7755575615628913511e-17 0.018399835965480559885" rpy="-3.141592653589793116 2.2946682489661683897e-15 3.1415926535897926719" />
 <parent link="motteur_rotation_6" />
 <child link="piston_19" />
@@ -2733,7 +2733,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="frame_moeur_pied2" type="revolute">
+<joint name="frame_motor_ankle2" type="revolute">
 <origin xyz="0.054086706326755190632 0.014047405294960790823 -0.024750000000000021982" rpy="1.570796326794896558 -0.17956569756706666774 -2.8556992757904748892" />
 <parent link="part_1" />
 <child link="motteur_rotation_6" />
@@ -2742,7 +2742,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="hanche_bas" type="revolute">
+<joint name="lower_hip" type="revolute">
 <origin xyz="6.6000000000010494716e-05 -2.7755575615628913511e-17 -6.6000000000000086375e-05" rpy="-1.5707963267949025532 -1.1595523542658980887 -1.5707963267948952257" />
 <parent link="cardan_foot_3" />
 <child link="part_1" />
@@ -2751,7 +2751,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="free_cardans_yhips" type="revolute">
+<joint name="free_universal_yhip" type="revolute">
 <origin xyz="0 -2.7755575615628913511e-17 -0.16500000000000009104" rpy="1.570796326794896558 -1.0038838022974944486e-17 -1.5707963267948992225" />
 <parent link="hanche" />
 <child link="cardan_foot_3" />
@@ -2802,7 +2802,7 @@
 <inertial>
 <origin xyz="6.2450045135165055399e-17 -0.012713533519811970329 -8.6137926851213824966e-18" rpy="0 0 0"/>
 <mass value="0.17794962537636810351" />
-<inertia ixx="3.4377373668620134326e-05" ixy="-3.8867373524181810196e-21"  ixz="2.0081036527363510443e-23" iyy="4.1215284105260616121e-05" iyz="3.5447475520577351224e-22" izz="3.4002456645612650764e-05" />
+<inertia ixx="3.4377373668620134326e-05" ixy="-3.8867373524181810196e-21"  ixz="2.0081036527363510443e-23" iyy="4.1215284105260609345e-05" iyz="3.5447475520577346522e-22" izz="3.4002456645612650764e-05" />
 </inertial>
 </link>
 
@@ -2829,21 +2829,21 @@
 </inertial>
 </link>
 
-<link name="fermeture4_B">
+<link name="closedloop4_B_6D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture4_B_frame" type="fixed">
+<joint name="closedloop4_B_6D_frame" type="fixed">
 <origin xyz="5.5511151231257827021e-17 0 -0.021999999999999887701" rpy="-5.2397508177699997199e-14 7.9985639615515115397e-15 -6.9853190798646948938e-18" />
 <parent link="piston_20" />
-<child link="fermeture4_B" />
+<child link="closedloop4_B_6D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="mot_hanchexy1" type="prismatic">
+<joint name="motor_hip_xy_2" type="prismatic">
 <origin xyz="0 -0.026361686710175066817 -1.9428902930940239457e-16" rpy="-1.5707963267949502928 -7.9875720912898989692e-15 7.040089964984604181e-15" />
 <parent link="moteur_hanche1_3" />
 <child link="piston_20" />
@@ -2852,7 +2852,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="free_attache_moeur_hanchexy2" type="revolute">
+<joint name="free_motor_holder_hipxy2" type="revolute">
 <origin xyz="-2.7755575615628913511e-17 -6.9388939039072283776e-17 -0.055000000000000062728" rpy="-1.570796326794896558 -1.1268255606165180627 1.5707963267948938935" />
 <parent link="cardan_hache_3" />
 <child link="moteur_hanche1_3" />
@@ -2861,7 +2861,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="free_attache_moeur_hanche_1" type="revolute">
+<joint name="free_motor_holder_1" type="revolute">
 <origin xyz="0.012499999999999998959 -0.037124999999999658273 -0.077000000000000151656" rpy="1.57079632679489678 -0.033001070205816974978 -1.5707963267948974462" />
 <parent link="hanche" />
 <child link="cardan_hache_3" />
@@ -2912,7 +2912,7 @@
 <inertial>
 <origin xyz="-2.0816681711721682051e-17 -0.012713533519811970329 2.626351889156016982e-17" rpy="0 0 0"/>
 <mass value="0.17794962537636810351" />
-<inertia ixx="3.4377373668620134326e-05" ixy="-2.8924313380968283259e-21"  ixz="-2.4191328857964440545e-23" iyy="4.1215284105260629674e-05" iyz="-3.5971653051358820958e-23" izz="3.4002456645612650764e-05" />
+<inertia ixx="3.4377373668620134326e-05" ixy="-2.8924313380968279497e-21"  ixz="-2.4191328857964440545e-23" iyy="4.1215284105260622898e-05" iyz="-3.5971653051358809203e-23" izz="3.4002456645612650764e-05" />
 </inertial>
 </link>
 
@@ -2939,21 +2939,21 @@
 </inertial>
 </link>
 
-<link name="fermeture3_B">
+<link name="closedloop3_B_6D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture3_B_frame" type="fixed">
+<joint name="closedloop3_B_6D_frame" type="fixed">
 <origin xyz="-4.1633363423443370266e-17 -8.3266726846886740532e-17 -0.022000000000000005662" rpy="-3.8323071526180824844e-15 1.9454298298622066299e-16 1.4021234671943678824e-17" />
 <parent link="piston_21" />
-<child link="fermeture3_B" />
+<child link="closedloop3_B_6D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="mot_hanchexy2" type="prismatic">
+<joint name="motor_hip_xy_1" type="prismatic">
 <origin xyz="5.5511151231257827021e-17 -0.026357933593704453712 2.7755575615628913511e-17" rpy="-1.5707963267948994446 2.6524860729722982745e-15 1.8903718014666384216e-15" />
 <parent link="moteur_hanche1_4" />
 <child link="piston_21" />
@@ -2962,7 +2962,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="free_attache_moeur_hanchexy" type="revolute">
+<joint name="free_motor_holder_hipxy1" type="revolute">
 <origin xyz="-2.7755575615628913511e-17 1.6653345369377348106e-16 -0.054999999999999979461" rpy="-1.57079632679489678 1.1267886452730790925 1.5707963267949007768" />
 <parent link="cardan_hache_4" />
 <child link="moteur_hanche1_4" />
@@ -2971,7 +2971,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="free_attache_moeur_hanche_3" type="revolute">
+<joint name="free_motor_holder_3" type="revolute">
 <origin xyz="0.012499999999999998959 0.037125000000000019096 -0.077000000000000151656" rpy="-1.570796326794896558 -0.029979973678264791592 1.5707963267948958919" />
 <parent link="hanche" />
 <child link="cardan_hache_4" />
@@ -3003,21 +3003,21 @@
 </inertial>
 </link>
 
-<link name="fermeture5_B">
+<link name="closedloop5_B_6D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture5_B_frame" type="fixed">
+<joint name="closedloop5_B_6D_frame" type="fixed">
 <origin xyz="0 -2.7755575615628913511e-17 -0.022000000000000231176" rpy="3.1415926535897917837 9.3675067702747509143e-17 -1.570796326794896558" />
 <parent link="piston_22" />
-<child link="fermeture5_B" />
+<child link="closedloop5_B_6D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="to_rotule_free_attache2_moeur_hanchez" type="revolute">
+<joint name="free_spherical_motor_holder_hipz" type="revolute">
 <origin xyz="3.380976054678797027e-15 0.038499999999999978684 -0.046750000000000131728" rpy="1.570796326794896558 0.051824161433119159126 1.5707963267948945596" />
 <parent link="hanche" />
 <child link="piston_22" />
@@ -3026,7 +3026,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="free_zhips" type="revolute">
+<joint name="free_zhip" type="revolute">
 <origin xyz="0.012499999999999891406 -0.029749999999999887645 -0.20500000000000001554" rpy="-1.570796326794896558 2.6592413774926255711e-28 -3.5042375413817778047e-15" />
 <parent link="hanche_batis" />
 <child link="hanche" />
@@ -3075,9 +3075,9 @@
 </geometry>
 </collision>
 <inertial>
-<origin xyz="6.7839909838383009861e-17 2.2204460492503130808e-16 -0.033743243243243278839" rpy="0 0 0"/>
-<mass value="0.19339251676417062997" />
-<inertia ixx="4.9207470246053547824e-05" ixy="3.4691714546122680101e-22"  ixz="-1.1518995707636510194e-35" iyy="4.9207470246053547824e-05" iyz="-5.6924043322247487608e-20" izz="3.3697502678236647725e-05" />
+<origin xyz="6.7839909838383009861e-17 1.1102230246251565404e-16 -0.033743243243243278839" rpy="0 0 0"/>
+<mass value="0.19339251676417060222" />
+<inertia ixx="4.9207470246053541048e-05" ixy="3.4691714546122661293e-22"  ixz="-1.1518995707636508857e-35" iyy="4.9207470246053534272e-05" iyz="-5.6924043322247439459e-20" izz="3.3697502678236647725e-05" />
 </inertial>
 </link>
 
@@ -3104,21 +3104,21 @@
 </inertial>
 </link>
 
-<link name="fermeture5_A">
+<link name="closedloop5_A_6D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture5_A_frame" type="fixed">
+<joint name="closedloop5_A_6D_frame" type="fixed">
 <origin xyz="-2.0816681711721685133e-17 0 -0.021999999999999936273" rpy="4.0939474033052918599e-16 2.1380466841413380764e-16 6.2026386493102164692e-16" />
 <parent link="piston_23" />
-<child link="fermeture5_A" />
+<child link="closedloop5_A_6D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="mot_hanchez" type="prismatic">
+<joint name="motor_hipz" type="prismatic">
 <origin xyz="-1.3877787807814456755e-16 -3.8163916471489756077e-16 -0.07149999999999984146" rpy="-2.1233015345958434142e-15 4.128211776064302964e-17 -1.5707963267949134334" />
 <parent link="motteur_rotation_7" />
 <child link="piston_23" />
@@ -3127,7 +3127,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="to_rotule_free_attache_moeur_hanche_z" type="revolute">
+<joint name="free_spherical_motor_holder_1" type="revolute">
 <origin xyz="1.3877787807814456755e-17 -8.3266726846886740532e-17 -0.051749999999999775346" rpy="1.5707963267948976682 -0.051824161433118527686 1.5707963267948943376" />
 <parent link="attache_hanche" />
 <child link="motteur_rotation_7" />
@@ -3136,7 +3136,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="free_attache_moeur_hanche_2" type="revolute">
+<joint name="free_motor_holder_2" type="revolute">
 <origin xyz="-0.10299999999999680245 -0.024749999999999584832 -0.24349999999999993872" rpy="1.570796326794896558 4.4226638947527427442e-16 3.1415926535897895633" />
 <parent link="hanche_batis" />
 <child link="attache_hanche" />
@@ -3194,9 +3194,9 @@
 </geometry>
 </collision>
 <inertial>
-<origin xyz="-7.1700528675036140679e-18 1.1102230246251565404e-16 -0.033743243243243264962" rpy="0 0 0"/>
-<mass value="0.19339251676417062997" />
-<inertia ixx="4.9207470246053547824e-05" ixy="-3.1602615851609366076e-21"  ixz="-4.5625133944400998581e-24" iyy="4.9207470246053547824e-05" iyz="-5.6931792837572383607e-20" izz="3.3697502678236634173e-05" />
+<origin xyz="-7.1700528675036109864e-18 0 -0.033743243243243264962" rpy="0 0 0"/>
+<mass value="0.19339251676417060222" />
+<inertia ixx="4.9207470246053541048e-05" ixy="-3.1602615851609358553e-21"  ixz="-4.5625133944400991234e-24" iyy="4.9207470246053534272e-05" iyz="-5.6931792837572335458e-20" izz="3.3697502678236634173e-05" />
 </inertial>
 </link>
 
@@ -3223,21 +3223,21 @@
 </inertial>
 </link>
 
-<link name="fermeture19_A_6D">
+<link name="closedloop19_A_6D">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture19_A_6D_frame" type="fixed">
+<joint name="closedloop19_A_6D_frame" type="fixed">
 <origin xyz="-2.4286128663675299322e-17 1.3877787807814456755e-17 -0.021999999999999981376" rpy="-9.4645443920224450633e-16 4.3138963368770645641e-15 -1.570796326794896558" />
 <parent link="piston_24" />
-<child link="fermeture19_A_6D" />
+<child link="closedloop19_A_6D" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="mot_hanchez_gauche" type="prismatic">
+<joint name="motor_hip_z_left" type="prismatic">
 <origin xyz="5.5511151231257827021e-17 3.4694469519536141888e-18 -0.070937073864986127658" rpy="-2.3978477236838945599e-15 -1.3376382854703311896e-16 -1.570796326794871467" />
 <parent link="motteur_rotation_8" />
 <child link="piston_24" />
@@ -3246,7 +3246,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="to_rotule_free_attache_moeur_hanche_z_gauche" type="revolute">
+<joint name="spherical_motor_holder_hip_z_left" type="revolute">
 <origin xyz="-1.3877787807814456755e-17 -5.5511151231257827021e-17 -0.051749999999999823919" rpy="1.570796326794896336 1.3223675276875890283 1.5707963267949045516" />
 <parent link="attache_hanche_2" />
 <child link="motteur_rotation_8" />
@@ -3255,7 +3255,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="free_cardan_hanche_rot_z_gauche" type="revolute">
+<joint name="free_universal_motor_holder_hipz_left" type="revolute">
 <origin xyz="-0.10299999999999671918 0.0065000000000000057732 -1.1102230246251565404e-16" rpy="8.2923786594574648618e-18 8.3515882679392369696e-16 -3.1380685543604354137" />
 <parent link="hanche_batis_gauche" />
 <child link="attache_hanche_2" />
