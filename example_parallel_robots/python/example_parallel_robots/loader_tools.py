@@ -299,7 +299,7 @@ def getModelPath(subpath, verbose=True):
         pass
     paths += [join(p, "../../../share/example-robot-data/robots") for p in sys.path]
     for path in paths:
-        print(f"Checkin {join(path, subpath.strip('/'))}")
+        print(f"Checking {join(path, subpath.strip('/'))}")
         if exists(join(path, subpath.strip("/"))):
             if verbose:
                 print("using %s as modelPath" % path)
