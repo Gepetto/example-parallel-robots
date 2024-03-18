@@ -8,9 +8,9 @@ set(PROJECT_DESCRIPTION
 set(PROJECT_URL https://gitlab.laas.fr/ldematteis/example-parallel-robots)
 
 # Project options
-option(BUILD_PYTHON_INTERFACE "Build the python unit tests and helpers" ON)
-option(INSTALL_PYTHON_INTERFACE_ONLY "Install *ONLY* the python interface" OFF)
-option(BUILD_TESTING "Allow unittests to be run" OFF)
+option(BUILD_PYTHON_INTERFACE "Build the Python unit tests and helpers" ON)
+option(INSTALL_PYTHON_INTERFACE_ONLY "Install *ONLY* the Python interface" OFF)
+option(BUILD_TESTING "Build unit tests" OFF)
 
 # Project configuration
 if(NOT INSTALL_PYTHON_INTERFACE_ONLY)
@@ -43,7 +43,7 @@ include("${JRL_CMAKE_MODULES}/base.cmake")
 
 # Print initial message
 message(STATUS "${PROJECT_DESCRIPTION}, version ${PROJECT_VERSION}")
-message(STATUS "Copyright (C) 2018-2023 LAAS-CNRS")
+message(STATUS "Copyright (C) 2023-2024 LAAS-CNRS")
 message(STATUS "All rights reserved.")
 # message(STATUS "Released under the BSD 3-Clause License.")
 
@@ -54,8 +54,6 @@ project(${PROJECT_NAME} ${PROJECT_ARGS})
 if(BUILD_PYTHON_INTERFACE)
   add_project_dependency(eigenpy 2.7.11 REQUIRED)
   include("${JRL_CMAKE_MODULES}/python.cmake")
-  # set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/find-external/CppAD/"
-  #                       ${CMAKE_MODULE_PATH})
   add_project_dependency(pinocchio REQUIRED)
   string(REGEX REPLACE "-" "_" PY_NAME ${PROJECT_NAME})
   add_subdirectory(python)
