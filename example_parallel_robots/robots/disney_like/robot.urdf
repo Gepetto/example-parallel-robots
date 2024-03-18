@@ -6,7 +6,7 @@
 <mesh filename="package:///part_9.stl"/>
 </geometry>
 <material name="part_9_material">
-<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
 </material>
 </visual>
 <collision>
@@ -18,21 +18,21 @@
 <inertial>
 <origin xyz="-2.7755575615628913511e-17 -0.22295507249524698645 0.00057556138838110726397" rpy="0 0 0"/>
 <mass value="8.9064002264242461138" />
-<inertia ixx="0.17097290511367957411" ixy="-8.5369352945427565038e-18"  ixz="3.6899966565964183242e-20" iyy="0.03155417147576040221" iyz="0.00060262218611366715273" izz="0.16190432000837884363" />
+<inertia ixx="0.17097290511367960186" ixy="-8.5369352945427580446e-18"  ixz="3.6899966565964183242e-20" iyy="0.03155417147576040221" iyz="0.00060262218611366715273" izz="0.16190432000837884363" />
 </inertial>
 </link>
 
-<link name="centre_hanche">
+<link name="hip">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="centre_hanche_frame" type="fixed">
+<joint name="hip_frame" type="fixed">
 <origin xyz="0.20000312504882905573 -0.35064297879654365842 -0.015450280473132521272" rpy="1.2764350627171105268e-14 -0 -6.1232339957367438492e-17" />
 <parent link="part_9" />
-<child link="centre_hanche" />
+<child link="hip" />
 <axis xyz="0 0 0"/>
 </joint>
 
@@ -43,7 +43,7 @@
 <mesh filename="package:///bloc_moteur2.stl"/>
 </geometry>
 <material name="bloc_moteur2_material">
-<color rgba="0.49803921568627451677 0.49803921568627451677 0.49803921568627451677 1.0"/>
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
 </material>
 </visual>
 <collision>
@@ -55,7 +55,7 @@
 <inertial>
 <origin xyz="-7.2834255054477454935e-17 -0.05306999115335553352 -0.093938639725548667148" rpy="0 0 0"/>
 <mass value="11.246937103837177929" />
-<inertia ixx="0.080778587435353196855" ixy="1.9023487224115439519e-19"  ixz="-1.821002824370263958e-18" iyy="0.038829493490668595679" iyz="0.00078194318444883587505" izz="0.051029383147217569072" />
+<inertia ixx="0.080778587435353196855" ixy="1.9023487224115444333e-19"  ixz="-1.8210028243702631877e-18" iyy="0.038829493490668609557" iyz="0.00078194318444883663399" izz="0.05102938314721758295" />
 </inertial>
 </link>
 
@@ -78,7 +78,7 @@
 <inertial>
 <origin xyz="0.082051282051282078966 -2.2204460492503130808e-16 -0.049230769230769251543" rpy="0 0 0"/>
 <mass value="0.28186684374163423206" />
-<inertia ixx="0.00016154305422476771003" ixy="2.6436963127673730727e-11"  ixz="-7.3681217612439691929e-20" iyy="0.001454325907789876058" iyz="-9.1486606502791713231e-13" izz="0.0013313697166450336792" />
+<inertia ixx="0.00016154305422476771003" ixy="2.6436963127673730727e-11"  ixz="-7.3681217612439679892e-20" iyy="0.0014543259077898758411" iyz="-9.1486606502791713231e-13" izz="0.0013313697166450334623" />
 </inertial>
 </link>
 
@@ -105,21 +105,21 @@
 </inertial>
 </link>
 
-<link name="fermeture2_A">
+<link name="closedloop2_A">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture2_A_frame" type="fixed">
+<joint name="closedloop2_A_frame" type="fixed">
 <origin xyz="-0.098047014809141019853 -0.36591500633661799835 -8.9052723362126329221e-08" rpy="1.570796326794896336 3.9766546240696217832e-16 3.141592653589793116" />
 <parent link="cuiqqe_22" />
-<child link="fermeture2_A" />
+<child link="closedloop2_A" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="to_rotule_2" type="revolute">
+<joint name="spherical_free_4barlink2" type="revolute">
 <origin xyz="0.16410256410256421344 -1.3877787807814456755e-17 -5.5511151231257827021e-17" rpy="-1.8001705999122800977e-17 1.23480581994850213e-16 0.29559516206773489566" />
 <parent link="part_6" />
 <child link="cuiqqe_22" />
@@ -128,7 +128,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="mot_4link1" type="revolute">
+<joint name="motor_4barlink1" type="revolute">
 <origin xyz="0.034871794871794675741 -0.10666666666666652086 -0.13538461538461535327" rpy="1.570796326794896558 0.95118241861191532571 -1.570796326794896336" />
 <parent link="bloc_moteur2" />
 <child link="part_6" />
@@ -177,9 +177,9 @@
 </geometry>
 </collision>
 <inertial>
-<origin xyz="0.029296723414748329639 -0.068880607610646071848 2.5180167995269307526e-07" rpy="0 0 0"/>
+<origin xyz="0.029296723414748329639 -0.068880607610646016337 2.5180167995269307526e-07" rpy="0 0 0"/>
 <mass value="0.59977356844858531471" />
-<inertia ixx="0.014531125700740546089" ixy="-0.0031022917976150439674"  ixz="-7.9230395471210932438e-09" iyy="0.0014521566197785037121" iyz="-9.6606952241993591397e-09" izz="0.015656087463329297627" />
+<inertia ixx="0.014531125700740542619" ixy="-0.0031022917976150444011"  ixz="-7.9230395471177845214e-09" iyy="0.0014521566197785037121" iyz="-9.6606952241993574854e-09" izz="0.015656087463329297627" />
 </inertial>
 </link>
 
@@ -202,7 +202,7 @@
 <inertial>
 <origin xyz="-4.8663629456235952546e-09 4.1641987916381391604e-17 -0.0002953894817476626633" rpy="0 0 0"/>
 <mass value="0.14303170725627573079" />
-<inertia ixx="8.1159978895249771259e-05" ixy="2.7283254436401571828e-13"  ixz="-8.9871791247067260665e-21" iyy="0.00014242614331383957721" iyz="-2.7283254743516416195e-13" izz="8.1159978895249811916e-05" />
+<inertia ixx="8.1159978895249757706e-05" ixy="2.7283254436401571828e-13"  ixz="-8.9871791247067245619e-21" iyy="0.00014242614331383955011" iyz="-2.7283254743516416195e-13" izz="8.1159978895249811916e-05" />
 </inertial>
 </link>
 
@@ -223,8 +223,8 @@
 </geometry>
 </collision>
 <inertial>
-<origin xyz="-0.11076923074308639428 9.7144514654701209613e-17 -6.1103986172167619924e-18" rpy="0 0 0"/>
-<mass value="0.33045817880272942979" />
+<origin xyz="-0.11076923074308639428 1.1102230246251565404e-16 -6.1103986172167627628e-18" rpy="0 0 0"/>
+<mass value="0.33045817880272937428" />
 <inertia ixx="0.00016808566862118432569" ixy="4.1907282290608965641e-11"  ixz="7.6825000559429739504e-28" iyy="0.0027144346281535464832" iyz="9.5637506625081971413e-10" izz="0.002591479656085893344" />
 </inertial>
 </link>
@@ -248,7 +248,7 @@
 <inertial>
 <origin xyz="-4.866363006790331708e-09 1.0144406789307833018e-16 -0.00029538948174760715215" rpy="0 0 0"/>
 <mass value="0.14303170725627573079" />
-<inertia ixx="8.1159978895249717049e-05" ixy="2.7283254417448185149e-13"  ixz="-8.1567921775703867805e-24" iyy="0.00014242614331383957721" iyz="-2.7283254768712093295e-13" izz="8.1159978895249811916e-05" />
+<inertia ixx="8.1159978895249703496e-05" ixy="2.7283254417448185149e-13"  ixz="-8.1567921775703838417e-24" iyy="0.00014242614331383955011" iyz="-2.7283254768712093295e-13" izz="8.1159978895249811916e-05" />
 </inertial>
 </link>
 
@@ -275,17 +275,17 @@
 </inertial>
 </link>
 
-<link name="fermeture1_A">
+<link name="closedloop1_A">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture1_A_frame" type="fixed">
+<joint name="closedloop1_A_frame" type="fixed">
 <origin xyz="1.1102230246251565404e-16 -5.5511151231257827021e-17 -0.10666666666666652086" rpy="-7.0826551989213637361e-16 5.0108442370046637999e-16 8.3199342453526548535e-17" />
 <parent link="tibias_mirror" />
-<child link="fermeture1_A" />
+<child link="closedloop1_A" />
 <axis xyz="0 0 0"/>
 </joint>
 
@@ -298,7 +298,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="free_cardan3_to_rotule" type="revolute">
+<joint name="spherical_free_foot" type="revolute">
 <origin xyz="-0.2215384615384614897 1.1102230246251565404e-16 0" rpy="1.018762015073934528e-16 6.8533423168462731645e-16 3.1404277272486473827" />
 <parent link="cheville" />
 <child link="cardan_2" />
@@ -324,27 +324,27 @@
 </geometry>
 </collision>
 <inertial>
-<origin xyz="0.029911178981850406605 0.046744408316480870469 4.7136322335110392201e-17" rpy="0 0 0"/>
-<mass value="9.775601923935292703" />
-<inertia ixx="0.039549758864514082679" ixy="-0.0039401029818231037352"  ixz="-1.405921885029744861e-34" iyy="0.072392087859156850627" iyz="-3.3634352633175220016e-33" izz="0.06426597351490803689" />
+<origin xyz="0.029911178981850406605 0.046744408316480856591 4.7829503545920835338e-17" rpy="0 0 0"/>
+<mass value="9.7756019239352944794" />
+<inertia ixx="0.03954975886451407574" ixy="-0.0039401029818231054699"  ixz="-1.4059218850297440057e-34" iyy="0.072392087859156822871" iyz="-3.3634352633175206332e-33" izz="0.064265973514908023012" />
 </inertial>
 </link>
 
-<link name="bout_pied">
+<link name="foot">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="bout_pied_frame" type="fixed">
+<joint name="foot_frame" type="fixed">
 <origin xyz="0.02871794871794855486 0.10256410256410286586 0" rpy="1.570796326794896558 -6.9388939039056606707e-18 -2.8965986363544974793e-31" />
 <parent link="foot" />
-<child link="bout_pied" />
+<child link="foot" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="mot_cheville" type="revolute">
+<joint name="motor_ankle" type="revolute">
 <origin xyz="-0.11076923076923070322 1.6653345369377348106e-16 -5.5511151231257827021e-17" rpy="-1.570796326794896558 1.0514878939640439626 -1.5707963267948961139" />
 <parent link="cheville" />
 <child link="foot" />
@@ -353,7 +353,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="free_cardan2" type="revolute">
+<joint name="free_universal2" type="revolute">
 <origin xyz="-0.00029538461538458626876 5.5511151231257827021e-17 -0.00029538461538464177991" rpy="1.57079632679489678 0.0088312852163830307672 -1.5707963267948970021" />
 <parent link="cardan" />
 <child link="cheville" />
@@ -362,7 +362,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="free_cardan1" type="revolute">
+<joint name="free_universal1" type="revolute">
 <origin xyz="0 -0.37743589743589733843 2.7755575615628913511e-17" rpy="1.570796326794896558 0.0050482419228041449169 1.6594171315849655033e-15" />
 <parent link="tibias" />
 <child link="cardan" />
@@ -394,21 +394,21 @@
 </inertial>
 </link>
 
-<link name="fermeture2_B">
+<link name="closedloop2_B">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture2_B_frame" type="fixed">
+<joint name="closedloop2_B_frame" type="fixed">
 <origin xyz="0.018726579856343239516 0.069889981937422795966 8.9052723445393056068e-08" rpy="1.57079632679489678 6.2116731977486425824e-17 3.1415926535897806815" />
 <parent link="cuiqqe_2" />
-<child link="fermeture2_B" />
+<child link="closedloop2_B" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="free_to_rotule_4link4" type="revolute">
+<joint name="spherical_free_4barlink4" type="revolute">
 <origin xyz="0.12024806843488550223 0.12907742097056090769 8.3266726846886740532e-17" rpy="3.101675607867788693e-16 -1.6442897688707137481e-16 1.0221182606507059898" />
 <parent link="tibias" />
 <child link="cuiqqe_2" />
@@ -417,7 +417,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="free_4link5" type="revolute">
+<joint name="free_4barlink5" type="revolute">
 <origin xyz="6.9388939039072283776e-17 -0.37743589743589744945 0" rpy="-4.5155172960891913228e-17 -4.4892155809767338609e-16 -1.439300600469447744" />
 <parent link="cuisse_1" />
 <child link="tibias" />
@@ -426,7 +426,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="mot_4link3" type="revolute">
+<joint name="motor_4barlink3" type="revolute">
 <origin xyz="0.034871794871794703496 3.8163916471489756077e-17 -0.049230769230769216849" rpy="1.570796326794896558 0.65078186773195378922 -1.570796326794896336" />
 <parent link="bloc_moteur2" />
 <child link="cuisse_1" />
@@ -435,7 +435,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="mot_hipsx" type="revolute">
+<joint name="motor_hip_x" type="revolute">
 <origin xyz="0.061538461538461514122 -0.26461538461538441913 -0.024615384615384483524" rpy="-1.570796326794896558 0.010172299766896189879 1.570796326794896558" />
 <parent link="part_9" />
 <child link="bloc_moteur2" />
@@ -451,7 +451,7 @@
 <mesh filename="package:///bloc_moteur.stl"/>
 </geometry>
 <material name="bloc_moteur_material">
-<color rgba="0.49803921568627451677 0.49803921568627451677 0.49803921568627451677 1.0"/>
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
 </material>
 </visual>
 <collision>
@@ -461,9 +461,9 @@
 </geometry>
 </collision>
 <inertial>
-<origin xyz="1.0513700596916026954e-16 -0.053069991153355644542 -0.093938639725548681025" rpy="0 0 0"/>
-<mass value="11.246937103837288063" />
-<inertia ixx="0.080778587435354015645" ixy="8.6799958144536700858e-20"  ixz="-1.8188978827252559909e-18" iyy="0.038829493490668623434" iyz="0.00078194318444882145516" izz="0.051029383147217756422" />
+<origin xyz="1.0513700596916026954e-16 -0.053069991153355762503 -0.093938639725548681025" rpy="0 0 0"/>
+<mass value="11.246937103837284511" />
+<inertia ixx="0.080778587435354015645" ixy="8.6799958144536700858e-20"  ixz="-1.8188978827252559909e-18" iyy="0.038829493490668623434" iyz="0.00078194318444882156358" izz="0.051029383147217756422" />
 </inertial>
 </link>
 
@@ -486,7 +486,7 @@
 <inertial>
 <origin xyz="0.082051282051282009578 0 -0.049230769230769251543" rpy="0 0 0"/>
 <mass value="0.28186684374163423206" />
-<inertia ixx="0.00016154305422476765582" ixy="2.6436963303057365725e-11"  ixz="-7.2595304439547469241e-20" iyy="0.0014543259077898764917" iyz="-9.1486607145612225329e-13" izz="0.0013313697166450336792" />
+<inertia ixx="0.00016154305422476765582" ixy="2.6436963303057365725e-11"  ixz="-7.2595304439547457204e-20" iyy="0.0014543259077898762748" iyz="-9.1486607145612225329e-13" izz="0.0013313697166450334623" />
 </inertial>
 </link>
 
@@ -513,21 +513,21 @@
 </inertial>
 </link>
 
-<link name="fermeture3_A">
+<link name="closedloop3_A">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture3_A_frame" type="fixed">
+<joint name="closedloop3_A_frame" type="fixed">
 <origin xyz="-0.09804663044632583313 -0.36591500633661810937 5.5511151231257827021e-17" rpy="1.5707963267948956698 -8.7456685035717067728e-18 3.1415926535897922278" />
 <parent link="cuiqqe_22_2" />
-<child link="fermeture3_A" />
+<child link="closedloop3_A" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="to_rotule_1" type="revolute">
+<joint name="spherical_free_4barlink1" type="revolute">
 <origin xyz="0.16410256410256410242 -2.7755575615628913511e-17 -5.5511151231257827021e-17" rpy="-3.141592653589793116 2.6020322225198728799e-16 -0.017899381364008804668" />
 <parent link="part_6_2" />
 <child link="cuiqqe_22_2" />
@@ -536,7 +536,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="mot_4link2" type="revolute">
+<joint name="motor_4barlink2" type="revolute">
 <origin xyz="-0.034871794871794925541 -0.10666666666666653474 -0.13538461538461535327" rpy="-1.570796326794896558 0.81155647644717276989 -1.57079632679489678" />
 <parent link="bloc_moteur" />
 <child link="part_6_2" />
@@ -591,17 +591,17 @@
 </inertial>
 </link>
 
-<link name="fermeture1_B">
+<link name="closedloop1_B">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture1_B_frame" type="fixed">
+<joint name="closedloop1_B_frame" type="fixed">
 <origin xyz="-1.1102230246251565404e-16 0.27066923076923060654 2.7755575615628913511e-16" rpy="-1.570796326794896558 -6.9533746316801810132e-17 1.8765245027468448435e-17" />
 <parent link="tibias_mirror2" />
-<child link="fermeture1_B" />
+<child link="closedloop1_B" />
 <axis xyz="0 0 0"/>
 </joint>
 
@@ -628,21 +628,21 @@
 </inertial>
 </link>
 
-<link name="fermeture3_B">
+<link name="closedloop3_B">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture3_B_frame" type="fixed">
+<joint name="closedloop3_B_frame" type="fixed">
 <origin xyz="0.018726579856343239516 0.069889981937422795966 8.9052723417637480452e-08" rpy="1.570796326794896336 -6.6744906857665710867e-17 -3.1415926535897926719" />
 <parent link="cuiqqe_2_2" />
-<child link="fermeture3_B" />
+<child link="closedloop3_B" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="free_to_rotule_4link3" type="revolute">
+<joint name="spherical_free_4barlink3" type="revolute">
 <origin xyz="0.12024806843488550223 -0.12907742097056101871 5.5511151231257827021e-17" rpy="-3.141592653589793116 3.4952106738054546811e-16 -0.99380518745195023378" />
 <parent link="tibias_mirror2" />
 <child link="cuiqqe_2_2" />
@@ -651,7 +651,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="free_4link6" type="revolute">
+<joint name="free_4barlink6" type="revolute">
 <origin xyz="1.3877787807814456755e-16 0.37743589743589756047 0" rpy="-2.7475810661940926133e-16 -2.1857764558124863903e-16 1.3398696506926415228" />
 <parent link="cuisse_1_2" />
 <child link="tibias_mirror2" />
@@ -660,7 +660,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="mot_4link4" type="revolute">
+<joint name="motor_4barlink4" type="revolute">
 <origin xyz="-0.034871794871794981052 -8.6736173798840354721e-18 -0.049230769230769216849" rpy="-1.570796326794896558 0.75635458602387717342 -1.570796326794896558" />
 <parent link="bloc_moteur" />
 <child link="cuisse_1_2" />
@@ -669,7 +669,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="free_hipsx" type="revolute">
+<joint name="free_hip_x" type="revolute">
 <origin xyz="0.061538461538461514122 -0.41641025641025630755 -0.024615384615384594547" rpy="-1.570796326794896558 -0.034665069869454112617 1.570796326794896558" />
 <parent link="part_9" />
 <child link="bloc_moteur" />

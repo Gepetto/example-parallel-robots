@@ -1,5 +1,5 @@
-closed_loop: [['fermeture1_B', 'fermeture1_A'], ['fermeture2_A', 'fermeture2_B'], ['fermeture3_A', 'fermeture3_B']]
+closed_loop: [['closedloop1_B', 'closedloop1_A'], ['closedloop2_A', 'closedloop2_B'], ['closedloop3_A', 'closedloop3_B']]
 type: ['6d', '6d', '6d']
-name_mot: ['mot_4link2', 'mot_4link4', 'mot_hipsx', 'mot_4link1', 'mot_4link3', 'mot_cheville']
-joint_name: ['to_rotule_1', 'free_to_rotule_4link3', 'to_rotule_2', 'free_cardan3_to_rotule', 'free_to_rotule_4link4']
+name_mot: ['motor_4barlink2', 'motor_4barlink4', 'motor_hip_x', 'motor_4barlink1', 'motor_4barlink3', 'motor_ankle']
+joint_name: ['spherical_free_4barlink3', 'spherical_free_4barlink4', 'spherical_free_4barlink1', 'spherical_free_4barlink2', 'spherical_free_foot']
 joint_type: ['SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL']
