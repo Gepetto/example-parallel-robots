@@ -7,15 +7,12 @@ Optimisation problem solved by casadi
 
 """
 
-import pinocchio as pin
 import numpy as np
-import sys
-
-sys.path.append("..")
-sys.path.append("../closed_loop_utils")
-from constraints import constraintsResidual
+import pinocchio as pin
 from pinocchio import casadi as caspin
 import casadi
+
+from toolbox_parallel_robots.constraints import constraintsResidual
 
 
 class ProjectConfig:

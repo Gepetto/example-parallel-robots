@@ -34,8 +34,9 @@ class RobotFrame:
         self.slider_vars = []
 
     def resetConfiguration(self, qref=None):
-        if qref is not None:
-            dq_ref = pin.difference(self.rmodel, self.q0, qref)
+        if qref is None:
+            qref = self.q0
+        dq_ref = pin.difference(self.rmodel, self.q0, qref)
         for i, s in enumerate(self.slider_vars):
             s.set(0 if qref is None else dq_ref[i])
 
