@@ -33,30 +33,13 @@ class ActuationModel:
         self.getFreeId_q(model)
         self.getMotId_v(model, names)
         self.getFreeId_v(model)
-        self.getMotNames(model, names)
+        self.mot_joints_names = names
 
     def __str__(self):
         return print(
             "Id q motor: " + str(self.mot_ids_q) + "\r"
             "Id v motor: " + str(self.mot_ids_v)
         )
-    
-    def getMotNames(self, model, motnames):
-        """
-        getMotNames(self[ActuationModel], model, motnames)
-        Return a list of names corresponding to the actuated joints
-
-        Arguments:
-            model - robot model from pinocchio
-            motnames - list of the identifiers of actuated joints
-        Return:
-            None - Update self.mot_joints_ids
-        """
-        self.mot_joints_names = []
-        for i, name in enumerate(model.names):
-            for motname in motnames:
-                if motname in name:
-                    self.mot_joints_names.append(name)
 
     def getMotId_q(self, model, motnames):
         """
@@ -72,7 +55,7 @@ class ActuationModel:
         ids_q = []
         for i, name in enumerate(model.names):
             for motname in motnames:
-                if motname in name:
+                if motname == name:
                     self.mot_joints_ids.append(i)
                     idq = model.joints[i].idx_q
                     nq = model.joints[i].nq
@@ -94,7 +77,7 @@ class ActuationModel:
         ids_v = []
         for i, name in enumerate(model.names):
             for motname in motnames:
-                if motname in name:
+                if motname == name:
                     idv = model.joints[i].idx_v
                     nv = model.joints[i].nv
                     for j in range(nv):

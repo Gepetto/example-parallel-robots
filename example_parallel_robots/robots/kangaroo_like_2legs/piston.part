@@ -1,13 +1,13 @@
 {
     "configuration": "default",
     "documentId": "c8c78d548c2570f531c1a3e9",
-    "documentMicroversion": "0b475a120b949e600fe0b7cf",
+    "documentMicroversion": "e1b40db5d4a089af33050dd8",
     "elementId": "99a046cd62858dee38e590f2",
     "fullConfiguration": "default",
-    "id": "MHaMe2LmYfxY1OJCf",
+    "id": "M4zLcom25BOepJ6Vc",
     "isStandardContent": false,
-    "name": "motteur_rotation <5>",
-    "partId": "RuCD",
+    "name": "piston <14>",
+    "partId": "R1CD",
     "suppressed": false,
     "type": "Part"
 }

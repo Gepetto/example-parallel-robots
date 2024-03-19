@@ -2,12 +2,12 @@
     "configuration": "default",
     "documentId": "52eb11422c701d811548a6f5",
     "documentMicroversion": "d0d9baf00ceab56003cd261a",
-    "elementId": "ce1bb868983fd9b6d21ff6d4",
+    "elementId": "0a2d86fa35ed43d74c66764b",
     "fullConfiguration": "default",
-    "id": "MmbD3y5IP5xL4JTti",
+    "id": "M9ltuHBCarOm1aAI1",
     "isStandardContent": false,
-    "name": "toe_A_1/2 <1>",
-    "partId": "JOD",
+    "name": "crank <2>",
+    "partId": "RJBD",
     "suppressed": false,
     "type": "Part"
 }

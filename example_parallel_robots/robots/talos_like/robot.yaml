@@ -1,5 +1,5 @@
-closed_loop: [['fermeture1_B', 'fermeture1_A']]
+closed_loop: [['closedloop1_A', 'closedloop1_B']]
 type: ['6d']
-name_mot: ['mot_hanche_x', 'mot_hanche_z', 'mot_hanch_y', 'mot_genoux', 'mot_cheville', 'mot_molet']
-joint_name: ['free_to_rotule_pied', 'free_to_rotule_molet']
+name_mot: ['motor_hip_x', 'motor_hip_z', 'motor_hip_y', 'motor_knee', 'motor_ankle', 'motor_shin']
+joint_name: ['free_spherical_shin', 'free_spherical_foot']
 joint_type: ['SPHERICAL', 'SPHERICAL']
