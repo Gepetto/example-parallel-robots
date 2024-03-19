@@ -66,24 +66,24 @@ class Delta:
     free_flyer = False
 
 
-class TalosClosed:
-    from .talos_closed import TalosClosed
+# class TalosClosed:
+#     from .talos_closed import TalosClosed
 
-    path = "talos_closed"
-    urdf_file = None
-    free_flyer = True
-    closed_loop = True
-    exec = TalosClosed
+#     path = "talos_closed"
+#     urdf_file = None
+#     free_flyer = True
+#     closed_loop = True
+#     exec = TalosClosed
 
 
-class Talos:
-    from .talos_closed import TalosClosed
+# class Talos:
+#     from .talos_closed import TalosClosed
 
-    path = "talos_closed"
-    urdf_file = None
-    free_flyer = True
-    closed_loop = False
-    exec = TalosClosed
+#     path = "talos_closed"
+#     urdf_file = None
+#     free_flyer = True
+#     closed_loop = False
+#     exec = TalosClosed
 
 
 class TalosLeg:
