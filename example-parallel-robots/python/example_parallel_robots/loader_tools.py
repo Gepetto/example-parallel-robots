@@ -41,10 +41,6 @@ def getNameFrameConstraint(model, name_loop="fermeture", cstr_frames_ids=[]):
     warn(
         "Function getNameFrameConstraint depreceated - prefer using a YAML file as complement to the URDF. Should only be used to generate a YAML file"
     )
-
-    warn(
-        "Function getNameFrameConstraint depreceated - prefer using a YAML file as complement to the URDF. Should only be used to generate a YAML file"
-    )
     if cstr_frames_ids == []:
         cstr_frames_ids = range(len(model.frames) // 2)
     cstr_frames_names = []
