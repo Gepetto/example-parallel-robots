@@ -21,13 +21,13 @@ class RobotFrame:
 
     NROW = 14  # Number of sliders per row
 
-    def __init__(self, model, constraint_model, actuation_model, q0, viz):
+    def __init__(self, model, constraint_model, mot_ids_q, q0, viz):
         """
         motors is a list of joint names that must be highlighted in blue
         """
         self.rmodel = model
         self.constraint_model = constraint_model
-        self.actuation_model = actuation_model
+        self.mot_ids_q = mot_ids_q
         self.viz = viz
         self.auto_refresh = True
         self.q0 = q0.copy()
@@ -74,7 +74,7 @@ class RobotFrame:
                     highlightbackground="blue",
                     highlightthickness=(
                         2
-                        if self.rmodel.joints[j].idx_q in self.actuation_model.mot_ids_q
+                        if self.rmodel.joints[j].idx_q in self.mot_ids_q
                         else 0
                     ),
                 )

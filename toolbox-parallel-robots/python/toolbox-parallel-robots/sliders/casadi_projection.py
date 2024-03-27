@@ -12,7 +12,8 @@ import pinocchio as pin
 from pinocchio import casadi as caspin
 import casadi
 
-from toolbox_parallel_robots.constraints import constraintsResidual
+# from toolbox_parallel_robots.constraints import constraintsResidual
+from constraints import constraintsResidual
 
 
 class ProjectConfig:
