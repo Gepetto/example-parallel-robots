@@ -8,56 +8,14 @@ Create a Tkinter interface to move some joints in the robots while satisfying th
 
 import meshcat
 import tkinter as tk
-from sliders.tk_configuration import RobotFrame
 import pinocchio as pin
 from sliders.util_frames import (
     addXYZAxisToJoints,
     replaceGeomByXYZAxis,
     addXYZAxisToConstraints,
 )
-from sliders.casadi_projection import ProjectConfig
-
-
-class ConstraintsManager:
-    def __init__(self, robotConstraintFrame):
-        self.robotConstraintFrame = robotConstraintFrame  # Tkinter projection manager
-        self.project = self.robotConstraintFrame.project  # Projector
-
-    def computeConstrainedConfig(self):
-        qref = self.robotConstraintFrame.getConfiguration(
-            False
-        )  # Get the sliders configuration
-        q = self.project(qref)  # Project to get the nearest feasible configuration
-        self.robotConstraintFrame.resetConfiguration(q)
-        self.robotConstraintFrame.display()
-
-    def resetAndDisp(self):  # Self-explanatory
-        self.robotConstraintFrame.resetConfiguration()
-        self.robotConstraintFrame.display()
-
-
-class RobotConstraintFrame(RobotFrame):
-    def __init__(self, model, constraint_models, mot_ids_q, q0, viz):
-        super().__init__(model, constraint_models, mot_ids_q, q0, viz)
-        self.model = model
-        self.constraint_models = constraint_models
-        self.setProjector()
-
-    def setProjector(self):
-        self.project = ProjectConfig(self.model, self.constraint_models)
-
-    def slider_display(self, i, v):  # Overwrites the parent function
-        qref = self.getConfiguration(self.boolVar.get())
-        q = self.project(qref, i)
-        self.resetConfiguration(q)
-        self.display()
-
-    def setVerboseVariable(self, boolVar):
-        self.boolVar = boolVar
-        self.verboseProjector()
-
-    def verboseProjector(self):
-        self.project.verbose = self.boolVar.get()
+from sliders.tk_robot_sliders import SlidersFrame
+from sliders.tk_sliders_manager import SlidersManager
 
 # * Interface to activate or deactivate constraints on the robot
 class CheckboxConstraintCmd:
@@ -76,37 +34,6 @@ class CheckboxConstraintCmd:
             assert self.cm in constraint_models
             constraint_models.remove(self.cm)
         self.project.recomputeConstraints(constraint_models)
-
-# * Setting the positions of elements in the active/display constraints window
-# constraintFrame = tk.Frame(constraintWindow)
-# constraintFrame.pack(side=tk.BOTTOM)
-# actLabel = tk.Label(constraintFrame, text="active")
-# actLabel.grid(row=0, column=1)
-# dispLabel = tk.Label(constraintFrame, text="display")
-# dispLabel.grid(row=0, column=2)
-
-# for i, cm in enumerate(full_constraint_models):
-#     cstLabel = tk.Label(constraintFrame, text=cm.name)
-#     cstLabel.grid(row=i + 1, column=0)
-
-#     active_constraint_var = tk.BooleanVar(value=cm in full_constraint_models)
-#     active_constraint_cmd = CheckboxConstraintCmd(
-#         active_constraint_var, cm, robotFrame.project
-#     )
-#     constraint_checkbox = tk.Checkbutton(
-#         constraintFrame, variable=active_constraint_var, command=active_constraint_cmd
-#     )
-#     constraint_checkbox.grid(row=i + 1, column=1)
-
-    # display_constraint_var = tk.BooleanVar(value=cm in full_constraint_models)
-    # display_constraint_cmd = CheckboxDisplayConstraintCmd(
-    #     display_constraint_var, cm, visual_model, viz)
-    # display_constraint_cmd()
-    # display_constraint_checkbox = tk.Checkbutton(constraintFrame, variable=display_constraint_var,
-    #                                              command=display_constraint_cmd)
-    # display_constraint_checkbox.grid(row=i+1, column=2)
-
-# root.mainloop()
 
 def createSlidersInterface(model, constraint_models, visual_model, mot_ids_q, viz, q0=None):
     """
@@ -127,56 +54,38 @@ def createSlidersInterface(model, constraint_models, visual_model, mot_ids_q, vi
     # * Set a scale factor to handle too small and too big robots
     scale = 1
 
-    replaceGeomByXYZAxis(visual_model, viz, scale=scale)
-    viz.display(q0)
+    # replaceGeomByXYZAxis(visual_model, viz, scale=scale)
+    # viz.display(q0)
 
     # * Create the interface
     root = tk.Tk()
     root.bind("<Escape>", lambda ev: root.destroy())
     root.title("Simple Robot Sliders")
-    robotFrame = RobotConstraintFrame(model, constraint_models, mot_ids_q, q0, viz)
+    sliders_frame = SlidersFrame(model, mot_ids_q, q0, viz)
+    # Creating sliders, main projection functions are called when the sliders are moved
+    sliders_frame.createSlider(root)  
 
-    robotFrame.createSlider(
-        root
-    )  # Creating sliders, main projection functions are called when the sliders are moved
-    robotFrame.createRefreshButons(root)
+    managerWindow = tk.Toplevel()
+    managerWindow.bind("<Escape>", lambda ev: root.destroy())
 
-    constraintsManager = ConstraintsManager(robotFrame)
-    optimFrame = tk.Frame(root)
-    optimFrame.pack(side=tk.BOTTOM)
-    reset_button = tk.Button(
-        optimFrame, text="Reset", command=constraintsManager.resetAndDisp
-    )
-    reset_button.pack(side=tk.LEFT, padx=10, pady=10)
-    optim_button = tk.Button(
-        optimFrame, text="Optim", command=constraintsManager.computeConstrainedConfig
-    )
-    optim_button.pack(side=tk.LEFT, padx=10, pady=10)
-    verbose_var = tk.BooleanVar(False)
-    robotFrame.setVerboseVariable(verbose_var)
-    verbose_checkbox = tk.Checkbutton(
-        optimFrame,
-        variable=verbose_var,
-        text="Verbose",
-        command=robotFrame.verboseProjector,
-    )
-    verbose_checkbox.pack(side=tk.LEFT, padx=10, pady=10)
-    constraintWindow = tk.Toplevel()
-    constraintWindow.bind("<Escape>", lambda ev: root.destroy())
+    sliders_manager = SlidersManager(sliders_frame, constraint_models)
+    sliders_manager.createButtons(managerWindow)
 
     root.mainloop()
 
 if __name__ == "__main__":
-    import example_robot_data as erd
-    robot = erd.load("solo12")
-    model = robot.model
-    visual_model  = robot.visual_model
-    constraint_models = []
-    mot_ids_q = []
+    import example_parallel_robots as epr
+    model, constraint_models, actuation_model, visual_model, collision_model = epr.load("kangaroo_2legs")
+    mot_ids_q = actuation_model.mot_ids_q
+    # import example_robot_data as erd
+    # robot = erd.load("solo12")
+    # model, visual_model, collision_model = robot.model, robot.visual_model, robot.collision_model
+    # constraint_models = []
+    # mot_ids_q = [model.getJointId(joint_name) for joint_name in ["FL_HAA", "FL_HFE", "FL_KFE", "FR_HAA", "FR_HFE", "FR_KFE", "HL_HAA", "HL_HFE", "HL_KFE", "HR_HAA", "HR_HFE", "HR_KFE"]]
     # * Create the visualizer
     import pinocchio as pin
     import meshcat
-    viz = pin.visualize.MeshcatVisualizer(model, visual_model, visual_model)
+    viz = pin.visualize.MeshcatVisualizer(model, collision_model, visual_model)
     viz.viewer = meshcat.Visualizer(zmq_url="tcp://127.0.0.1:6000")
     viz.clean()
     viz.loadViewerModel(rootNodeName="universe")
