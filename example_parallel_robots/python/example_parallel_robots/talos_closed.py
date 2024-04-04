@@ -73,10 +73,7 @@ def reorganizeModels(old_model, old_geometry_models, constraint_models):
                 pin.ReferenceFrame.LOCAL,
             )
         )
-    # Actuation models
-    actuation_model = ActuationModel(model, ["mot"])
-
-    return (model, geometry_models, new_constraint_models, actuation_model)
+    return (model, geometry_models, new_constraint_models) 
 
 
 def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
@@ -446,9 +443,11 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
                     pin.FrameType.OP_FRAME,
                 )
             )
-    new_model, geometry_models, constraint_models, actuation_model = reorganizeModels(
+    new_model, geometry_models, constraint_models = reorganizeModels(
         new_model, [visual_model, collision_model], constraint_models
     )
+    # Actuation models
+    actuation_model = ActuationModel(new_model, [n for n in new_model.names if "mot" in n])
     visual_model, collision_model = geometry_models[0], geometry_models[1]
 
     return (
