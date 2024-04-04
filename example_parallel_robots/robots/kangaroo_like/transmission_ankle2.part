@@ -1,12 +1,12 @@
 {
     "configuration": "default",
-    "documentId": "02b671fba0e1d834a1f488f1",
-    "documentMicroversion": "b1c14b619ef692c12c2887d0",
-    "elementId": "791e2be6c15db5be9d68deed",
+    "documentId": "c8c78d548c2570f531c1a3e9",
+    "documentMicroversion": "36cef3dc9db34cf0ce518f1f",
+    "elementId": "99a046cd62858dee38e590f2",
     "fullConfiguration": "default",
     "id": "Md6JXX63dvdtReitE",
     "isStandardContent": false,
-    "name": "renvois_cheville_2 <1>",
+    "name": "transmission_ankle2 <1>",
     "partId": "R0BD",
     "suppressed": false,
     "type": "Part"
