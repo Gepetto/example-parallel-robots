@@ -103,17 +103,17 @@
 </inertial>
 </link>
 
-<link name="effecteur">
+<link name="effector">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="effecteur_frame" type="fixed">
+<joint name="effector_frame" type="fixed">
 <origin xyz="0.025000000000000022204 -0.18000000000000015987 -0.067499999999999976685" rpy="-3.141592653589793116 -1.5132630134575502908e-16 -1.570796326794896558" />
 <parent link="part_4" />
-<child link="effecteur" />
+<child link="effector" />
 <axis xyz="0 0 0"/>
 </joint>
 
@@ -143,21 +143,21 @@
 </inertial>
 </link>
 
-<link name="fermeture6D_1A">
+<link name="closedloop6D_1A">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture6D_1A_frame" type="fixed">
+<joint name="closedloop6D_1A_frame" type="fixed">
 <origin xyz="5.5511151231257827021e-17 -2.7755575615628913511e-17 -0.10249999999999981348" rpy="-3.141592653589793116 7.4909873354573750005e-16 -3.141592653589793116" />
 <parent link="part_6" />
-<child link="fermeture6D_1A" />
+<child link="closedloop6D_1A" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="to_rotule_libre3" type="revolute">
+<joint name="spherical_free3" type="revolute">
 <origin xyz="0 -0.18000000000000015987 -0.064999999999999918954" rpy="7.808431419004548746e-16 0.87266462599716454474 -1.5707963267948956698" />
 <parent link="part_4" />
 <child link="part_6" />
@@ -166,7 +166,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="libreortho" type="revolute">
+<joint name="freeortho" type="revolute">
 <origin xyz="-0.065000000000000113243 -0.34500000000000008438 -0.024999999999999994449" rpy="2.3794305551220863726e-16 1.5707963267948954478 0" />
 <parent link="part_3" />
 <child link="part_4" />
@@ -175,7 +175,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="libre1" type="revolute">
+<joint name="free1" type="revolute">
 <origin xyz="0 0.31500000000000005773 -0.049999999999999961142" rpy="-4.2298279813785684808e-19 -4.639019543158211348e-18 2.3867293943822684987" />
 <parent link="part_2" />
 <child link="part_3" />
@@ -245,17 +245,17 @@
 </inertial>
 </link>
 
-<link name="fermeture6D_1B">
+<link name="closedloop6D_1B">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture6D_1B_frame" type="fixed">
+<joint name="closedloop6D_1B_frame" type="fixed">
 <origin xyz="-0.0025000000000001687539 -0.36500000000000010214 -0.024999999999999994449" rpy="1.57079632679489678 -1.195073737747987526e-16 -3.141592653589793116" />
 <parent link="part_5" />
-<child link="fermeture6D_1B" />
+<child link="closedloop6D_1B" />
 <axis xyz="0 0 0"/>
 </joint>
 
@@ -268,7 +268,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="libre2" type="revolute">
+<joint name="free2" type="revolute">
 <origin xyz="0.1500000000000000222 -0.10000000000000000555 -2.4112656316077618612e-16" rpy="1.570796326794896558 0.058234987822223291398 3.141592653589793116" />
 <parent link="part_1" />
 <child link="part_2_2" />
