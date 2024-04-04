@@ -1,12 +1,12 @@
 {
     "configuration": "default",
     "documentId": "0c5faab298eae3ffd6b7214c",
-    "documentMicroversion": "400dd6cd00e92887c4a706ff",
-    "elementId": "091283117decc1d91ac0edb1",
+    "documentMicroversion": "29f459158d4e2319d1f96553",
+    "elementId": "cd78ff1275630d817ff80e24",
     "fullConfiguration": "default",
-    "id": "MhAUwBMQPT5XnlpTz",
+    "id": "MSba+idvXfcoTSx/N",
     "isStandardContent": false,
-    "name": "motor <6>",
+    "name": "hip <1>",
     "partId": "JHD",
     "suppressed": false,
     "type": "Part"
