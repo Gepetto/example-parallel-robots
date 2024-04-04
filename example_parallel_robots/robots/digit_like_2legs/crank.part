@@ -2,12 +2,12 @@
     "configuration": "default",
     "documentId": "52eb11422c701d811548a6f5",
     "documentMicroversion": "d8ff04c1c91200b65ef2a7db",
-    "elementId": "4f0d574f0b7001f8bc8ee8bb",
+    "elementId": "0a2d86fa35ed43d74c66764b",
     "fullConfiguration": "default",
-    "id": "MR9L5Y+ehJzL00X0a",
+    "id": "M8TMOtR/aQLFnOwux",
     "isStandardContent": false,
-    "name": "torso <1>",
-    "partId": "JHD",
+    "name": "crank <4>",
+    "partId": "RJBD",
     "suppressed": false,
     "type": "Part"
 }

@@ -66,24 +66,23 @@ class Delta:
     free_flyer = False
 
 
-class TalosClosed:
-    from .talos_closed import TalosClosed
+# class TalosClosed:
+#     from .talos_closed import TalosClosed
 
-    path = "talos_closed"
-    urdf_file = None
-    free_flyer = True
-    closed_loop = True
-    exec = TalosClosed
+#     path = "true_talos_2_legs"
+#     urdf_file = "robot.urdf"
+#     yaml_file = "robot.yaml"
+#     free_flyer = True
 
 
-class Talos:
-    from .talos_closed import TalosClosed
+# class Talos:
+#     from .talos_closed import TalosClosed
 
-    path = "talos_closed"
-    urdf_file = None
-    free_flyer = True
-    closed_loop = False
-    exec = TalosClosed
+#     path = "talos_closed"
+#     urdf_file = None
+#     free_flyer = True
+#     closed_loop = False
+#     exec = TalosClosed
 
 
 class TalosLeg:
@@ -94,7 +93,7 @@ class TalosLeg:
 
 
 class TalosBiped:
-    path = "talos_like_2legs"
+    path = "true_talos_2_legs"
     urdf_file = "robot.urdf"
     yaml_file = "robot.yaml"
     free_flyer = True
@@ -118,8 +117,8 @@ ROBOTS = {
     "kangaroo_leg": Kangaroo,
     "kangaroo_2legs": KangarooBiped,
     "delta": Delta,
-    "talos_full_closed": TalosClosed,
-    "talos_full_open": Talos,
+    # "talos_full_closed": TalosClosed,
+    # "talos_full_open": Talos,
     "talos_leg": TalosLeg,
     "talos_2legs": TalosBiped,
     "wl16_leg": WL16,

@@ -1,20 +1,20 @@
 <robot name="onshape">
-<link name="bati">
+<link name="built">
 <visual>
 <origin xyz="0 0 0" rpy="0 -0 0" />
 <geometry>
-<mesh filename="package:///bati.stl"/>
+<mesh filename="package:///built.stl"/>
 </geometry>
-<material name="bati_material">
+<material name="built_material">
 <color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
 </material>
 </visual>
 <collision>
 <origin xyz="0 0 0" rpy="0 -0 0" />
 <geometry>
-<mesh filename="package:///bati.stl"/>
+<mesh filename="package:///built.stl"/>
 </geometry>
-<material name="bati_material">
+<material name="built_material">
 <color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
 </material>
 </collision>
@@ -171,7 +171,7 @@
 
 <joint name="mot1_rod1" type="revolute">
 <origin xyz="0.0050000000000004901635 -0.0099999999999999776568 0.049999999999999863998" rpy="-1.570796326794896558 0.021170584225393279665 1.570796326794896558" />
-<parent link="bati" />
+<parent link="built" />
 <child link="rod1" />
 <axis xyz="0 0 1"/>
 <limit effort="1" velocity="20" />
@@ -275,7 +275,7 @@
 
 <joint name="mot1_rod2" type="revolute">
 <origin xyz="0.0050000000000000001041 0.010000000000000001943 0.050000000000000002776" rpy="-1.570796326794896558 2.7817834526774081734e-52 1.570796326794896558" />
-<parent link="bati" />
+<parent link="built" />
 <child link="rod2" />
 <axis xyz="0 0 1"/>
 <limit effort="1" velocity="20" />
@@ -414,7 +414,7 @@
 
 <joint name="free1_rod3" type="revolute">
 <origin xyz="0.0075000000000001766642 0.012070552360820205329 0.057727406610312198554" rpy="-1.570796326794896558 3.5527136788004875187e-15 1.570796326794896558" />
-<parent link="bati" />
+<parent link="built" />
 <child link="transmission_rod" />
 <axis xyz="0 0 1"/>
 <limit effort="1" velocity="20" />

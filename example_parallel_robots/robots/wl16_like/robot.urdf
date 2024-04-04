@@ -16,9 +16,9 @@
 </geometry>
 </collision>
 <inertial>
-<origin xyz="2.3389538382576431005e-17 -5.5511151231257827021e-17 -0.013541487382732171965" rpy="0 0 0"/>
+<origin xyz="2.0425389630288760601e-17 -5.5511151231257827021e-17 -0.013541487382732182373" rpy="0 0 0"/>
 <mass value="43.978349764609049544" />
-<inertia ixx="4.6258306252989935814" ixy="2.644330982209518378e-16"  ixz="0" iyy="1.3050696127197516372" iyz="0" izz="5.9197242798244626982" />
+<inertia ixx="4.6258306252989944696" ixy="3.0409806295409462086e-16"  ixz="0" iyy="1.3050696127197511931" iyz="0" izz="5.9197242798244626982" />
 </inertial>
 </link>
 
@@ -36,7 +36,7 @@
 <axis xyz="0 0 0"/>
 </joint>
 
-<link name="motor">
+<link name="motor_part">
 <visual>
 <origin xyz="5.5511151231257827021e-17 -0.087999999999999967137 -0.19800000000000000933" rpy="0 -0 0" />
 <geometry>
@@ -55,22 +55,22 @@
 <visual>
 <origin xyz="0 0 0" rpy="3.141592653589793116 -0 0" />
 <geometry>
-<mesh filename="package:///motor.stl"/>
+<mesh filename="package:///motor_part.stl"/>
 </geometry>
-<material name="motor_material">
+<material name="motor_part_material">
 <color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
 </material>
 </visual>
 <collision>
 <origin xyz="0 0 0" rpy="3.141592653589793116 -0 0" />
 <geometry>
-<mesh filename="package:///motor.stl"/>
+<mesh filename="package:///motor_part.stl"/>
 </geometry>
 </collision>
 <inertial>
 <origin xyz="1.9271666106817245563e-17 -0.017875862058824534828 -0.18771294080586725661" rpy="0 0 0"/>
 <mass value="1.9686111325898227875" />
-<inertia ixx="0.038264330306084837208" ixy="9.8243428473424756588e-19"  ixz="-3.3361726516500853527e-18" iyy="0.037336736935094920475" iyz="0.0031218634824534494815" izz="0.0015134483226646423207" />
+<inertia ixx="0.038264330306084837208" ixy="9.8243428473424756588e-19"  ixz="-3.3361726516500853527e-18" iyy="0.037336736935094913536" iyz="0.0031218634824534494815" izz="0.0015134483226646423207" />
 </inertial>
 </link>
 
@@ -93,7 +93,7 @@
 <inertial>
 <origin xyz="1.7356879633218755426e-19 -1.0103336092965668551e-18 -0.049500000000000099476" rpy="0 0 0"/>
 <mass value="0.084674561394042349716" />
-<inertia ixx="7.4921110353466283767e-05" ixy="0"  ixz="0" iyy="7.4921110353466283767e-05" iyz="0" izz="1.1526324669764020852e-05" />
+<inertia ixx="7.4921110353466270214e-05" ixy="0"  ixz="0" iyy="7.4921110353466270214e-05" iyz="0" izz="1.1526324669764020852e-05" />
 </inertial>
 </link>
 
@@ -113,7 +113,7 @@
 
 <joint name="motor_4" type="prismatic">
 <origin xyz="0 0 -0.48779999999999995586" rpy="0 -0 0" />
-<parent link="motor" />
+<parent link="motor_part" />
 <child link="axis_1" />
 <axis xyz="0 0 1"/>
 <limit effort="1" velocity="20" />
@@ -123,26 +123,26 @@
 <joint name="spherical_1" type="revolute">
 <origin xyz="-0.27500000000000007772 -0.22647302994931878262 -0.066000000000000003109" rpy="0 -0 0" />
 <parent link="hip_part" />
-<child link="motor" />
+<child link="motor_part" />
 <axis xyz="0 0 1"/>
 <limit effort="1" velocity="20" />
 <joint_properties friction="0.0"/>
 </joint>
 
-<link name="motor_2">
+<link name="motor_part_2">
 <visual>
 <origin xyz="0 0 0" rpy="3.141592653589793116 -0 0" />
 <geometry>
-<mesh filename="package:///motor.stl"/>
+<mesh filename="package:///motor_part.stl"/>
 </geometry>
-<material name="motor_material">
+<material name="motor_part_material">
 <color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
 </material>
 </visual>
 <collision>
 <origin xyz="0 0 0" rpy="3.141592653589793116 -0 0" />
 <geometry>
-<mesh filename="package:///motor.stl"/>
+<mesh filename="package:///motor_part.stl"/>
 </geometry>
 </collision>
 <visual>
@@ -163,7 +163,7 @@
 <inertial>
 <origin xyz="-4.6049761876997009531e-18 -0.017875862058824572992 -0.18771294080586725661" rpy="0 0 0"/>
 <mass value="1.9686111325898227875" />
-<inertia ixx="0.038264330306084844147" ixy="-2.4550009275949174121e-19"  ixz="8.3367478941690658038e-19" iyy="0.037336736935094920475" iyz="0.0031218634824534559867" izz="0.0015134483226646464407" />
+<inertia ixx="0.038264330306084837208" ixy="-2.4550009275949174121e-19"  ixz="8.3367478941690658038e-19" iyy="0.037336736935094913536" iyz="0.0031218634824534559867" izz="0.0015134483226646464407" />
 </inertial>
 </link>
 
@@ -186,7 +186,7 @@
 <inertial>
 <origin xyz="1.7356879633218755426e-19 -1.0103336092965668551e-18 -0.049500000000000099476" rpy="0 0 0"/>
 <mass value="0.084674561394042349716" />
-<inertia ixx="7.4921110353466283767e-05" ixy="0"  ixz="0" iyy="7.4921110353466283767e-05" iyz="0" izz="1.1526324669764020852e-05" />
+<inertia ixx="7.4921110353466270214e-05" ixy="0"  ixz="0" iyy="7.4921110353466270214e-05" iyz="0" izz="1.1526324669764020852e-05" />
 </inertial>
 </link>
 
@@ -206,7 +206,7 @@
 
 <joint name="motor_1" type="prismatic">
 <origin xyz="0 0 -0.48779999999999995586" rpy="0 -0 0" />
-<parent link="motor_2" />
+<parent link="motor_part_2" />
 <child link="axis_1_2" />
 <axis xyz="0 0 1"/>
 <limit effort="1" velocity="20" />
@@ -216,13 +216,13 @@
 <joint name="spherical_2" type="revolute">
 <origin xyz="-0.09899999999999996303 -0.53131397208144126587 -0.066000000000000003109" rpy="0 -0 0" />
 <parent link="hip_part" />
-<child link="motor_2" />
+<child link="motor_part_2" />
 <axis xyz="0 0 1"/>
 <limit effort="1" velocity="20" />
 <joint_properties friction="0.0"/>
 </joint>
 
-<link name="motor_3">
+<link name="motor_part_3">
 <visual>
 <origin xyz="1.3877787807814456755e-17 -0.08800000000000007816 -0.19800000000000000933" rpy="0 -0 0" />
 <geometry>
@@ -241,22 +241,22 @@
 <visual>
 <origin xyz="0 0 0" rpy="3.141592653589793116 -0 0" />
 <geometry>
-<mesh filename="package:///motor.stl"/>
+<mesh filename="package:///motor_part.stl"/>
 </geometry>
-<material name="motor_material">
+<material name="motor_part_material">
 <color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
 </material>
 </visual>
 <collision>
 <origin xyz="0 0 0" rpy="3.141592653589793116 -0 0" />
 <geometry>
-<mesh filename="package:///motor.stl"/>
+<mesh filename="package:///motor_part.stl"/>
 </geometry>
 </collision>
 <inertial>
 <origin xyz="4.9456807301070791942e-18 -0.017875862058824572992 -0.18771294080586725661" rpy="0 0 0"/>
 <mass value="1.9686111325898227875" />
-<inertia ixx="0.038264330306084844147" ixy="2.4567365823800514681e-19"  ixz="-8.3426418700989023138e-19" iyy="0.037336736935094920475" iyz="0.0031218634824534559867" izz="0.0015134483226646464407" />
+<inertia ixx="0.038264330306084837208" ixy="2.4567365823800514681e-19"  ixz="-8.3426418700989023138e-19" iyy="0.037336736935094913536" iyz="0.0031218634824534559867" izz="0.0015134483226646464407" />
 </inertial>
 </link>
 
@@ -279,7 +279,7 @@
 <inertial>
 <origin xyz="1.7356879633218755426e-19 -1.0103336092965668551e-18 -0.049500000000000099476" rpy="0 0 0"/>
 <mass value="0.084674561394042349716" />
-<inertia ixx="7.4921110353466283767e-05" ixy="0"  ixz="0" iyy="7.4921110353466283767e-05" iyz="0" izz="1.1526324669764020852e-05" />
+<inertia ixx="7.4921110353466270214e-05" ixy="0"  ixz="0" iyy="7.4921110353466270214e-05" iyz="0" izz="1.1526324669764020852e-05" />
 </inertial>
 </link>
 
@@ -299,7 +299,7 @@
 
 <joint name="motor_2" type="prismatic">
 <origin xyz="0 0 -0.48779999999999995586" rpy="0 -0 0" />
-<parent link="motor_3" />
+<parent link="motor_part_3" />
 <child link="axis_1_3" />
 <axis xyz="0 0 1"/>
 <limit effort="1" velocity="20" />
@@ -309,26 +309,26 @@
 <joint name="spherical_3" type="revolute">
 <origin xyz="0.099000000000000074052 -0.53131397208144148792 -0.066000000000000003109" rpy="0 -0 0" />
 <parent link="hip_part" />
-<child link="motor_3" />
+<child link="motor_part_3" />
 <axis xyz="0 0 1"/>
 <limit effort="1" velocity="20" />
 <joint_properties friction="0.0"/>
 </joint>
 
-<link name="motor_4">
+<link name="motor_part_4">
 <visual>
 <origin xyz="0 0 0" rpy="3.141592653589793116 -0 0" />
 <geometry>
-<mesh filename="package:///motor.stl"/>
+<mesh filename="package:///motor_part.stl"/>
 </geometry>
-<material name="motor_material">
+<material name="motor_part_material">
 <color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
 </material>
 </visual>
 <collision>
 <origin xyz="0 0 0" rpy="3.141592653589793116 -0 0" />
 <geometry>
-<mesh filename="package:///motor.stl"/>
+<mesh filename="package:///motor_part.stl"/>
 </geometry>
 </collision>
 <visual>
@@ -349,7 +349,7 @@
 <inertial>
 <origin xyz="1.7035227120368885576e-19 -0.017875862058824534828 -0.18771294080586725661" rpy="0 0 0"/>
 <mass value="1.9686111325898227875" />
-<inertia ixx="0.038264330306084837208" ixy="8.6782739256691254621e-23"  ixz="-2.9469879649178820854e-22" iyy="0.037336736935094920475" iyz="0.0031218634824534494815" izz="0.0015134483226646423207" />
+<inertia ixx="0.038264330306084837208" ixy="8.6782739256691254621e-23"  ixz="-2.9469879649178820854e-22" iyy="0.037336736935094913536" iyz="0.0031218634824534494815" izz="0.0015134483226646423207" />
 </inertial>
 </link>
 
@@ -392,7 +392,7 @@
 
 <joint name="motor_3" type="prismatic">
 <origin xyz="0 0 -0.49860000000000009868" rpy="0 -0 0" />
-<parent link="motor_4" />
+<parent link="motor_part_4" />
 <child link="axis_2" />
 <axis xyz="0 0 1"/>
 <limit effort="1" velocity="20" />
@@ -402,13 +402,13 @@
 <joint name="spherical_4" type="revolute">
 <origin xyz="0.2750000000000000222 -0.22647302994931894915 -0.066000000000000003109" rpy="0 -0 0" />
 <parent link="hip_part" />
-<child link="motor_4" />
+<child link="motor_part_4" />
 <axis xyz="0 0 1"/>
 <limit effort="1" velocity="20" />
 <joint_properties friction="0.0"/>
 </joint>
 
-<link name="motor_5">
+<link name="motor_part_5">
 <visual>
 <origin xyz="0 -0.088000000000000022649 -0.19800000000000000933" rpy="0 -0 0" />
 <geometry>
@@ -427,22 +427,22 @@
 <visual>
 <origin xyz="0 0 0" rpy="3.141592653589793116 -0 0" />
 <geometry>
-<mesh filename="package:///motor.stl"/>
+<mesh filename="package:///motor_part.stl"/>
 </geometry>
-<material name="motor_material">
+<material name="motor_part_material">
 <color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
 </material>
 </visual>
 <collision>
 <origin xyz="0 0 0" rpy="3.141592653589793116 -0 0" />
 <geometry>
-<mesh filename="package:///motor.stl"/>
+<mesh filename="package:///motor_part.stl"/>
 </geometry>
 </collision>
 <inertial>
 <origin xyz="1.7035227120368885576e-19 -0.017875862058824552175 -0.18771294080586725661" rpy="0 0 0"/>
 <mass value="1.9686111325898227875" />
-<inertia ixx="0.038264330306084844147" ixy="8.678273925669137217e-23"  ixz="-2.9469879649178820854e-22" iyy="0.037336736935094920475" iyz="0.0031218634824534525173" izz="0.0015134483226646438386" />
+<inertia ixx="0.038264330306084837208" ixy="8.678273925669137217e-23"  ixz="-2.9469879649178820854e-22" iyy="0.037336736935094913536" iyz="0.0031218634824534525173" izz="0.0015134483226646438386" />
 </inertial>
 </link>
 
@@ -485,7 +485,7 @@
 
 <joint name="motor_5" type="prismatic">
 <origin xyz="0 0 -0.49860000000000009868" rpy="0 -0 0" />
-<parent link="motor_5" />
+<parent link="motor_part_5" />
 <child link="axis_2_2" />
 <axis xyz="0 0 1"/>
 <limit effort="1" velocity="20" />
@@ -495,26 +495,26 @@
 <joint name="spherical_5" type="revolute">
 <origin xyz="-0.1760000000000000453 -0.054999999999999993339 -0.066000000000000003109" rpy="0 -0 0" />
 <parent link="hip_part" />
-<child link="motor_5" />
+<child link="motor_part_5" />
 <axis xyz="0 0 1"/>
 <limit effort="1" velocity="20" />
 <joint_properties friction="0.0"/>
 </joint>
 
-<link name="motor_6">
+<link name="motor_part_6">
 <visual>
 <origin xyz="0 0 0" rpy="3.141592653589793116 -0 0" />
 <geometry>
-<mesh filename="package:///motor.stl"/>
+<mesh filename="package:///motor_part.stl"/>
 </geometry>
-<material name="motor_material">
+<material name="motor_part_material">
 <color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
 </material>
 </visual>
 <collision>
 <origin xyz="0 0 0" rpy="3.141592653589793116 -0 0" />
 <geometry>
-<mesh filename="package:///motor.stl"/>
+<mesh filename="package:///motor_part.stl"/>
 </geometry>
 </collision>
 <visual>
@@ -535,7 +535,7 @@
 <inertial>
 <origin xyz="9.7210091890104684975e-18 -0.017875862058824552175 -0.18771294080586725661" rpy="0 0 0"/>
 <mass value="1.9686111325898227875" />
-<inertia ixx="0.038264330306084844147" ixy="4.9126053373675284453e-19"  ixz="-1.668233675223288541e-18" iyy="0.037336736935094920475" iyz="0.0031218634824534525173" izz="0.0015134483226646438386" />
+<inertia ixx="0.038264330306084837208" ixy="4.9126053373675284453e-19"  ixz="-1.668233675223288541e-18" iyy="0.037336736935094913536" iyz="0.0031218634824534525173" izz="0.0015134483226646438386" />
 </inertial>
 </link>
 
@@ -579,9 +579,9 @@
 </geometry>
 </collision>
 <inertial>
-<origin xyz="-0.012714979969319025604 -0.10480129214087557932 -0.050868234541626859702" rpy="0 0 0"/>
-<mass value="1.2962021735874538209" />
-<inertia ixx="0.0095471082597448717749" ixy="2.013717778330901198e-07"  ixz="-6.8096389546425166407e-05" iyy="0.01088823198497338926" iyz="3.875123595938482229e-07" izz="0.020084784381139409587" />
+<origin xyz="-0.01271497996931902387 -0.10480129214087557932 -0.05086823454162686664" rpy="0 0 0"/>
+<mass value="1.2962021735874540429" />
+<inertia ixx="0.0095471082597448717749" ixy="2.0137177783308284061e-07"  ixz="-6.8096389546425139302e-05" iyy="0.010888231984973387526" iyz="3.8751235959397517197e-07" izz="0.020084784381139409587" />
 </inertial>
 </link>
 
@@ -618,7 +618,7 @@
 <inertial>
 <origin xyz="1.7356879633218755426e-19 5.0451325344937634402e-17 -0.049500000000000037026" rpy="0 0 0"/>
 <mass value="0.084674561394042349716" />
-<inertia ixx="7.4921110353466283767e-05" ixy="0"  ixz="0" iyy="7.4921110353466283767e-05" iyz="4.8018739292929057917e-21" izz="1.1526324669764020852e-05" />
+<inertia ixx="7.4921110353466270214e-05" ixy="0"  ixz="0" iyy="7.4921110353466270214e-05" iyz="4.8018739292929050394e-21" izz="1.1526324669764020852e-05" />
 </inertial>
 </link>
 
@@ -710,7 +710,7 @@
 <inertial>
 <origin xyz="1.7356879633218755426e-19 -5.0598258863201879973e-18 -0.049500000000000037026" rpy="0 0 0"/>
 <mass value="0.084674561394042349716" />
-<inertia ixx="7.4921110353466283767e-05" ixy="0"  ixz="0" iyy="7.4921110353466283767e-05" iyz="4.8018739292929057917e-21" izz="1.1526324669764020852e-05" />
+<inertia ixx="7.4921110353466270214e-05" ixy="0"  ixz="0" iyy="7.4921110353466270214e-05" iyz="4.8018739292929050394e-21" izz="1.1526324669764020852e-05" />
 </inertial>
 </link>
 
@@ -802,7 +802,7 @@
 <inertial>
 <origin xyz="1.7356879633218755426e-19 5.0598258863201879973e-18 -0.049499999999999988454" rpy="0 0 0"/>
 <mass value="0.084674561394042349716" />
-<inertia ixx="7.4921110353466283767e-05" ixy="0"  ixz="0" iyy="7.4921110353466283767e-05" iyz="4.8018739292929057917e-21" izz="1.1526324669764020852e-05" />
+<inertia ixx="7.4921110353466270214e-05" ixy="0"  ixz="0" iyy="7.4921110353466270214e-05" iyz="4.8018739292929050394e-21" izz="1.1526324669764020852e-05" />
 </inertial>
 </link>
 
@@ -840,7 +840,7 @@
 
 <joint name="motor_6" type="prismatic">
 <origin xyz="0 0 -0.35820000000000012941" rpy="0 -0 0" />
-<parent link="motor_6" />
+<parent link="motor_part_6" />
 <child link="part_4" />
 <axis xyz="0 0 1"/>
 <limit effort="1" velocity="20" />
@@ -850,7 +850,7 @@
 <joint name="spherical_6" type="revolute">
 <origin xyz="0.17600000000000012856 -0.054999999999999993339 -0.066000000000000003109" rpy="0 -0 0" />
 <parent link="hip_part" />
-<child link="motor_6" />
+<child link="motor_part_6" />
 <axis xyz="0 0 1"/>
 <limit effort="1" velocity="20" />
 <joint_properties friction="0.0"/>

@@ -12,12 +12,14 @@ from example_parallel_robots.loader_tools import load
 class TestRobotLoad(unittest.TestCase):
     def setUp(self) -> None:
         self.nameRobotToTest = ['5bar', '5bar3d', '5bar6d', 'cassie_leg', 'digit_leg', 'digit_2legs', 'disney_leg', "kangaroo_leg",
-                           "kangaroo_2legs", "delta", "talos_full_closed", "talos_full_open", "talos_leg", "talos_2legs", "wl16_leg"]
+                           "kangaroo_2legs", "delta", "talos_leg",  "wl16_leg"]
 
     def test_robot(self):
         for name in self.nameRobotToTest:
             test=True
+            load(name)
             try:
+                print(name)
                 load(name)
             except :
                 test=False

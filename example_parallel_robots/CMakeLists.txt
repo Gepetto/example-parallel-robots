@@ -2,10 +2,10 @@ cmake_minimum_required(VERSION 3.10)
 
 # Project properties
 set(PROJECT_ORG gepetto)
-set(PROJECT_NAME example-parallel-robots)
+set(PROJECT_NAME example_parallel_robots)
 set(PROJECT_DESCRIPTION
     "Set of parallel robot models for general use in benchmarks and examples")
-set(PROJECT_URL https://gitlab.laas.fr/ldematteis/example-parallel-robots)
+set(PROJECT_URL https://gitlab.laas.fr/ldematteis/example_parallel_robots)
 
 # Project options
 option(BUILD_PYTHON_INTERFACE "Build the Python unit tests and helpers" ON)
