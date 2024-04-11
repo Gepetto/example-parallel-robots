@@ -75,7 +75,7 @@ def createSlidersInterface(model, constraint_models, visual_model, mot_ids_q, vi
 
 if __name__ == "__main__":
     import example_parallel_robots as epr
-    model, constraint_models, actuation_model, visual_model, collision_model = epr.load("kangaroo_2legs")
+    model, constraint_models, actuation_model, visual_model, collision_model = epr.load("digit_2legs")
     mot_ids_q = actuation_model.mot_ids_q
     # import example_robot_data as erd
     # robot = erd.load("solo12")
