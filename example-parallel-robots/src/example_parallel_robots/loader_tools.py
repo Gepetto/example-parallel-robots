@@ -20,7 +20,7 @@ from .robot_options import ROBOTS
 from .path import EXAMPLE_PARALLEL_ROBOTS_MODEL_DIR, EXAMPLE_PARALLEL_ROBOTS_SOURCE_DIR
 
 
-def getNameFrameConstraint(model, name_loop="fermeture", cstr_frames_ids=[]):
+def getNameFrameConstraint(model, name_loop="closedloop", cstr_frames_ids=[]):
     """
     Extracts the names of constrained frames based on a kinematic loop in the robot model.
 
@@ -57,7 +57,7 @@ def getNameFrameConstraint(model, name_loop="fermeture", cstr_frames_ids=[]):
     return cstr_frames_names
 
 
-def generateYAML(path, name_mot="mot", name_spherical="to_rotule", file=None):
+def generateYAML(path, name_mot="motor", name_spherical="spherical", file=None):
     """
     Generates or updates a YAML file to describe robot constraints and actuation.
 
@@ -88,7 +88,7 @@ def generateYAML(path, name_mot="mot", name_spherical="to_rotule", file=None):
         if match_mot:
             mot_joints_names.append(name)
 
-    name_frame_constraint = getNameFrameConstraint(rob.model, name_loop="fermeture")
+    name_frame_constraint = getNameFrameConstraint(rob.model, name_loop="closedloop")
     constraint_type = ["6d"] * len(
         name_frame_constraint
     )  # Constraint is default to 6D... that is not very general...

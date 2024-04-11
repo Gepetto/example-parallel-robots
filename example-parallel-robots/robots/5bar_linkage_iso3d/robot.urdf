@@ -103,35 +103,35 @@
 </inertial>
 </link>
 
-<link name="fermeture3D_1A">
+<link name="closedloop3D_1A">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture3D_1A_frame" type="fixed">
+<joint name="closedloop3D_1A_frame" type="fixed">
 <origin xyz="0 -0.18000000000000015987 -0.062500000000000166533" rpy="1.570796326794896558 -1.570796326794896336 0" />
 <parent link="part_4" />
-<child link="fermeture3D_1A" />
+<child link="closedloop3D_1A" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<link name="effecteur">
+<link name="effector">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="effecteur_frame" type="fixed">
+<joint name="effector_frame" type="fixed">
 <origin xyz="0.025000000000000022204 -0.18000000000000004885 -0.067500000000000115463" rpy="3.141592653589793116 -2.0243283558835282576e-16 -1.570796326794896558" />
 <parent link="part_4" />
-<child link="effecteur" />
+<child link="effector" />
 <axis xyz="0 0 0"/>
 </joint>
 
-<joint name="libreortho" type="revolute">
+<joint name="freeortho" type="revolute">
 <origin xyz="-0.06500000000000000222 -0.34500000000000008438 -0.024999999999999994449" rpy="-1.45215238593493469e-17 1.570796326794896558 0" />
 <parent link="part_3" />
 <child link="part_4" />
@@ -140,7 +140,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="libre1" type="revolute">
+<joint name="free1" type="revolute">
 <origin xyz="1.9428902930940239457e-16 0.31500000000000022427 -0.04999999999999997502" rpy="3.3991432702649502991e-18 -8.5627342893293126743e-18 2.0318009336061488845" />
 <parent link="part_2" />
 <child link="part_3" />
@@ -210,17 +210,17 @@
 </inertial>
 </link>
 
-<link name="fermeture3D_1B">
+<link name="closedloop3D_1B">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="fermeture3D_1B_frame" type="fixed">
+<joint name="closedloop3D_1B_frame" type="fixed">
 <origin xyz="-0.0025000000000001132427 -0.36500000000000010214 -0.024999999999999994449" rpy="1.570796326794896558 4.8549226442908764763e-28 -3.1415926535897926719" />
 <parent link="part_5" />
-<child link="fermeture3D_1B" />
+<child link="closedloop3D_1B" />
 <axis xyz="0 0 0"/>
 </joint>
 
@@ -233,7 +233,7 @@
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="libre2" type="revolute">
+<joint name="free2" type="revolute">
 <origin xyz="0.15000000000000004996 -0.10000000000000001943 -1.249000902703301108e-16" rpy="1.570796326794896558 0.44184666170691727638 3.141592653589793116" />
 <parent link="part_1" />
 <child link="part_2_2" />

@@ -1,20 +1,20 @@
 <robot name="onshape">
-<link name="batie">
+<link name="built">
 <visual>
 <origin xyz="0 0 0" rpy="0 -0 0" />
 <geometry>
-<mesh filename="package:///batie.stl"/>
+<mesh filename="package:///built.stl"/>
 </geometry>
-<material name="batie_material">
+<material name="built_material">
 <color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
 </material>
 </visual>
 <collision>
 <origin xyz="0 0 0" rpy="0 -0 0" />
 <geometry>
-<mesh filename="package:///batie.stl"/>
+<mesh filename="package:///built.stl"/>
 </geometry>
-<material name="batie_material">
+<material name="built_material">
 <color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
 </material>
 </collision>
@@ -25,22 +25,22 @@
 </inertial>
 </link>
 
-<link name="barre">
+<link name="rod">
 <visual>
 <origin xyz="-0.11026961925186587465 -0.24753479872234485093 0" rpy="-1.570796326794896558 -1.570796326794896558 0" />
 <geometry>
-<mesh filename="package:///barre.stl"/>
+<mesh filename="package:///rod.stl"/>
 </geometry>
-<material name="barre_material">
+<material name="rod_material">
 <color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
 </material>
 </visual>
 <collision>
 <origin xyz="-0.11026961925186587465 -0.24753479872234485093 0" rpy="-1.570796326794896558 -1.570796326794896558 0" />
 <geometry>
-<mesh filename="package:///barre.stl"/>
+<mesh filename="package:///rod.stl"/>
 </geometry>
-<material name="barre_material">
+<material name="rod_material">
 <color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
 </material>
 </collision>
@@ -51,22 +51,22 @@
 </inertial>
 </link>
 
-<link name="barre_2">
+<link name="rod_2">
 <visual>
 <origin xyz="-0.11026961925186590241 -0.24753479872234479542 0" rpy="-1.570796326794896558 -1.570796326794896558 0" />
 <geometry>
-<mesh filename="package:///barre.stl"/>
+<mesh filename="package:///rod.stl"/>
 </geometry>
-<material name="barre_material">
+<material name="rod_material">
 <color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
 </material>
 </visual>
 <collision>
 <origin xyz="-0.11026961925186590241 -0.24753479872234479542 0" rpy="-1.570796326794896558 -1.570796326794896558 0" />
 <geometry>
-<mesh filename="package:///barre.stl"/>
+<mesh filename="package:///rod.stl"/>
 </geometry>
-<material name="barre_material">
+<material name="rod_material">
 <color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
 </material>
 </collision>
@@ -85,19 +85,19 @@
 </inertial>
 </link>
 
-<joint name="fermeture1_A" type="revolute">
+<joint name="closedloop1_A" type="revolute">
 <origin xyz="2.7755575615628913511e-17 -0.46000000000000001998 -2.7755575615628913511e-17" rpy="2.0436181652775820801e-30 6.9767163393490848699e-30 1.570796326794896558" />
-<parent link="barre_2" />
+<parent link="rod_2" />
 <child link="sphere" />
 <axis xyz="0 0 1"/>
 <limit effort="1" velocity="20" />
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="libre1" type="revolute">
+<joint name="free1" type="revolute">
 <origin xyz="2.7755575615628913511e-17 -0.45999999999999990896 0.050000000000000016653" rpy="-1.5128280870939263564e-40 -3.6734198463195946286e-40 -6.1876044703704446752e-78" />
-<parent link="barre" />
-<child link="barre_2" />
+<parent link="rod" />
+<child link="rod_2" />
 <axis xyz="0 0 1"/>
 <limit effort="1" velocity="20" />
 <joint_properties friction="0.0"/>
@@ -105,29 +105,29 @@
 
 <joint name="mot1" type="revolute">
 <origin xyz="0.10000000000000000555 0.14999999999999996669 0.042018709005587850935" rpy="1.570796326794896558 -0 1.570796326794896558" />
-<parent link="batie" />
-<child link="barre" />
+<parent link="built" />
+<child link="rod" />
 <axis xyz="0 0 1"/>
 <limit effort="1" velocity="20" />
 <joint_properties friction="0.0"/>
 </joint>
 
-<link name="barre_3">
+<link name="rod_3">
 <visual>
 <origin xyz="-0.11026961925186590241 0.24753479872234485093 0.050000000000000002776" rpy="1.570796326794896558 1.570796326794896558 0" />
 <geometry>
-<mesh filename="package:///barre.stl"/>
+<mesh filename="package:///rod.stl"/>
 </geometry>
-<material name="barre_material">
+<material name="rod_material">
 <color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
 </material>
 </visual>
 <collision>
 <origin xyz="-0.11026961925186590241 0.24753479872234485093 0.050000000000000002776" rpy="1.570796326794896558 1.570796326794896558 0" />
 <geometry>
-<mesh filename="package:///barre.stl"/>
+<mesh filename="package:///rod.stl"/>
 </geometry>
-<material name="barre_material">
+<material name="rod_material">
 <color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
 </material>
 </collision>
@@ -138,22 +138,22 @@
 </inertial>
 </link>
 
-<link name="barre_bout">
+<link name="end_rod">
 <visual>
 <origin xyz="0.1102696192518658469 -0.24753479872234485093 -0.050000000000000002776" rpy="-1.570796326794896558 -1.570796326794896558 0" />
 <geometry>
-<mesh filename="package:///barre_bout.stl"/>
+<mesh filename="package:///end_rod.stl"/>
 </geometry>
-<material name="barre_bout_material">
+<material name="end_rod_material">
 <color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
 </material>
 </visual>
 <collision>
 <origin xyz="0.1102696192518658469 -0.24753479872234485093 -0.050000000000000002776" rpy="-1.570796326794896558 -1.570796326794896558 0" />
 <geometry>
-<mesh filename="package:///barre_bout.stl"/>
+<mesh filename="package:///end_rod.stl"/>
 </geometry>
-<material name="barre_bout_material">
+<material name="end_rod_material">
 <color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
 </material>
 </collision>
@@ -164,17 +164,17 @@
 </inertial>
 </link>
 
-<link name="effecteur">
+<link name="effector">
 <inertial>
 <origin xyz="0 0 0" rpy="0 0 0" />
 <mass value="1e-9" />
 <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
 </inertial>
 </link>
-<joint name="effecteur_frame" type="fixed">
+<joint name="effector_frame" type="fixed">
 <origin xyz="0 -0.52750000000000019096 1.3877787807814456755e-17" rpy="-1.5707963267948958919 -1.570796326794896558 0" />
-<parent link="barre_bout" />
-<child link="effecteur" />
+<parent link="end_rod" />
+<child link="effector" />
 <axis xyz="0 0 0"/>
 </joint>
 
@@ -186,19 +186,19 @@
 </inertial>
 </link>
 
-<joint name="fermeture1_B" type="revolute">
+<joint name="closedloop1_B" type="revolute">
 <origin xyz="-5.5511151231257827021e-17 -0.45999999999999985345 0.050000000000000002776" rpy="-6.1152609076707444674e-30 1.2212640759497854267e-29 -2.9143354396410176762e-16" />
-<parent link="barre_bout" />
+<parent link="end_rod" />
 <child link="sphere_2" />
 <axis xyz="0 0 1"/>
 <limit effort="1" velocity="20" />
 <joint_properties friction="0.0"/>
 </joint>
 
-<joint name="libre2" type="revolute">
+<joint name="free2" type="revolute">
 <origin xyz="2.7755575615628913511e-17 0.45999999999999996447 0" rpy="3.7235323964476006137e-42 7.1746481373430608542e-42 -3.141592653589793116" />
-<parent link="barre_3" />
-<child link="barre_bout" />
+<parent link="rod_3" />
+<child link="end_rod" />
 <axis xyz="0 0 1"/>
 <limit effort="1" velocity="20" />
 <joint_properties friction="0.0"/>
@@ -206,8 +206,8 @@
 
 <joint name="mot2" type="revolute">
 <origin xyz="0.10000000000000001943 -0.15000000000000007772 0.042018709005587989713" rpy="-1.570796326794896558 -2.2204460492503120948e-16 -1.570796326794896558" />
-<parent link="batie" />
-<child link="barre_3" />
+<parent link="built" />
+<child link="rod_3" />
 <axis xyz="0 0 1"/>
 <limit effort="1" velocity="20" />
 <joint_properties friction="0.0"/>
