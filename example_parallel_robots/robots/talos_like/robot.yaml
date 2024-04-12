@@ -1,5 +1,0 @@
-closed_loop: [['closedloop1_A', 'closedloop1_B']]
-type: ['6d']
-name_mot: ['motor_hip_x', 'motor_hip_z', 'motor_hip_y', 'motor_knee', 'motor_ankle', 'motor_shin']
-joint_name: ['free_spherical_shin', 'free_spherical_foot']
-joint_type: ['SPHERICAL', 'SPHERICAL']
