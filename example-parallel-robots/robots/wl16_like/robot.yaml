@@ -1,5 +1,3 @@
 closed_loop: [['closedloop1_A', 'closedloop1_B'], ['closedloop2_A', 'closedloop2_B'], ['closedloop3_A', 'closedloop3_B'], ['closedloop4_A', 'closedloop4_B'], ['closedloop5_A', 'closedloop5_B']]
 type: ['6d', '6d', '6d', '6d', '6d']
 name_mot: ['motor_4', 'motor_1', 'motor_2', 'motor_3', 'motor_5', 'motor_6']
-joint_name: ['spherical_1', 'spherical_2', 'spherical_3', 'spherical_4', 'spherical_5', 'spherical_6', 'spherical_12', 'spherical_10', 'spherical_11', 'spherical_7', 'spherical_8', 'spherical_9']
-joint_type: ['SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL']

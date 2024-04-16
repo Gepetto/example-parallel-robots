@@ -1,5 +1,3 @@
 closed_loop: [['closedloop0_B', 'closedloop0_A'], ['closedloop2_A', 'closedloop2_B'], ['closedloop3_B', 'closedloop3_A'], ['closedloop4_B', 'closedloop4_A'], ['closedloop5_A', 'closedloop5_B'], ['closedloop6_A', 'closedloop6_B'], ['closedloop7_B', 'closedloop7_A'], ['closedloop8_B', 'closedloop8_A'], ['closedloop9_A', 'closedloop9_B'], ['closedloop10_A', 'closedloop10_B'], ['closedloop11_B', 'closedloop11_A']]
 type: ['6d', '6d', '6d', '6d', '6d', '6d', '6d', '6d', '6d', '6d', '6d']
 name_mot: [ 'motor_hipz',  'motor_hip_xy1', 'motor_hip_xy2', 'motor_ankle2', 'motor_ankle1', 'motor_knee']
-joint_name: ['spherical_motor_holder_1_hip_z', 'spherical_motor_transmission_hip1', 'spherical_transmission_hip3', 'spherical_motor_transmission_hip2', 'spherical_transmission_hip4', 'spherical_lower_hip1', 'spherical_lower_hip2', 'spherical_transmission_knee', 'spherical_transmission_foot2', 'spherical_transmission_foot1', 'spherical_shin', 'spherical_motor_holder_2_hip_z']
-joint_type: ['SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL']

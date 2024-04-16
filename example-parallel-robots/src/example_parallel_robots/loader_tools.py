@@ -14,7 +14,7 @@ from warnings import warn
 from os.path import dirname, exists, join
 import sys
 import numpy as np
-
+from .freeze_joints import freezeJoints
 from .actuation_model import ActuationModel
 from .robot_options import ROBOTS
 from .path import EXAMPLE_PARALLEL_ROBOTS_MODEL_DIR, EXAMPLE_PARALLEL_ROBOTS_SOURCE_DIR
@@ -157,8 +157,13 @@ def completeRobotLoader(
     yaml_content = getYAMLcontents(path, name_yaml)
 
     # Update model
-    update_joint = yaml_content["joint_name"]
-    joints_types = yaml_content["joint_type"]
+    try : 
+        update_joint = yaml_content["joint_name"]
+        joints_types = yaml_content["joint_type"]
+    except :
+        update_joint = []
+        joints_types = []
+
     fixed_joints_names = []
     new_model = pin.Model()
     for place, iner, name, parent_old, joint in list(
@@ -271,6 +276,7 @@ def completeRobotLoader(
         print("no constraint")
 
     actuation_model = ActuationModel(model, yaml_content["name_mot"])
+    model,constraints_models,actuation_model,visual_model,collision_model=simplifyModel(model,constraints_models,actuation_model,visual_model,collision_model)
     return (model, constraints_models, actuation_model, visual_model, collision_model)
 
 
@@ -324,25 +330,95 @@ def load(robot_name, free_flyer=None, only_legs=None):
             f"Robot {robot_name} does not exist.\n Call 'models()' to see the list of available models"
         )
     robot = ROBOTS[robot_name]
-    if robot.urdf_file is not None:
+    
+    if robot_name == "talos_only_leg":
+        models_stack = talosOnlyLeg()
+    else :
         ff = robot.free_flyer if free_flyer is None else free_flyer
         models_stack = completeRobotLoader(
             getModelPath(robot.path), robot.urdf_file, robot.yaml_file, ff
         )
-        return models_stack
-    else:  # This concerns full body models
-        ff = robot.free_flyer if free_flyer is None else free_flyer
-        ol = robot.only_legs if only_legs is None else only_legs
-        models_stack = robot.exec(robot.closed_loop, ol, ff)
-        return models_stack
+    return models_stack
 
+        
+
+def talosOnlyLeg():
+    new_model, constraint_models, actuation_model, visual_model, collision_model = load("talos_full_closed")
+
+    names_joints_to_lock=[
+        # 'universe',
+    # 'root_joint',
+    'torso_1_joint',
+    'torso_2_joint',
+    'arm_left_1_joint',
+    'arm_left_2_joint',
+    'arm_left_3_joint',
+    # 'arm_left_4_joint',
+    'arm_left_5_joint',
+    'arm_left_6_joint',
+    'arm_left_7_joint',
+    'gripper_left_inner_double_joint',
+    'gripper_left_fingertip_1_joint',
+    'gripper_left_fingertip_2_joint',
+    'gripper_left_inner_single_joint',
+    'gripper_left_fingertip_3_joint',
+    'gripper_left_joint',
+    'gripper_left_motor_single_joint',
+    'arm_right_1_joint',
+    'arm_right_2_joint',
+    'arm_right_3_joint',
+    # 'arm_right_4_joint',
+    'arm_right_5_joint',
+    'arm_right_6_joint',
+    'arm_right_7_joint',
+    'gripper_right_inner_double_joint',
+    'gripper_right_fingertip_1_joint',
+    'gripper_right_fingertip_2_joint',
+    'gripper_right_inner_single_joint',
+    'gripper_right_fingertip_3_joint',
+    'gripper_right_joint',
+    'gripper_right_motor_single_joint',
+    'head_1_joint',
+    'head_2_joint']
+
+
+
+
+
+
+    ids_joints_to_lock = [
+        i for (i, n) in enumerate(new_model.names) if n in names_joints_to_lock
+    ]
+    q0=pin.neutral(new_model)
+    (
+        new_model,
+        constraint_models,
+        actuation_model,
+        visual_model,
+        collision_model,
+    ) = freezeJoints(
+        new_model,
+        constraint_models,
+        actuation_model,
+        visual_model,
+        collision_model,
+        ids_joints_to_lock,
+        q0,
+    )
+    return (
+        new_model,
+        constraint_models,
+        actuation_model,
+        visual_model,
+        collision_model,
+    )
 
 def models():
     """Displays the list of available robot names"""
     print(f"Available models are: \n {ROBOTS.keys()}\n Generate model with method load")
 
 
-def simplifyModel(model, visual_model):
+def simplifyModel(model,constraint_models,actuation_model, visual_model,collision_model):
     """
     Checks if any revolute joints can be replaced with spherical joints.
 
@@ -355,9 +431,10 @@ def simplifyModel(model, visual_model):
         pinocchio.GeometryModel: The simplified Pinocchio robot visual model.
     """
     data = model.createData()
-    pin.framesForwardKinematics(model, data, pin.randomConfiguration(model))
+    pin.framesForwardKinematics(model, data, pin.neutral(model))
     new_model = pin.Model()
     fixed_joints_ids = []
+    spherical=False
     for jid, place, iner, name, parent_old, jtype in list(
         zip(
             range(len(model.joints)),
@@ -388,66 +465,35 @@ def simplifyModel(model, visual_model):
             vectors.append(vec)
             points.append(oMi.translation)
         if len(vectors) == 3:
-            if joints_mass[-1] < 1e-3 and joints_mass[-2] < 1e-3:
+            if joints_mass[0] < 1e-5 and joints_mass[1] < 1e-5:
+                # print("no mass")
+                print(jtype.shortname())
+                print(vectors)
+                
                 if (
                     np.linalg.norm(np.cross(vectors[0], vectors[1])) > 1e-6
                     and np.linalg.norm(np.cross(vectors[0], vectors[2])) > 1e-6
                     and np.linalg.norm(np.cross(vectors[2], vectors[1])) > 1e-6
                 ):
-                    if (
-                        abs(
-                            np.dot(
-                                np.cross(vectors[0], vectors[1]), points[0] - points[1]
-                            )
-                        )
-                        < 1e-5
-                        and abs(
-                            np.dot(
-                                np.cross(vectors[0], vectors[2]), points[0] - points[2]
-                            )
-                        )
-                        < 1e-5
-                        and abs(
-                            np.dot(
-                                np.cross(vectors[2], vectors[1]), points[2] - points[1]
-                            )
-                        )
-                        < 1e-5
-                    ):
-                        print(jid)
-                        a = vectors[0]
-                        b = vectors[1]
-                        A = points[0]
-                        B = points[1]
+                    print("no colinearité")
+                    if np.linalg.norm(points[0]-points[1]) < 1e-4 and np.linalg.norm(points[2]-points[1]) < 1e-4:
 
-                        numerateur = A[0] - B[0] - ((A[1] - B[1]) / b[1]) * b[0]
-                        denominateur = (a[1] / b[1]) * b[0] - a[0]
-                        if numerateur < 1e-5:
-                            t = 0
-                        elif denominateur != 0:
-                            t = numerateur / denominateur  # intersection point
-                        else:
-                            t = 0
-                            print("INVALID POSITION COMPUTED")
-
-                            break
-
-                        pos = A + t * a
-                        newoMi = pin.SE3.Identity()
-                        newoMi.translation = pos
-
-                        place = data.oMi[max(jid - 1, 0)].inverse() * newoMi
-                        jtype = pin.JointModelSpherical()
-                        fixed_joints_ids += [jid + 1, jid + 2]
+                        spherical=True
+                        last_joint=jid
+                        
+                        fixed_joints_ids += [jid + 0, jid + 1]
         if jid != 0:
-            print(jid)
+            # print(jid)
+            if spherical and jid==last_joint+2:
+                jtype = pin.JointModelSpherical()
+                spherical=False
             test = new_model.addJoint(parent, jtype, place, name)
             new_model.appendBodyToJoint(test, iner, pin.SE3.Identity())
-
-    new_model, new_visual_model = pin.buildReducedModel(
-        new_model, visual_model, fixed_joints_ids, pin.neutral(new_model)
-    )
-    return (new_model, new_visual_model)
+    # print(fixed_joints_ids)
+    q0=pin.neutral(new_model)
+    
+    new_model,new_constraint_models,new_actuation_model,new_visual_model,collision_model = freezeJoints(new_model,constraint_models,actuation_model,visual_model,collision_model,fixed_joints_ids,q0)
+    return (new_model, new_constraint_models,new_actuation_model,new_visual_model,collision_model)
 
 
 def unitest_SimplifyModel():
