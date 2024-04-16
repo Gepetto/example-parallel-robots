@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
 <package format="3">
-  <name>example-parallel-robots</name>
+  <name>sandbox-pinocchio-parallel-robots</name>
   <version>0.0.1</version>
-  <description>Set of parallel robots models for general use in benchmarks and examples</description>
+  <description>Set of tools for general purpose operations on pinocchio models. This was originally designed to work with parallel robots.</description>
+  <author email="ldematteis@laas.fr">Ludovic De Matteis</author>
   <author email="vbatto@laas.fr">Virgile Batto</author>
   <maintainer email="ldematteis@laas.fr">Ludovic De Matteis</maintainer>
   <license>BSD</license>
@@ -11,11 +12,7 @@
 
   <build_depend>git</build_depend>
   <depend>python3</depend>
-  <depend>python3-numpy</depend>
-  <!-- The default setting has BUILD_TESTING=ON, as thus we need to explicitly depend on Pinocchio -->
-  <!-- <build_depend>pinocchio</build_depend> -->
   <depend>pinocchio</depend>
-  <depend>pyaml</depend>
 
   <buildtool_depend>cmake</buildtool_depend>
   <export>

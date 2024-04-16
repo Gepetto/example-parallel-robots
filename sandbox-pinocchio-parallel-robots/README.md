@@ -18,5 +18,4 @@ Installation instuctions are to be added.
 - Virgile Batto, LAAS-CNRS :fr:
 
 ### :construction_worker: With contributions from
-
 - 
