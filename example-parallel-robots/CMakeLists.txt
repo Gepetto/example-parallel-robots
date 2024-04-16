@@ -8,14 +8,14 @@ set(PROJECT_DESCRIPTION
 set(PROJECT_URL https://gitlab.laas.fr/ldematteis/example-parallel-robots)
 
 # Project options
-option(BUILD_PYTHON_INTERFACE "Build the Python unit tests and helpers" ON)
-option(INSTALL_PYTHON_INTERFACE_ONLY "Install *ONLY* the Python interface" OFF)
-option(BUILD_TESTING "Build unit tests" OFF)
+    # * Since the project is Python only for now, we remove the option of building the python interface
+# option(BUILD_PYTHON_INTERFACE "Build the Python unit tests and helpers" ON)
+set(BUILD_PYTHON_INTERFACE ON)
+# option(INSTALL_PYTHON_INTERFACE_ONLY "Install *ONLY* the Python interface" OFF)
+# option(BUILD_TESTING "Build unit tests" OFF)
+set(BUILD_TESTING ON)
 
 # Project configuration
-if(NOT INSTALL_PYTHON_INTERFACE_ONLY)
-  set(PROJECT_USE_CMAKE_EXPORT TRUE)
-endif(NOT INSTALL_PYTHON_INTERFACE_ONLY)
 set(CUSTOM_HEADER_DIR ${PROJECT_NAME})
 set(PROJECT_COMPATIBILITY_VERSION AnyNewerVersion)
 
@@ -52,7 +52,8 @@ compute_project_args(PROJECT_ARGS LANGUAGES CXX)
 project(${PROJECT_NAME} ${PROJECT_ARGS})
 
 if(BUILD_PYTHON_INTERFACE)
-  add_project_dependency(eigenpy 2.7.11 REQUIRED)
+  # add_project_dependency(numpy REQUIRED)
+  # add_project_dependency(sandbox_pinocchio_parallel_robots REQUIRED)
   include("${JRL_CMAKE_MODULES}/python.cmake")
   add_project_dependency(pinocchio REQUIRED)
   string(REGEX REPLACE "-" "_" PY_NAME ${PROJECT_NAME})
@@ -62,22 +63,20 @@ if(BUILD_PYTHON_INTERFACE)
   endif(BUILD_TESTING)
 endif(BUILD_PYTHON_INTERFACE)
 
-if(NOT INSTALL_PYTHON_INTERFACE_ONLY)
-  add_library(${PROJECT_NAME} INTERFACE)
-  target_include_directories(${PROJECT_NAME}
-                             INTERFACE $<INSTALL_INTERFACE:include>)
-  target_compile_definitions(
-    ${PROJECT_NAME}
-    INTERFACE
-      EXAMPLE_PARALLEL_ROBOTS_MODEL_DIR="$<INSTALL_PREFIX>/share/${PROJECT_NAME}/robots"
-  )
-  install(
-    TARGETS ${PROJECT_NAME}
-    EXPORT ${TARGETS_EXPORT_NAME}
-    DESTINATION lib)
+add_library(${PROJECT_NAME} INTERFACE)
+target_include_directories(${PROJECT_NAME}
+                            INTERFACE $<INSTALL_INTERFACE:include>)
+target_compile_definitions(
+  ${PROJECT_NAME}
+  INTERFACE
+    EXAMPLE_PARALLEL_ROBOTS_MODEL_DIR="$<INSTALL_PREFIX>/share/${PROJECT_NAME}/robots"
+)
+install(
+  TARGETS ${PROJECT_NAME}
+  EXPORT ${TARGETS_EXPORT_NAME}
+  DESTINATION lib)
 
 #   install(FILES include/${CUSTOM_HEADER_DIR}/path.hpp
 #           DESTINATION include/${CUSTOM_HEADER_DIR})
-  install(DIRECTORY robots DESTINATION share/${PROJECT_NAME})
-  install(FILES package.xml DESTINATION share/${PROJECT_NAME})
-endif(NOT INSTALL_PYTHON_INTERFACE_ONLY)
+install(DIRECTORY robots DESTINATION share/${PROJECT_NAME})
+install(FILES package.xml DESTINATION share/${PROJECT_NAME})
