@@ -1,5 +1,3 @@
 closed_loop: [['closedloop1_B', 'closedloop1_A'], ['closedloop2_A', 'closedloop2_B']]
 type: ['6d', '6d']
 name_mot: ['motor_hip1', 'motor_hip2', 'motor_tigh', 'motor_knee', 'motor_ankle']
-joint_name: ['spherical_foot', 'spherical_shin', 'spherical_knee', 'spherical_hip']
-joint_type: ['SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL']
