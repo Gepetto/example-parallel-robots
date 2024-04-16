@@ -1,5 +1,3 @@
 closed_loop: [['closedloop1_A', 'closedloop1_B']]
 type: ['6d']
 name_mot: ['mot1', 'mot2']
-joint_name: []
-joint_type: []
