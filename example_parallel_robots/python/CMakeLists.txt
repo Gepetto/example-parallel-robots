@@ -2,7 +2,7 @@ set(${PROJECT_NAME}_PYTHON_FILES
 actuation_model.py 
 loader_tools.py 
 robot_options.py
-talos_closed.py
+talos_utils.py
 freeze_joints.py
 __init__.py 
 __main__.py 
