@@ -55,10 +55,19 @@ if(BUILD_PYTHON_INTERFACE)
   include("${JRL_CMAKE_MODULES}/python.cmake")
   add_project_dependency(pinocchio REQUIRED)
   string(REGEX REPLACE "-" "_" PY_NAME ${PROJECT_NAME})
-  add_subdirectory(bindings)
-  if(BUILD_TESTING)
-    add_subdirectory(unittest)
-  endif(BUILD_TESTING)
+
+  set(${PROJECT_NAME}_PYTHON_FILES 
+      __init__.py
+      reorganize_models.py
+  )
+  foreach(python ${${PROJECT_NAME}_PYTHON_FILES})
+    python_install_on_site(${PY_NAME} ${python})
+  endforeach(python ${${PROJECT_NAME}_PYTHON_FILES})
+
 endif(BUILD_PYTHON_INTERFACE)
+
+if(BUILD_TESTING)
+  add_subdirectory(unittest)
+endif(BUILD_TESTING)
 
 install(FILES package.xml DESTINATION share/${PROJECT_NAME})
