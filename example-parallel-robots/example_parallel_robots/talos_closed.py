@@ -5,8 +5,7 @@ import meshcat
 from pinocchio.visualize import MeshcatVisualizer
 import hppfcl
 import re
-from .actuation_model import ActuationModel
-from .freeze_joints import freezeJoints
+from toolbox_parallel_robots import freezeJoints, ActuationModel
 
 import sandbox_pinocchio_parallel_robots as sppr
 

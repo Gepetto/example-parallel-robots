@@ -14,8 +14,7 @@ from warnings import warn
 from os.path import dirname, exists, join
 import sys
 import numpy as np
-from .freeze_joints import freezeJoints
-from .actuation_model import ActuationModel
+from toolbox_parallel_robots import freezeJoints, ActuationModel
 from .robot_options import ROBOTS
 from .path import EXAMPLE_PARALLEL_ROBOTS_MODEL_DIR, EXAMPLE_PARALLEL_ROBOTS_SOURCE_DIR
 

@@ -4,6 +4,7 @@
   <version>0.0.1</version>
   <description>Set of parallel robots models for general use in benchmarks and examples</description>
   <author email="vbatto@laas.fr">Virgile Batto</author>
+  <author email="ldematteis@laas.fr">Ludovic De Matteis</author>
   <maintainer email="ldematteis@laas.fr">Ludovic De Matteis</maintainer>
   <license>BSD</license>
 

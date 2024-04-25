@@ -104,7 +104,7 @@ def freezeJoints(
         ]
 
     if actuation_model is not None:
-        from example_parallel_robots.actuation_model import ActuationModel
+        from toolbox_parallel_robots.actuation_model import ActuationModel
 
         print("Reducing the actuation model")
         list_names = [model.names[idMot] for idMot in actuation_model.mot_joints_ids]

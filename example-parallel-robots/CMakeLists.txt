@@ -45,7 +45,7 @@ include("${JRL_CMAKE_MODULES}/base.cmake")
 message(STATUS "${PROJECT_DESCRIPTION}, version ${PROJECT_VERSION}")
 message(STATUS "Copyright (C) 2023-2024 LAAS-CNRS")
 message(STATUS "All rights reserved.")
-# message(STATUS "Released under the BSD 3-Clause License.")
+message(STATUS "Released under the BSD 3-Clause License.")
 
 # Project definition
 compute_project_args(PROJECT_ARGS LANGUAGES CXX)
@@ -53,11 +53,27 @@ project(${PROJECT_NAME} ${PROJECT_ARGS})
 
 if(BUILD_PYTHON_INTERFACE)
   # add_project_dependency(numpy REQUIRED)
-  # add_project_dependency(sandbox_pinocchio_parallel_robots REQUIRED)
+  # add_project_dependency(toolbox-parallel-robots REQUIRED)
   include("${JRL_CMAKE_MODULES}/python.cmake")
   add_project_dependency(pinocchio REQUIRED)
   string(REGEX REPLACE "-" "_" PY_NAME ${PROJECT_NAME})
-  add_subdirectory(python)
+  
+  set(${PROJECT_NAME}_PYTHON_FILES 
+      __init__.py
+      __main__.py
+      loader_tools.py
+      robot_options.py
+      talos_closed.py
+  )
+
+  foreach(python ${${PROJECT_NAME}_PYTHON_FILES})
+    python_install_on_site(${PY_NAME} ${python})
+  endforeach(python ${${PROJECT_NAME}_PYTHON_FILES})
+
+  configure_file(${PY_NAME}/path.py.in ${PY_NAME}/path.py)
+  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PY_NAME}/path.py
+          DESTINATION "${PYTHON_SITELIB}/${PY_NAME}")
+
   if(BUILD_TESTING)
     add_subdirectory(unittest)
   endif(BUILD_TESTING)
