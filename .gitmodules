@@ -1,6 +1,0 @@
-[submodule "example_parallel_robots/cmake"]
-	path = example_parallel_robots/cmake
-	url = https://github.com/jrl-umi3218/jrl-cmakemodules.git
-[submodule "closed_loop_tools/jrl-cmakemodules"]
-	path = closed_loop_tools/jrl-cmakemodules
-	url = https://github.com/jrl-umi3218/jrl-cmakemodules.git
