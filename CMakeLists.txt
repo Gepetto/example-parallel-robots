@@ -5,7 +5,7 @@ set(PROJECT_ORG gepetto)
 set(PROJECT_NAME example-parallel-robots)
 set(PROJECT_DESCRIPTION
     "Set of parallel robot models for general use in benchmarks and examples")
-set(PROJECT_URL https://gitlab.laas.fr/ldematteis/example-parallel-robots)
+set(PROJECT_URL "https://github.com/${PROJECT_ORG}/${PROJECT_NAME}")
 
 # Project options * Since the project is Python only for now, we remove the
 # option of building the python interface option(BUILD_PYTHON_INTERFACE "Build
