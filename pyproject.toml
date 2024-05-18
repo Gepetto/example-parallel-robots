@@ -7,8 +7,8 @@ name = "example-parallel-robots"
 description = "Set of parallel robot models for general use in benchmarks and examples"
 version = "0.0.1"
 dependencies = [
-    "pin",
-    "pyyaml",
+  "pin",
+  "pyyaml"
 ]
 
 [tool.cmeel]
