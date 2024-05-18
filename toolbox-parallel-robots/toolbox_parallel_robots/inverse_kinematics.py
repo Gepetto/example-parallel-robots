@@ -1,6 +1,6 @@
 """
 -*- coding: utf-8 -*-
-Ludovic DE MATTEIS & Virgile BATTO, February 2024 
+Ludovic DE MATTEIS & Virgile BATTO, February 2024
 
 Tools to compute the inverse kinematics of a closed loop system.
 """

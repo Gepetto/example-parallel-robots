@@ -1,5 +1,6 @@
 import pinocchio as pin
 
+
 def reorganizeModelDepthFirst(model):
     """
     Reorganizes the model by creating a new model and propagating the joints and bodies.
@@ -8,11 +9,16 @@ def reorganizeModelDepthFirst(model):
     Returns:
         pin.Model: The reorganized model.
     """
+
     def propagate(stack, new_model, i):
         if len(stack) == 0:
             return new_model
         if i == 1000:
-            raise (RecursionError("Reached max recursion depth when reorganizing the model"))
+            raise (
+                RecursionError(
+                    "Reached max recursion depth when reorganizing the model"
+                )
+            )
         else:
             (jointId, parentId) = stack.pop()
             jId = new_model.addJoint(
@@ -83,4 +89,3 @@ def reorganizeModels(old_model, old_geometry_models=[], old_constraint_models=[]
             )
         )
     return (model, geometry_models, constraint_models)
-

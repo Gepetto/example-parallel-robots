@@ -36,7 +36,6 @@ class ActuationData:
     """
 
     def __init__(self, model, constraints_models, actuation_model):
-
         Lidmot = actuation_model.mot_ids_v
         free_ids_v = actuation_model.free_ids_v
         nv = model.nv

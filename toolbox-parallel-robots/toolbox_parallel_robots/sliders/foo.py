@@ -9,13 +9,9 @@ Create a Tkinter interface to move some joints in the robots while satisfying th
 import meshcat
 import tkinter as tk
 import pinocchio as pin
-from sliders.util_frames import (
-    addXYZAxisToJoints,
-    replaceGeomByXYZAxis,
-    addXYZAxisToConstraints,
-)
 from sliders.tk_robot_sliders import SlidersFrame
 from sliders.tk_sliders_manager import SlidersManager
+
 
 # * Interface to activate or deactivate constraints on the robot
 class CheckboxConstraintCmd:
@@ -35,7 +31,10 @@ class CheckboxConstraintCmd:
             constraint_models.remove(self.cm)
         self.project.recomputeConstraints(constraint_models)
 
-def createSlidersInterface(model, constraint_models, visual_model, mot_ids_q, viz, q0=None):
+
+def createSlidersInterface(
+    model, constraint_models, visual_model, mot_ids_q, viz, q0=None
+):
     """
     Create a Tkinter interface to move some joints in the robots while satisfying the desired closed loop constraints
     """
@@ -63,7 +62,7 @@ def createSlidersInterface(model, constraint_models, visual_model, mot_ids_q, vi
     root.title("Simple Robot Sliders")
     sliders_frame = SlidersFrame(model, mot_ids_q, q0, viz)
     # Creating sliders, main projection functions are called when the sliders are moved
-    sliders_frame.createSlider(root)  
+    sliders_frame.createSlider(root)
 
     managerWindow = tk.Toplevel()
     managerWindow.bind("<Escape>", lambda ev: root.destroy())
@@ -73,9 +72,13 @@ def createSlidersInterface(model, constraint_models, visual_model, mot_ids_q, vi
 
     root.mainloop()
 
+
 if __name__ == "__main__":
     import example_parallel_robots as epr
-    model, constraint_models, actuation_model, visual_model, collision_model = epr.load("digit_2legs")
+
+    model, constraint_models, actuation_model, visual_model, collision_model = epr.load(
+        "digit_2legs"
+    )
     mot_ids_q = actuation_model.mot_ids_q
     # import example_robot_data as erd
     # robot = erd.load("solo12")
@@ -85,6 +88,7 @@ if __name__ == "__main__":
     # * Create the visualizer
     import pinocchio as pin
     import meshcat
+
     viz = pin.visualize.MeshcatVisualizer(model, collision_model, visual_model)
     viz.viewer = meshcat.Visualizer(zmq_url="tcp://127.0.0.1:6000")
     viz.clean()

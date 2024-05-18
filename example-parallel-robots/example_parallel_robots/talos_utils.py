@@ -10,7 +10,6 @@
 # from .loader_tools import load
 
 
-
 # def onlyleg():
 #     model, constraint_models, actuation_model, visual_model, collision_model = load("talos_full_closed")
 #     names_joints_to_lock = [

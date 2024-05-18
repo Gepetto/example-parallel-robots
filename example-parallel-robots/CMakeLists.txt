@@ -7,12 +7,12 @@ set(PROJECT_DESCRIPTION
     "Set of parallel robot models for general use in benchmarks and examples")
 set(PROJECT_URL https://gitlab.laas.fr/ldematteis/example-parallel-robots)
 
-# Project options
-    # * Since the project is Python only for now, we remove the option of building the python interface
-# option(BUILD_PYTHON_INTERFACE "Build the Python unit tests and helpers" ON)
+# Project options * Since the project is Python only for now, we remove the
+# option of building the python interface option(BUILD_PYTHON_INTERFACE "Build
+# the Python unit tests and helpers" ON)
 set(BUILD_PYTHON_INTERFACE ON)
-# option(INSTALL_PYTHON_INTERFACE_ONLY "Install *ONLY* the Python interface" OFF)
-# option(BUILD_TESTING "Build unit tests" OFF)
+# option(INSTALL_PYTHON_INTERFACE_ONLY "Install *ONLY* the Python interface"
+# OFF) option(BUILD_TESTING "Build unit tests" OFF)
 set(BUILD_TESTING ON)
 
 # Project configuration
@@ -57,14 +57,9 @@ if(BUILD_PYTHON_INTERFACE)
   include("${JRL_CMAKE_MODULES}/python.cmake")
   add_project_dependency(pinocchio REQUIRED)
   string(REGEX REPLACE "-" "_" PY_NAME ${PROJECT_NAME})
-  
-  set(${PROJECT_NAME}_PYTHON_FILES 
-      __init__.py
-      __main__.py
-      loader_tools.py
-      robot_options.py
-      talos_closed.py
-  )
+
+  set(${PROJECT_NAME}_PYTHON_FILES __init__.py __main__.py loader_tools.py
+                                   robot_options.py talos_closed.py)
 
   foreach(python ${${PROJECT_NAME}_PYTHON_FILES})
     python_install_on_site(${PY_NAME} ${python})
@@ -81,7 +76,7 @@ endif(BUILD_PYTHON_INTERFACE)
 
 add_library(${PROJECT_NAME} INTERFACE)
 target_include_directories(${PROJECT_NAME}
-                            INTERFACE $<INSTALL_INTERFACE:include>)
+                           INTERFACE $<INSTALL_INTERFACE:include>)
 target_compile_definitions(
   ${PROJECT_NAME}
   INTERFACE
@@ -92,7 +87,7 @@ install(
   EXPORT ${TARGETS_EXPORT_NAME}
   DESTINATION lib)
 
-#   install(FILES include/${CUSTOM_HEADER_DIR}/path.hpp
-#           DESTINATION include/${CUSTOM_HEADER_DIR})
+# install(FILES include/${CUSTOM_HEADER_DIR}/path.hpp DESTINATION
+# include/${CUSTOM_HEADER_DIR})
 install(DIRECTORY robots DESTINATION share/${PROJECT_NAME})
 install(FILES package.xml DESTINATION share/${PROJECT_NAME})

@@ -7,12 +7,12 @@ set(PROJECT_DESCRIPTION
     "Set of tools to work with robots with bilateral constraints")
 set(PROJECT_URL https://gitlab.laas.fr/ldematteis/example-parallel-robots)
 
-# Project options
-    # * Since the project is Python only for now, we remove the option of building the python interface
-# option(BUILD_PYTHON_INTERFACE "Build the Python unit tests and helpers" ON)
+# Project options * Since the project is Python only for now, we remove the
+# option of building the python interface option(BUILD_PYTHON_INTERFACE "Build
+# the Python unit tests and helpers" ON)
 set(BUILD_PYTHON_INTERFACE ON)
-# option(INSTALL_PYTHON_INTERFACE_ONLY "Install *ONLY* the Python interface" OFF)
-# option(BUILD_TESTING "Build unit tests" OFF)
+# option(INSTALL_PYTHON_INTERFACE_ONLY "Install *ONLY* the Python interface"
+# OFF) option(BUILD_TESTING "Build unit tests" OFF)
 set(BUILD_TESTING ON)
 
 # Project configuration
@@ -56,7 +56,7 @@ if(BUILD_PYTHON_INTERFACE)
   add_project_dependency(pinocchio REQUIRED)
   string(REGEX REPLACE "-" "_" PY_NAME ${PROJECT_NAME})
 
-  set(${PROJECT_NAME}_PYTHON_FILES 
+  set(${PROJECT_NAME}_PYTHON_FILES
       __init__.py
       actuation_data.py
       actuation_model.py
@@ -69,20 +69,15 @@ if(BUILD_PYTHON_INTERFACE)
       inverse_dynamics.py
       jacobian.py
       mounting.py
-      projections.py
-  )
+      projections.py)
   foreach(python ${${PROJECT_NAME}_PYTHON_FILES})
     python_install_on_site(${PY_NAME} ${python})
   endforeach(python ${${PROJECT_NAME}_PYTHON_FILES})
 
-  set(${PROJECT_NAME}_SLIDERS_PYTHON_FILES 
-    foo.py
-    tk_robot_sliders.py
-    tk_sliders_manager.py
-    util_frames.py
-  )
+  set(${PROJECT_NAME}_SLIDERS_PYTHON_FILES foo.py tk_robot_sliders.py
+                                           tk_sliders_manager.py util_frames.py)
   foreach(python ${${PROJECT_NAME}_SLIDERS_PYTHON_FILES})
-      python_install_on_site(${PY_NAME} sliders/${python})
+    python_install_on_site(${PY_NAME} sliders/${python})
   endforeach(python ${${PROJECT_NAME}_SLIDERS_PYTHON_FILES})
 
 endif(BUILD_PYTHON_INTERFACE)

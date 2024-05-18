@@ -2,7 +2,7 @@
 -*- coding: utf-8 -*-
 Virgile BATTO & Ludovic DE MATTEIS - February 2024
 
-This module provides tools to perform loop closure on a robot model. 
+This module provides tools to perform loop closure on a robot model.
 It is used to get configurations that minimizes the pinocchio constraints residuals under joints configurations constraints.
 """
 

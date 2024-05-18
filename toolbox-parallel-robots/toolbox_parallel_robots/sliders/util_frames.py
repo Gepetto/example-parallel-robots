@@ -1,8 +1,5 @@
-from pinocchio.robot_wrapper import RobotWrapper
 import pinocchio as pin
 import hppfcl
-import example_robot_data as robex
-import numpy as np
 
 
 def addXYZAxisToFrames(rm, vm, basename="XYZ", scale=1, world=False):

@@ -9,6 +9,7 @@ from toolbox_parallel_robots import freezeJoints, ActuationModel
 
 import sandbox_pinocchio_parallel_robots as sppr
 
+
 def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
     robot = robex.load("talos")
     model = robot.model
@@ -199,9 +200,7 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
     # ? Is this really necessary or can we just frame.copy() ?
     for frame in model.frames[1:]:
         name = frame.name
-        parent_joint = (
-            frame.parentJoint
-        )  # Parent joints for frames may be incorrect dur to the changes in the joints order
+        parent_joint = frame.parentJoint  # Parent joints for frames may be incorrect dur to the changes in the joints order
         placement = frame.placement
         frame = pin.Frame(name, parent_joint, placement, pin.BODY)
         new_model.addFrame(frame, False)
@@ -380,7 +379,9 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
         new_model, [visual_model, collision_model], constraint_models
     )
     # Actuation models
-    actuation_model = ActuationModel(new_model, [n for n in new_model.names if "mot" in n])
+    actuation_model = ActuationModel(
+        new_model, [n for n in new_model.names if "mot" in n]
+    )
     visual_model, collision_model = geometry_models[0], geometry_models[1]
 
     return (

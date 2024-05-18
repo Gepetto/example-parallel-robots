@@ -4,15 +4,16 @@ cmake_minimum_required(VERSION 3.10)
 set(PROJECT_ORG gepetto)
 set(PROJECT_NAME sandbox-pinocchio-parallel-robots)
 set(PROJECT_DESCRIPTION
-    "Set of tools for general purpose operations on pinocchio models. This was originally designed to work with parallel robots.")
+    "Set of tools for general purpose operations on pinocchio models. This was originally designed to work with parallel robots."
+)
 set(PROJECT_URL https://gitlab.laas.fr/ldematteis/example-parallel-robots)
 
-# Project options
-    # * Since the project is Python only for now, we remove the option of building the python interface
-# option(BUILD_PYTHON_INTERFACE "Build the Python unit tests and helpers" ON)
+# Project options * Since the project is Python only for now, we remove the
+# option of building the python interface option(BUILD_PYTHON_INTERFACE "Build
+# the Python unit tests and helpers" ON)
 set(BUILD_PYTHON_INTERFACE ON)
-# option(INSTALL_PYTHON_INTERFACE_ONLY "Install *ONLY* the Python interface" OFF)
-# option(BUILD_TESTING "Build unit tests" OFF)
+# option(INSTALL_PYTHON_INTERFACE_ONLY "Install *ONLY* the Python interface"
+# OFF) option(BUILD_TESTING "Build unit tests" OFF)
 set(BUILD_TESTING ON)
 
 # Project configuration
@@ -56,10 +57,7 @@ if(BUILD_PYTHON_INTERFACE)
   add_project_dependency(pinocchio REQUIRED)
   string(REGEX REPLACE "-" "_" PY_NAME ${PROJECT_NAME})
 
-  set(${PROJECT_NAME}_PYTHON_FILES 
-      __init__.py
-      reorganize_models.py
-  )
+  set(${PROJECT_NAME}_PYTHON_FILES __init__.py reorganize_models.py)
   foreach(python ${${PROJECT_NAME}_PYTHON_FILES})
     python_install_on_site(${PY_NAME} ${python})
   endforeach(python ${${PROJECT_NAME}_PYTHON_FILES})
