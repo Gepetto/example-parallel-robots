@@ -1,6 +1,6 @@
 [build-system]
 build-backend = "cmeel"
-requires = ["cmeel[build]", "pin", "pyyaml"]
+requires = ["cmeel[build]", "pin[build]", "pyyaml"]
 
 [project]
 name = "example-parallel-robots"
