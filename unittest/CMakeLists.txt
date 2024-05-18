@@ -5,10 +5,10 @@ include(FetchContent)
 FetchContent_Declare(
   "toolbox"
   GIT_REPOSITORY "https://github.com/gepetto/toolbox-parallel-robots"
-  GIT_TAG "main"
-  )
+  GIT_TAG "main")
 FetchContent_Populate("toolbox")
 
 foreach(TEST ${${PROJECT_NAME}_PYTHON_TESTS})
-    add_python_unit_test("py-${TEST}" "unittest/test_${TEST}.py" ".:${toolbox_SOURCE_DIR}")
+  add_python_unit_test("py-${TEST}" "unittest/test_${TEST}.py"
+                       ".:${toolbox_SOURCE_DIR}")
 endforeach(TEST ${${PROJECT_NAME}_PYTHON_TESTS})

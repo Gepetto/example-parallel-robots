@@ -159,7 +159,7 @@ def completeRobotLoader(
     try:
         update_joint = yaml_content["joint_name"]
         joints_types = yaml_content["joint_type"]
-    except:
+    except KeyError:
         update_joint = []
         joints_types = []
 

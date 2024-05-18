@@ -1,11 +1,11 @@
 import unittest
 
+from example_parallel_robots.loader_tools import load
+
 # import os
 # script_dir = os.path.dirname(__file__)
 # mymodule_dir = os.path.join(script_dir, "../example_parallel_robots")
 # sys.path.append(mymodule_dir)
-
-from example_parallel_robots.loader_tools import load
 
 
 class TestRobotLoad(unittest.TestCase):
@@ -29,14 +29,7 @@ class TestRobotLoad(unittest.TestCase):
 
     def test_robot(self):
         for name in self.nameRobotToTest:
-            test = True
             load(name)
-            try:
-                print(name)
-                load(name)
-            except:
-                test = False
-            self.assertTrue(test)
 
 
 if __name__ == "__main__":
