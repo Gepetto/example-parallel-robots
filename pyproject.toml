@@ -1,0 +1,16 @@
+[build-system]
+build-backend = "cmeel"
+requires = ["cmeel[build]", "pin", "pyyaml"]
+
+[project]
+name = "example-parallel-robots"
+description = "Set of parallel robot models for general use in benchmarks and examples"
+version = "0.0.1"
+dependencies = [
+    "pin",
+    "pyyaml",
+]
+
+[tool.cmeel]
+# TODO: fix casadi
+run-tests = false
