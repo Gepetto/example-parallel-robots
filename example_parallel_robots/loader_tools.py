@@ -312,7 +312,7 @@ def getModelPath(subpath, verbose=True):
     raise IOError("%s not found" % subpath)
 
 
-def load(robot_name, free_flyer=None, only_legs=None):
+def load(robot_name, closed_loop=True, free_flyer=None, only_legs=None):
     """
     Load a model of a robot and return model objects containing all information about the robot.
 
@@ -335,84 +335,20 @@ def load(robot_name, free_flyer=None, only_legs=None):
     robot = ROBOTS[robot_name]
 
     if robot_name == "talos_only_leg":
+        from .talos_only_legs import talosOnlyLeg
         models_stack = talosOnlyLeg()
+    elif robot_name == "talos_2legs":
+        from .talos_closed import TalosClosed
+        (model, constraints_models, actuation_model, visual_model, collision_model) = TalosClosed(closed_loop, only_legs, free_flyer)
+    elif robot_name == "talos_2legs_6d":
+        from .talos_closed_6d import TalosClosed
+        (model, constraints_models, actuation_model, visual_model, collision_model) = TalosClosed(closed_loop, only_legs, free_flyer)
     else:
         ff = robot.free_flyer if free_flyer is None else free_flyer
         models_stack = completeRobotLoader(
             getModelPath(robot.path), robot.urdf_file, robot.yaml_file, ff
         )
     return models_stack
-
-
-def talosOnlyLeg():
-    new_model, constraint_models, actuation_model, visual_model, collision_model = load(
-        "talos_full_closed"
-    )
-
-    names_joints_to_lock = [
-        # 'universe',
-        # 'root_joint',
-        "torso_1_joint",
-        "torso_2_joint",
-        "arm_left_1_joint",
-        "arm_left_2_joint",
-        "arm_left_3_joint",
-        # 'arm_left_4_joint',
-        "arm_left_5_joint",
-        "arm_left_6_joint",
-        "arm_left_7_joint",
-        "gripper_left_inner_double_joint",
-        "gripper_left_fingertip_1_joint",
-        "gripper_left_fingertip_2_joint",
-        "gripper_left_inner_single_joint",
-        "gripper_left_fingertip_3_joint",
-        "gripper_left_joint",
-        "gripper_left_motor_single_joint",
-        "arm_right_1_joint",
-        "arm_right_2_joint",
-        "arm_right_3_joint",
-        # 'arm_right_4_joint',
-        "arm_right_5_joint",
-        "arm_right_6_joint",
-        "arm_right_7_joint",
-        "gripper_right_inner_double_joint",
-        "gripper_right_fingertip_1_joint",
-        "gripper_right_fingertip_2_joint",
-        "gripper_right_inner_single_joint",
-        "gripper_right_fingertip_3_joint",
-        "gripper_right_joint",
-        "gripper_right_motor_single_joint",
-        "head_1_joint",
-        "head_2_joint",
-    ]
-
-    ids_joints_to_lock = [
-        i for (i, n) in enumerate(new_model.names) if n in names_joints_to_lock
-    ]
-    q0 = pin.neutral(new_model)
-    (
-        new_model,
-        constraint_models,
-        actuation_model,
-        visual_model,
-        collision_model,
-    ) = freezeJoints(
-        new_model,
-        constraint_models,
-        actuation_model,
-        visual_model,
-        collision_model,
-        ids_joints_to_lock,
-        q0,
-    )
-    return (
-        new_model,
-        constraint_models,
-        actuation_model,
-        visual_model,
-        collision_model,
-    )
-
 
 def models():
     """Displays the list of available robot names"""
