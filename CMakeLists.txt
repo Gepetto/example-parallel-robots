@@ -71,7 +71,7 @@ if(BUILD_PYTHON_INTERFACE)
   string(REGEX REPLACE "-" "_" PY_NAME ${PROJECT_NAME})
 
   set(${PROJECT_NAME}_PYTHON_FILES __init__.py __main__.py loader_tools.py
-                                   robot_options.py talos_closed.py)
+                                   robot_options.py talos_closed.py talos_closed_6d.py)
 
   foreach(python ${${PROJECT_NAME}_PYTHON_FILES})
     python_install_on_site(${PY_NAME} ${python})
