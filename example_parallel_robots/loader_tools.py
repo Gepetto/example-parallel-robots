@@ -182,13 +182,27 @@ def completeRobotLoader(
             elif joint_type == "FIXED":
                 jm = joint
                 fixed_joints_names.append(joint.id)
-            elif joint_type == "CARDAN":
+            elif joint_type == "UJOINT_XY":
                 parent = new_model.addJoint(
                     parent, pin.JointModelRX(), place, name + "_X"
                 )
                 jm = pin.JointModelRY()
                 place = pin.SE3.Identity()
                 name = name + "_Y"
+            elif joint_type == "UJOINT_YZ":
+                parent = new_model.addJoint(
+                    parent, pin.JointModelRY(), place, name + "_Y"
+                )
+                jm = pin.JointModelRZ()
+                place = pin.SE3.Identity()
+                name = name + "_Z"
+            elif joint_type == "UJOINT_ZX":
+                parent = new_model.addJoint(
+                    parent, pin.JointModelRZ(), place, name + "_Z"
+                )
+                jm = pin.JointModelRX()
+                place = pin.SE3.Identity()
+                name = name + "_X"
         else:
             jm = joint
         jid = new_model.addJoint(parent, jm, place, name)
