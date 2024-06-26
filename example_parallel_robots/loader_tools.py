@@ -15,8 +15,8 @@ from os.path import dirname, exists, join
 import sys
 import numpy as np
 from toolbox_parallel_robots import freezeJoints, ActuationModel
-from .robot_options import ROBOTS
-from .path import EXAMPLE_PARALLEL_ROBOTS_MODEL_DIR, EXAMPLE_PARALLEL_ROBOTS_SOURCE_DIR
+from example_parallel_robots.robot_options import ROBOTS
+from example_parallel_robots.path import EXAMPLE_PARALLEL_ROBOTS_MODEL_DIR, EXAMPLE_PARALLEL_ROBOTS_SOURCE_DIR
 
 
 def getNameFrameConstraint(model, name_loop="closedloop", cstr_frames_ids=[]):
@@ -227,8 +227,8 @@ def completeRobotLoader(
     visual_model, collision_model = geometry_models[0], geometry_models[1]
 
     new_model.frames.__delitem__(0)
-    new_model, visual_model = pin.buildReducedModel(
-        new_model, visual_model, fixed_joints_names, pin.neutral(new_model)
+    new_model, [visual_model, collision_model] = pin.buildReducedModel(
+        new_model, [visual_model, collision_model], fixed_joints_names, pin.neutral(new_model)
     )
 
     model = new_model
@@ -275,11 +275,9 @@ def completeRobotLoader(
         print("no constraint")
 
     actuation_model = ActuationModel(model, yaml_content["name_mot"])
-    model, constraints_models, actuation_model, visual_model, collision_model = (
-        simplifyModel(
+    model, constraints_models, actuation_model, visual_model, collision_model = simplifyModel(
             model, constraints_models, actuation_model, visual_model, collision_model
         )
-    )
     return (model, constraints_models, actuation_model, visual_model, collision_model)
 
 
@@ -303,6 +301,7 @@ def getModelPath(subpath, verbose=True):
     except NameError:
         pass
     paths += [join(p, "../../../share/example-robot-data/robots") for p in sys.path]
+    paths += ["robots/"]
     for path in paths:
         print(f"Checking {join(path, subpath.strip('/'))}")
         if exists(join(path, subpath.strip("/"))):
@@ -384,18 +383,19 @@ def simplifyModel(
             model.joints,
         )
     ):
+        
         vectors = []
         joints_mass = []
         points = []
         parent = new_model.getJointId(model.names[parent_old])
-        for jid2, jtype in zip(range(3), model.joints[jid : jid + 3]):
+        for jid2, jtype2 in zip(range(3), model.joints[jid : jid + 3]):
             joint_id = jid + jid2
             oMi = data.oMi[joint_id]
-            if "RX" in jtype.shortname():
+            if "RX" in jtype2.shortname():
                 vec = oMi.rotation[:, 0]
-            elif "RY" in jtype.shortname():
+            elif "RY" in jtype2.shortname():
                 vec = oMi.rotation[:, 1]
-            elif "RZ" in jtype.shortname():
+            elif "RZ" in jtype2.shortname():
                 vec = oMi.rotation[:, 2]
             else:
                 break
@@ -424,13 +424,18 @@ def simplifyModel(
 
                         fixed_joints_ids += [jid + 0, jid + 1]
         if jid != 0:
-            # print(jid)
             if spherical and jid == last_joint + 2:
                 jtype = pin.JointModelSpherical()
                 spherical = False
             test = new_model.addJoint(parent, jtype, place, name)
             new_model.appendBodyToJoint(test, iner, pin.SE3.Identity())
-    # print(fixed_joints_ids)
+        # Adding frames
+    for f in model.frames:
+        n, parent_old, placement = f.name, f.parentJoint, f.placement
+        parent = new_model.getJointId(model.names[parent_old])
+        frame = pin.Frame(n, parent, placement, f.type)
+        new_model.addFrame(frame, False) # We assume that there is no inertial frame
+
     q0 = pin.neutral(new_model)
 
     (
@@ -476,3 +481,17 @@ def unitest_SimplifyModel():
     viz.clean()
     viz.loadViewerModel(rootNodeName="number 1" + str(np.random.rand()))
     viz.display(pin.randomConfiguration(new_model))
+
+if __name__ == "__main__":
+    model, constraints_models, actuation_model, visual_model, collision_model = load('digit_2legs_6D')
+    from toolbox_parallel_robots.foo import createSlidersInterface
+    from pinocchio.visualize import MeshcatVisualizer
+    import meshcat
+
+    viz = MeshcatVisualizer(model, visual_model, visual_model)
+    viz.viewer = meshcat.Visualizer(zmq_url="tcp://127.0.0.1:6000")
+    viz.clean()
+    viz.loadViewerModel(rootNodeName="universe")
+
+    createSlidersInterface(model, constraints_models, visual_model, actuation_model.mot_ids_q, viz, q0=pin.neutral(model))
+    print(model)
