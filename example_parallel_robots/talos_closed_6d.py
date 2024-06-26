@@ -37,8 +37,8 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
 
     I4 = pin.SE3.Identity()
     inertia = pin.Inertia(
-        1e-3, np.array([0.0, 0.0, 0.0]), np.eye(3) * 1e-3**2
-    )  # inertia of a 1g sphere
+        1e-1, np.array([0.0, 0.0, 0.0]), np.eye(3) * 1e-1**2
+    )  # inertia of a 100g sphere
 
     # * Creation of free bar on foot B
     # Defining placement wrt to the parent joints
@@ -106,6 +106,9 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
     AMD_left.translation = np.array([0, 0, mot_bar_length])
     AMD_right = I4.copy()
     AMD_right.translation = np.array([0, 0, mot_bar_length])
+
+    model.appendBodyToJoint(id_A_right, inertia, AMD_right)
+    model.appendBodyToJoint(id_A_left, inertia, AMD_left)
     # Adding joints
     id_D_right_X = model.addJoint(
         id_A_right,
