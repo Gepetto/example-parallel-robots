@@ -67,3 +67,6 @@ def visualizeConstraints(viz, model, data, constraint_models, q=None):
         applyViewerConfiguration(viz, name+"_1", pin.SE3ToXYZQUATtuple(data.oMi[c.joint1_id]*c.joint1_placement.act(offset)))
         box = addViewerBox(viz, name+"_2", 0.03, 0.02, 0.01, [0, 1, 0, 0.5])
         applyViewerConfiguration(viz, name+"_2", pin.SE3ToXYZQUATtuple(data.oMi[c.joint2_id]*c.joint2_placement.act(offset)))
+
+def addFrames(viz, frames_list):
+    viz.displayFrames(True, frames_list, axis_length=0.5, axis_width=5)
