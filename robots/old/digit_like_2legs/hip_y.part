@@ -1,13 +1,13 @@
 {
     "configuration": "default",
     "documentId": "52eb11422c701d811548a6f5",
-    "documentMicroversion": "ba42a4618bff06504f0ee8ba",
-    "elementId": "0a2d86fa35ed43d74c66764b",
+    "documentMicroversion": "d8ff04c1c91200b65ef2a7db",
+    "elementId": "bed607d3fe99b569edc813b4",
     "fullConfiguration": "default",
-    "id": "MbcVfqbvMJ1tpT6lP",
+    "id": "MXWhGFwx20X7AUvQS",
     "isStandardContent": false,
-    "name": "actuator_molet <2>",
-    "partId": "RcBD",
+    "name": "hip_y <2>",
+    "partId": "JVD",
     "suppressed": false,
     "type": "Part"
 }
