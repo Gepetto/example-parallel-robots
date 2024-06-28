@@ -113,29 +113,29 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
     model.appendBodyToJoint(id_A_right, inertia, AMD_right)
     model.appendBodyToJoint(id_A_left, inertia, AMD_left)
     # Adding joints
-    id_D_right_X = model.addJoint(
+    id_D_right_Z = model.addJoint(
         id_A_right,
-        pin.JointModelRX(),
+        pin.JointModelRZ(),
         AMD_right,
-        "free_calf_right_X",
+        "free_calf_right_Z",
     )
-    id_D_left_X = model.addJoint(
+    id_D_left_Z = model.addJoint(
         id_A_left,
-        pin.JointModelRX(),
+        pin.JointModelRZ(),
         AMD_left,
-        "free_calf_left_X",
+        "free_calf_left_Z",
     )
-    model.appendBodyToJoint(id_D_right_X, inertia_ujoints, pin.SE3.Identity())
-    model.appendBodyToJoint(id_D_left_X, inertia_ujoints, pin.SE3.Identity())
+    model.appendBodyToJoint(id_D_right_Z, inertia_ujoints, pin.SE3.Identity())
+    model.appendBodyToJoint(id_D_left_Z, inertia_ujoints, pin.SE3.Identity())
 
     id_D_right = model.addJoint(
-        id_D_right_X,
+        id_D_right_Z,
         pin.JointModelRY(),
         pin.SE3.Identity(),
         "free_calf_right_Y",
     )
     id_D_left = model.addJoint(
-        id_D_left_X,
+        id_D_left_Z,
         pin.JointModelRY(),
         pin.SE3.Identity(),
         "free_calf_left_Y",
