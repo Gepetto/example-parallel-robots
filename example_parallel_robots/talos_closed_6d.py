@@ -52,8 +52,10 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
     # * Creation of the motor joint A
     kneeMA_right = I4.copy()
     kneeMA_right.translation = np.array([-0.015, -0.105, -0.11])
+    kneeMA_right.rotation = pin.utils.rotate('y', -np.pi/2)
     kneeMA_left = I4.copy()
     kneeMA_left.translation = np.array([-0.015, 0.105, -0.11])
+    kneeMA_left.rotation = pin.utils.rotate('y', -np.pi/2)
 
     ## Get the length of the rods
     # * Rod DC
@@ -127,17 +129,18 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
     )
     model.appendBodyToJoint(id_D_right_Z, inertia_ujoints, pin.SE3.Identity())
     model.appendBodyToJoint(id_D_left_Z, inertia_ujoints, pin.SE3.Identity())
+    rot_Y = pin.SE3(pin.utils.rotate('y', -np.pi/2), np.zeros(3))
 
     id_D_right = model.addJoint(
         id_D_right_Z,
         pin.JointModelRY(),
-        pin.SE3.Identity(),
+        rot_Y,
         "free_calf_right_Y",
     )
     id_D_left = model.addJoint(
         id_D_left_Z,
         pin.JointModelRY(),
-        pin.SE3.Identity(),
+        rot_Y,
         "free_calf_left_Y",
     )
 
