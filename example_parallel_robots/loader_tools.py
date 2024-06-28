@@ -212,9 +212,14 @@ def completeRobotLoader(
         n, parent_old, placement = f.name, f.parentJoint, f.placement
         if (
             model.names[parent_old] in update_joint
-            and joints_types[update_joint.index(model.names[parent_old])] == "CARDAN"
+            and "UJOINT" in joints_types[update_joint.index(model.names[parent_old])]
         ):
-            parent = new_model.getJointId(model.names[parent_old] + "_Y")
+            if joints_types[update_joint.index(model.names[parent_old])] == "UJOINT_XY":
+                parent = new_model.getJointId(model.names[parent_old] + "_Y")
+            elif joints_types[update_joint.index(model.names[parent_old])] == "UJOINT_YZ":
+                parent = new_model.getJointId(model.names[parent_old] + "_Z")
+            elif joints_types[update_joint.index(model.names[parent_old])] == "UJOINT_ZX":
+                parent = new_model.getJointId(model.names[parent_old] + "_X")
         else:
             parent = new_model.getJointId(model.names[parent_old])
             # print(parent)
@@ -228,12 +233,14 @@ def completeRobotLoader(
         for gm in geom_model.geometryObjects:
             if (
                 model.names[gm.parentJoint] in update_joint
-                and joints_types[update_joint.index(model.names[gm.parentJoint])]
-                == "CARDAN"
+                and "UJOINT" in joints_types[update_joint.index(model.names[gm.parentJoint])]
             ):
-                gm.parentJoint = new_model.getJointId(
-                    model.names[gm.parentJoint] + "_Y"
-                )
+                if joints_types[update_joint.index(model.names[gm.parentJoint])] == "UJOINT_XY":
+                    gm.parentJoint = new_model.getJointId(model.names[gm.parentJoint] + "_Y")
+                elif joints_types[update_joint.index(model.names[gm.parentJoint])] == "UJOINT_YZ":
+                    gm.parentJoint = new_model.getJointId(model.names[gm.parentJoint] + "_Z")
+                elif joints_types[update_joint.index(model.names[gm.parentJoint])] == "UJOINT_ZX":
+                    gm.parentJoint = new_model.getJointId(model.names[gm.parentJoint] + "_X")    
             else:
                 gm.parentJoint = new_model.getJointId(model.names[gm.parentJoint])
             gm.parentFrame = new_model.getFrameId(model.frames[gm.parentFrame].name)
