@@ -156,10 +156,10 @@ def completeRobotLoader(
     yaml_content = getYAMLcontents(path, name_yaml)
 
     # Update model
-    try:
+    if "joint_name" in yaml_content.keys():
         update_joint = yaml_content["joint_name"]
         joints_types = yaml_content["joint_type"]
-    except KeyError:
+    else:
         update_joint = []
         joints_types = []
 
@@ -409,7 +409,7 @@ def simplifyModel(
         joints_mass = []
         points = []
         parent = new_model.getJointId(model.names[parent_old])
-        for jid2, jtype2 in zip(range(3), model.joints[jid : jid + 3]):
+        for jid2, jtype2 in enumerate(model.joints[jid : jid + 3]):
             joint_id = jid + jid2
             oMi = data.oMi[joint_id]
             if "RX" in jtype2.shortname():
