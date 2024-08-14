@@ -1,12 +1,12 @@
 {
     "configuration": "default",
-    "documentId": "52eb11422c701d811548a6f5",
-    "documentMicroversion": "681cd9e037aa40a38857ad86",
-    "elementId": "0a2d86fa35ed43d74c66764b",
+    "documentId": "1e0747dc504df5f011bc52ce",
+    "documentMicroversion": "099a373f7584b99ea081e366",
+    "elementId": "4c198bf46f01a0f3272ff61f",
     "fullConfiguration": "default",
     "id": "M8TMOtR/aQLFnOwux",
     "isStandardContent": false,
-    "name": "crank <4>",
+    "name": "molet <4>",
     "partId": "RJBD",
     "suppressed": false,
     "type": "Part"

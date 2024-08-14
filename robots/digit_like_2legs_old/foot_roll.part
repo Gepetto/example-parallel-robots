@@ -1,13 +1,13 @@
 {
     "configuration": "default",
     "documentId": "52eb11422c701d811548a6f5",
-    "documentMicroversion": "681cd9e037aa40a38857ad86",
-    "elementId": "26e8f3356a1de58024575c05",
+    "documentMicroversion": "7f48455e5be895e676dd3697",
+    "elementId": "0a2d86fa35ed43d74c66764b",
     "fullConfiguration": "default",
-    "id": "M2MM1dP+v3zNvMEUX",
+    "id": "Mlmu4LyOhmalDrzuh",
     "isStandardContent": false,
-    "name": "foot_part <2>",
-    "partId": "JLD",
+    "name": "foot_roll <2>",
+    "partId": "RQBD",
     "suppressed": false,
     "type": "Part"
 }
