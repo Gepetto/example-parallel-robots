@@ -319,9 +319,9 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
             "mot_calf_left",
             "free_ankle_spherical_right",
             "free_ankle_spherical_left",
-            "free_calf_right_X",
+            "free_calf_right_Z",
             "free_calf_right_Y",
-            "free_calf_left_X",
+            "free_calf_left_Z",
             "free_calf_left_Y",
         ]
         ids_joints_to_lock = [
