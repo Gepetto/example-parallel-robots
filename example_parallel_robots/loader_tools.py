@@ -203,6 +203,13 @@ def completeRobotLoader(
                 jm = pin.JointModelRX()
                 place = pin.SE3.Identity()
                 name = name + "_X"
+            elif joint_type == "UJOINT_ZY":
+                parent = new_model.addJoint(
+                    parent, pin.JointModelRZ(), place, name + "_Z"
+                )
+                jm = pin.JointModelRY()
+                place = pin.SE3.Identity()
+                name = name + "_Y"
         else:
             jm = joint
         jid = new_model.addJoint(parent, jm, place, name)
@@ -220,6 +227,8 @@ def completeRobotLoader(
                 parent = new_model.getJointId(model.names[parent_old] + "_Z")
             elif joints_types[update_joint.index(model.names[parent_old])] == "UJOINT_ZX":
                 parent = new_model.getJointId(model.names[parent_old] + "_X")
+            elif joints_types[update_joint.index(model.names[parent_old])] == "UJOINT_ZY":
+                parent = new_model.getJointId(model.names[parent_old] + "_Y")
         else:
             parent = new_model.getJointId(model.names[parent_old])
             # print(parent)
@@ -241,6 +250,8 @@ def completeRobotLoader(
                     gm.parentJoint = new_model.getJointId(model.names[gm.parentJoint] + "_Z")
                 elif joints_types[update_joint.index(model.names[gm.parentJoint])] == "UJOINT_ZX":
                     gm.parentJoint = new_model.getJointId(model.names[gm.parentJoint] + "_X")    
+                elif joints_types[update_joint.index(model.names[gm.parentJoint])] == "UJOINT_ZY":
+                    gm.parentJoint = new_model.getJointId(model.names[gm.parentJoint] + "_Y")    
             else:
                 gm.parentJoint = new_model.getJointId(model.names[gm.parentJoint])
             gm.parentFrame = new_model.getFrameId(model.frames[gm.parentFrame].name)
