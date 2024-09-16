@@ -139,4 +139,5 @@ ROBOTS = {
     "talos_only_leg": None,
     "talos_leg": TalosLeg,
     "wl16_leg": WL16,
+    "battobot": BattoBot,
 }
