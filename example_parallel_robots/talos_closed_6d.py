@@ -452,7 +452,8 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
 
 
 if __name__ == "__main__":
-    from vizutils import *
+    # from vizutils import *
+    from toolbox_parallel_robots.foo import createSlidersInterface
 
     model, cm, am, visual_model, collision_model = TalosClosed(
         closed_loop=True, only_legs=True
@@ -465,18 +466,5 @@ if __name__ == "__main__":
     viz.display(q0)
     data = model.createData()
     cd = [c.createData() for c in cm]
-    from toolbox_parallel_robots.mounting import closedLoopMountScipy
-
-    closedLoopMountScipy(model, data, cm, cd, q0)
-
-    from toolbox_parallel_robots.foo import createSlidersInterface
 
     createSlidersInterface(model, cm, visual_model, am.mot_ids_q, viz, q0=q0)
-    #
-    # input()
-    # q0 = pin.neutral(new_model)
-    # viz = MeshcatVisualizer(new_model, new_visual_model, new_visual_model)
-    # viz.viewer = meshcat.Visualizer(zmq_url="tcp://127.0.0.1:6000")
-    # viz.clean()
-    # viz.loadViewerModel(rootNodeName="universe")
-    # viz.display(q0)
