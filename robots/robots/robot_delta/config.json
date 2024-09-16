@@ -1,8 +1,9 @@
 {
-    "documentId": "11b95c88447c997789ec6319",
-    "outputFormat": "urdf",
-    "assemblyName":"Assemblage_ouvert",
-    "ignore":[
-        "Frame","sphere"
-    ]
+  "documentId": "11b95c88447c997789ec6319",
+  "outputFormat": "urdf",
+  "assemblyName": "Assemblage_ouvert",
+  "ignore": [
+    "Frame",
+    "sphere"
+  ]
 }

@@ -1,7 +1,7 @@
 import pinocchio as pin
-import numpy as np
 from .loader_tools import load
 from toolbox_parallel_robots import freezeJoints
+
 
 def talosOnlyLeg():
     new_model, constraint_models, actuation_model, visual_model, collision_model = load(
@@ -71,4 +71,3 @@ def talosOnlyLeg():
         visual_model,
         collision_model,
     )
-

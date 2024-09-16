@@ -9,12 +9,13 @@ from toolbox_parallel_robots import ActuationModel
 
 import sandbox_pinocchio_parallel_robots as sppr
 
+
 def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
     """
     Create the talos robot with closed loop constraints
     """
     # In this code, the robot is loaded from example robot data and is modified to add the closed loop constraints
-    # The closed loop is defined to form a parallelogram named ABCD in the code 
+    # The closed loop is defined to form a parallelogram named ABCD in the code
     # A being the motor in the calf, B being the free ankle joint
     # C being the rod attach point on the foot and D being the joint between the motor rod and the free rod
     robot = robex.load("talos")
@@ -25,12 +26,12 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
         model, [visual_model, collision_model] = pin.buildReducedModel(
             model, [visual_model, collision_model], [1], pin.neutral(model)
         )
-        id_A_parent_left = id_B_parent_left  = 4
+        id_A_parent_left = id_B_parent_left = 4
         id_A_parent_right = id_B_parent_right = 10
         id_B_left = id_parent_C_left = 5
         id_B_right = id_parent_C_right = 11
     else:
-        id_A_parent_left = id_B_parent_left  = 5
+        id_A_parent_left = id_B_parent_left = 5
         id_A_parent_right = id_B_parent_right = 11
         id_B_left = id_parent_C_left = 6
         id_B_right = id_parent_C_right = 12
@@ -134,7 +135,7 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
     visual_model.addGeometryObject(bar_mot_right)
     visual_model.addGeometryObject(bar_mot_left)
 
-    DMC = I4.copy() # Placement of the contact frame of the rod wrt the u joint
+    DMC = I4.copy()  # Placement of the contact frame of the rod wrt the u joint
     DMC.translation = np.array([0, 0, bar_length_top])
 
     # * Create free joint linked to previous motor bar
@@ -187,12 +188,8 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
     visual_model.addGeometryObject(half_rod_top_left)
 
     # * Create the frames corresponding to the closed loop contacts
-    closure_right_A = pin.Frame(
-        "closure_right_A", id_D_right, DMC, pin.OP_FRAME
-    )
-    closure_left_A = pin.Frame(
-        "closure_left_A", id_D_left, DMC, pin.OP_FRAME
-    )
+    closure_right_A = pin.Frame("closure_right_A", id_D_right, DMC, pin.OP_FRAME)
+    closure_left_A = pin.Frame("closure_left_A", id_D_left, DMC, pin.OP_FRAME)
     # fplacement = I4.copy()
     # fplacement.translation = np.array([0, 0, bar_length_bottom])
     # closure_right_B = pin.Frame(
@@ -201,12 +198,8 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
     # closure_left_B = pin.Frame(
     #     "closure_left_B", id_C_left_Y, fplacement, pin.OP_FRAME
     # )
-    closure_right_B = pin.Frame(
-        "closure_right_B", id_B_right, BMC_right, pin.OP_FRAME
-    )
-    closure_left_B = pin.Frame(
-        "closure_left_B", id_B_left, BMC_left, pin.OP_FRAME
-    )
+    closure_right_B = pin.Frame("closure_right_B", id_B_right, BMC_right, pin.OP_FRAME)
+    closure_left_B = pin.Frame("closure_left_B", id_B_left, BMC_left, pin.OP_FRAME)
     model.addFrame(closure_right_A)
     model.addFrame(closure_right_B)
     model.addFrame(closure_left_A)
@@ -240,9 +233,7 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
     # ? Is this really necessary or can we just frame.copy() ?
     for frame in model.frames[1:]:
         name = frame.name
-        parent_joint = (
-            frame.parentJoint
-        )  # Parent joints for frames may be incorrect dur to the changes in the joints order
+        parent_joint = frame.parentJoint  # Parent joints for frames may be incorrect dur to the changes in the joints order
         placement = frame.placement
         frame = pin.Frame(name, parent_joint, placement, pin.BODY)
         new_model.addFrame(frame, False)
@@ -304,17 +295,25 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
         new_model.name = "talos_open"
         print("Freezing closed loop joints")
         # Remove inertia from the rod and add it back in the foot
-        new_model.inertias[new_model.getJointId("free_calf_right_Y")] = pin.Inertia.Zero()
-        new_model.inertias[new_model.getJointId("free_calf_left_Y")] = pin.Inertia.Zero()
-        new_model.appendBodyToJoint(
-            [i for i,n in enumerate(new_model.names) if model.names[id_B_right] in n][0], 
-            inertia, 
-            BMC_right
+        new_model.inertias[new_model.getJointId("free_calf_right_Y")] = (
+            pin.Inertia.Zero()
+        )
+        new_model.inertias[new_model.getJointId("free_calf_left_Y")] = (
+            pin.Inertia.Zero()
         )
         new_model.appendBodyToJoint(
-            [i for i,n in enumerate(new_model.names) if model.names[id_B_left] in n][0], 
-            inertia, 
-            BMC_left
+            [i for i, n in enumerate(new_model.names) if model.names[id_B_right] in n][
+                0
+            ],
+            inertia,
+            BMC_right,
+        )
+        new_model.appendBodyToJoint(
+            [i for i, n in enumerate(new_model.names) if model.names[id_B_left] in n][
+                0
+            ],
+            inertia,
+            BMC_left,
         )
         names_joints_to_lock = [
             "mot_calf_right",
@@ -348,12 +347,12 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
         )
         q0 = pin.neutral(new_model)
         # Retransform free joints into actuated joints
-        new_model.names[
-            new_model.getJointId("free_leg_right_5_joint")
-        ] = "mot_leg_right_5_joint"
-        new_model.names[
-            new_model.getJointId("free_leg_left_5_joint")
-        ] = "mot_leg_left_5_joint"
+        new_model.names[new_model.getJointId("free_leg_right_5_joint")] = (
+            "mot_leg_right_5_joint"
+        )
+        new_model.names[new_model.getJointId("free_leg_left_5_joint")] = (
+            "mot_leg_left_5_joint"
+        )
         actuation_model = ActuationModel(new_model, ["mot"])
 
     else:  # if we consider closed loop
@@ -461,6 +460,7 @@ if __name__ == "__main__":
     viz.loadViewerModel(rootNodeName="universe")
     viz.display(q0)
     from toolbox_parallel_robots.foo import createSlidersInterface
+
     createSlidersInterface(model, cm, visual_model, am.mot_ids_q, viz, q0=q0)
     #
     # input()

@@ -16,7 +16,10 @@ import sys
 import numpy as np
 from toolbox_parallel_robots import freezeJoints, ActuationModel
 from example_parallel_robots.robot_options import ROBOTS
-from example_parallel_robots.path import EXAMPLE_PARALLEL_ROBOTS_MODEL_DIR, EXAMPLE_PARALLEL_ROBOTS_SOURCE_DIR
+from example_parallel_robots.path import (
+    EXAMPLE_PARALLEL_ROBOTS_MODEL_DIR,
+    EXAMPLE_PARALLEL_ROBOTS_SOURCE_DIR,
+)
 
 
 def getNameFrameConstraint(model, name_loop="closedloop", cstr_frames_ids=[]):
@@ -223,11 +226,17 @@ def completeRobotLoader(
         ):
             if joints_types[update_joint.index(model.names[parent_old])] == "UJOINT_XY":
                 parent = new_model.getJointId(model.names[parent_old] + "_Y")
-            elif joints_types[update_joint.index(model.names[parent_old])] == "UJOINT_YZ":
+            elif (
+                joints_types[update_joint.index(model.names[parent_old])] == "UJOINT_YZ"
+            ):
                 parent = new_model.getJointId(model.names[parent_old] + "_Z")
-            elif joints_types[update_joint.index(model.names[parent_old])] == "UJOINT_ZX":
+            elif (
+                joints_types[update_joint.index(model.names[parent_old])] == "UJOINT_ZX"
+            ):
                 parent = new_model.getJointId(model.names[parent_old] + "_X")
-            elif joints_types[update_joint.index(model.names[parent_old])] == "UJOINT_ZY":
+            elif (
+                joints_types[update_joint.index(model.names[parent_old])] == "UJOINT_ZY"
+            ):
                 parent = new_model.getJointId(model.names[parent_old] + "_Y")
         else:
             parent = new_model.getJointId(model.names[parent_old])
@@ -242,16 +251,37 @@ def completeRobotLoader(
         for gm in geom_model.geometryObjects:
             if (
                 model.names[gm.parentJoint] in update_joint
-                and "UJOINT" in joints_types[update_joint.index(model.names[gm.parentJoint])]
+                and "UJOINT"
+                in joints_types[update_joint.index(model.names[gm.parentJoint])]
             ):
-                if joints_types[update_joint.index(model.names[gm.parentJoint])] == "UJOINT_XY":
-                    gm.parentJoint = new_model.getJointId(model.names[gm.parentJoint] + "_Y")
-                elif joints_types[update_joint.index(model.names[gm.parentJoint])] == "UJOINT_YZ":
-                    gm.parentJoint = new_model.getJointId(model.names[gm.parentJoint] + "_Z")
-                elif joints_types[update_joint.index(model.names[gm.parentJoint])] == "UJOINT_ZX":
-                    gm.parentJoint = new_model.getJointId(model.names[gm.parentJoint] + "_X")    
-                elif joints_types[update_joint.index(model.names[gm.parentJoint])] == "UJOINT_ZY":
-                    gm.parentJoint = new_model.getJointId(model.names[gm.parentJoint] + "_Y")    
+                if (
+                    joints_types[update_joint.index(model.names[gm.parentJoint])]
+                    == "UJOINT_XY"
+                ):
+                    gm.parentJoint = new_model.getJointId(
+                        model.names[gm.parentJoint] + "_Y"
+                    )
+                elif (
+                    joints_types[update_joint.index(model.names[gm.parentJoint])]
+                    == "UJOINT_YZ"
+                ):
+                    gm.parentJoint = new_model.getJointId(
+                        model.names[gm.parentJoint] + "_Z"
+                    )
+                elif (
+                    joints_types[update_joint.index(model.names[gm.parentJoint])]
+                    == "UJOINT_ZX"
+                ):
+                    gm.parentJoint = new_model.getJointId(
+                        model.names[gm.parentJoint] + "_X"
+                    )
+                elif (
+                    joints_types[update_joint.index(model.names[gm.parentJoint])]
+                    == "UJOINT_ZY"
+                ):
+                    gm.parentJoint = new_model.getJointId(
+                        model.names[gm.parentJoint] + "_Y"
+                    )
             else:
                 gm.parentJoint = new_model.getJointId(model.names[gm.parentJoint])
             gm.parentFrame = new_model.getFrameId(model.frames[gm.parentFrame].name)
@@ -260,7 +290,10 @@ def completeRobotLoader(
 
     new_model.frames.__delitem__(0)
     new_model, [visual_model, collision_model] = pin.buildReducedModel(
-        new_model, [visual_model, collision_model], fixed_joints_names, pin.neutral(new_model)
+        new_model,
+        [visual_model, collision_model],
+        fixed_joints_names,
+        pin.neutral(new_model),
     )
 
     model = new_model
@@ -307,9 +340,11 @@ def completeRobotLoader(
         print("no constraint")
 
     actuation_model = ActuationModel(model, yaml_content["name_mot"])
-    model, constraints_models, actuation_model, visual_model, collision_model = simplifyModel(
+    model, constraints_models, actuation_model, visual_model, collision_model = (
+        simplifyModel(
             model, constraints_models, actuation_model, visual_model, collision_model
         )
+    )
     return (model, constraints_models, actuation_model, visual_model, collision_model)
 
 
@@ -367,19 +402,27 @@ def load(robot_name, closed_loop=True, free_flyer=None, only_legs=None):
 
     if robot_name == "talos_only_leg":
         from .talos_only_legs import talosOnlyLeg
+
         models_stack = talosOnlyLeg()
     elif robot_name == "talos_2legs":
         from .talos_closed import TalosClosed
-        (model, constraints_models, actuation_model, visual_model, collision_model) = TalosClosed(closed_loop, only_legs, free_flyer)
+
+        (model, constraints_models, actuation_model, visual_model, collision_model) = (
+            TalosClosed(closed_loop, only_legs, free_flyer)
+        )
     elif robot_name == "talos_2legs_6d":
         from .talos_closed_6d import TalosClosed
-        (model, constraints_models, actuation_model, visual_model, collision_model) = TalosClosed(closed_loop, only_legs, free_flyer)
+
+        (model, constraints_models, actuation_model, visual_model, collision_model) = (
+            TalosClosed(closed_loop, only_legs, free_flyer)
+        )
     else:
         ff = robot.free_flyer if free_flyer is None else free_flyer
         models_stack = completeRobotLoader(
             getModelPath(robot.path), robot.urdf_file, robot.yaml_file, ff
         )
     return models_stack
+
 
 def models():
     """Displays the list of available robot names"""
@@ -415,7 +458,6 @@ def simplifyModel(
             model.joints,
         )
     ):
-        
         vectors = []
         joints_mass = []
         points = []
@@ -466,7 +508,7 @@ def simplifyModel(
         n, parent_old, placement = f.name, f.parentJoint, f.placement
         parent = new_model.getJointId(model.names[parent_old])
         frame = pin.Frame(n, parent, placement, f.type)
-        new_model.addFrame(frame, False) # We assume that there is no inertial frame
+        new_model.addFrame(frame, False)  # We assume that there is no inertial frame
 
     q0 = pin.neutral(new_model)
 
@@ -514,8 +556,11 @@ def unitest_SimplifyModel():
     viz.loadViewerModel(rootNodeName="number 1" + str(np.random.rand()))
     viz.display(pin.randomConfiguration(new_model))
 
+
 if __name__ == "__main__":
-    model, constraints_models, actuation_model, visual_model, collision_model = load('digit_2legs_6D')
+    model, constraints_models, actuation_model, visual_model, collision_model = load(
+        "digit_2legs_6D"
+    )
     from toolbox_parallel_robots.foo import createSlidersInterface
     from pinocchio.visualize import MeshcatVisualizer
     import meshcat
@@ -525,5 +570,12 @@ if __name__ == "__main__":
     viz.clean()
     viz.loadViewerModel(rootNodeName="universe")
 
-    createSlidersInterface(model, constraints_models, visual_model, actuation_model.mot_ids_q, viz, q0=pin.neutral(model))
+    createSlidersInterface(
+        model,
+        constraints_models,
+        visual_model,
+        actuation_model.mot_ids_q,
+        viz,
+        q0=pin.neutral(model),
+    )
     print(model)

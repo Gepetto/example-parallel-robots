@@ -114,6 +114,7 @@ class WL16:
     yaml_file = "robot.yaml"
     free_flyer = False
 
+
 class BattoBot:
     path = "battobot_6d"
     urdf_file = "robot.urdf"
