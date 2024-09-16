@@ -1,0 +1,13 @@
+{
+    "configuration": "default",
+    "documentId": "b26e49b6d17d154476907010",
+    "documentMicroversion": "5fc02e05ee406d02483a08aa",
+    "elementId": "655b6859edc88ad16826360d",
+    "fullConfiguration": "default",
+    "id": "MPhiFpoPzM7psXngC",
+    "isStandardContent": false,
+    "name": "hip_y_axis_batie_2bearing <2>",
+    "partId": "RJBD",
+    "suppressed": false,
+    "type": "Part"
+}

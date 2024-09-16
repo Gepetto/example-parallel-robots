@@ -51,7 +51,7 @@ class Disney:
     path = "disney_like"
     urdf_file = "robot.urdf"
     yaml_file = "robot.yaml"
-    free_flyer = False
+    free_flyer = True
 
 
 class Kangaroo:
@@ -113,6 +113,12 @@ class WL16:
     urdf_file = "robot.urdf"
     yaml_file = "robot.yaml"
     free_flyer = False
+
+class BattoBot:
+    path = "battobot_6d"
+    urdf_file = "robot.urdf"
+    yaml_file = "robot.yaml"
+    free_flyer = True
 
 
 ROBOTS = {

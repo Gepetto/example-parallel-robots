@@ -1,0 +1,2036 @@
+<robot name="onshape">
+<link name="hip_z_axis_2_leg_assembly">
+<visual>
+<origin xyz="-1.2644827664659753706e-18 -0.12500000000000022204 -0.021250000000000393574" rpy="-3.141592653589793116 2.6584637269343878469e-16 -1.570796326794896558" />
+<geometry>
+<mesh filename="package:///hip_z_axis_transmission.stl"/>
+</geometry>
+<material name="hip_z_axis_transmission_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-1.2644827664659753706e-18 -0.12500000000000022204 -0.021250000000000393574" rpy="-3.141592653589793116 2.6584637269343878469e-16 -1.570796326794896558" />
+<geometry>
+<mesh filename="package:///hip_z_axis_transmission.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="-6.9637698984057339234e-18 0.12500000000000038858 -0.092250000000001719513" rpy="1.57079632679489678 1.570796326794896336 0" />
+<geometry>
+<mesh filename="package:///entretoise_hip.stl"/>
+</geometry>
+<material name="entretoise_hip_material">
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-6.9637698984057339234e-18 0.12500000000000038858 -0.092250000000001719513" rpy="1.57079632679489678 1.570796326794896336 0" />
+<geometry>
+<mesh filename="package:///entretoise_hip.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="-0.084711626245620896825 0.034964990387751693213 0.0013950324465671903873" rpy="-6.4184768611141492715e-17 -1.3010426069826053208e-18 1.570796326794896558" />
+<geometry>
+<mesh filename="package:///visage.stl"/>
+</geometry>
+<material name="visage_material">
+<color rgba="0.96078431372549022438 0.83529411764705885357 0.47058823529411764053 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.084711626245620896825 0.034964990387751693213 0.0013950324465671903873" rpy="-6.4184768611141492715e-17 -1.3010426069826053208e-18 1.570796326794896558" />
+<geometry>
+<mesh filename="package:///visage.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="6.700346589998734915e-18 -0.12500000000000022204 -0.02150000000000030359" rpy="-3.141592653589793116 2.6671373443142664589e-16 -1.570796326794896558" />
+<geometry>
+<mesh filename="package:///hip_z_axis.stl"/>
+</geometry>
+<material name="hip_z_axis_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="6.700346589998734915e-18 -0.12500000000000022204 -0.02150000000000030359" rpy="-3.141592653589793116 2.6671373443142664589e-16 -1.570796326794896558" />
+<geometry>
+<mesh filename="package:///hip_z_axis.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="-1.4390499125493934438e-18 0.12500000000000038858 -0.022000000000000505262" rpy="-3.141592653589793116 1.7347234759767620277e-18 -1.570796326794896558" />
+<geometry>
+<mesh filename="package:///hip_z_axis.stl"/>
+</geometry>
+<material name="hip_z_axis_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-1.4390499125493934438e-18 0.12500000000000038858 -0.022000000000000505262" rpy="-3.141592653589793116 1.7347234759767620277e-18 -1.570796326794896558" />
+<geometry>
+<mesh filename="package:///hip_z_axis.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="-7.7225101894504407377e-19 -0.12500000000000022204 -0.091750000000001413758" rpy="1.57079632679489678 1.570796326794896336 0" />
+<geometry>
+<mesh filename="package:///entretoise_hip.stl"/>
+</geometry>
+<material name="entretoise_hip_material">
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-7.7225101894504407377e-19 -0.12500000000000022204 -0.091750000000001413758" rpy="1.57079632679489678 1.570796326794896336 0" />
+<geometry>
+<mesh filename="package:///entretoise_hip.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="0.15871162624562212828 -0.032229824949829080638 1.3877787807814456755e-17" rpy="6.4184768611141394107e-17 1.301042606982600506e-18 -1.570796326794896558" />
+<geometry>
+<mesh filename="package:///torso_masse.stl"/>
+</geometry>
+<material name="torso_masse_material">
+<color rgba="0.91764705882352937127 0.91764705882352937127 0.91764705882352937127 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.15871162624562212828 -0.032229824949829080638 1.3877787807814456755e-17" rpy="6.4184768611141394107e-17 1.301042606982600506e-18 -1.570796326794896558" />
+<geometry>
+<mesh filename="package:///torso_masse.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="-3.6851273389880421364e-19 0.12500000000000038858 -0.015000000000000042813" rpy="-7.7195194680967693834e-17 1.7347234759768032426e-18 -1.570796326794896558" />
+<geometry>
+<mesh filename="package:///torso.stl"/>
+</geometry>
+<material name="torso_material">
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-3.6851273389880421364e-19 0.12500000000000038858 -0.015000000000000042813" rpy="-7.7195194680967693834e-17 1.7347234759768032426e-18 -1.570796326794896558" />
+<geometry>
+<mesh filename="package:///torso.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="-9.3396945004029724025e-18 0.12500000000000038858 -0.02175000000000050851" rpy="-3.141592653589793116 8.6736173798838101383e-19 -1.570796326794896558" />
+<geometry>
+<mesh filename="package:///hip_z_axis_transmission.stl"/>
+</geometry>
+<material name="hip_z_axis_transmission_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-9.3396945004029724025e-18 0.12500000000000038858 -0.02175000000000050851" rpy="-3.141592653589793116 8.6736173798838101383e-19 -1.570796326794896558" />
+<geometry>
+<mesh filename="package:///hip_z_axis_transmission.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="-5.9448604633884720495e-06 0.00016059677641706106071 0.083143008206148741324" rpy="0 0 0"/>
+<mass value="8.1628243741083075236" />
+<inertia ixx="0.10446962743488713565" ixy="9.8402786445006866528e-08"  ixz="2.7154425172995466835e-06" iyy="0.050705803162250782934" iyz="0.00016220459588176298037" izz="0.063943930891078387679" />
+</inertial>
+</link>
+
+<link name="torso">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="torso_frame" type="fixed">
+<origin xyz="0 0 0.0025000000000000022204" rpy="-1.3010426069826033949e-18 7.7195194680967878723e-17 -1.2220991362985039129e-17" />
+<parent link="hip_z_axis_2_leg_assembly" />
+<child link="torso" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<link name="hip_x_acis_organic_25nm">
+<visual>
+<origin xyz="-0.084500000000000047296 0 -0.13849999999999998423" rpy="6.1232339957367438492e-17 2.3919074527398639212e-16 -8.6716850262592644082e-32" />
+<geometry>
+<mesh filename="package:///gip_x_axis_organic_25nm.stl"/>
+</geometry>
+<material name="gip_x_axis_organic_25nm_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.084500000000000047296 0 -0.13849999999999998423" rpy="6.1232339957367438492e-17 2.3919074527398639212e-16 -8.6716850262592644082e-32" />
+<geometry>
+<mesh filename="package:///gip_x_axis_organic_25nm.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="-0.065999999999999781064 -4.1633363423443370266e-17 -0.13849999999999998423" rpy="1.570796326794896336 1.5707963267948950037 0" />
+<geometry>
+<mesh filename="package:///hip_x_axis_hat.stl"/>
+</geometry>
+<material name="hip_x_axis_hat_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.065999999999999781064 -4.1633363423443370266e-17 -0.13849999999999998423" rpy="1.570796326794896336 1.5707963267948950037 0" />
+<geometry>
+<mesh filename="package:///hip_x_axis_hat.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="-0.092999999999999097278 -1.3877787807814456755e-17 -0.13849999999999998423" rpy="3.2734571866145476723e-16 -2.0449627575444854925e-16 -3.141592653589793116" />
+<geometry>
+<mesh filename="package:///entretoise_hip.stl"/>
+</geometry>
+<material name="entretoise_hip_material">
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.092999999999999097278 -1.3877787807814456755e-17 -0.13849999999999998423" rpy="3.2734571866145476723e-16 -2.0449627575444854925e-16 -3.141592653589793116" />
+<geometry>
+<mesh filename="package:///entretoise_hip.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="-0.08450000000000001954 -1.1102230246251565404e-15 -0.13849999999999954015" rpy="2.8327694488238280912e-16 -5.9181692594032119513e-17 1.1449174941446796168e-16" />
+<geometry>
+<mesh filename="package:///cage_x8-90.stl"/>
+</geometry>
+<material name="cage_x8-90_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.08450000000000001954 -1.1102230246251565404e-15 -0.13849999999999954015" rpy="2.8327694488238280912e-16 -5.9181692594032119513e-17 1.1449174941446796168e-16" />
+<geometry>
+<mesh filename="package:///cage_x8-90.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="-0.091205598992862235708 5.9452721667698689456e-05 -0.13123538594009653835" rpy="0 0 0"/>
+<mass value="2.6407979721831433828" />
+<inertia ixx="0.004630198342232761527" ixy="-8.1049127815175597784e-06"  ixz="-0.0012719032158152812368" iyy="0.0056873405612195872261" iyz="-4.3822263411770831379e-05" izz="0.0036798409366395985406" />
+</inertial>
+</link>
+
+<link name="hip_y_axis_cage">
+<visual>
+<origin xyz="0.054999999999999243938 2.7755575615628913511e-17 -0.077499999999999999445" rpy="-3.1415926535897926719 -4.9449804335245347872e-18 -5.9153015726386470964e-17" />
+<geometry>
+<mesh filename="package:///hip_hat_bearing.stl"/>
+</geometry>
+<material name="hip_hat_bearing_material">
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.054999999999999243938 2.7755575615628913511e-17 -0.077499999999999999445" rpy="-3.1415926535897926719 -4.9449804335245347872e-18 -5.9153015726386470964e-17" />
+<geometry>
+<mesh filename="package:///hip_hat_bearing.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="0.045000000000000095479 1.9428902930940239457e-16 -0.077499999999999763522" rpy="-3.1415926535897900074 -3.9771597230904425768e-28 1.1877103798485918823e-27" />
+<geometry>
+<mesh filename="package:///cage_rmd150.stl"/>
+</geometry>
+<material name="cage_rmd150_material">
+<color rgba="0.97254901960784312376 0.52941176470588235947 0.0039215686274509803377 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.045000000000000095479 1.9428902930940239457e-16 -0.077499999999999763522" rpy="-3.1415926535897900074 -3.9771597230904425768e-28 1.1877103798485918823e-27" />
+<geometry>
+<mesh filename="package:///cage_rmd150.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="0.044999999999999984457 2.7755575615628913511e-17 -0.077499999999999985567" rpy="3.141592653589793116 -6.6313037592983719898e-32 8.0287038306975641609e-32" />
+<geometry>
+<mesh filename="package:///hip_y_axis_batie.stl"/>
+</geometry>
+<material name="hip_y_axis_batie_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.044999999999999984457 2.7755575615628913511e-17 -0.077499999999999985567" rpy="3.141592653589793116 -6.6313037592983719898e-32 8.0287038306975641609e-32" />
+<geometry>
+<mesh filename="package:///hip_y_axis_batie.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="-0.030999999999999250377 2.7755575615628913511e-17 -0.077499999999999985567" rpy="-6.2450045135166997969e-16 2.1943340772909254043e-28 -3.141592653589793116" />
+<geometry>
+<mesh filename="package:///entretoise_hip.stl"/>
+</geometry>
+<material name="entretoise_hip_material">
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.030999999999999250377 2.7755575615628913511e-17 -0.077499999999999985567" rpy="-6.2450045135166997969e-16 2.1943340772909254043e-28 -3.141592653589793116" />
+<geometry>
+<mesh filename="package:///entretoise_hip.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="0.043499999999999483524 2.7755575615628913511e-17 -0.077499999999999999445" rpy="-3.1415926535897926719 -2.1943340772909254043e-28 1.2046708893108441742e-27" />
+<geometry>
+<mesh filename="package:///x12_150_hip_transmission.stl"/>
+</geometry>
+<material name="x12_150_hip_transmission_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.043499999999999483524 2.7755575615628913511e-17 -0.077499999999999999445" rpy="-3.1415926535897926719 -2.1943340772909254043e-28 1.2046708893108441742e-27" />
+<geometry>
+<mesh filename="package:///x12_150_hip_transmission.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="0.053389317638395994425 -1.0025241247778360996e-05 -0.07470517435107314197" rpy="0 0 0"/>
+<mass value="2.2512083512912495209" />
+<inertia ixx="0.0023882416320815842703" ixy="-2.1419815467451164245e-06"  ixz="0.00033416346444338425629" iyy="0.0031986740662783962746" iyz="-2.1233563524976828685e-07" izz="0.0028699555300892511285" />
+</inertial>
+</link>
+
+<link name="tigh_assembly">
+<visual>
+<origin xyz="0 -6.9388939039072283776e-18 2.7755575615628913511e-17" rpy="-1.570796326794896558 2.3121762172307650876e-31 -1.4244006022154147034e-17" />
+<geometry>
+<mesh filename="package:///tigh_exo_propre.stl"/>
+</geometry>
+<material name="tigh_exo_propre_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 -6.9388939039072283776e-18 2.7755575615628913511e-17" rpy="-1.570796326794896558 2.3121762172307650876e-31 -1.4244006022154147034e-17" />
+<geometry>
+<mesh filename="package:///tigh_exo_propre.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="0.17000000000000001221 0 -0.034499999999999989009" rpy="-8.5289174917434873836e-17 1.941758699698603966e-16 -8.863554680431607077e-16" />
+<geometry>
+<mesh filename="package:///axis_shin_knee.stl"/>
+</geometry>
+<material name="axis_shin_knee_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.17000000000000001221 0 -0.034499999999999989009" rpy="-8.5289174917434873836e-17 1.941758699698603966e-16 -8.863554680431607077e-16" />
+<geometry>
+<mesh filename="package:///axis_shin_knee.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="1.6653345369377348106e-16 -1.3183898417423733918e-16 0.03770000000000001128" rpy="-1.5707963267948983344 -4.6759895847329731045e-16 -2.6734346805937452274" />
+<geometry>
+<mesh filename="package:///interior_knee_cover.stl"/>
+</geometry>
+<material name="interior_knee_cover_material">
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="1.6653345369377348106e-16 -1.3183898417423733918e-16 0.03770000000000001128" rpy="-1.5707963267948983344 -4.6759895847329731045e-16 -2.6734346805937452274" />
+<geometry>
+<mesh filename="package:///interior_knee_cover.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="0.015622857433484212478 -0.0004726183303673397746 -0.061090831639825177168" rpy="0 0 0"/>
+<mass value="1.6595295493624933059" />
+<inertia ixx="0.0011821201503135771692" ixy="3.9975109261766981507e-05"  ixz="-0.0010557311232778133787" iyy="0.0043140643300774309324" iyz="3.1032220876288732232e-05" izz="0.004006073108310639723" />
+</inertial>
+</link>
+
+<link name="shin_assembly">
+<visual>
+<origin xyz="-0.067054000000036029228 0.0550000000000082645 0.016500000000003331446" rpy="-3.1415926535895737359 -1.5707963267948257258 0" />
+<geometry>
+<mesh filename="package:///entretoise_shin_1.stl"/>
+</geometry>
+<material name="entretoise_shin_1_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.067054000000036029228 0.0550000000000082645 0.016500000000003331446" rpy="-3.1415926535895737359 -1.5707963267948257258 0" />
+<geometry>
+<mesh filename="package:///entretoise_shin_1.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="0.47833861668261618005 -0.017606069675663332808 0.01650000000001290712" rpy="-2.9583330821305464653 1.5707963267948088504 0" />
+<geometry>
+<mesh filename="package:///entretoise_shin_2.stl"/>
+</geometry>
+<material name="entretoise_shin_2_material">
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.47833861668261618005 -0.017606069675663332808 0.01650000000001290712" rpy="-2.9583330821305464653 1.5707963267948088504 0" />
+<geometry>
+<mesh filename="package:///entretoise_shin_2.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="-0.0670540000000291736 -1.2934098236883073696e-14 0.016500000000003928191" rpy="-3.1415926535895737359 -1.570796326794826836 0" />
+<geometry>
+<mesh filename="package:///entretoise_shin_1.stl"/>
+</geometry>
+<material name="entretoise_shin_1_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.0670540000000291736 -1.2934098236883073696e-14 0.016500000000003928191" rpy="-3.1415926535895737359 -1.570796326794826836 0" />
+<geometry>
+<mesh filename="package:///entretoise_shin_1.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="0.25000000000011041168 4.7295500849031668622e-14 0.016500000000009326651" rpy="3.1415926535896070426 1.5707963267948203967 0" />
+<geometry>
+<mesh filename="package:///shine_2_2.stl"/>
+</geometry>
+<material name="shine_2/2_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.25000000000011041168 4.7295500849031668622e-14 0.016500000000009326651" rpy="3.1415926535896070426 1.5707963267948203967 0" />
+<geometry>
+<mesh filename="package:///shine_2_2.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="0.24359423638270488732 0.03462457768511090217 0.016500000000007189471" rpy="0.36651914291906068089 -1.5707963267948144015 0" />
+<geometry>
+<mesh filename="package:///entretoise_shin_2.stl"/>
+</geometry>
+<material name="entretoise_shin_2_material">
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.24359423638270488732 0.03462457768511090217 0.016500000000007189471" rpy="0.36651914291906068089 -1.5707963267948144015 0" />
+<geometry>
+<mesh filename="package:///entretoise_shin_2.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="0.25000000000011041168 4.7295500849031668622e-14 0.016500000000009326651" rpy="3.1415926535896074867 1.570796326794821951 0" />
+<geometry>
+<mesh filename="package:///shin_1_2.stl"/>
+</geometry>
+<material name="shin_1/2_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.25000000000011041168 4.7295500849031668622e-14 0.016500000000009326651" rpy="3.1415926535896074867 1.570796326794821951 0" />
+<geometry>
+<mesh filename="package:///shin_1_2.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="0.08960251224851203955 -0.0027870873585760049841 0.016264874620480179734" rpy="0 0 0"/>
+<mass value="1.4503400765942422446" />
+<inertia ixx="0.00055592308288101666223" ixy="-0.00054651344481590328518"  ixz="-7.783965651321511376e-05" iyy="0.0073865489049219348536" iyz="-9.0539843361936342528e-06" izz="0.007506577978771845211" />
+</inertial>
+</link>
+
+<link name="ankle_assembly">
+<inertial>
+<origin xyz="0.0016044581133135399874 0.0099999999999999932693 -0.018104458113314559481" rpy="0 0 0"/>
+<mass value="0.070022436079266572873" />
+<inertia ixx="1.55944137196864258e-05" ixy="-1.1234806568136137351e-06"  ixz="-1.8025776549753835835e-07" iyy="1.15059593838674263e-05" iyz="-1.1234806568136281347e-06" izz="1.5594413719686300439e-05" />
+</inertial>
+</link>
+
+<link name="foot_assembly">
+<visual>
+<origin xyz="0.023000000000000797584 -1.3877787807814456755e-16 0.016643317361204043592" rpy="3.141592653589793116 1.5707963267948821251 0" />
+<geometry>
+<mesh filename="package:///foot_v2.stl"/>
+</geometry>
+<material name="foot_v2_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.023000000000000797584 -1.3877787807814456755e-16 0.016643317361204043592" rpy="3.141592653589793116 1.5707963267948821251 0" />
+<geometry>
+<mesh filename="package:///foot_v2.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="-0.002999999999999447553 -8.0491169285323849181e-16 0.016643317361204352373" rpy="5.0806685317736928549e-16 1.5707963267948819031 0" />
+<geometry>
+<mesh filename="package:///axis__foot_ankle.stl"/>
+</geometry>
+<material name="axis__foot_ankle_material">
+<color rgba="0.91764705882352937127 0.91764705882352937127 0.91764705882352937127 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.002999999999999447553 -8.0491169285323849181e-16 0.016643317361204352373" rpy="5.0806685317736928549e-16 1.5707963267948819031 0" />
+<geometry>
+<mesh filename="package:///axis__foot_ankle.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="0.023000000000000686562 -3.0531133177191804862e-16 0.01664331736120386665" rpy="3.141592653589793116 1.5707963267948821251 0" />
+<geometry>
+<mesh filename="package:///axis__foot_ankle.stl"/>
+</geometry>
+<material name="axis__foot_ankle_material">
+<color rgba="0.91764705882352937127 0.91764705882352937127 0.91764705882352937127 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.023000000000000686562 -3.0531133177191804862e-16 0.01664331736120386665" rpy="3.141592653589793116 1.5707963267948821251 0" />
+<geometry>
+<mesh filename="package:///axis__foot_ankle.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="-0.002999999999999447553 -0.07199999999999986966 0.016643317361204230942" rpy="2.4623098671266695986e-15 1.5707963267948819031 0" />
+<geometry>
+<mesh filename="package:///entretoise_foot_1.stl"/>
+</geometry>
+<material name="entretoise_foot_1_material">
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.002999999999999447553 -0.07199999999999986966 0.016643317361204230942" rpy="2.4623098671266695986e-15 1.5707963267948819031 0" />
+<geometry>
+<mesh filename="package:///entretoise_foot_1.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="-0.0029999999999993365307 0.011499999999999552247 0.016643317361204296861" rpy="-4.6542185969369175743e-16 1.5707963267948819031 0" />
+<geometry>
+<mesh filename="package:///entretoise_foot_1.stl"/>
+</geometry>
+<material name="entretoise_foot_1_material">
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.0029999999999993365307 0.011499999999999552247 0.016643317361204296861" rpy="-4.6542185969369175743e-16 1.5707963267948819031 0" />
+<geometry>
+<mesh filename="package:///entretoise_foot_1.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="0.023000000000000686562 0.060500000000000234146 0.016643317361203651544" rpy="3.141592653589793116 1.5707963267948821251 0" />
+<geometry>
+<mesh filename="package:///entretoise_foot_1.stl"/>
+</geometry>
+<material name="entretoise_foot_1_material">
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.023000000000000686562 0.060500000000000234146 0.016643317361203651544" rpy="3.141592653589793116 1.5707963267948821251 0" />
+<geometry>
+<mesh filename="package:///entretoise_foot_1.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="-0.0029999999999996695976 -0.060500000000000983547 0.016643317361204761767" rpy="-2.0214926680249419187e-16 1.5707963267948819031 0" />
+<geometry>
+<mesh filename="package:///entretoise_foot_1.stl"/>
+</geometry>
+<material name="entretoise_foot_1_material">
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.0029999999999996695976 -0.060500000000000983547 0.016643317361204761767" rpy="-2.0214926680249419187e-16 1.5707963267948819031 0" />
+<geometry>
+<mesh filename="package:///entretoise_foot_1.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="0.011915193368596671553 7.1246359012670236187e-10 0.035240549916301877609" rpy="0 0 0"/>
+<mass value="0.30330965161985090628" />
+<inertia ixx="0.00052939894285826286178" ixy="1.7600934272284844112e-11"  ixz="-1.1812812225279434886e-05" iyy="0.00039206724444652759362" iyz="3.1159783993754337465e-11" izz="0.00018807787192118632924" />
+</inertial>
+</link>
+
+<link name="foot_left">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="foot_left_frame" type="fixed">
+<origin xyz="0.023000000000000797584 -1.3877787807814456755e-16 0.014999999999999763522" rpy="3.141592653589793116 1.5707963267948821251 0" />
+<parent link="foot_assembly" />
+<child link="foot_left" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<link name="small_axis_assembly_6d">
+<visual>
+<origin xyz="0.08199999999999957323 0.026133450472090757888 0.1446650409681820848" rpy="3.141592653589793116 5.3949900102878266763e-16 1.5707963267948954478" />
+<geometry>
+<mesh filename="package:///small_axis_6d_2.stl"/>
+</geometry>
+<material name="small_axis_6d_2_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.08199999999999957323 0.026133450472090757888 0.1446650409681820848" rpy="3.141592653589793116 5.3949900102878266763e-16 1.5707963267948954478" />
+<geometry>
+<mesh filename="package:///small_axis_6d_2.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="0.037618245402564788604 6.9204062356574342739e-18 2.4038232590165561961e-18" rpy="0 0 0"/>
+<mass value="0.017449623934432653694" />
+<inertia ixx="2.5309272826769136387e-07" ixy="-3.2047297984286899651e-22"  ixz="1.0613215032492365235e-14" iyy="1.3387910537156897363e-05" iyz="-2.1948186683914389729e-14" izz="1.3457795609339379616e-05" />
+</inertial>
+</link>
+
+<link name="closedloop_ankle_right_2B">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="closedloop_ankle_right_2B_frame" type="fixed">
+<origin xyz="0.082494999999989382378 5.5511151231257827021e-17 0" rpy="1.57079632679489678 5.3949900102883305612e-16 1.5707963267948954478" />
+<parent link="small_axis_assembly_6d" />
+<child link="closedloop_ankle_right_2B" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<joint name="right_spherical_foot_2" type="revolute">
+<origin xyz="0.010000000000001563194 -0.036000000000000600964 0.083643317361204644333" rpy="-1.5707963267948930053 0.51427502650596990108 3.1415926535897904515" />
+<parent link="foot_assembly" />
+<child link="small_axis_assembly_6d" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="long_axis_assembly_6d">
+<visual>
+<origin xyz="0.077000000000000012879 0.04507143106395991583 -0.07431952983086435871" rpy="1.570796326794896558 1.5707963267948961139 0" />
+<geometry>
+<mesh filename="package:///long_axis_6d.stl"/>
+</geometry>
+<material name="long_axis_6d_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.077000000000000012879 0.04507143106395991583 -0.07431952983086435871" rpy="1.570796326794896558 1.5707963267948961139 0" />
+<geometry>
+<mesh filename="package:///long_axis_6d.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="0.058839351252735573594 -1.4069261260241451774e-17 -4.07566562819852713e-17" rpy="0 0 0"/>
+<mass value="0.025931924099119846305" />
+<inertia ixx="3.5912148032646319793e-07" ixy="7.7348127217232847408e-21"  ixz="-1.061318162816094901e-14" iyy="3.8595781033171235302e-05" iyz="-2.1948185712043850814e-14" izz="3.8665666105353685368e-05" />
+</inertial>
+</link>
+
+<link name="closedloop_ankle_right_1B">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="closedloop_ankle_right_1B_frame" type="fixed">
+<origin xyz="0.1224949999999654926 -1.1102230246251565404e-16 -8.3266726846886740532e-17" rpy="-1.570796326794896558 -7.8582973461743721021e-16 -1.5707963267948954478" />
+<parent link="long_axis_assembly_6d" />
+<child link="closedloop_ankle_right_1B" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<joint name="right_spherical_foot_1" type="revolute">
+<origin xyz="0.010000000000001896261 0.036000000000000101363 0.083643317361204394533" rpy="1.5707963267949007768 0.42687585104360342703 -3.1415926535897917837" />
+<parent link="foot_assembly" />
+<child link="long_axis_assembly_6d" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="anklex_right" type="revolute">
+<origin xyz="-0.016500000000001062428 0.020000000000000239808 -0.016500000000001041611" rpy="1.5707963267948974462 1.6142256303166609952e-15 1.5707963267948954478" />
+<parent link="ankle_assembly" />
+<child link="foot_assembly" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="ankley_right" type="revolute">
+<origin xyz="0.2500000000001105227 4.696243394164412166e-14 4.0800696154974502861e-15" rpy="3.141592653589793116 -1.7984319359183912887e-16 1.2476165880763010474" />
+<parent link="shin_assembly" />
+<child link="ankle_assembly" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="ankle_actuator_assembly">
+<visual>
+<origin xyz="2.7755575615628913511e-17 0 -0.013499999999999900968" rpy="-3.1415926535897806815 -2.8009548467350236348e-15 -1.303348490700531798e-14" />
+<geometry>
+<mesh filename="package:///entretoise_motor_ankle.stl"/>
+</geometry>
+<material name="entretoise_motor_ankle_material">
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="2.7755575615628913511e-17 0 -0.013499999999999900968" rpy="-3.1415926535897806815 -2.8009548467350236348e-15 -1.303348490700531798e-14" />
+<geometry>
+<mesh filename="package:///entretoise_motor_ankle.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="-9.7144514654701197287e-17 -5.5511151231257827021e-17 -0.023499999999999937605" rpy="-3.1415926535897806815 -2.7108059117939603304e-15 -1.3646437769270871386e-14" />
+<geometry>
+<mesh filename="package:///entretoise_motor_ankle.stl"/>
+</geometry>
+<material name="entretoise_motor_ankle_material">
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-9.7144514654701197287e-17 -5.5511151231257827021e-17 -0.023499999999999937605" rpy="-3.1415926535897806815 -2.7108059117939603304e-15 -1.3646437769270871386e-14" />
+<geometry>
+<mesh filename="package:///entretoise_motor_ankle.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="0.016427684798689154433 0.025102413671894474589 -0.029499999999551107521" rpy="-3.0357660829555208658e-16 -1.3530843112616921039e-16 3.8216904418977080536e-16" />
+<geometry>
+<mesh filename="package:///axis_motor.stl"/>
+</geometry>
+<material name="axis_motor_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.016427684798689154433 0.025102413671894474589 -0.029499999999551107521" rpy="-3.0357660829555208658e-16 -1.3530843112616921039e-16 3.8216904418977080536e-16" />
+<geometry>
+<mesh filename="package:///axis_motor.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="0.0049135615662171967105 0.0075210858589110762135 -0.0084932430631735871679" rpy="0 0 0"/>
+<mass value="0.030021260162216917983" />
+<inertia ixx="5.9289740065550016609e-06" ixy="-2.2880488873850221514e-06"  ixz="8.8686848436999432087e-07" iyy="3.9448681161680700588e-06" iyz="1.3526182062115629447e-06" izz="7.4346969308942455345e-06" />
+</inertial>
+</link>
+
+<link name="long_axis_assembly_6d_2">
+<visual>
+<origin xyz="0.077000000000000123901 -0.045071431063960054608 0.074319529830864622388" rpy="-1.570796326794896558 -1.5707963267948958919 0" />
+<geometry>
+<mesh filename="package:///long_axis_6d.stl"/>
+</geometry>
+<material name="long_axis_6d_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.077000000000000123901 -0.045071431063960054608 0.074319529830864622388" rpy="-1.570796326794896558 -1.5707963267948958919 0" />
+<geometry>
+<mesh filename="package:///long_axis_6d.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="0.058839351252735705433 4.1233318878429335337e-18 6.3137991868491816794e-17" rpy="0 0 0"/>
+<mass value="0.025931924099119846305" />
+<inertia ixx="3.5912148032646732721e-07" ixy="-1.3839850816304451153e-21"  ixz="1.0613170203313667438e-14" iyy="3.8595781033171364051e-05" iyz="-2.1948184507533917458e-14" izz="3.8665666105353854775e-05" />
+</inertial>
+</link>
+
+<link name="closedloop_ankle_right_1A">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="closedloop_ankle_right_1A_frame" type="fixed">
+<origin xyz="0.12249499999996577015 5.5511151231257827021e-17 1.3877787807814456755e-16" rpy="1.5707963267948972241 -3.0376492319638771441e-17 -1.57079632679489678" />
+<parent link="long_axis_assembly_6d_2" />
+<child link="closedloop_ankle_right_1A" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<joint name="right_spherical_ankle_1" type="revolute">
+<origin xyz="0.016427684798689098922 0.025102413671894585612 -0.023999999999551241414" rpy="-2.7747960485631534301e-16 -3.0170991825814965372e-16 -1.2353725944695598709e-14" />
+<parent link="ankle_actuator_assembly" />
+<child link="long_axis_assembly_6d_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="motor_ankle1_right" type="revolute">
+<origin xyz="0.051000000000111178622 1.1657341758564143674e-14 -0.00099999999999900168746" rpy="1.7276380982942376952e-14 -7.2852315382696954242e-14 0.75108913035068103348" />
+<parent link="shin_assembly" />
+<child link="ankle_actuator_assembly" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" lower="-0.52359877559829881566" upper="1.9198621771937625091"/>
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="ankle_actuator_assembly_2">
+<visual>
+<origin xyz="-2.7755575615628913511e-16 -3.3306690738754696213e-16 -0.01350000000000001199" rpy="-3.1415926535897904515 1.0234868508174681246e-16 -1.5855386331628846736e-16" />
+<geometry>
+<mesh filename="package:///entretoise_motor_ankle.stl"/>
+</geometry>
+<material name="entretoise_motor_ankle_material">
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-2.7755575615628913511e-16 -3.3306690738754696213e-16 -0.01350000000000001199" rpy="-3.1415926535897904515 1.0234868508174681246e-16 -1.5855386331628846736e-16" />
+<geometry>
+<mesh filename="package:///entretoise_motor_ankle.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="-4.9960036108132044319e-16 -3.3306690738754696213e-16 -0.023499999999999951483" rpy="-3.1415926535897908956 7.6327832942920162697e-17 1.6028482679446066105e-16" />
+<geometry>
+<mesh filename="package:///entretoise_motor_ankle.stl"/>
+</geometry>
+<material name="entretoise_motor_ankle_material">
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-4.9960036108132044319e-16 -3.3306690738754696213e-16 -0.023499999999999951483" rpy="-3.1415926535897908956 7.6327832942920162697e-17 1.6028482679446066105e-16" />
+<geometry>
+<mesh filename="package:///entretoise_motor_ankle.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="0.016427684798688391155 0.025102413671894197034 -0.02949999999955117691" rpy="2.671474152999718379e-16 2.862293735362162621e-16 -2.2881989956447507797e-16" />
+<geometry>
+<mesh filename="package:///axis_motor.stl"/>
+</geometry>
+<material name="axis_motor_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.016427684798688391155 0.025102413671894197034 -0.02949999999955117691" rpy="2.671474152999718379e-16 2.862293735362162621e-16 -2.2881989956447507797e-16" />
+<geometry>
+<mesh filename="package:///axis_motor.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="0.0049135615662171047702 0.0075210858589109938141 -0.0084932430631736149235" rpy="0 0 0"/>
+<mass value="0.030021260162216917983" />
+<inertia ixx="5.9289740065549855673e-06" ixy="-2.2880488873849510006e-06"  ixz="8.8686848436996901576e-07" iyy="3.9448681161679955199e-06" iyz="1.3526182062115656976e-06" izz="7.4346969308941362672e-06" />
+</inertial>
+</link>
+
+<link name="small_axis_assembly_6d_2">
+<visual>
+<origin xyz="0.08200000000000051692 0.026133450472091424022 0.14466504096817794922" rpy="-3.141592653589793116 2.2137771742854919648e-16 1.5707963267948941155" />
+<geometry>
+<mesh filename="package:///small_axis_6d_2.stl"/>
+</geometry>
+<material name="small_axis_6d_2_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.08200000000000051692 0.026133450472091424022 0.14466504096817794922" rpy="-3.141592653589793116 2.2137771742854919648e-16 1.5707963267948941155" />
+<geometry>
+<mesh filename="package:///small_axis_6d_2.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="0.037618245402565329838 1.5532213246613772718e-17 2.4038232590165465664e-18" rpy="0 0 0"/>
+<mass value="0.017449623934432653694" />
+<inertia ixx="2.5309272826769538727e-07" ixy="5.0066263403024922867e-22"  ixz="1.0613207664142545246e-14" iyy="1.3387910537157383559e-05" iyz="-2.194818481327803964e-14" izz="1.3457795609339579516e-05" />
+</inertial>
+</link>
+
+<link name="closedloop_ankle_right_2A">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="closedloop_ankle_right_2A_frame" type="fixed">
+<origin xyz="0.082494999999990770156 5.5511151231257827021e-17 1.3877787807814456755e-17" rpy="1.570796326794896336 -2.2137771742853982876e-16 -1.5707963267948990005" />
+<parent link="small_axis_assembly_6d_2" />
+<child link="closedloop_ankle_right_2A" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<joint name="right_spherical_ankle_2" type="revolute">
+<origin xyz="0.016427684798689057288 0.025102413671894585612 -0.023999999999551255292" rpy="3.141592653589793116 3.1511351664117150261e-29 1.570796326794896558" />
+<parent link="ankle_actuator_assembly_2" />
+<child link="small_axis_assembly_6d_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="motor_ankle2_right" type="revolute">
+<origin xyz="0.13194600000010964225 2.4202861936828412581e-14 0.034000000000004387823" rpy="3.1415926535897251703 -3.408924830681045965e-14 2.0943951023933822242" />
+<parent link="shin_assembly" />
+<child link="ankle_actuator_assembly_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" lower="-0.52359877559829881566" upper="1.9198621771937625091"/>
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="knee_assembly_6d_2">
+<visual>
+<origin xyz="5.5511151231257827021e-17 2.7755575615628913511e-17 -0.091500000000000719647" rpy="1.570796326794896558 8.5527615516920538178e-17 1.5707963267948934494" />
+<geometry>
+<mesh filename="package:///knee_rod_6d_2.stl"/>
+</geometry>
+<material name="knee_rod_6d_2_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="5.5511151231257827021e-17 2.7755575615628913511e-17 -0.091500000000000719647" rpy="1.570796326794896558 8.5527615516920538178e-17 1.5707963267948934494" />
+<geometry>
+<mesh filename="package:///knee_rod_6d_2.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="0.033583535576093344333 -1.9507550132508585476e-16 -0.015047513706424469476" rpy="0 0 0"/>
+<mass value="0.056571110632948257146" />
+<inertia ixx="2.9155376211343668144e-06" ixy="2.8630294273897923116e-19"  ixz="8.5965966244173615349e-07" iyy="7.7911555811947173734e-05" iyz="2.4264810639556816569e-21" izz="7.8524761851501016286e-05" />
+</inertial>
+</link>
+
+<link name="closedloop_knee_right_A">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="closedloop_knee_right_A_frame" type="fixed">
+<origin xyz="0.1088332621588188609 -7.2164496600635175128e-16 -0.015499999999999986011" rpy="1.570796326794896558 8.5527615516921820077e-17 1.5707963267948932273" />
+<parent link="knee_assembly_6d_2" />
+<child link="closedloop_knee_right_A" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<joint name="free_knee_right" type="revolute">
+<origin xyz="-0.060000305599882813867 -0.039997692782303223558 0.030999999999993782529" rpy="-4.2618383418235289645e-14 -6.2667679659202648568e-14 1.5826396927571024786" />
+<parent link="shin_assembly" />
+<child link="knee_assembly_6d_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="knee_right" type="revolute">
+<origin xyz="0.17000000000000001221 -6.9388939039072283776e-18 0.0065000000000000335287" rpy="-3.141592653589793116 2.5647656469813823868e-16 -0.77690444426113491883" />
+<parent link="tigh_assembly" />
+<child link="shin_assembly" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" lower="-1.1344640137963142301" upper="0.34906585039886589561"/>
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="knee_actuation">
+<visual>
+<origin xyz="-0.048296291314569153585 0.012940952255177995411 -0.00099999999993313770652" rpy="-3.1415926535893921034 1.7089454851237735656e-13 -5.9753975116153581454e-13" />
+<geometry>
+<mesh filename="package:///axis_knee_transmission.stl"/>
+</geometry>
+<material name="axis_knee_transmission_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.048296291314569153585 0.012940952255177995411 -0.00099999999993313770652" rpy="-3.1415926535893921034 1.7089454851237735656e-13 -5.9753975116153581454e-13" />
+<geometry>
+<mesh filename="package:///axis_knee_transmission.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="-5.5511151231257827021e-17 -2.7755575615628913511e-17 -0.052000000000000004552" rpy="1.570796326794896558 -2.2932592168240341923e-31 -5.3620665085897917829e-17" />
+<geometry>
+<mesh filename="package:///knee_transmission.stl"/>
+</geometry>
+<material name="knee_transmission_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-5.5511151231257827021e-17 -2.7755575615628913511e-17 -0.052000000000000004552" rpy="1.570796326794896558 -2.2932592168240341923e-31 -5.3620665085897917829e-17" />
+<geometry>
+<mesh filename="package:///knee_transmission.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="-0.019149851374773197571 0.0053514071788838754595 -0.010903494956786125708" rpy="0 0 0"/>
+<mass value="0.13504266801571943035" />
+<inertia ixx="0.00014959075635801832686" ixy="2.1567313834896911491e-05"  ixz="-3.3919844976836382934e-05" iyy="0.00022119257651435772971" iyz="9.2849691393500168902e-06" izz="0.00032076263316524011686" />
+</inertial>
+</link>
+
+<link name="knee_assembly_6d_1">
+<visual>
+<origin xyz="1.1102230246251565404e-16 0.18700000000000061018 -0.081000000000000030309" rpy="1.570796326794896558 3.8329675244141940952e-27 -5.9801050230047264012e-18" />
+<geometry>
+<mesh filename="package:///knee_rode_6d_1.stl"/>
+</geometry>
+<material name="knee_rode_6d_1_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="1.1102230246251565404e-16 0.18700000000000061018 -0.081000000000000030309" rpy="1.570796326794896558 3.8329675244141940952e-27 -5.9801050230047264012e-18" />
+<geometry>
+<mesh filename="package:///knee_rode_6d_1.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="0.00015733536986535233177 0.022653905042026762501 -0.0046945650556844626192" rpy="0 0 0"/>
+<mass value="0.042983526200894434099" />
+<inertia ixx="3.1451616122066398441e-05" ixy="1.9173443803067359304e-07"  ixz="2.0656042968726299787e-09" iyy="2.2236768363406603737e-06" iyz="2.9741566461376215799e-07" izz="3.2300886724211180453e-05" />
+</inertial>
+</link>
+
+<link name="closedloop_knee_right_B">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="closedloop_knee_right_B_frame" type="fixed">
+<origin xyz="4.1633363423443370266e-17 0.0781567378411803515 -0.0049999999999999905631" rpy="1.570796326794896558 3.8183327845207021078e-27 -1.8889879714262472785e-16" />
+<parent link="knee_assembly_6d_1" />
+<child link="closedloop_knee_right_B" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<joint name="transmission_knee_right" type="revolute">
+<origin xyz="-0.048296291314568667863 0.012940952255176579877 -0.037999999999934447326" rpy="9.5582971590875810417e-15 7.0671004384610001341e-16 -3.110258335067140667" />
+<parent link="knee_actuation" />
+<child link="knee_assembly_6d_1" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="motor_knee_right" type="revolute">
+<origin xyz="0 6.9388939039072283776e-18 -0.051999999999999949041" rpy="-3.141592653589793116 5.0017066148221627417e-16 -1.1419760250108306199" />
+<parent link="tigh_assembly" />
+<child link="knee_actuation" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="hipy_right" type="revolute">
+<origin xyz="0.010000000000000036637 2.7755575615628913511e-17 -0.077499999999999985567" rpy="-1.570796326794896558 0.44188133958049918837 -1.5707963267948970021" />
+<parent link="hip_y_axis_cage" />
+<child link="tigh_assembly" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" lower="-1.9198621771937625091" upper="0.34906585039886589561"/>
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="hipx_right" type="revolute">
+<origin xyz="-0.048000000000000132838 -1.3877787807814456755e-17 -0.13849999999999998423" rpy="1.570796326794896336 -3.2734571866145994413e-16 -1.570796326794896336" />
+<parent link="hip_x_acis_organic_25nm" />
+<child link="hip_y_axis_cage" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" lower="-0.52359877559829881566" upper="0.52359877559829881566"/>
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="hipz_right" type="revolute">
+<origin xyz="1.3877787807814456755e-17 -0.12500000000000022204 -0.050750000000000822231" rpy="-1.6575282812958506172e-15 -3.3286581297672786155e-16 -1.3697404152897136757e-15" />
+<parent link="hip_z_axis_2_leg_assembly" />
+<child link="hip_x_acis_organic_25nm" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="hip_x_acis_organic_25nm_2">
+<visual>
+<origin xyz="-0.084499999999999977907 1.3877787807814456755e-17 -0.13850000000000001199" rpy="6.1232339957367660359e-17 2.3919074527398639212e-16 4.3468177562752106035e-33" />
+<geometry>
+<mesh filename="package:///gip_x_axis_organic_25nm.stl"/>
+</geometry>
+<material name="gip_x_axis_organic_25nm_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.084499999999999977907 1.3877787807814456755e-17 -0.13850000000000001199" rpy="6.1232339957367660359e-17 2.3919074527398639212e-16 4.3468177562752106035e-33" />
+<geometry>
+<mesh filename="package:///gip_x_axis_organic_25nm.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="-0.06599999999999968392 4.1633363423443370266e-17 -0.13850000000000001199" rpy="1.5707963267948961139 1.5707963267948961139 0" />
+<geometry>
+<mesh filename="package:///hip_x_axis_hat.stl"/>
+</geometry>
+<material name="hip_x_axis_hat_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.06599999999999968392 4.1633363423443370266e-17 -0.13850000000000001199" rpy="1.5707963267948961139 1.5707963267948961139 0" />
+<geometry>
+<mesh filename="package:///hip_x_axis_hat.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="-0.0929999999999992083 1.3877787807814456755e-17 -0.13850000000000001199" rpy="-6.1232339957366156593e-17 -2.3919074527398777263e-16 3.141592653589793116" />
+<geometry>
+<mesh filename="package:///entretoise_hip.stl"/>
+</geometry>
+<material name="entretoise_hip_material">
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.0929999999999992083 1.3877787807814456755e-17 -0.13850000000000001199" rpy="-6.1232339957366156593e-17 -2.3919074527398777263e-16 3.141592653589793116" />
+<geometry>
+<mesh filename="package:///entretoise_hip.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="-0.084499999999999977907 -7.4940054162198066479e-16 -0.1384999999999995679" rpy="6.1232339957366119615e-17 2.3919074527398249712e-16 -2.3930507770169350241e-30" />
+<geometry>
+<mesh filename="package:///cage_x8-90.stl"/>
+</geometry>
+<material name="cage_x8-90_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.084499999999999977907 -7.4940054162198066479e-16 -0.1384999999999995679" rpy="6.1232339957366119615e-17 2.3919074527398249712e-16 -2.3930507770169350241e-30" />
+<geometry>
+<mesh filename="package:///cage_x8-90.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="-0.091205598992862027541 6.0493251277355420965e-05 -0.13123602881800780495" rpy="0 0 0"/>
+<mass value="2.6407979721831433828" />
+<inertia ixx="0.0046302226779761862865" ixy="-7.9790692598392673007e-06"  ixz="-0.0012719813914875337333" iyy="0.0057172732196863326401" iyz="-2.9739475353209649433e-05" izz="0.0036499326139162562022" />
+</inertial>
+</link>
+
+<link name="hip_y_axis_cage_sym">
+<visual>
+<origin xyz="-0.054999999999999965583 5.5511151231257827021e-17 -0.077499999999999957812" rpy="3.141592653589793116 -8.6616482979408361365e-16 3.1415926535897917837" />
+<geometry>
+<mesh filename="package:///hip_hat_bearing.stl"/>
+</geometry>
+<material name="hip_hat_bearing_material">
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.054999999999999965583 5.5511151231257827021e-17 -0.077499999999999957812" rpy="3.141592653589793116 -8.6616482979408361365e-16 3.1415926535897917837" />
+<geometry>
+<mesh filename="package:///hip_hat_bearing.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="-0.04499999999999990119 -1.1102230246251565404e-16 -0.077499999999999791278" rpy="-3.141592653589793116 5.0388081992115647407e-16 3.1415926535897922278" />
+<geometry>
+<mesh filename="package:///cage_rmd150.stl"/>
+</geometry>
+<material name="cage_rmd150_material">
+<color rgba="0.97254901960784312376 0.52941176470588235947 0.0039215686274509803377 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.04499999999999990119 -1.1102230246251565404e-16 -0.077499999999999791278" rpy="-3.141592653589793116 5.0388081992115647407e-16 3.1415926535897922278" />
+<geometry>
+<mesh filename="package:///cage_rmd150.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="-0.054999999999999993339 2.7755575615628913511e-17 -0.077499999999999985567" rpy="3.141592653589793116 -9.3123197375363187661e-33 -4.7370331529069083801e-33" />
+<geometry>
+<mesh filename="package:///hip_y_axis_batie_sym.stl"/>
+</geometry>
+<material name="hip_y_axis_batie_sym_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.054999999999999993339 2.7755575615628913511e-17 -0.077499999999999985567" rpy="3.141592653589793116 -9.3123197375363187661e-33 -4.7370331529069083801e-33" />
+<geometry>
+<mesh filename="package:///hip_y_axis_batie_sym.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="0.031000000000000027534 -8.3266726846886740532e-17 -0.077499999999999985567" rpy="-1.110223024624075801e-16 5.8641457949971830388e-17 -1.6547511136452656148e-15" />
+<geometry>
+<mesh filename="package:///entretoise_hip.stl"/>
+</geometry>
+<material name="entretoise_hip_material">
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.031000000000000027534 -8.3266726846886740532e-17 -0.077499999999999985567" rpy="-1.110223024624075801e-16 5.8641457949971830388e-17 -1.6547511136452656148e-15" />
+<geometry>
+<mesh filename="package:///entretoise_hip.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="-0.043499999999999983125 5.5511151231257827021e-17 -0.077499999999999985567" rpy="3.141592653589793116 -8.6193929501152790885e-16 3.1415926535897917837" />
+<geometry>
+<mesh filename="package:///x12_150_hip_transmission.stl"/>
+</geometry>
+<material name="x12_150_hip_transmission_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.043499999999999983125 5.5511151231257827021e-17 -0.077499999999999985567" rpy="3.141592653589793116 -8.6193929501152790885e-16 3.1415926535897917837" />
+<geometry>
+<mesh filename="package:///x12_150_hip_transmission.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="-0.053389309429681106045 4.1329189337180513282e-05 -0.074705164322273670541" rpy="0 0 0"/>
+<mass value="2.2512087504966058482" />
+<inertia ixx="0.002388239011078490022" ixy="-5.3011576828427983904e-06"  ixz="-0.00033416414744721759707" iyy="0.0031986929551525121462" iyz="-4.9842600793998493144e-07" izz="0.0028699357307604227672" />
+</inertial>
+</link>
+
+<link name="tigh_assembly_sym">
+<visual>
+<origin xyz="2.7755575615628913511e-16 3.3306690738754696213e-16 0.038699999999998541123" rpy="-1.5707963267948930053 2.1397865792974608222e-15 2.0166248294524296014" />
+<geometry>
+<mesh filename="package:///interior_knee_cover.stl"/>
+</geometry>
+<material name="interior_knee_cover_material">
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="2.7755575615628913511e-16 3.3306690738754696213e-16 0.038699999999998541123" rpy="-1.5707963267948930053 2.1397865792974608222e-15 2.0166248294524296014" />
+<geometry>
+<mesh filename="package:///interior_knee_cover.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="2.7755575615628913511e-17 6.9388939039072283776e-18 2.7755575615628913511e-17" rpy="1.570796326794896558 -1.481162935865171653e-31 3.1285758754314630105e-17" />
+<geometry>
+<mesh filename="package:///tigh_exo_propre_sym.stl"/>
+</geometry>
+<material name="tigh_exo_propre_sym_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="2.7755575615628913511e-17 6.9388939039072283776e-18 2.7755575615628913511e-17" rpy="1.570796326794896558 -1.481162935865171653e-31 3.1285758754314630105e-17" />
+<geometry>
+<mesh filename="package:///tigh_exo_propre_sym.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="0.17000000000000003997 0 -0.034500000000000002887" rpy="-2.064320936408451454e-16 -1.5525775109932445414e-16 -5.4319543428022670927e-16" />
+<geometry>
+<mesh filename="package:///axis_shin_knee.stl"/>
+</geometry>
+<material name="axis_shin_knee_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.17000000000000003997 0 -0.034500000000000002887" rpy="-2.064320936408451454e-16 -1.5525775109932445414e-16 -5.4319543428022670927e-16" />
+<geometry>
+<mesh filename="package:///axis_shin_knee.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="0.015622855954504761417 0.00047261773744109938792 -0.060279149825178207633" rpy="0 0 0"/>
+<mass value="1.6595295495548292308" />
+<inertia ixx="0.0011585900685146886379" ixy="-3.9971324164927459193e-05"  ixz="-0.0010346870627998402611" iyy="0.0042905415942198149928" iyz="-3.0395650987857196891e-05" izz="0.0040060731849681716077" />
+</inertial>
+</link>
+
+<link name="shin_assembly_sym">
+<visual>
+<origin xyz="-0.067054000000000141268 -0.055000000000000021094 0.016500000000000070166" rpy="-3.4520939576014149026e-16 1.5707963267948956698 0" />
+<geometry>
+<mesh filename="package:///entretoise_shin_1.stl"/>
+</geometry>
+<material name="entretoise_shin_1_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.067054000000000141268 -0.055000000000000021094 0.016500000000000070166" rpy="-3.4520939576014149026e-16 1.5707963267948956698 0" />
+<geometry>
+<mesh filename="package:///entretoise_shin_1.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="0.47833861668240401643 -0.017606069675744212555 0.016500000000000569766" rpy="-2.9583330821303972513 1.570796326794896336 0" />
+<geometry>
+<mesh filename="package:///entretoise_shin_2.stl"/>
+</geometry>
+<material name="entretoise_shin_2_material">
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.47833861668240401643 -0.017606069675744212555 0.016500000000000569766" rpy="-2.9583330821303972513 1.570796326794896336 0" />
+<geometry>
+<mesh filename="package:///entretoise_shin_2.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="-0.067054000000000224535 -1.1102230246251565404e-16 0.016500000000000014655" rpy="-2.3277598713524549925e-16 1.5707963267948961139 0" />
+<geometry>
+<mesh filename="package:///entretoise_shin_1.stl"/>
+</geometry>
+<material name="entretoise_shin_1_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.067054000000000224535 -1.1102230246251565404e-16 0.016500000000000014655" rpy="-2.3277598713524549925e-16 1.5707963267948961139 0" />
+<geometry>
+<mesh filename="package:///entretoise_shin_1.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="0.25000000000000027756 2.1094237467877974268e-15 0.016500000000000070166" rpy="1.3750996902231578802e-14 -1.570796326794896336 0" />
+<geometry>
+<mesh filename="package:///shine_2_2_sym.stl"/>
+</geometry>
+<material name="shine_2/2_sym_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.25000000000000027756 2.1094237467877974268e-15 0.016500000000000070166" rpy="1.3750996902231578802e-14 -1.570796326794896336 0" />
+<geometry>
+<mesh filename="package:///shine_2_2_sym.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="0.24999999999999994449 2.7755575615628913511e-17 0.016499999999999986899" rpy="2.7166489617259111725e-16 -1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///entretoise_shin_2.stl"/>
+</geometry>
+<material name="entretoise_shin_2_material">
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.24999999999999994449 2.7755575615628913511e-17 0.016499999999999986899" rpy="2.7166489617259111725e-16 -1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///entretoise_shin_2.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="0.24999999999999994449 2.7755575615628913511e-17 0.016499999999999986899" rpy="2.7166489617259111725e-16 -1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///shine_1_2_sym.stl"/>
+</geometry>
+<material name="shine_1/2_sym_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.24999999999999994449 2.7755575615628913511e-17 0.016499999999999986899" rpy="2.7166489617259111725e-16 -1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///shine_1_2_sym.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="0.08960244192153440923 0.0027871077461444977892 0.016264874620477431932" rpy="0 0 0"/>
+<mass value="1.4503400765942424666" />
+<inertia ixx="0.00055592413956181410337" ixy="0.00054651876394675173894"  ixz="-7.7839632531081248711e-05" iyy="0.0073865726045811742895" iyz="9.053999278118554303e-06" izz="0.0075066027351118162769" />
+</inertial>
+</link>
+
+<link name="ankle_assembly_sym">
+<inertial>
+<origin xyz="-0.0016044581133135738145 0.010000000000000133782 -0.018104458113314372131" rpy="0 0 0"/>
+<mass value="0.070022436079266572873" />
+<inertia ixx="1.5594413719686039553e-05" ixy="1.1234806568135868418e-06"  ixz="1.8025776549754267293e-07" iyy="1.1505959383867084099e-05" iyz="-1.1234806568135616426e-06" izz="1.5594413719686070046e-05" />
+</inertial>
+</link>
+
+<link name="foot_assembly_2">
+<visual>
+<origin xyz="0.023000000000000020428 1.9428902930940239457e-16 0.016643317361204387067" rpy="-3.141592653589793116 1.570796326794891673 0" />
+<geometry>
+<mesh filename="package:///foot_v2.stl"/>
+</geometry>
+<material name="foot_v2_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.023000000000000020428 1.9428902930940239457e-16 0.016643317361204387067" rpy="-3.141592653589793116 1.570796326794891673 0" />
+<geometry>
+<mesh filename="package:///foot_v2.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="-0.0029999999999997806199 -3.6082248300317587564e-16 0.016643317361203936039" rpy="-1.0998275620828253178e-15 1.5707963267948903408 0" />
+<geometry>
+<mesh filename="package:///axis__foot_ankle.stl"/>
+</geometry>
+<material name="axis__foot_ankle_material">
+<color rgba="0.91764705882352937127 0.91764705882352937127 0.91764705882352937127 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.0029999999999997806199 -3.6082248300317587564e-16 0.016643317361203936039" rpy="-1.0998275620828253178e-15 1.5707963267948903408 0" />
+<geometry>
+<mesh filename="package:///axis__foot_ankle.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="0.023000000000000242473 8.3266726846886740532e-17 0.016643317361203828486" rpy="3.1415926535897922278 1.570796326794891673 0" />
+<geometry>
+<mesh filename="package:///axis__foot_ankle.stl"/>
+</geometry>
+<material name="axis__foot_ankle_material">
+<color rgba="0.91764705882352937127 0.91764705882352937127 0.91764705882352937127 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.023000000000000242473 8.3266726846886740532e-17 0.016643317361203828486" rpy="3.1415926535897922278 1.570796326794891673 0" />
+<geometry>
+<mesh filename="package:///axis__foot_ankle.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="-0.0029999999999996695976 -0.072000000000000091704 0.01664331736120386665" rpy="-1.0995536729630002331e-15 1.5707963267948927832 0" />
+<geometry>
+<mesh filename="package:///entretoise_foot_1.stl"/>
+</geometry>
+<material name="entretoise_foot_1_material">
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.0029999999999996695976 -0.072000000000000091704 0.01664331736120386665" rpy="-1.0995536729630002331e-15 1.5707963267948927832 0" />
+<geometry>
+<mesh filename="package:///entretoise_foot_1.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="-0.0029999999999997806199 0.011499999999999802047 0.01664331736120399155" rpy="-1.0993151402369556434e-15 1.5707963267948907848 0" />
+<geometry>
+<mesh filename="package:///entretoise_foot_1.stl"/>
+</geometry>
+<material name="entretoise_foot_1_material">
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.0029999999999997806199 0.011499999999999802047 0.01664331736120399155" rpy="-1.0993151402369556434e-15 1.5707963267948907848 0" />
+<geometry>
+<mesh filename="package:///entretoise_foot_1.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="0.02300000000000013145 0.060500000000000053735 0.016643317361203453786" rpy="3.141592653589793116 1.5707963267948947816 0" />
+<geometry>
+<mesh filename="package:///entretoise_foot_1.stl"/>
+</geometry>
+<material name="entretoise_foot_1_material">
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.02300000000000013145 0.060500000000000053735 0.016643317361203453786" rpy="3.141592653589793116 1.5707963267948947816 0" />
+<geometry>
+<mesh filename="package:///entretoise_foot_1.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="-0.0030000000000001136868 -0.060500000000000636602 0.016643317361203908283" rpy="-1.9222194867549865945e-17 1.5707963267948845676 0" />
+<geometry>
+<mesh filename="package:///entretoise_foot_1.stl"/>
+</geometry>
+<material name="entretoise_foot_1_material">
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.0030000000000001136868 -0.060500000000000636602 0.016643317361203908283" rpy="-1.9222194867549865945e-17 1.5707963267948845676 0" />
+<geometry>
+<mesh filename="package:///entretoise_foot_1.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="0.011915193368596137258 7.124638161230678478e-10 0.035240549916301752709" rpy="0 0 0"/>
+<mass value="0.30330965161985090628" />
+<inertia ixx="0.00052939894285824302088" ixy="1.7600933781286517286e-11"  ixz="-1.181281222527522852e-05" iyy="0.00039206724444651577582" iyz="3.1159785423107908597e-11" izz="0.00018807787192117876693" />
+</inertial>
+</link>
+
+<link name="foot_right">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="foot_right_frame" type="fixed">
+<origin xyz="0.023000000000000020428 2.2204460492503130808e-16 0.015000000000000148631" rpy="-3.141592653589793116 1.570796326794891673 0" />
+<parent link="foot_assembly_2" />
+<child link="foot_right" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<link name="long_axis_assembly_6d_3">
+<visual>
+<origin xyz="0.076999999999999901856 0.04507143106395991583 -0.074319529830864344833" rpy="1.570796326794896558 1.5707963267948961139 0" />
+<geometry>
+<mesh filename="package:///long_axis_6d.stl"/>
+</geometry>
+<material name="long_axis_6d_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.076999999999999901856 0.04507143106395991583 -0.074319529830864344833" rpy="1.570796326794896558 1.5707963267948961139 0" />
+<geometry>
+<mesh filename="package:///long_axis_6d.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="0.058839351252735462572 -1.6079571964865109155e-17 -3.2259512978148113652e-17" rpy="0 0 0"/>
+<mass value="0.025931924099119846305" />
+<inertia ixx="3.5912148032646393908e-07" ixy="-2.7266525877874213776e-21"  ixz="-1.0613188892117635767e-14" iyy="3.8595781033171235302e-05" iyz="-2.1948185218505189698e-14" izz="3.8665666105353719249e-05" />
+</inertial>
+</link>
+
+<link name="closedloop_ankle_left_1B">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="closedloop_ankle_left_1B_frame" type="fixed">
+<origin xyz="0.12249499999996543709 -2.7755575615628913511e-17 -8.3266726846886740532e-17" rpy="-1.5707963267948970021 2.9490299091609523161e-17 -1.5707963267948961139" />
+<parent link="long_axis_assembly_6d_3" />
+<child link="closedloop_ankle_left_1B" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<joint name="left_spherical_foot_1" type="revolute">
+<origin xyz="0.010000000000000008882 -0.036000000000000836886 0.083643317361201313664" rpy="1.5707963267948974462 0.4002123905477965593 -3.1415926535897917837" />
+<parent link="foot_assembly_2" />
+<child link="long_axis_assembly_6d_3" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="small_axis_assembly_6d_3">
+<visual>
+<origin xyz="0.026133450472090924421 -0.08199999999999907363 0.1446650409681783378" rpy="-3.141592653589793116 1.1342286216797752647e-31 9.7870677692601615412e-18" />
+<geometry>
+<mesh filename="package:///small_axis_6d_2.stl"/>
+</geometry>
+<material name="small_axis_6d_2_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.026133450472090924421 -0.08199999999999907363 0.1446650409681783378" rpy="-3.141592653589793116 1.1342286216797752647e-31 9.7870677692601615412e-18" />
+<geometry>
+<mesh filename="package:///small_axis_6d_2.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="1.1266456342985976838e-18 -0.037618245402564726154 3.0159683505826972883e-17" rpy="0 0 0"/>
+<mass value="0.017449623934432653694" />
+<inertia ixx="1.3387910537156926162e-05" ixy="-1.596789979658938382e-21"  ixz="-2.1948185185961947899e-14" iyy="2.5309272826768945804e-07" iyz="-1.0613208227046561441e-14" izz="1.3457795609339213598e-05" />
+</inertial>
+</link>
+
+<link name="closedloop_ankle_left_2B">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="closedloop_ankle_left_2B_frame" type="fixed">
+<origin xyz="-5.5511151231257827021e-17 -0.082494999999989382378 0" rpy="1.57079632679489678 -1.7347234759721652181e-18 2.1144583272750938362e-16" />
+<parent link="small_axis_assembly_6d_3" />
+<child link="closedloop_ankle_left_2B" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<joint name="left_spherical_foot_2" type="revolute">
+<origin xyz="0.010000000000000119904 0.035999999999999351963 0.083643317361201424687" rpy="1.5707963267948930053 1.16504032664075452 -3.5399157867329024959e-16" />
+<parent link="foot_assembly_2" />
+<child link="small_axis_assembly_6d_3" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="anklex_left" type="revolute">
+<origin xyz="0.016500000000000725892 0.019999999999999906741 -0.016500000000000819567" rpy="-1.57079632679489678 -4.9766808550267345805e-15 1.5707963267948990005" />
+<parent link="ankle_assembly_sym" />
+<child link="foot_assembly_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="ankley_left" type="revolute">
+<origin xyz="0.24999999999999961142 0 -1.0824674490095276269e-15" rpy="3.1415926535897913396 -9.1953126038277221719e-16 1.8965439081053139248" />
+<parent link="shin_assembly_sym" />
+<child link="ankle_assembly_sym" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="ankle_actuator_assembly_3">
+<visual>
+<origin xyz="2.2204460492503130808e-16 6.9388939039072283776e-18 -0.013499999999999956479" rpy="-3.1415926535897922278 4.2153780466235307989e-16 2.7371506512554173012e-16" />
+<geometry>
+<mesh filename="package:///entretoise_motor_ankle.stl"/>
+</geometry>
+<material name="entretoise_motor_ankle_material">
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="2.2204460492503130808e-16 6.9388939039072283776e-18 -0.013499999999999956479" rpy="-3.1415926535897922278 4.2153780466235307989e-16 2.7371506512554173012e-16" />
+<geometry>
+<mesh filename="package:///entretoise_motor_ankle.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="1.6653345369377348106e-16 2.6367796834847467835e-16 -0.023500000000000076383" rpy="-3.1415926535897922278 3.5561831257523391726e-16 -4.6604276297205870086e-17" />
+<geometry>
+<mesh filename="package:///entretoise_motor_ankle.stl"/>
+</geometry>
+<material name="entretoise_motor_ankle_material">
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="1.6653345369377348106e-16 2.6367796834847467835e-16 -0.023500000000000076383" rpy="-3.1415926535897922278 3.5561831257523391726e-16 -4.6604276297205870086e-17" />
+<geometry>
+<mesh filename="package:///entretoise_motor_ankle.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="0.016427684798689168311 0.025102413671894696634 -0.02949999999955105201" rpy="2.9663771439217827608e-16 4.3368086898606442685e-17 -1.9682676632125156958e-16" />
+<geometry>
+<mesh filename="package:///axis_motor.stl"/>
+</geometry>
+<material name="axis_motor_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.016427684798689168311 0.025102413671894696634 -0.02949999999955105201" rpy="2.9663771439217827608e-16 4.3368086898606442685e-17 -1.9682676632125156958e-16" />
+<geometry>
+<mesh filename="package:///axis_motor.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="0.0049135615662173233453 0.0075210858589110926933 -0.0084932430631736062498" rpy="0 0 0"/>
+<mass value="0.030021260162216917983" />
+<inertia ixx="5.9289740065550626473e-06" ixy="-2.2880488873850331628e-06"  ixz="8.8686848437000003834e-07" iyy="3.9448681161680666706e-06" iyz="1.3526182062115894145e-06" izz="7.4346969308942921213e-06" />
+</inertial>
+</link>
+
+<link name="long_axis_assembly_6d_4">
+<visual>
+<origin xyz="0.076999999999999985123 0.045071431063959888075 -0.074319529830864414222" rpy="1.570796326794896558 1.5707963267948961139 0" />
+<geometry>
+<mesh filename="package:///long_axis_6d.stl"/>
+</geometry>
+<material name="long_axis_6d_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.076999999999999985123 0.045071431063959888075 -0.074319529830864414222" rpy="1.570796326794896558 1.5707963267948961139 0" />
+<geometry>
+<mesh filename="package:///long_axis_6d.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="0.058839351252735608289 -4.9323143639498041207e-17 -8.2554179460793928276e-17" rpy="0 0 0"/>
+<mass value="0.025931924099119846305" />
+<inertia ixx="3.5912148032646976243e-07" ixy="-2.9282958200423164653e-21"  ixz="-1.0613181666573822393e-14" iyy="3.8595781033171126882e-05" iyz="-2.1948186007839957354e-14" izz="3.8665666105353624382e-05" />
+</inertial>
+</link>
+
+<link name="closedloop_ankle_left_1A">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="closedloop_ankle_left_1A_frame" type="fixed">
+<origin xyz="0.1224949999999654926 -5.5511151231257827021e-17 -1.1102230246251565404e-16" rpy="1.570796326794896336 -8.9007405046287486251e-31 -1.570796326794896558" />
+<parent link="long_axis_assembly_6d_4" />
+<child link="closedloop_ankle_left_1A" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<joint name="left_spherical_ankle_1" type="revolute">
+<origin xyz="0.016427684798689168311 0.025102413671894557856 -0.023999999999551296925" rpy="-3.141592653589793116 -1.7245786804261771264e-16 1.5707963267948887864" />
+<parent link="ankle_actuator_assembly_3" />
+<child link="long_axis_assembly_6d_4" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="motor_ankle1_left" type="revolute">
+<origin xyz="0.050999999999999934275 -2.7755575615628913511e-16 -0.0010000000000000286438" rpy="-1.0202882170849968287e-15 -1.2189628708050815292e-15 -2.735293742481039736" />
+<parent link="shin_assembly_sym" />
+<child link="ankle_actuator_assembly_3" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" lower="-1.9198621771937625091" upper="0.52359877559829881566"/>
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="ankle_actuator_assembly_4">
+<visual>
+<origin xyz="5.5511151231257827021e-17 1.1102230246251565404e-16 -0.013499999999999984235" rpy="-3.1415926535897908956 6.2426868809150449733e-16 2.0521278685499668322e-15" />
+<geometry>
+<mesh filename="package:///entretoise_motor_ankle.stl"/>
+</geometry>
+<material name="entretoise_motor_ankle_material">
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="5.5511151231257827021e-17 1.1102230246251565404e-16 -0.013499999999999984235" rpy="-3.1415926535897908956 6.2426868809150449733e-16 2.0521278685499668322e-15" />
+<geometry>
+<mesh filename="package:///entretoise_motor_ankle.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="0 1.1102230246251565404e-16 -0.023500000000000076383" rpy="-3.1415926535897922278 2.25910328519619924e-16 1.7394226178396153617e-15" />
+<geometry>
+<mesh filename="package:///entretoise_motor_ankle.stl"/>
+</geometry>
+<material name="entretoise_motor_ankle_material">
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 1.1102230246251565404e-16 -0.023500000000000076383" rpy="-3.1415926535897922278 2.25910328519619924e-16 1.7394226178396153617e-15" />
+<geometry>
+<mesh filename="package:///entretoise_motor_ankle.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="0.016427684798688724221 0.025102413671893086811 -0.029499999999551398955" rpy="3.8832607195594004611e-16 4.5773523439773072044e-16 1.8801749285770186212e-15" />
+<geometry>
+<mesh filename="package:///axis_motor.stl"/>
+</geometry>
+<material name="axis_motor_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.016427684798688724221 0.025102413671893086811 -0.029499999999551398955" rpy="3.8832607195594004611e-16 4.5773523439773072044e-16 1.8801749285770186212e-15" />
+<geometry>
+<mesh filename="package:///axis_motor.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="0.0049135615662172079862 0.0075210858589108715161 -0.0084932430631736374749" rpy="0 0 0"/>
+<mass value="0.030021260162216917983" />
+<inertia ixx="5.9289740065548153137e-06" ixy="-2.2880488873849137311e-06"  ixz="8.8686848436999485026e-07" iyy="3.9448681161680488829e-06" iyz="1.3526182062115404984e-06" izz="7.4346969308939795661e-06" />
+</inertial>
+</link>
+
+<link name="small_axis_assembly_6d_4">
+<visual>
+<origin xyz="0.081999999999999018119 0.026133450472091063199 0.14466504096817939251" rpy="-3.141592653589793116 4.0606517249819695089e-16 1.570796326794901443" />
+<geometry>
+<mesh filename="package:///small_axis_6d_2.stl"/>
+</geometry>
+<material name="small_axis_6d_2_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.081999999999999018119 0.026133450472091063199 0.14466504096817939251" rpy="-3.141592653589793116 4.0606517249819695089e-16 1.570796326794901443" />
+<geometry>
+<mesh filename="package:///small_axis_6d_2.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="0.037618245402564767788 1.1056540982006835867e-17 1.9387005504552047671e-17" rpy="0 0 0"/>
+<mass value="0.017449623934432653694" />
+<inertia ixx="2.5309272826769146974e-07" ixy="-1.8692882192583965294e-20"  ixz="1.0613202543298417668e-14" iyy="1.3387910537156932938e-05" iyz="-2.1948185602218575636e-14" izz="1.3457795609339255949e-05" />
+</inertial>
+</link>
+
+<link name="closedloop_ankle_left_2A">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="closedloop_ankle_left_2A_frame" type="fixed">
+<origin xyz="0.082494999999989548911 -1.3877787807814456755e-16 0" rpy="1.5707963267948961139 -4.060651724981790043e-16 -1.570796326794891673" />
+<parent link="small_axis_assembly_6d_4" />
+<child link="closedloop_ankle_left_2A" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<joint name="left_spherical_ankle_2" type="revolute">
+<origin xyz="0.0164276847986891128 0.025102413671894585612 -0.023999999999551241414" rpy="-7.0582730517032275126e-17 -4.1998637780414343204e-17 6.2400955652604422101e-14" />
+<parent link="ankle_actuator_assembly_4" />
+<child link="small_axis_assembly_6d_4" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="motor_ankle2_left" type="revolute">
+<origin xyz="0.13194600000000028528 5.273559366969493567e-16 0.034000000000000044076" rpy="-3.141592653589793116 1.1102242226355248758e-15 -0.13050246176244179042" />
+<parent link="shin_assembly_sym" />
+<child link="ankle_actuator_assembly_4" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" lower="-1.9198621771937625091" upper="0.52359877559829881566"/>
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="knee_assembly_6d_2_2">
+<visual>
+<origin xyz="1.1102230246251565404e-16 1.1102230246251565404e-16 -0.091499999999998915534" rpy="1.5707963267948998887 3.093161263472652406e-16 1.5707963267948932273" />
+<geometry>
+<mesh filename="package:///knee_rod_6d_2.stl"/>
+</geometry>
+<material name="knee_rod_6d_2_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="1.1102230246251565404e-16 1.1102230246251565404e-16 -0.091499999999998915534" rpy="1.5707963267948998887 3.093161263472652406e-16 1.5707963267948932273" />
+<geometry>
+<mesh filename="package:///knee_rod_6d_2.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="0.03358353557609310841 -5.8295368552280680536e-17 -0.015047513706424518048" rpy="0 0 0"/>
+<mass value="0.056571110632948257146" />
+<inertia ixx="2.915537621134370626e-06" ixy="2.3991803887434679187e-19"  ixz="8.5965966244169083723e-07" iyy="7.7911555811944571649e-05" iyz="-8.0340309125361856476e-20" izz="7.8524761851497939863e-05" />
+</inertial>
+</link>
+
+<link name="closedloop_knee_left_A">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="closedloop_knee_left_A_frame" type="fixed">
+<origin xyz="0.10883326215881813925 -3.0531133177191804862e-16 -0.015500000000000319078" rpy="1.5707963267948932273 -3.0931612634727238966e-16 -1.5707963267949003328" />
+<parent link="knee_assembly_6d_2_2" />
+<child link="closedloop_knee_left_A" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<joint name="free_knee_left" type="revolute">
+<origin xyz="-0.060000305600000275463 0.039997692782289762103 0.029999999999999957256" rpy="2.3918736049907539536e-16 -4.3226738528747351468e-15 -1.5621261107580259875" />
+<parent link="shin_assembly_sym" />
+<child link="knee_assembly_6d_2_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="knee_left" type="revolute">
+<origin xyz="0.17000000000000009548 4.1633363423443370266e-17 0.0065000000000001723066" rpy="3.1415926535897922278 5.4488992057052582119e-15 0.7834194499299725889" />
+<parent link="tigh_assembly_sym" />
+<child link="shin_assembly_sym" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" lower="-0.34906585039886589561" upper="1.1344640137963142301"/>
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="knee_actuation_2">
+<visual>
+<origin xyz="-0.048296291314584419152 0.012940952255175192098 -0.00099999999991892685181" rpy="-3.1415926535895688509 4.9636510179862672719e-14 -5.8612129676774376728e-13" />
+<geometry>
+<mesh filename="package:///axis_knee_transmission.stl"/>
+</geometry>
+<material name="axis_knee_transmission_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.048296291314584419152 0.012940952255175192098 -0.00099999999991892685181" rpy="-3.1415926535895688509 4.9636510179862672719e-14 -5.8612129676774376728e-13" />
+<geometry>
+<mesh filename="package:///axis_knee_transmission.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="0 0 -0.051999999999999990674" rpy="1.570796326794896558 4.1803377035557324215e-31 6.6093456750811722034e-18" />
+<geometry>
+<mesh filename="package:///knee_transmission.stl"/>
+</geometry>
+<material name="knee_transmission_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.051999999999999990674" rpy="1.570796326794896558 4.1803377035557324215e-31 6.6093456750811722034e-18" />
+<geometry>
+<mesh filename="package:///knee_transmission.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="-0.019149851374776288848 0.0053514071788820722145 -0.010903494956782455033" rpy="0 0 0"/>
+<mass value="0.13504266801571943035" />
+<inertia ixx="0.00014959075635799875701" ixy="2.1567313834892913496e-05"  ixz="-3.3919844976827797408e-05" iyy="0.00022119257651436667438" iyz="9.2849691393409299208e-06" izz="0.00032076263316526115038" />
+</inertial>
+</link>
+
+<link name="knee_assembly_6d_1_2">
+<visual>
+<origin xyz="2.4910629115026949876e-15 0.18700000000000180367 -0.081000000000000071942" rpy="1.57079632679489678 -3.4694469513416973269e-18 -4.5939458533016976345e-16" />
+<geometry>
+<mesh filename="package:///knee_rode_6d_1.stl"/>
+</geometry>
+<material name="knee_rode_6d_1_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="2.4910629115026949876e-15 0.18700000000000180367 -0.081000000000000071942" rpy="1.57079632679489678 -3.4694469513416973269e-18 -4.5939458533016976345e-16" />
+<geometry>
+<mesh filename="package:///knee_rode_6d_1.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="0.00015733536986556743748 0.022653905042026918626 -0.0046945650556844365983" rpy="0 0 0"/>
+<mass value="0.042983526200894434099" />
+<inertia ixx="3.1451616122066398441e-05" ixy="1.9173443803063235313e-07"  ixz="2.0656042968637758375e-09" iyy="2.2236768363406883258e-06" iyz="2.9741566461375707579e-07" izz="3.2300886724211322755e-05" />
+</inertial>
+</link>
+
+<link name="closedloop_knee_left_B">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="closedloop_knee_left_B_frame" type="fixed">
+<origin xyz="1.0061396160665481148e-15 0.078156737841180962123 -0.0049999999999999766853" rpy="1.570796326794896558 3.4694469513496741435e-18 3.1415926535897926719" />
+<parent link="knee_assembly_6d_1_2" />
+<child link="closedloop_knee_left_B" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<joint name="transmission_knee_left" type="revolute">
+<origin xyz="-0.04829629131458373914 0.012940952255174636987 -0.037999999999920708316" rpy="-8.3282696310942605215e-15 -5.3901619155743803316e-15 -0.54919343207941007101" />
+<parent link="knee_actuation_2" />
+<child link="knee_assembly_6d_1_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="motor_knee_left" type="revolute">
+<origin xyz="5.5511151231257827021e-17 2.7755575615628913511e-17 -0.05100000000000008693" rpy="3.1415926535897922278 4.2010309271234930397e-15 0.75075820516603808397" />
+<parent link="tigh_assembly_sym" />
+<child link="knee_actuation_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="hipy_left" type="revolute">
+<origin xyz="-0.0099999999999998978595 8.3266726846886740532e-17 -0.077500000000000013323" rpy="1.5707963267949009989 0.4458285026575319332 -1.570796326794896558" />
+<parent link="hip_y_axis_cage_sym" />
+<child link="tigh_assembly_sym" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" lower="-0.34906585039886589561" upper="1.9198621771937625091"/>
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="hipx_left" type="revolute">
+<origin xyz="-0.048000000000000077327 4.1633363423443370266e-17 -0.13850000000000001199" rpy="1.570796326794896336 6.1232339957366575675e-17 -1.570796326794896336" />
+<parent link="hip_x_acis_organic_25nm_2" />
+<child link="hip_y_axis_cage_sym" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" lower="-0.52359877559829881566" upper="0.52359877559829881566"/>
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="hipz_left" type="revolute">
+<origin xyz="0 0.12500000000000038858 -0.051250000000001127987" rpy="-1.5092094167760957066e-16 2.8140621586883908726e-16 4.4267836834781421853e-17" />
+<parent link="hip_z_axis_2_leg_assembly" />
+<child link="hip_x_acis_organic_25nm_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+
+</robot>

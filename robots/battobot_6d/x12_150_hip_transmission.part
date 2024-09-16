@@ -1,0 +1,13 @@
+{
+    "configuration": "default",
+    "documentId": "b26e49b6d17d154476907010",
+    "documentMicroversion": "480f90c95c5cfba28532d845",
+    "elementId": "9379e6a216a58626342647cb",
+    "fullConfiguration": "default",
+    "id": "MskE9M7anBgD8A4Xk",
+    "isStandardContent": false,
+    "name": "x12 150 hip transmission <1>",
+    "partId": "JHD",
+    "suppressed": false,
+    "type": "Part"
+}

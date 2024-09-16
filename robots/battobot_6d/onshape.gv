@@ -1,0 +1,140 @@
+digraph G {
+node [shape=box];
+"hip_z_axis_2_leg_assembly" [label="hip_z_axis_2_leg_assembly"];
+"hip_x_axis_sym" [label="hip_x_axis_sym"];
+"hip_y_axis_sym" [label="hip_y_axis_sym"];
+"tigh_assembly_sym" [label="tigh_assembly_sym"];
+"shin_assembly_sym" [label="shin_assembly_sym"];
+"ankle_assembly_sym" [label="ankle_assembly_sym"];
+"foot_assembly_2" [label="foot_assembly_2"];
+"foot_right" [label="foot_right"];
+"long_axis_assembly_6d_3" [label="long_axis_assembly_6d_3"];
+"closedloop_ankle_left_1B" [label="closedloop_ankle_left_1B"];
+"small_axis_assembly_6d_3" [label="small_axis_assembly_6d_3"];
+"closedloop_ankle_left_2B" [label="closedloop_ankle_left_2B"];
+"knee_assembly_6d_2_2" [label="knee_assembly_6d_2_2"];
+"closedloop_knee_left_A" [label="closedloop_knee_left_A"];
+"ankle_actuator_assembly_3" [label="ankle_actuator_assembly_3"];
+"long_axis_assembly_6d_4" [label="long_axis_assembly_6d_4"];
+"closedloop_ankle_left_1A" [label="closedloop_ankle_left_1A"];
+"ankle_actuator_assembly_4" [label="ankle_actuator_assembly_4"];
+"small_axis_assembly_6d_4" [label="small_axis_assembly_6d_4"];
+"closedloop_ankle_left_2A" [label="closedloop_ankle_left_2A"];
+"knee_actuation_2" [label="knee_actuation_2"];
+"knee_assembly_6d_1_2" [label="knee_assembly_6d_1_2"];
+"closedloop_knee_left_B" [label="closedloop_knee_left_B"];
+"hip_x_axis" [label="hip_x_axis"];
+"hip_y_axis" [label="hip_y_axis"];
+"tigh_assembly" [label="tigh_assembly"];
+"shin_assembly" [label="shin_assembly"];
+"ankle_assembly" [label="ankle_assembly"];
+"foot_assembly" [label="foot_assembly"];
+"foot_left" [label="foot_left"];
+"long_axis_assembly_6d" [label="long_axis_assembly_6d"];
+"closedloop_ankle_right_1B" [label="closedloop_ankle_right_1B"];
+"small_axis_assembly_6d" [label="small_axis_assembly_6d"];
+"closedloop_ankle_right_2B" [label="closedloop_ankle_right_2B"];
+"knee_assembly_6d_2" [label="knee_assembly_6d_2"];
+"closedloop_knee_right_A" [label="closedloop_knee_right_A"];
+"ankle_actuator_assembly" [label="ankle_actuator_assembly"];
+"long_axis_assembly_6d_2" [label="long_axis_assembly_6d_2"];
+"closedloop_ankle_right_1A" [label="closedloop_ankle_right_1A"];
+"ankle_actuator_assembly_2" [label="ankle_actuator_assembly_2"];
+"small_axis_assembly_6d_2" [label="small_axis_assembly_6d_2"];
+"closedloop_ankle_right_2A" [label="closedloop_ankle_right_2A"];
+"knee_actuation" [label="knee_actuation"];
+"knee_assembly_6d_1" [label="knee_assembly_6d_1"];
+"closedloop_knee_right_B" [label="closedloop_knee_right_B"];
+"torso" [label="torso"];
+node [shape=ellipse, color=blue, fontcolor=blue];
+"hip_z_axis_2_leg_assembly" -> "hipz_left" [label="xyz: 0.00243886 0.229987 -0.12275 \nrpy: -6.00047e-14 -5.29587e-14 -0.010604"]
+"hipz_left" -> "hip_x_axis_sym"
+"hip_x_axis_sym" -> "hipx_left" [label="xyz: -0.048 5.55112e-17 -0.138 \nrpy: -1.5708 -1.59872e-14 1.5708"]
+"hipx_left" -> "hip_y_axis_sym"
+"hip_y_axis_sym" -> "hipy_left" [label="xyz: 0.01 0 -0.0775 \nrpy: 0 1.5708 0.00294118"]
+"hipy_left" -> "tigh_assembly_sym"
+"tigh_assembly_sym" -> "knee_left" [label="xyz: 0.17 -5.55112e-17 0.0065 \nrpy: 3.14159 -1.09538e-17 1.57373"]
+"knee_left" -> "shin_assembly_sym"
+"shin_assembly_sym" -> "ankley_left" [label="xyz: 0.25 -5.55112e-17 2.77556e-17 \nrpy: 3.14159 -5.70867e-18 1.57079"]
+"ankley_left" -> "ankle_assembly_sym"
+"ankle_assembly_sym" -> "anklex_left" [label="xyz: 0.0165 0.02 -0.0165 \nrpy: -1.5708 1.89848e-14 1.5708"]
+"anklex_left" -> "foot_assembly_2"
+"foot_assembly_2" -> "foot_right_frame" [label="xyz: 0.023 1.38778e-16 0.015 \nrpy: 0 1.5708 -3.14159"]
+"foot_right_frame" -> "foot_right"
+"foot_assembly_2" -> "left_spherical_foot_1" [label="xyz: 0.01 -0.036 0.0836433 \nrpy: 1.5708 5.66472e-14 -3.14159"]
+"left_spherical_foot_1" -> "long_axis_assembly_6d_3"
+"long_axis_assembly_6d_3" -> "closedloop_ankle_left_1B_frame" [label="xyz: 0.122495 5.55112e-17 -5.55112e-17 \nrpy: -1.5708 -0 -1.5708"]
+"closedloop_ankle_left_1B_frame" -> "closedloop_ankle_left_1B"
+"foot_assembly_2" -> "left_spherical_foot_2" [label="xyz: 0.01 0.036 0.0836433 \nrpy: 0 1.5708 -1.5708"]
+"left_spherical_foot_2" -> "small_axis_assembly_6d_3"
+"small_axis_assembly_6d_3" -> "closedloop_ankle_left_2B_frame" [label="xyz: 0 -0.082495 2.77556e-17 \nrpy: 1.5708 -1.43634e-18 8.42532e-15"]
+"closedloop_ankle_left_2B_frame" -> "closedloop_ankle_left_2B"
+"shin_assembly_sym" -> "free_knee_left" [label="xyz: -0.0600003 0.0399977 0.002 \nrpy: -3.14159 8.1541e-16 -1.57071"]
+"free_knee_left" -> "knee_assembly_6d_2_2"
+"knee_assembly_6d_2_2" -> "closedloop_knee_left_A_frame" [label="xyz: 0.108833 0 -0.0155 \nrpy: 1.5708 -4.44089e-16 -1.5708"]
+"closedloop_knee_left_A_frame" -> "closedloop_knee_left_A"
+"shin_assembly_sym" -> "motor_ankle1_left" [label="xyz: 0.051 -2.77556e-16 -0.001 \nrpy: -1.67605e-15 -6.09777e-17 -1.5708"]
+"motor_ankle1_left" -> "ankle_actuator_assembly_3"
+"ankle_actuator_assembly_3" -> "left_spherical_ankle_1" [label="xyz: 0.0164277 0.0251024 -0.024 \nrpy: 3.14159 1.90969e-14 1.56128"]
+"left_spherical_ankle_1" -> "long_axis_assembly_6d_4"
+"long_axis_assembly_6d_4" -> "closedloop_ankle_left_1A_frame" [label="xyz: 0.122495 0 -2.22045e-16 \nrpy: 1.5708 -0 -1.5708"]
+"closedloop_ankle_left_1A_frame" -> "closedloop_ankle_left_1A"
+"shin_assembly_sym" -> "motor_ankle2_left" [label="xyz: 0.131946 5.55112e-16 0.034 \nrpy: 3.14159 -3.66661e-16 -5.63772e-14"]
+"motor_ankle2_left" -> "ankle_actuator_assembly_4"
+"ankle_actuator_assembly_4" -> "left_spherical_ankle_2" [label="xyz: 0.0164277 0.0251024 -0.024 \nrpy: -5.18454e-16 2.5942e-16 0.0410585"]
+"left_spherical_ankle_2" -> "small_axis_assembly_6d_4"
+"small_axis_assembly_6d_4" -> "closedloop_ankle_left_2A_frame" [label="xyz: 0.082495 -5.55112e-17 8.32667e-17 \nrpy: 1.5708 1.11022e-16 -1.5708"]
+"closedloop_ankle_left_2A_frame" -> "closedloop_ankle_left_2A"
+"tigh_assembly_sym" -> "motor_knee_left" [label="xyz: 3.46945e-18 -1.66533e-16 -0.051 \nrpy: 3.14159 5.96075e-17 1.29464"]
+"motor_knee_left" -> "knee_actuation_2"
+"knee_actuation_2" -> "transmission_knee_left" [label="xyz: -0.0482963 0.012941 -0.038 \nrpy: -9.66903e-15 3.03795e-16 -2.56247e-14"]
+"transmission_knee_left" -> "knee_assembly_6d_1_2"
+"knee_assembly_6d_1_2" -> "closedloop_knee_left_B_frame" [label="xyz: 9.99201e-16 0.0781567 -0.005 \nrpy: -1.5708 2.47432e-19 -5.36078e-16"]
+"closedloop_knee_left_B_frame" -> "closedloop_knee_left_B"
+"hip_z_axis_2_leg_assembly" -> "hipz_right" [label="xyz: -3.73312e-15 7.45096e-15 -0.12225 \nrpy: -5.97695e-14 -5.25119e-14 -0.010604"]
+"hipz_right" -> "hip_x_axis"
+"hip_x_axis" -> "hipx_right" [label="xyz: -0.048 9.34343e-17 -0.138 \nrpy: 1.5708 9.81437e-14 -1.5708"]
+"hipx_right" -> "hip_y_axis"
+"hip_y_axis" -> "hipy_right" [label="xyz: 0.01 2.77556e-16 -0.0775 \nrpy: 0 1.5708 1.21403e-13"]
+"hipy_right" -> "tigh_assembly"
+"tigh_assembly" -> "knee_right" [label="xyz: 0.17 5.55112e-17 0.0065 \nrpy: 3.14159 -9.38026e-16 -1.5708"]
+"knee_right" -> "shin_assembly"
+"shin_assembly" -> "ankley_right" [label="xyz: 0.25 2.70617e-14 4.13905e-15 \nrpy: 3.14159 -1.9673e-14 1.5708"]
+"ankley_right" -> "ankle_assembly"
+"ankle_assembly" -> "anklex_right" [label="xyz: -0.0165 0.02 -0.0165 \nrpy: 1.5708 -1.00864e-13 1.5708"]
+"anklex_right" -> "foot_assembly"
+"foot_assembly" -> "foot_left_frame" [label="xyz: 0.023 -1.4732e-16 0.015 \nrpy: 0 1.5708 3.14159"]
+"foot_left_frame" -> "foot_left"
+"foot_assembly" -> "right_shperical_foot_1" [label="xyz: 0.01 0.036 0.0836433 \nrpy: 1.5708 -1.31961e-14 -3.14159"]
+"right_shperical_foot_1" -> "long_axis_assembly_6d"
+"long_axis_assembly_6d" -> "closedloop_ankle_right_1B_frame" [label="xyz: 0.122495 -2.77556e-17 -1.11022e-16 \nrpy: -1.5708 -7.77156e-16 -1.5708"]
+"closedloop_ankle_right_1B_frame" -> "closedloop_ankle_right_1B"
+"foot_assembly" -> "right_spherical_foot_2" [label="xyz: 0.01 -0.036 0.0836433 \nrpy: -1.5708 -1.40738e-14 -3.14159"]
+"right_spherical_foot_2" -> "small_axis_assembly_6d"
+"small_axis_assembly_6d" -> "closedloop_ankle_right_2B_frame" [label="xyz: 0.082495 1.11022e-16 1.31839e-16 \nrpy: 1.5708 3.33067e-16 1.5708"]
+"closedloop_ankle_right_2B_frame" -> "closedloop_ankle_right_2B"
+"shin_assembly" -> "free_knee_right" [label="xyz: -0.0600003 -0.0399977 0.002 \nrpy: 3.14159 5.68243e-14 1.57071"]
+"free_knee_right" -> "knee_assembly_6d_2"
+"knee_assembly_6d_2" -> "closedloop_knee_right_A_frame" [label="xyz: 0.108833 -6.93889e-16 -0.0155 \nrpy: -1.5708 -6.10623e-15 -1.5708"]
+"closedloop_knee_right_A_frame" -> "closedloop_knee_right_A"
+"shin_assembly" -> "motor_ankle1_right" [label="xyz: 0.051 8.16014e-15 -0.001 \nrpy: -5.38838e-14 -2.81622e-14 9.28406e-14"]
+"motor_ankle1_right" -> "ankle_actuator_assembly"
+"ankle_actuator_assembly" -> "right_spherical_ankle_1" [label="xyz: 0.0164277 0.0251024 -0.024 \nrpy: -2.71804e-16 -1.92589e-16 -1.7047e-14"]
+"right_spherical_ankle_1" -> "long_axis_assembly_6d_2"
+"long_axis_assembly_6d_2" -> "closedloop_ankle_right_1A_frame" [label="xyz: 0.122495 5.55112e-17 1.11022e-16 \nrpy: 1.5708 -0 -1.5708"]
+"closedloop_ankle_right_1A_frame" -> "closedloop_ankle_right_1A"
+"shin_assembly" -> "motor_ankle2_right" [label="xyz: 0.131946 1.72362e-14 0.034 \nrpy: 3.14159 5.37607e-14 1.5708"]
+"motor_ankle2_right" -> "ankle_actuator_assembly_2"
+"ankle_actuator_assembly_2" -> "right_spherical_ankle_2" [label="xyz: 0.0164277 0.0251024 -0.024 \nrpy: 3.14159 4.68345e-15 1.5708"]
+"right_spherical_ankle_2" -> "small_axis_assembly_6d_2"
+"small_axis_assembly_6d_2" -> "closedloop_ankle_right_2A_frame" [label="xyz: 0.082495 2.77556e-17 -3.747e-16 \nrpy: 1.5708 1.16573e-14 -1.5708"]
+"closedloop_ankle_right_2A_frame" -> "closedloop_ankle_right_2A"
+"tigh_assembly" -> "motor_knee_right" [label="xyz: 3.46945e-18 0 -0.052 \nrpy: -3.14159 -6.76087e-15 -2.04743"]
+"motor_knee_right" -> "knee_actuation"
+"knee_actuation" -> "transmission_knee_right" [label="xyz: -0.0482963 0.012941 -0.038 \nrpy: 9.67441e-15 -3.14778e-16 3.14159"]
+"transmission_knee_right" -> "knee_assembly_6d_1"
+"knee_assembly_6d_1" -> "closedloop_knee_right_B_frame" [label="xyz: -5.55112e-17 0.0781567 -0.005 \nrpy: 1.5708 -1.89803e-19 -7.11764e-15"]
+"closedloop_knee_right_B_frame" -> "closedloop_knee_right_B"
+"hip_z_axis_2_leg_assembly" -> "torso_frame" [label="xyz: 0.00121943 0.114994 -0.069 \nrpy: -6.0475e-14 -5.33988e-14 -0.010604"]
+"torso_frame" -> "torso"
+}
