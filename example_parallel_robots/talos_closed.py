@@ -80,20 +80,7 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
 
     # * Adding corresponding visual and collision models
     alpha = 0
-    bar_length_bottom = bar_length * alpha
     bar_length_top = bar_length * (1 - alpha)
-
-    # bar_free = hppfcl.Box(thickness, bar_width, bar_length_bottom)
-    # CMrod = I4.copy()
-    # CMrod.translation = np.array([0, 0, bar_length_bottom / 2])
-    # half_rod_bottom_right = pin.GeometryObject("half_rod_right", id_C_right_Y, CMrod, bar_free)
-    # color = [1, 0, 0, 1]
-    # half_rod_bottom_right.meshColor = np.array(color)
-    # half_rod_bottom_left = pin.GeometryObject("half_rod_left", id_C_left_Y, CMrod, bar_free)
-    # color = [0, 1, 0, 1]
-    # half_rod_bottom_left.meshColor = np.array(color)
-    # visual_model.addGeometryObject(half_rod_bottom_right)
-    # visual_model.addGeometryObject(half_rod_bottom_left)
 
     ## Adding new joints and links for the parallel actuation
     # Adding corresponding Geometry objects using hpp-fcl
