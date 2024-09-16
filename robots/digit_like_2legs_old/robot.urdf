@@ -1,0 +1,1226 @@
+<robot name="onshape">
+<link name="torso">
+<visual>
+<origin xyz="-3.6658488180179105565e-18 2.0816681711721685133e-17 0.059867854479678836443" rpy="-6.1232339957367660359e-17 -0 1.570796326794896558" />
+<geometry>
+<mesh filename="package:///torso.stl"/>
+</geometry>
+<material name="torso_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-3.6658488180179105565e-18 2.0816681711721685133e-17 0.059867854479678836443" rpy="-6.1232339957367660359e-17 -0 1.570796326794896558" />
+<geometry>
+<mesh filename="package:///torso.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="-4.323244991970371108e-18 2.1521404452081105239e-17 0.070603948746371325562" rpy="0 0 0"/>
+<mass value="3.2452322404414171153" />
+<inertia ixx="0.012163262961236530682" ixy="0"  ixz="1.2921033060725045034e-19" iyy="0.0040573041803173628961" iyz="0" izz="0.010053098125184017561" />
+</inertial>
+</link>
+
+<link name="hip">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="hip_frame" type="fixed">
+<origin xyz="2.4027501270446886779e-19 -1.626303258728255688e-19 0.0024999999999999996184" rpy="2.8421709430404007435e-14 3.0814879110196404233e-31 0" />
+<parent link="torso" />
+<child link="hip" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<link name="hip_y">
+<visual>
+<origin xyz="0.1070657929734565722 0 -0.035199999999999995182" rpy="-1.570796326794896558 -1.1844937103675576483e-32 1.4161262230606110952e-20" />
+<geometry>
+<mesh filename="package:///hip_y.stl"/>
+</geometry>
+<material name="hip_y_material">
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.1070657929734565722 0 -0.035199999999999995182" rpy="-1.570796326794896558 -1.1844937103675576483e-32 1.4161262230606110952e-20" />
+<geometry>
+<mesh filename="package:///hip_y.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="0.015578666288194945033 -1.2357431137270556961e-07 -0.034149457045324432825" rpy="0 0 0"/>
+<mass value="1.2895238899898622265" />
+<inertia ixx="0.00089621011138626526914" ixy="-1.7957438648414495318e-09"  ixz="3.2112420914059134399e-05" iyy="0.0010420724953831758935" iyz="3.049249647458305054e-09" izz="0.0010213484696825509291" />
+</inertial>
+</link>
+
+<link name="hip_x">
+<visual>
+<origin xyz="0 0 -0.054400000000000003908" rpy="1.570796326794896558 1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///hip_x.stl"/>
+</geometry>
+<material name="hip_x_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.054400000000000003908" rpy="1.570796326794896558 1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///hip_x.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="0.0023378176535870068449 -8.4710947525755844375e-19 -0.045216753463575065641" rpy="0 0 0"/>
+<mass value="1.4197410037164888141" />
+<inertia ixx="0.0014949229305128526255" ixy="-6.9793458158034925278e-22"  ixz="-1.2476184392984375319e-05" iyy="0.0013017541081209297628" iyz="-4.0022934241776067926e-23" izz="0.00094724669336309881909" />
+</inertial>
+</link>
+
+<link name="hip_z">
+<visual>
+<origin xyz="-0.11999999999999999556 -1.3877787807814456755e-17 -0.069999999999999992784" rpy="-1.570796326794896558 5.0130689015175087756e-19 -8.4215724036254150557e-19" />
+<geometry>
+<mesh filename="package:///hip_z.stl"/>
+</geometry>
+<material name="hip_z_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.11999999999999999556 -1.3877787807814456755e-17 -0.069999999999999992784" rpy="-1.570796326794896558 5.0130689015175087756e-19 -8.4215724036254150557e-19" />
+<geometry>
+<mesh filename="package:///hip_z.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="-0.059999999999999983902 -1.3619213780776531285e-17 -0.021999999999999991784" rpy="0 0 0"/>
+<mass value="3.8932756153047387571" />
+<inertia ixx="0.0040205863361596526698" ixy="1.1914904364189343786e-19"  ixz="1.0811943767928000132e-19" iyy="0.014779167671256707509" iyz="-4.4307834023949588709e-20" izz="0.017543523742211356714" />
+</inertial>
+</link>
+
+<link name="shin">
+<visual>
+<origin xyz="1.3877787807814456755e-17 2.7755575615628913511e-17 -0.025000000000000008327" rpy="-1.570796326794896558 3.8615053551073672305e-20 7.9988785258603199007e-18" />
+<geometry>
+<mesh filename="package:///shin.stl"/>
+</geometry>
+<material name="shin_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="1.3877787807814456755e-17 2.7755575615628913511e-17 -0.025000000000000008327" rpy="-1.570796326794896558 3.8615053551073672305e-20 7.9988785258603199007e-18" />
+<geometry>
+<mesh filename="package:///shin.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="0.086542930154570346657 0.024349627108824760391 -0.025000000824260217025" rpy="0 0 0"/>
+<mass value="0.5557814093331634453" />
+<inertia ixx="0.0004664406681127271294" ixy="-0.00088329043391741611253"  ixz="6.3639817824118843526e-13" iyy="0.009055909587116245385" iyz="1.1189385821089145658e-11" izz="0.0093490826129847721948" />
+</inertial>
+</link>
+
+<link name="tarsus">
+<visual>
+<origin xyz="-0.11600000000000042222 -0.11491398237765959589 -1.249000902703301108e-16" rpy="3.1415926535897926719 1.570796326794896336 0" />
+<geometry>
+<mesh filename="package:///actuator_molet.stl"/>
+</geometry>
+<material name="actuator_molet_material">
+<color rgba="0.91764705882352937127 0.91764705882352937127 0.91764705882352937127 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.11600000000000042222 -0.11491398237765959589 -1.249000902703301108e-16" rpy="3.1415926535897926719 1.570796326794896336 0" />
+<geometry>
+<mesh filename="package:///actuator_molet.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="1.0408340855860842566e-17 0.0010860176223413953167 -1.3877787807814456755e-17" rpy="-1.570796326794896558 -1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///tarsus.stl"/>
+</geometry>
+<material name="tarsus_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="1.0408340855860842566e-17 0.0010860176223413953167 -1.3877787807814456755e-17" rpy="-1.570796326794896558 -1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///tarsus.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="-0.083086291902174758128 -0.020033778925019916917 2.8736095503356731052e-08" rpy="0 0 0"/>
+<mass value="0.74284619422086228813" />
+<inertia ixx="0.00039818835112512198249" ixy="-0.00054213231673499973854"  ixz="-5.2637644316165951714e-10" iyy="0.007985191784274097912" iyz="1.2685116127592519424e-10" izz="0.0079848716361182459078" />
+</inertial>
+</link>
+
+<link name="foot_roll">
+<visual>
+<origin xyz="0.32599840000000002149 0.039744000000000001549 -0.013999999999999887534" rpy="-1.570796326794896558 -1.570796326794896336 0" />
+<geometry>
+<mesh filename="package:///foot_roll.stl"/>
+</geometry>
+<material name="foot_roll_material">
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.32599840000000002149 0.039744000000000001549 -0.013999999999999887534" rpy="-1.570796326794896558 -1.570796326794896336 0" />
+<geometry>
+<mesh filename="package:///foot_roll.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="-2.1851523928205735411e-08 -0.0014449033387292573027 -0.013999993222565322581" rpy="0 0 0"/>
+<mass value="0.0027067106871796996204" />
+<inertia ixx="1.8232396912107815056e-07" ixy="1.245649487549639627e-13"  ixz="-3.0177862000987832938e-13" iyy="1.1958745424438041694e-07" iyz="4.5807687217163734993e-14" izz="1.0944659228682657435e-07" />
+</inertial>
+</link>
+
+<link name="foot_part">
+<visual>
+<origin xyz="-0.0011288304490429806881 0 0.0090799999999999769784" rpy="1.570796326794896558 -1.4779105403993040743e-17 5.0003939490505958977e-19" />
+<geometry>
+<mesh filename="package:///foot_part.stl"/>
+</geometry>
+<material name="foot_part_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.0011288304490429806881 0 0.0090799999999999769784" rpy="1.570796326794896558 -1.4779105403993040743e-17 5.0003939490505958977e-19" />
+<geometry>
+<mesh filename="package:///foot_part.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="-0.04229663135485713793 -6.7228492031229705192e-10 0.011797351827666179708" rpy="0 0 0"/>
+<mass value="0.3309516742025366276" />
+<inertia ixx="0.0010118322945958278195" ixy="2.5339652328962750394e-12"  ixz="-0.00049446274168876572577" iyy="0.001227680104999263281" iyz="7.2849212763520957282e-12" izz="0.00051045333461432855493" />
+</inertial>
+</link>
+
+<link name="foot">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="foot_frame" type="fixed">
+<origin xyz="-0.05589761960057725021 0 0.014375929767894368716" rpy="3.1415926535897926719 1.0420837364882549192 -3.141592653589793116" />
+<parent link="foot_part" />
+<child link="foot" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<link name="toe_b_1/2">
+<visual>
+<origin xyz="-0.054171488011523757922 -0.043924303555988974956 4.9999999999855715416e-05" rpy="-1.570796326794896558 -1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///toe_b_1_2.stl"/>
+</geometry>
+<material name="toe_b_1/2_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.054171488011523757922 -0.043924303555988974956 4.9999999999855715416e-05" rpy="-1.570796326794896558 -1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///toe_b_1_2.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="1.9773367173850385603e-17 -2.7755575615628913511e-17 -0.059975000000000104616" rpy="0 0 0"/>
+<mass value="0.0060293446207695467268" />
+<inertia ixx="7.2533028348992173594e-06" ixy="-5.5718104143754692192e-23"  ixz="-9.6052251408486654215e-23" iyy="7.2533028348992097361e-06" iyz="1.0470170739629290831e-22" izz="4.8234756966146925458e-08" />
+</inertial>
+</link>
+
+<link name="closedloop3_B">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="closedloop3_B_frame" type="fixed">
+<origin xyz="1.3877787807814456755e-17 -1.1102230246251565404e-16 -0.11995000000000012597" rpy="-3.141592653589793116 -1.4358405587370260483e-17 1.570796326794896558" />
+<parent link="toe_b_1/2" />
+<child link="closedloop3_B" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<joint name="spherical_free_foot1" type="revolute">
+<origin xyz="-0.0091288304490430710603 -0.01427599999999996927 0.05281360000000012711" rpy="1.570796326794896558 0.16707679024231919529 -1.5707963267948981123" />
+<parent link="foot_part" />
+<child link="toe_b_1/2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="toe_b_1/2_2">
+<visual>
+<origin xyz="-0.054171488011523785677 0.043924303555988863934 -0.12000000000000002331" rpy="1.570796326794896558 1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///toe_b_1_2.stl"/>
+</geometry>
+<material name="toe_b_1/2_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.054171488011523785677 0.043924303555988863934 -0.12000000000000002331" rpy="1.570796326794896558 1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///toe_b_1_2.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="-3.2506612012986713131e-19 -8.3266726846886740532e-17 -0.059975000000000062983" rpy="0 0 0"/>
+<mass value="0.0060293446207695467268" />
+<inertia ixx="7.2533028348992190535e-06" ixy="2.4242881996009424434e-23"  ixz="6.8112914886745958567e-23" iyy="7.2533028348992097361e-06" iyz="-6.3923152036408267432e-22" izz="4.8234756966146912223e-08" />
+</inertial>
+</link>
+
+<link name="closedloop2_B">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="closedloop2_B_frame" type="fixed">
+<origin xyz="-2.7755575615628913511e-17 -1.1102230246251565404e-16 -0.11995000000000013984" rpy="3.141592653589793116 8.8295612703919830242e-17 1.570796326794896558" />
+<parent link="toe_b_1/2_2" />
+<child link="closedloop2_B" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<joint name="spherical_free_foot2" type="revolute">
+<origin xyz="-0.0091288304490430155491 0.014275999999999997025 0.052813600000000238133" rpy="1.57079632679489678 0.16707679024232066634 -1.570796326794896558" />
+<parent link="foot_part" />
+<child link="toe_b_1/2_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="free_foot2" type="revolute">
+<origin xyz="-2.7755575615628913511e-17 0.008999999999999785949 -0.014000000000000012434" rpy="-1.570796326794896558 0.0018265628936102844011 -3.1415926535897913396" />
+<parent link="foot_roll" />
+<child link="foot_part" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="free_foot1" type="revolute">
+<origin xyz="-0.325998400000000077 -0.038657982377658606232 -0.014000000000000054068" rpy="-3.1415926535897917837 -1.2907497451769181967e-15 2.7453650200287231797" />
+<parent link="tarsus" />
+<child link="foot_roll" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="crank">
+<visual>
+<origin xyz="0.088799999999999990052 0.027200000000000001954 0.02999999999999999889" rpy="-1.570796326794896558 -1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///crank.stl"/>
+</geometry>
+<material name="crank_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.088799999999999990052 0.027200000000000001954 0.02999999999999999889" rpy="-1.570796326794896558 -1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///crank.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="-4.1576481395356361778e-17 0.015221680213895987313 -0.00095148915120264396239" rpy="0 0 0"/>
+<mass value="0.0045332434126214744829" />
+<inertia ixx="2.0190313503504425919e-06" ixy="-7.6258349421984413952e-26"  ixz="-3.9570393731079925836e-24" iyy="3.8254267160843608508e-07" iyz="-9.1875323763544920682e-09" izz="2.3968139039834545946e-06" />
+</inertial>
+</link>
+
+<link name="toe_b_2/2">
+<visual>
+<origin xyz="-0.054171488011523771799 -0.043924303555988947201 -0.12000000000000005107" rpy="-1.570796326794896558 -1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///toe_b_2_2.stl"/>
+</geometry>
+<material name="toe_b_2/2_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.054171488011523771799 -0.043924303555988947201 -0.12000000000000005107" rpy="-1.570796326794896558 -1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///toe_b_2_2.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="2.0692449911346088542e-17 0 -0.059974999999999986655" rpy="0 0 0"/>
+<mass value="0.0060293446207695345837" />
+<inertia ixx="7.2533028348992021128e-06" ixy="-1.540297775809409216e-23"  ixz="1.572186451617625276e-25" iyy="7.2533028348991885603e-06" iyz="5.0031936960781365765e-24" izz="4.8234756966146826196e-08" />
+</inertial>
+</link>
+
+<link name="closedloop2_A">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="closedloop2_A_frame" type="fixed">
+<origin xyz="5.5511151231257827021e-17 -3.4694469519536141888e-18 -0.11994999999999994555" rpy="3.4063828878721196103e-16 -2.2014753343827181929e-20 6.3501031464105377993e-19" />
+<parent link="toe_b_2/2" />
+<child link="closedloop2_A" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<joint name="spherical_free_shin2" type="revolute">
+<origin xyz="0 0.056999999999999884093 0.0025000000000000160982" rpy="1.570796326794896558 -0.043999020249819477402 1.5707963267948952257" />
+<parent link="crank" />
+<child link="toe_b_2/2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="motor_shin1" type="revolute">
+<origin xyz="-0.088799999999999962297 -0.026113982377658606637 0.029999999999999978073" rpy="3.141592653589793116 1.1588285902909991479e-15 0.70691495434820683652" />
+<parent link="tarsus" />
+<child link="crank" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="crank_2">
+<visual>
+<origin xyz="0.088800000000000045564 0.027200000000000001954 0.029999999999999985012" rpy="-1.570796326794896558 -1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///crank.stl"/>
+</geometry>
+<material name="crank_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.088800000000000045564 0.027200000000000001954 0.029999999999999985012" rpy="-1.570796326794896558 -1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///crank.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="2.7827947743873951804e-17 0.015221680213895987313 -0.00095148915120266130963" rpy="0 0 0"/>
+<mass value="0.0045332434126214744829" />
+<inertia ixx="2.0190313503504417449e-06" ixy="-5.8520357220370701274e-28"  ixz="3.4078129128914773589e-26" iyy="3.825426716084359792e-07" iyz="-9.1875323763544904139e-09" izz="2.3968139039834554417e-06" />
+</inertial>
+</link>
+
+<link name="toe_b_2/2_2">
+<visual>
+<origin xyz="-0.054171488011523771799 -0.043924303555988961079 -0.11999999999999994005" rpy="-1.570796326794896558 -1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///toe_b_2_2.stl"/>
+</geometry>
+<material name="toe_b_2/2_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.054171488011523771799 -0.043924303555988961079 -0.11999999999999994005" rpy="-1.570796326794896558 -1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///toe_b_2_2.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="6.9105454032238442154e-18 -6.9388939039072283776e-18 -0.059974999999999882572" rpy="0 0 0"/>
+<mass value="0.0060293446207695345837" />
+<inertia ixx="7.2533028348991987247e-06" ixy="-1.8729968021574703138e-23"  ixz="-2.8181333010117856553e-25" iyy="7.2533028348991919484e-06" iyz="-1.5598026945787522917e-23" izz="4.8234756966146812962e-08" />
+</inertial>
+</link>
+
+<link name="closedloop3_A">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="closedloop3_A_frame" type="fixed">
+<origin xyz="-5.5511151231257827021e-17 0 -0.11994999999999994555" rpy="5.4938147692151912312e-16 3.88885177613581823e-20 -1.9295956924994820687e-18" />
+<parent link="toe_b_2/2_2" />
+<child link="closedloop3_A" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<joint name="spherical_free_shin1" type="revolute">
+<origin xyz="5.5511151231257827021e-17 0.057000000000000050626 0.0025000000000000022204" rpy="-1.57079632679489678 0.040608021976129206332 1.5707963267948990005" />
+<parent link="crank_2" />
+<child link="toe_b_2/2_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="motor_shin2" type="revolute">
+<origin xyz="-0.08880000000000000393 -0.026113982377658606637 -0.030000000000000012768" rpy="8.9897733374673702766e-16 -1.372988716961691066e-15 -2.4346776992415857244" />
+<parent link="tarsus" />
+<child link="crank_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="toe_a_1/2">
+<visual>
+<origin xyz="0.056794565202878954935 -0.040773406646044452195 4.9999999999994493294e-05" rpy="-1.570796326794896558 -1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///toe_a_1_2.stl"/>
+</geometry>
+<material name="toe_a_1/2_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.056794565202878954935 -0.040773406646044452195 4.9999999999994493294e-05" rpy="-1.570796326794896558 -1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///toe_a_1_2.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="-5.7063895794484359958e-17 6.9388939039072283776e-18 -0.099974999999999966671" rpy="0 0 0"/>
+<mass value="0.015704036277131967758" />
+<inertia ixx="5.241876769505099447e-05" ixy="1.8472966973059125198e-22"  ixz="3.9246348623489026058e-21" iyy="5.2418767695050980918e-05" iyz="-3.1992107165520627842e-21" izz="1.9630045346413525667e-07" />
+</inertial>
+</link>
+
+<link name="closedloop1_B">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="closedloop1_B_frame" type="fixed">
+<origin xyz="2.7755575615628913511e-17 8.3266726846886740532e-17 -0.19995000000000029416" rpy="-3.141592653589793116 7.4547420754140838791e-17 3.141592653589793116" />
+<parent link="toe_a_1/2" />
+<child link="closedloop1_B" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<joint name="spherical_free_knee" type="revolute">
+<origin xyz="0.11418993498637033945 0.036206749731294562977 -6.9388939039072283776e-17" rpy="-1.57079632679489678 -0.0024782974323323777623 3.1415926535897926719" />
+<parent link="tarsus" />
+<child link="toe_a_1/2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="free_knee" type="revolute">
+<origin xyz="0.39567486363081377787 0.053875166733171803157 -0.025000000000000008327" rpy="-3.1415926535897913396 -5.6991269667964937762e-16 -1.1259608736106334614" />
+<parent link="shin" />
+<child link="tarsus" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="motor_knee" type="revolute">
+<origin xyz="-0.11999999999999313993 1.8457457784393227485e-15 9.7144514654701197287e-17" rpy="-3.1415926535897900074 -2.8790473541599528652e-15 -1.5679404125952072224" />
+<parent link="hip_z" />
+<child link="shin" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="motor_hip_y" type="revolute">
+<origin xyz="-0.025999999999999967581 -1.3877787807814456755e-17 -0.054399999999999976152" rpy="1.5707963267948970021 -1.3059816663625809507 1.570796326794901665" />
+<parent link="hip_x" />
+<child link="hip_z" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="toe_a_2/2">
+<visual>
+<origin xyz="0.056794565202878989629 -0.040773406646044452195 -0.2000000000000000111" rpy="-1.570796326794896558 -1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///toe_a_2_2.stl"/>
+</geometry>
+<material name="toe_a_2/2_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.056794565202878989629 -0.040773406646044452195 -0.2000000000000000111" rpy="-1.570796326794896558 -1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///toe_a_2_2.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="-7.2512901683149383743e-18 -6.9388939039072283776e-18 -0.099974999999999938916" rpy="0 0 0"/>
+<mass value="0.015704036277131950411" />
+<inertia ixx="5.2418767695050838616e-05" ixy="-4.4771008552146945447e-22"  ixz="-2.0244450031833117512e-24" iyy="5.2418767695050811511e-05" iyz="-1.6729487195066322561e-22" izz="1.9630045346413507138e-07" />
+</inertial>
+</link>
+
+<link name="closedloop1_A">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="closedloop1_A_frame" type="fixed">
+<origin xyz="6.9388939039072283776e-17 -1.3877787807814456755e-17 -0.1999499999999999611" rpy="-3.788813618164422701e-16 -6.1252745321360377712e-19 3.1025899480884559963e-18" />
+<parent link="toe_a_2/2" />
+<child link="closedloop1_A" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<joint name="spherical_free_hip" type="revolute">
+<origin xyz="0.033685999999999993726 1.3877787807814456755e-17 -0.054399999999999983091" rpy="-1.5707963267948983344 -1.5498622103990022936 3.1415926535893028415" />
+<parent link="hip_x" />
+<child link="toe_a_2/2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="motor_hip_z" type="revolute">
+<origin xyz="0.052665792973456568293 1.3877787807814456755e-17 -0.035200000000000009059" rpy="-1.5707963267948952257 -0.013078473573069489613 1.5707963267948958919" />
+<parent link="hip_y" />
+<child link="hip_x" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="motor_hip_x" type="revolute">
+<origin xyz="-0.02999999999999999889 -0.072800000000000003597 0.059867854479678822566" rpy="1.5707963267948932273 1.5524862860405099774 1.5707963267948932273" />
+<parent link="torso" />
+<child link="hip_y" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="hip_y_2">
+<visual>
+<origin xyz="0.10440000000000000668 1.3877787807814456755e-17 -0.035199999999999995182" rpy="-1.570796326794896558 1.3206928271447807755e-33 4.5540479520856111524e-18" />
+<geometry>
+<mesh filename="package:///hip_y.stl"/>
+</geometry>
+<material name="hip_y_material">
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.10440000000000000668 1.3877787807814456755e-17 -0.035199999999999995182" rpy="-1.570796326794896558 1.3206928271447807755e-33 4.5540479520856111524e-18" />
+<geometry>
+<mesh filename="package:///hip_y.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="0.012912873314738379515 -1.2357431135924311911e-07 -0.034149457045324432825" rpy="0 0 0"/>
+<mass value="1.2895238899898622265" />
+<inertia ixx="0.00089621011138626526914" ixy="-1.7957438648349063264e-09"  ixz="3.2112420914059134399e-05" iyy="0.0010420724953831758935" iyz="3.0492496474584510513e-09" izz="0.0010213484696825509291" />
+</inertial>
+</link>
+
+<link name="hip_x_2">
+<visual>
+<origin xyz="-0.0031172266567815881677 -1.3877787807814456755e-17 -0.054400000000000003908" rpy="1.570796326794896558 1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///hip_x.stl"/>
+</geometry>
+<material name="hip_x_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.0031172266567815881677 -1.3877787807814456755e-17 -0.054400000000000003908" rpy="1.570796326794896558 1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///hip_x.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="-0.00077940900319458132281 -1.4724536241557834134e-17 -0.045216753463575065641" rpy="0 0 0"/>
+<mass value="1.4197410037164888141" />
+<inertia ixx="0.0014949229305128526255" ixy="4.6872303244728068779e-22"  ixz="-1.2476184392984378707e-05" iyy="0.0013017541081209297628" iyz="-3.327084348656620667e-24" izz="0.00094724669336309881909" />
+</inertial>
+</link>
+
+<link name="hip_z_2">
+<visual>
+<origin xyz="3.4694469519536141888e-18 0 -0.070000000000000020539" rpy="-1.570796326794896558 -4.2743437946246598917e-18 -2.7102170661543854729e-17" />
+<geometry>
+<mesh filename="package:///hip_z.stl"/>
+</geometry>
+<material name="hip_z_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="3.4694469519536141888e-18 0 -0.070000000000000020539" rpy="-1.570796326794896558 -4.2743437946246598917e-18 -2.7102170661543854729e-17" />
+<geometry>
+<mesh filename="package:///hip_z.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="0.060000000000000011657 -1.2984168507588390269e-18 -0.02200000000000001954" rpy="0 0 0"/>
+<mass value="3.8932756153047387571" />
+<inertia ixx="0.0040205863361596526698" ixy="4.8686059526259438351e-19"  ixz="-2.2997019692369700816e-20" iyy="0.014779167671256707509" iyz="-7.3463881046883916766e-20" izz="0.017543523742211356714" />
+</inertial>
+</link>
+
+<link name="shin_2">
+<visual>
+<origin xyz="-1.3877787807814456755e-17 0 -0.024999999999999994449" rpy="1.570796326794896558 3.8794969757206229507e-19 1.6969176157191160305e-17" />
+<geometry>
+<mesh filename="package:///shin.stl"/>
+</geometry>
+<material name="shin_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-1.3877787807814456755e-17 0 -0.024999999999999994449" rpy="1.570796326794896558 3.8794969757206229507e-19 1.6969176157191160305e-17" />
+<geometry>
+<mesh filename="package:///shin.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="0.086542930154570318901 -0.024349627108824732635 -0.024999999175739785751" rpy="0 0 0"/>
+<mass value="0.5557814093331634453" />
+<inertia ixx="0.00046644066811272723782" ixy="0.00088329043391741654621"  ixz="-6.3639814872641654365e-13" iyy="0.009055909587116245385" iyz="1.1189385792422117471e-11" izz="0.0093490826129847721948" />
+</inertial>
+</link>
+
+<link name="tarsus_2">
+<visual>
+<origin xyz="-9.7144514654701197287e-17 0.001086017622341506339 -1.3877787807814456755e-17" rpy="-1.570796326794896558 -1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///tarsus.stl"/>
+</geometry>
+<material name="tarsus_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-9.7144514654701197287e-17 0.001086017622341506339 -1.3877787807814456755e-17" rpy="-1.570796326794896558 -1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///tarsus.stl"/>
+</geometry>
+</collision>
+<visual>
+<origin xyz="-0.061600000000000473821 -0.11491398237765759749 9.7144514654701197287e-17" rpy="3.1415926535897922278 -1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///actuator_molet.stl"/>
+</geometry>
+<material name="actuator_molet_material">
+<color rgba="0.91764705882352937127 0.91764705882352937127 0.91764705882352937127 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.061600000000000473821 -0.11491398237765759749 9.7144514654701197287e-17" rpy="3.1415926535897922278 -1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///actuator_molet.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="-0.083086291902174855273 -0.020033778925019798955 2.8736095531489683007e-08" rpy="0 0 0"/>
+<mass value="0.74284619422086228813" />
+<inertia ixx="0.00039818835112512057303" ixy="-0.00054213231673499963012"  ixz="-5.2637644302134931593e-10" iyy="0.0079851917842740961773" iyz="1.2685116134668654069e-10" izz="0.0079848716361182493773" />
+</inertial>
+</link>
+
+<link name="foot_roll_2">
+<visual>
+<origin xyz="0.32599840000000002149 0.039744000000000001549 1.249000902703301108e-16" rpy="-1.570796326794896558 -1.570796326794896336 0" />
+<geometry>
+<mesh filename="package:///foot_roll.stl"/>
+</geometry>
+<material name="foot_roll_material">
+<color rgba="0.2313725490196078538 0.38039215686274507888 0.7058823529411765163 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.32599840000000002149 0.039744000000000001549 1.249000902703301108e-16" rpy="-1.570796326794896558 -1.570796326794896336 0" />
+<geometry>
+<mesh filename="package:///foot_roll.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="-2.1851523925528459479e-08 -0.0014449033387292573027 6.7774346913703113731e-09" rpy="0 0 0"/>
+<mass value="0.0027067106871796996204" />
+<inertia ixx="1.8232396912107815056e-07" ixy="1.245649487427083459e-13"  ixz="-3.0177862000960171057e-13" iyy="1.1958745424438052282e-07" iyz="4.5807687215915201683e-14" izz="1.0944659228682654788e-07" />
+</inertial>
+</link>
+
+<link name="foot_part_2">
+<visual>
+<origin xyz="-0.0011288304490429806881 -1.3877787807814456755e-17 0.0090799999999999769784" rpy="-1.570796326794896558 7.131710466813624739e-17 5.7554671843822333963e-19" />
+<geometry>
+<mesh filename="package:///foot_part.stl"/>
+</geometry>
+<material name="foot_part_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.0011288304490429806881 -1.3877787807814456755e-17 0.0090799999999999769784" rpy="-1.570796326794896558 7.131710466813624739e-17 5.7554671843822333963e-19" />
+<geometry>
+<mesh filename="package:///foot_part.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="-0.04229663135485713793 6.7228490639514661388e-10 0.0063626481723337768512" rpy="0 0 0"/>
+<mass value="0.3309516742025366276" />
+<inertia ixx="0.0010118322945958278195" ixy="-2.5339652307009566769e-12"  ixz="0.00049446274168876572577" iyy="0.0012276801049992637146" iyz="7.2849212808546126702e-12" izz="0.00051045333461432877177" />
+</inertial>
+</link>
+
+<link name="foot_left">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="foot_left_frame" type="fixed">
+<origin xyz="-0.05589761960057737511 0 0.0037840702321053631962" rpy="-3.2399764691790045377e-15 -1.0420837364882542531 3.141592653589793116" />
+<parent link="foot_part_2" />
+<child link="foot_left" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<link name="toe_b_1/2_3">
+<visual>
+<origin xyz="-0.054171488011523799555 0.043924303555989085979 -0.1199999999999999678" rpy="1.570796326794896558 1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///toe_b_1_2.stl"/>
+</geometry>
+<material name="toe_b_1/2_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.054171488011523799555 0.043924303555989085979 -0.1199999999999999678" rpy="1.570796326794896558 1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///toe_b_1_2.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="-2.1127200221171822223e-17 1.3877787807814456755e-16 -0.059975000000000014411" rpy="0 0 0"/>
+<mass value="0.0060293446207695467268" />
+<inertia ixx="7.2533028348992173594e-06" ixy="3.9256183068655385696e-23"  ixz="3.3325163683921331857e-23" iyy="7.2533028348992097361e-06" iyz="5.4622667054144820813e-22" izz="4.8234756966146925458e-08" />
+</inertial>
+</link>
+
+<link name="closedloop4_A">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="closedloop4_A_frame" type="fixed">
+<origin xyz="-2.7755575615628913511e-17 2.2204460492503130808e-16 -0.11995000000000013984" rpy="-3.1415926535897926719 1.4315792633067183667e-15 1.57079632679489678" />
+<parent link="toe_b_1/2_3" />
+<child link="closedloop4_A" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<joint name="spherical_free_foot1_left" type="revolute">
+<origin xyz="-0.0091288304490430571825 -0.014276000000000010903 -0.034653600000000173154" rpy="1.570796326794896558 0.16726750545934601644 -1.57079632679489678" />
+<parent link="foot_part_2" />
+<child link="toe_b_1/2_3" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="toe_b_2/2_3">
+<visual>
+<origin xyz="-0.054171488011523785677 0.043924303555988863934 5.0000000000119393384e-05" rpy="1.570796326794896558 1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///toe_b_2_2.stl"/>
+</geometry>
+<material name="toe_b_2/2_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.054171488011523785677 0.043924303555988863934 5.0000000000119393384e-05" rpy="1.570796326794896558 1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///toe_b_2_2.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="-1.4314016427057823769e-17 -9.0205620750793968909e-17 -0.059974999999999945022" rpy="0 0 0"/>
+<mass value="0.0060293446207695345837" />
+<inertia ixx="7.2533028348991970306e-06" ixy="-5.8579709519714707534e-23"  ixz="1.3096897008260327522e-23" iyy="7.2533028348991885603e-06" iyz="-2.5032611382562519672e-22" izz="4.8234756966146826196e-08" />
+</inertial>
+</link>
+
+<link name="closedloop5_A">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="closedloop5_A_frame" type="fixed">
+<origin xyz="0 1.1102230246251565404e-16 -0.11995000000000000107" rpy="-3.1415926535897922278 4.1571142832877555497e-15 1.570796326794896558" />
+<parent link="toe_b_2/2_3" />
+<child link="closedloop5_A" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<joint name="spherical_free_foot2_left" type="revolute">
+<origin xyz="-0.0091288304490430710603 0.014276000000000010903 -0.034653600000000173154" rpy="1.570796326794896558 0.16726750545934351844 -1.5707963267948958919" />
+<parent link="foot_part_2" />
+<child link="toe_b_2/2_3" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="free_foot2_left" type="revolute">
+<origin xyz="2.7755575615628913511e-17 0.0090000000000000079936 -1.3877787807814456755e-17" rpy="-1.5707963267948976682 -0.0018265628936090377854 3.1415926535897864547" />
+<parent link="foot_roll_2" />
+<child link="foot_part_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="free_foot1_left" type="revolute">
+<origin xyz="-0.32599839999999896678 -0.038657982377660826678 -2.7755575615628913511e-16" rpy="9.1857826099949105318e-16 2.9669073048643708657e-16 2.7453650200287267324" />
+<parent link="tarsus_2" />
+<child link="foot_roll_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="crank_3">
+<visual>
+<origin xyz="0.088799999999999990052 0.027199999999999946443 0.02999999999999999889" rpy="-1.570796326794896558 -1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///crank.stl"/>
+</geometry>
+<material name="crank_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.088799999999999990052 0.027199999999999946443 0.02999999999999999889" rpy="-1.570796326794896558 -1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///crank.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="-2.7754266594257509499e-17 0.015221680213895930067 -0.00095148915120264754026" rpy="0 0 0"/>
+<mass value="0.0045332434126214744829" />
+<inertia ixx="2.0190313503504417449e-06" ixy="2.2117533841596718678e-26"  ixz="8.6709221296785290134e-25" iyy="3.8254267160843608508e-07" iyz="-9.1875323763544904139e-09" izz="2.3968139039834554417e-06" />
+</inertial>
+</link>
+
+<link name="toe_b_2/2_4">
+<visual>
+<origin xyz="-0.054171488011523716288 0.043924303555988933323 5.0000000000105515596e-05" rpy="1.570796326794896558 1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///toe_b_2_2.stl"/>
+</geometry>
+<material name="toe_b_2/2_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.054171488011523716288 0.043924303555988933323 5.0000000000105515596e-05" rpy="1.570796326794896558 1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///toe_b_2_2.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="6.2489255865127242206e-17 -2.7755575615628913511e-17 -0.0599749999999999589" rpy="0 0 0"/>
+<mass value="0.0060293446207695345837" />
+<inertia ixx="7.2533028348991987247e-06" ixy="-8.3613919664953194488e-24"  ixz="4.0542341691817911855e-25" iyy="7.2533028348991919484e-06" iyz="-4.7073043514861164551e-22" izz="4.8234756966146826196e-08" />
+</inertial>
+</link>
+
+<link name="closedloop4_B">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="closedloop4_B_frame" type="fixed">
+<origin xyz="5.5511151231257827021e-17 1.3877787807814456755e-17 -0.11994999999999989004" rpy="1.6709049170258792098e-16 -3.8336666344612196835e-16 -7.6597093190821181337e-17" />
+<parent link="toe_b_2/2_4" />
+<child link="closedloop4_B" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<joint name="spherical_free_shin2_left" type="revolute">
+<origin xyz="5.5511151231257827021e-17 0.056999999999999995115 0.002500000000000029976" rpy="-1.57079632679489678 -0.027781755534782716366 -1.5707963267949005548" />
+<parent link="crank_3" />
+<child link="toe_b_2/2_4" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="motor_shin1_left" type="revolute">
+<origin xyz="-0.088799999999998935341 -0.02611398237766116015 0.029999999999999887867" rpy="3.141592653589793116 1.1035601505333686801e-15 0.70691495434820739163" />
+<parent link="tarsus_2" />
+<child link="crank_3" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="crank_4">
+<visual>
+<origin xyz="0.088799999999999990052 0.027199999999999946443 0.02999999999999999889" rpy="-1.570796326794896558 -1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///crank.stl"/>
+</geometry>
+<material name="crank_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.088799999999999990052 0.027199999999999946443 0.02999999999999999889" rpy="-1.570796326794896558 -1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///crank.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="-2.7716865275525307547e-17 0.015221680213895930067 -0.00095148915120264396239" rpy="0 0 0"/>
+<mass value="0.0045332434126214744829" />
+<inertia ixx="2.0190313503504417449e-06" ixy="8.7720744229391815641e-28"  ixz="4.6186420935347185963e-25" iyy="3.8254267160843608508e-07" iyz="-9.1875323763544920682e-09" izz="2.3968139039834545946e-06" />
+</inertial>
+</link>
+
+<link name="toe_b_1/2_4">
+<visual>
+<origin xyz="-0.054171488011523771799 0.043924303555988926384 -0.11999999999999999556" rpy="1.570796326794896558 1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///toe_b_1_2.stl"/>
+</geometry>
+<material name="toe_b_1/2_material">
+<color rgba="0.64705882352941179736 0.64705882352941179736 0.64705882352941179736 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.054171488011523771799 0.043924303555988926384 -0.11999999999999999556" rpy="1.570796326794896558 1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///toe_b_1_2.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="1.3461615055677226139e-17 -1.3877787807814456755e-17 -0.059975000000000042166" rpy="0 0 0"/>
+<mass value="0.0060293446207695467268" />
+<inertia ixx="7.2533028348992190535e-06" ixy="1.0979629120308287525e-23"  ixz="1.0118521962653010886e-24" iyy="7.2533028348992080421e-06" iyz="-7.0356252979876690071e-24" izz="4.8234756966146925458e-08" />
+</inertial>
+</link>
+
+<link name="closedloop5_B">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="closedloop5_B_frame" type="fixed">
+<origin xyz="-5.5511151231257827021e-17 -6.9388939039072283776e-18 -0.11995000000000011209" rpy="1.258009249659380946e-16 1.1091975987985855455e-15 -3.141592653589793116" />
+<parent link="toe_b_1/2_4" />
+<child link="closedloop5_B" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<joint name="spherical_free_shin1_left" type="revolute">
+<origin xyz="0 0.056999999999999939604 0.0025000000000000160982" rpy="-1.57079632679489678 -0.027781755534719749373 1.5707963267949012209" />
+<parent link="crank_4" />
+<child link="toe_b_1/2_4" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="motor_shin2_left" type="revolute">
+<origin xyz="-0.088799999999998990852 -0.026113982377661049128 -0.030000000000000130729" rpy="1.4227913028969940573e-16 -1.2435456074704160044e-15 -2.4346776992415866125" />
+<parent link="tarsus_2" />
+<child link="crank_4" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="toe_a_1/2_2">
+<visual>
+<origin xyz="0.056794565202878913301 0.040773406646044431378 -0.19999999999999995559" rpy="1.570796326794896558 1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///toe_a_1_2.stl"/>
+</geometry>
+<material name="toe_a_1/2_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.056794565202878913301 0.040773406646044431378 -0.19999999999999995559" rpy="1.570796326794896558 1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///toe_a_1_2.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="-9.0205537320827901399e-17 -3.4694469519536141888e-17 -0.099974999999999994427" rpy="0 0 0"/>
+<mass value="0.015704036277131967758" />
+<inertia ixx="5.2418767695051021575e-05" ixy="2.8362724361759434242e-23"  ixz="1.9681020995652825703e-21" iyy="5.2418767695050980918e-05" iyz="-5.1793241715970667596e-22" izz="1.9630045346413525667e-07" />
+</inertial>
+</link>
+
+<link name="closedloop6_A">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="closedloop6_A_frame" type="fixed">
+<origin xyz="-8.3266726846886740532e-17 -2.7755575615628913511e-17 -0.19995000000000001661" rpy="-3.141592653589793116 9.3065370271098693317e-16 1.1566469354901175842e-16" />
+<parent link="toe_a_1/2_2" />
+<child link="closedloop6_A" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<joint name="spherical_free_knee_left" type="revolute">
+<origin xyz="0.1141899349863701868 0.036206749731294507466 0" rpy="-1.57079632679489678 0.18921460045656104954 3.1415926535897917837" />
+<parent link="tarsus_2" />
+<child link="toe_a_1/2_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="free_knee_left" type="revolute">
+<origin xyz="0.3956748636308139444 -0.053875166733171664379 -0.024999999999999994449" rpy="2.9138174925510993941e-15 -6.5841678893026028255e-16 1.1443674094310145595" />
+<parent link="shin_2" />
+<child link="tarsus_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="motor_knee_left" type="revolute">
+<origin xyz="0.12000000000000005107 2.8727020762175925483e-15 1.3877787807814456755e-17" rpy="-3.1415926535897917837 3.0163080839021476512e-15 -1.5552457051742081262" />
+<parent link="hip_z_2" />
+<child link="shin_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="motor_hip_y_left" type="revolute">
+<origin xyz="-0.029117226656781597383 1.3877787807814456755e-17 -0.047379470518249228173" rpy="1.5707963267948958919 1.3059816663625891664 1.5707963267949012209" />
+<parent link="hip_x_2" />
+<child link="hip_z_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="toe_a_2/2_2">
+<visual>
+<origin xyz="0.056794565202879003507 0.040773406646044452195 5.0000000000133271172e-05" rpy="1.570796326794896558 1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///toe_a_2_2.stl"/>
+</geometry>
+<material name="toe_a_2/2_material">
+<color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.056794565202879003507 0.040773406646044452195 5.0000000000133271172e-05" rpy="1.570796326794896558 1.570796326794896558 0" />
+<geometry>
+<mesh filename="package:///toe_a_2_2.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="6.9402673665853180814e-18 -6.9388939039072283776e-18 -0.099974999999999938916" rpy="0 0 0"/>
+<mass value="0.015704036277131950411" />
+<inertia ixx="5.2418767695050838616e-05" ixy="-3.9806148737395411625e-22"  ixz="4.3912862991162126311e-24" iyy="5.2418767695050825063e-05" iyz="-3.2821379185606682552e-21" izz="1.9630045346413507138e-07" />
+</inertial>
+</link>
+
+<link name="closedloop6_B">
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0" />
+<mass value="1e-9" />
+<inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+<joint name="closedloop6_B_frame" type="fixed">
+<origin xyz="6.9388939039072283776e-18 -6.9388939039072283776e-18 -0.19994999999999990559" rpy="-6.2841240652970591823e-17 -8.3557163575224844715e-20 -7.4186862763841184082e-18" />
+<parent link="toe_a_2/2_2" />
+<child link="closedloop6_B" />
+<axis xyz="0 0 0"/>
+</joint>
+
+<joint name="spherical_free_hip_left" type="revolute">
+<origin xyz="0.030568773343218412497 1.3877787807814456755e-17 -0.054400000000000017786" rpy="1.5707963267949007768 1.5498694414327498503 3.1415926535897269467" />
+<parent link="hip_x_2" />
+<child link="toe_a_2/2_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="motor_hip_z_left" type="revolute">
+<origin xyz="0.050000000000000009714 4.1633363423443370266e-17 -0.035200000000000009059" rpy="1.570796326794896558 0.013078473573069846966 -1.5707963267948974462" />
+<parent link="hip_y_2" />
+<child link="hip_x_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="motor_hip_x_left" type="revolute">
+<origin xyz="-0.02999999999999999889 0.072800000000000017475 0.059867854479678822566" rpy="1.5707963267948932273 1.5524862860405099774 1.5707963267948932273" />
+<parent link="torso" />
+<child link="hip_y_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+
+</robot>
