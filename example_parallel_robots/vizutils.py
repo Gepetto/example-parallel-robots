@@ -68,7 +68,7 @@ def visualizeConstraints(viz, model, data, constraint_models, q=None):
             name = f"c{i}"
         offset = pin.SE3.Identity()
         offset.translation = np.array([0, 0, 0.005])
-        box = addViewerBox(viz, name + "_1", 0.03, 0.02, 0.01, [1, 0, 0, 0.5])
+        addViewerBox(viz, name + "_1", 0.03, 0.02, 0.01, [1, 0, 0, 0.5])
         applyViewerConfiguration(
             viz,
             name + "_1",
@@ -76,7 +76,7 @@ def visualizeConstraints(viz, model, data, constraint_models, q=None):
                 data.oMi[c.joint1_id] * c.joint1_placement.act(offset)
             ),
         )
-        box = addViewerBox(viz, name + "_2", 0.03, 0.02, 0.01, [0, 1, 0, 0.5])
+        addViewerBox(viz, name + "_2", 0.03, 0.02, 0.01, [0, 1, 0, 0.5])
         applyViewerConfiguration(
             viz,
             name + "_2",

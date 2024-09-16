@@ -5,7 +5,8 @@ import meshcat
 from pinocchio.visualize import MeshcatVisualizer
 import hppfcl
 import re
-from toolbox_parallel_robots import ActuationModel, freezeJoints
+from toolbox_parallel_robots import ActuationModel
+from toolbox_parallel_robots.freeze_joints import freezeJoints
 
 import sandbox_pinocchio_parallel_robots as sppr
 
@@ -26,13 +27,13 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
         model, [visual_model, collision_model] = pin.buildReducedModel(
             model, [visual_model, collision_model], [1], pin.neutral(model)
         )
-        id_A_parent_left = id_B_parent_left = 4
-        id_A_parent_right = id_B_parent_right = 10
+        id_A_parent_left = 4
+        id_A_parent_right = 10
         id_B_left = id_parent_C_left = 5
         id_B_right = id_parent_C_right = 11
     else:
-        id_A_parent_left = id_B_parent_left = 5
-        id_A_parent_right = id_B_parent_right = 11
+        id_A_parent_left = 5
+        id_A_parent_right = 11
         id_B_left = id_parent_C_left = 6
         id_B_right = id_parent_C_right = 12
 

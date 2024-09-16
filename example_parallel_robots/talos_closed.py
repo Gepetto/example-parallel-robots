@@ -6,6 +6,7 @@ from pinocchio.visualize import MeshcatVisualizer
 import hppfcl
 import re
 from toolbox_parallel_robots import ActuationModel
+from toolbox_parallel_robots.freeze_joints import freezeJoints
 
 import sandbox_pinocchio_parallel_robots as sppr
 
@@ -26,15 +27,15 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
         model, [visual_model, collision_model] = pin.buildReducedModel(
             model, [visual_model, collision_model], [1], pin.neutral(model)
         )
-        id_A_parent_left = id_B_parent_left = 4
-        id_A_parent_right = id_B_parent_right = 10
-        id_B_left = id_parent_C_left = 5
-        id_B_right = id_parent_C_right = 11
+        id_A_parent_left = 4
+        id_A_parent_right = 10
+        id_B_left = 5
+        id_B_right = 11
     else:
-        id_A_parent_left = id_B_parent_left = 5
-        id_A_parent_right = id_B_parent_right = 11
-        id_B_left = id_parent_C_left = 6
-        id_B_right = id_parent_C_right = 12
+        id_A_parent_left = 5
+        id_A_parent_right = 11
+        id_B_left = 6
+        id_B_right = 12
 
     I4 = pin.SE3.Identity()
     inertia = pin.Inertia(
@@ -47,34 +48,7 @@ def TalosClosed(closed_loop=True, only_legs=True, free_flyer=True):
     BMC_right.translation = np.array([-0.08, -0.105, 0.02])
     BMC_left = I4.copy()
     BMC_left.translation = np.array([-0.08, 0.105, 0.02])
-    # Adding the joints
-    # id_C_right_X = model.addJoint(
-    #     id_B_right,
-    #     pin.JointModelRX(),
-    #     BMC_right,
-    #     "free_ankle_rod_right_X",
-    # )
-    # id_C_right_Y = model.addJoint(
-    #     id_C_right_X,
-    #     pin.JointModelRY(),
-    #     pin.SE3.Identity(),
-    #     "free_ankle_rod_right_Y",
-    # )
-    # id_C_left_X = model.addJoint(
-    #     id_B_left,
-    #     pin.JointModelRX(),
-    #     BMC_left,
-    #     "free_ankle_rod_left_X",
-    # )
-    # id_C_left_Y = model.addJoint(
-    #     id_C_left_X,
-    #     pin.JointModelRY(),
-    #     pin.SE3.Identity(),
-    #     "free_ankle_rod_left_Y",
-    # )
-    # Adding bodies to joints with no displacement
-    # model.appendBodyToJoint(id_C_right_Y, inertia, I4)
-    # model.appendBodyToJoint(id_C_left_Y, inertia, I4)
+
     # * Creation of the motor joint A
     kneeMA_right = I4.copy()
     kneeMA_right.translation = np.array([-0.015, -0.105, -0.11])
