@@ -54,6 +54,13 @@ class Disney:
     free_flyer = True
 
 
+class DisneyBiped:
+    path = "disney_robot"
+    urdf_file = "robot.urdf"
+    yaml_file = "robot.yaml"
+    free_flyer = True
+
+
 class Kangaroo:
     path = "kangaroo_like"
     urdf_file = "robot.urdf"
@@ -131,6 +138,7 @@ ROBOTS = {
     "digit_2legs": DigitBiped,
     "digit_2legs_6D": DigitBiped6d,
     "disney_leg": Disney,
+    "disney_2legs": DisneyBiped,
     "kangaroo_leg": Kangaroo,
     "kangaroo_2legs": KangarooBiped,
     "delta": Delta,

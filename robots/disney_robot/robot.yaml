@@ -1,0 +1,5 @@
+closed_loop: [['closedloop1_B', 'closedloop1_A'], ['closedloop2_A', 'closedloop2_B'], ['closedloop3_A', 'closedloop3_B'], ['left_closedloop1_B', 'left_closedloop1_A'], ['left_closedloop2_A', 'left_closedloop2_B'], ['left_closedloop3_A', 'left_closedloop3_B']]
+type: ['6d', '6d', '6d','6d', '6d', '6d']
+name_mot: ['motor_4barlink2', 'motor_4barlink4', 'motor_hip_x', 'motor_4barlink1', 'motor_4barlink3', 'motor_ankle', 'left_motor_4barlink2', 'left_motor_4barlink4', 'left_motor_hip_x', 'left_motor_4barlink1', 'left_motor_4barlink3', 'left_motor_ankle']
+joint_name: ['spherical_free_foot', 'spherical_free_4barlink3', 'spherical_free_4barlink4', 'spherical_free_4barlink1', 'spherical_free_4barlink2','left_spherical_free_foot', 'left_spherical_free_4barlink3', 'left_spherical_free_4barlink4', 'left_spherical_free_4barlink1', 'left_spherical_free_4barlink2']
+joint_type: ['SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL','SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL', 'SPHERICAL']
