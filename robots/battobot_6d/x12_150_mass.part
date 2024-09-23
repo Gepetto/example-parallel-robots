@@ -1,0 +1,13 @@
+{
+    "configuration": "default",
+    "documentId": "b26e49b6d17d154476907010",
+    "documentMicroversion": "cd8bbed70849b0d80a608c96",
+    "elementId": "e602ba017b2aff657005b53d",
+    "fullConfiguration": "default",
+    "id": "M1jVwR1qQQJjPJxRL",
+    "isStandardContent": false,
+    "name": "x12_150_mass <1>",
+    "partId": "JID",
+    "suppressed": false,
+    "type": "Part"
+}

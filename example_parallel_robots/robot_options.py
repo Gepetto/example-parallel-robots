@@ -40,11 +40,25 @@ class DigitBiped:
     free_flyer = True
 
 
+class DigitBiped6d:
+    path = "digit_like_2legs_6D"
+    urdf_file = "robot.urdf"
+    yaml_file = "robot.yaml"
+    free_flyer = True
+
+
 class Disney:
     path = "disney_like"
     urdf_file = "robot.urdf"
     yaml_file = "robot.yaml"
-    free_flyer = False
+    free_flyer = True
+
+
+class DisneyBiped:
+    path = "disney_robot"
+    urdf_file = "robot.urdf"
+    yaml_file = "robot.yaml"
+    free_flyer = True
 
 
 class Kangaroo:
@@ -108,6 +122,13 @@ class WL16:
     free_flyer = False
 
 
+class BattoBot:
+    path = "battobot_6d"
+    urdf_file = "robot.urdf"
+    yaml_file = "robot.yaml"
+    free_flyer = True
+
+
 ROBOTS = {
     "5bar": FiveBarLinkage,
     "5bar3d": FiveBarLinkageIso3D,
@@ -115,13 +136,17 @@ ROBOTS = {
     "cassie_leg": Cassie,
     "digit_leg": Digit,
     "digit_2legs": DigitBiped,
+    "digit_2legs_6D": DigitBiped6d,
     "disney_leg": Disney,
+    "disney_2legs": DisneyBiped,
     "kangaroo_leg": Kangaroo,
     "kangaroo_2legs": KangarooBiped,
     "delta": Delta,
-    # "talos_full_closed": TalosClosed,
-    # "talos_full_open": Talos,
+    "talos_2legs": None,
+    "talos_2legs_6d": None,
+    "talos_2legs_urdf": TalosBiped,
+    "talos_only_leg": None,
     "talos_leg": TalosLeg,
-    "talos_2legs": TalosBiped,
     "wl16_leg": WL16,
+    "battobot": BattoBot,
 }

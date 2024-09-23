@@ -1,0 +1,3 @@
+closed_loop: [['closedloop1_B', 'closedloop1_A'], ['closedloop2_B', 'closedloop2_A'], ['closedloop3_B', 'closedloop3_A'], ['closedloop4_B', 'closedloop4_A'], ['closedloop5_B', 'closedloop5_A'], ['closedloop6_B', 'closedloop6_A']]
+type: ['6d', '6d', '6d', '6d', '6d', '6d']
+name_mot: ['motor_hip_x', 'motor_hip_z', 'motor_hip_y', 'motor_knee', 'motor_shin1', 'motor_shin2', 'motor_hip_x_left', 'motor_hip_z_left', 'motor_hip_y_left', 'motor_knee_left', 'motor_shin1_left', 'motor_shin2_left']

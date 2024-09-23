@@ -15,8 +15,11 @@ from os.path import dirname, exists, join
 import sys
 import numpy as np
 from toolbox_parallel_robots import freezeJoints, ActuationModel
-from .robot_options import ROBOTS
-from .path import EXAMPLE_PARALLEL_ROBOTS_MODEL_DIR, EXAMPLE_PARALLEL_ROBOTS_SOURCE_DIR
+from example_parallel_robots.robot_options import ROBOTS
+from example_parallel_robots.path import (
+    EXAMPLE_PARALLEL_ROBOTS_MODEL_DIR,
+    EXAMPLE_PARALLEL_ROBOTS_SOURCE_DIR,
+)
 
 
 def getNameFrameConstraint(model, name_loop="closedloop", cstr_frames_ids=[]):
@@ -156,16 +159,19 @@ def completeRobotLoader(
     yaml_content = getYAMLcontents(path, name_yaml)
 
     # Update model
-    try:
+    if "joint_name" in yaml_content.keys():
         update_joint = yaml_content["joint_name"]
         joints_types = yaml_content["joint_type"]
-    except KeyError:
+    else:
         update_joint = []
         joints_types = []
 
     fixed_joints_names = []
     new_model = pin.Model()
-    for place, iner, name, parent_old, joint in list(
+
+    ujoints_type = {"X": pin.JointModelRX, "Y": pin.JointModelRY, "Z": pin.JointModelRZ}
+
+    for old_place, old_iner, old_name, old_parent, old_joint in list(
         zip(
             model.jointPlacements,
             model.inertias,
@@ -174,38 +180,94 @@ def completeRobotLoader(
             model.joints,
         )
     )[1:]:
-        parent = new_model.getJointId(model.names[parent_old])
-        if name in update_joint:
-            joint_type = joints_types[update_joint.index(name)]
+        parent = new_model.getJointId(model.names[old_parent])
+        place = old_place
+        name = old_name
+        if old_name in update_joint:
+            joint_type = joints_types[update_joint.index(old_name)]
             if joint_type == "SPHERICAL":
-                jm = pin.JointModelSpherical()
+                joint_model = pin.JointModelSpherical()
             elif joint_type == "FIXED":
-                jm = joint
-                fixed_joints_names.append(joint.id)
-            elif joint_type == "CARDAN":
+                joint_model = old_joint
+                fixed_joints_names.append(old_joint.id)
+            if "UJOINT" in joint_type:
+                type1 = ujoints_type[joint_type[-2]]
+                type2 = ujoints_type[joint_type[-1]]
+
                 parent = new_model.addJoint(
-                    parent, pin.JointModelRX(), place, name + "_X"
+                    parent, type1(), place, old_name + f"_{joint_type[-2]}"
                 )
-                jm = pin.JointModelRY()
+                joint_model = type2()
                 place = pin.SE3.Identity()
-                name = name + "_Y"
+                name = old_name + f"_{joint_type[-1]}"
         else:
-            jm = joint
-        jid = new_model.addJoint(parent, jm, place, name)
-        new_model.appendBodyToJoint(jid, iner, pin.SE3.Identity())
+            joint_model = old_joint
+        jid = new_model.addJoint(parent, joint_model, place, name)
+        new_model.appendBodyToJoint(jid, old_iner, pin.SE3.Identity())
+
+    # Frames - Add ujoints frames
     # Frames
     for f in model.frames:
-        n, parent_old, placement = f.name, f.parentJoint, f.placement
+        old_name, old_parent, old_place, old_type = (
+            f.name,
+            f.parentJoint,
+            f.placement,
+            f.type,
+        )
+        # For ujoints, create frames for the joints
         if (
-            model.names[parent_old] in update_joint
-            and joints_types[update_joint.index(model.names[parent_old])] == "CARDAN"
-        ):
-            parent = new_model.getJointId(model.names[parent_old] + "_Y")
-        else:
-            parent = new_model.getJointId(model.names[parent_old])
-            # print(parent)
-        frame = pin.Frame(n, parent, placement, f.type)
-        new_model.addFrame(frame, False)
+            old_name in update_joint
+        ):  # If the frame is a joint frame for a joint that as been updated
+            assert old_type == pin.JOINT, "Frame type should be JOINT"
+            assert (
+                model.names[old_parent] == old_name
+            ), "Frame parent should be the joint"
+            assert old_place == pin.SE3.Identity(), "Frame placement should be Identity"
+            joint_type = joints_types[update_joint.index(old_name)]
+            if "UJOINT" in joint_type:  # If this joint is a ujoint
+                ujoint_frame = pin.Frame(
+                    old_name + f"_{joint_type[-2]}",
+                    new_model.getJointId(old_name + f"_{joint_type[-2]}"),
+                    pin.SE3.Identity(),
+                    pin.FrameType.JOINT,
+                )
+                new_model.addFrame(ujoint_frame, False)
+                ujoint_frame = pin.Frame(
+                    old_name + f"_{joint_type[-1]}",
+                    new_model.getJointId(old_name + f"_{joint_type[-1]}"),
+                    pin.SE3.Identity(),
+                    pin.FrameType.JOINT,
+                )
+                new_model.addFrame(ujoint_frame, False)
+            else:
+                name = old_name
+                parent = new_model.getJointId(model.names[old_parent])
+                assert old_type == pin.JOINT, "Frame type should be JOINT"
+                joint_frame = pin.Frame(name, parent, old_place, old_type)
+                new_model.addFrame(joint_frame, False)
+
+        elif (
+            model.names[old_parent] in update_joint
+        ):  # Frame is attached to a joint that has been modified (but is not this joint frame)
+            joint_type = joints_types[update_joint.index(model.names[old_parent])]
+
+            if "UJOINT" in joint_type:  # The parent joint is ujoint
+                type2 = ujoints_type[joint_type[-1]]
+                name = old_name
+                parent = new_model.getJointId(
+                    model.names[old_parent] + f"_{joint_type[-1]}"
+                )
+                place = old_place
+                frame_type = old_type
+
+            else:  # The parent joint is not ujoint
+                name = old_name
+                parent = new_model.getJointId(model.names[old_parent])
+                place = old_place
+                frame_type = old_type
+
+            frame = pin.Frame(name, parent, place, frame_type)
+            new_model.addFrame(frame, False)
 
     # Geometry models
     geometry_models = []
@@ -214,12 +276,37 @@ def completeRobotLoader(
         for gm in geom_model.geometryObjects:
             if (
                 model.names[gm.parentJoint] in update_joint
-                and joints_types[update_joint.index(model.names[gm.parentJoint])]
-                == "CARDAN"
+                and "UJOINT"
+                in joints_types[update_joint.index(model.names[gm.parentJoint])]
             ):
-                gm.parentJoint = new_model.getJointId(
-                    model.names[gm.parentJoint] + "_Y"
-                )
+                if (
+                    joints_types[update_joint.index(model.names[gm.parentJoint])]
+                    == "UJOINT_XY"
+                ):
+                    gm.parentJoint = new_model.getJointId(
+                        model.names[gm.parentJoint] + "_Y"
+                    )
+                elif (
+                    joints_types[update_joint.index(model.names[gm.parentJoint])]
+                    == "UJOINT_YZ"
+                ):
+                    gm.parentJoint = new_model.getJointId(
+                        model.names[gm.parentJoint] + "_Z"
+                    )
+                elif (
+                    joints_types[update_joint.index(model.names[gm.parentJoint])]
+                    == "UJOINT_ZX"
+                ):
+                    gm.parentJoint = new_model.getJointId(
+                        model.names[gm.parentJoint] + "_X"
+                    )
+                elif (
+                    joints_types[update_joint.index(model.names[gm.parentJoint])]
+                    == "UJOINT_ZY"
+                ):
+                    gm.parentJoint = new_model.getJointId(
+                        model.names[gm.parentJoint] + "_Y"
+                    )
             else:
                 gm.parentJoint = new_model.getJointId(model.names[gm.parentJoint])
             gm.parentFrame = new_model.getFrameId(model.frames[gm.parentFrame].name)
@@ -227,8 +314,11 @@ def completeRobotLoader(
     visual_model, collision_model = geometry_models[0], geometry_models[1]
 
     new_model.frames.__delitem__(0)
-    new_model, visual_model = pin.buildReducedModel(
-        new_model, visual_model, fixed_joints_names, pin.neutral(new_model)
+    new_model, [visual_model, collision_model] = pin.buildReducedModel(
+        new_model,
+        [visual_model, collision_model],
+        fixed_joints_names,
+        pin.neutral(new_model),
     )
 
     model = new_model
@@ -303,6 +393,7 @@ def getModelPath(subpath, verbose=True):
     except NameError:
         pass
     paths += [join(p, "../../../share/example-robot-data/robots") for p in sys.path]
+    paths += ["robots/"]
     for path in paths:
         print(f"Checking {join(path, subpath.strip('/'))}")
         if exists(join(path, subpath.strip("/"))):
@@ -312,7 +403,7 @@ def getModelPath(subpath, verbose=True):
     raise IOError("%s not found" % subpath)
 
 
-def load(robot_name, free_flyer=None, only_legs=None):
+def load(robot_name, closed_loop=True, free_flyer=None, only_legs=None):
     """
     Load a model of a robot and return model objects containing all information about the robot.
 
@@ -335,83 +426,27 @@ def load(robot_name, free_flyer=None, only_legs=None):
     robot = ROBOTS[robot_name]
 
     if robot_name == "talos_only_leg":
+        from .talos_only_legs import talosOnlyLeg
+
         models_stack = talosOnlyLeg()
+    elif robot_name == "talos_2legs":
+        from .talos_closed import TalosClosed
+
+        (model, constraints_models, actuation_model, visual_model, collision_model) = (
+            TalosClosed(closed_loop, only_legs, free_flyer)
+        )
+    elif robot_name == "talos_2legs_6d":
+        from .talos_closed_6d import TalosClosed
+
+        (model, constraints_models, actuation_model, visual_model, collision_model) = (
+            TalosClosed(closed_loop, only_legs, free_flyer)
+        )
     else:
         ff = robot.free_flyer if free_flyer is None else free_flyer
         models_stack = completeRobotLoader(
             getModelPath(robot.path), robot.urdf_file, robot.yaml_file, ff
         )
     return models_stack
-
-
-def talosOnlyLeg():
-    new_model, constraint_models, actuation_model, visual_model, collision_model = load(
-        "talos_full_closed"
-    )
-
-    names_joints_to_lock = [
-        # 'universe',
-        # 'root_joint',
-        "torso_1_joint",
-        "torso_2_joint",
-        "arm_left_1_joint",
-        "arm_left_2_joint",
-        "arm_left_3_joint",
-        # 'arm_left_4_joint',
-        "arm_left_5_joint",
-        "arm_left_6_joint",
-        "arm_left_7_joint",
-        "gripper_left_inner_double_joint",
-        "gripper_left_fingertip_1_joint",
-        "gripper_left_fingertip_2_joint",
-        "gripper_left_inner_single_joint",
-        "gripper_left_fingertip_3_joint",
-        "gripper_left_joint",
-        "gripper_left_motor_single_joint",
-        "arm_right_1_joint",
-        "arm_right_2_joint",
-        "arm_right_3_joint",
-        # 'arm_right_4_joint',
-        "arm_right_5_joint",
-        "arm_right_6_joint",
-        "arm_right_7_joint",
-        "gripper_right_inner_double_joint",
-        "gripper_right_fingertip_1_joint",
-        "gripper_right_fingertip_2_joint",
-        "gripper_right_inner_single_joint",
-        "gripper_right_fingertip_3_joint",
-        "gripper_right_joint",
-        "gripper_right_motor_single_joint",
-        "head_1_joint",
-        "head_2_joint",
-    ]
-
-    ids_joints_to_lock = [
-        i for (i, n) in enumerate(new_model.names) if n in names_joints_to_lock
-    ]
-    q0 = pin.neutral(new_model)
-    (
-        new_model,
-        constraint_models,
-        actuation_model,
-        visual_model,
-        collision_model,
-    ) = freezeJoints(
-        new_model,
-        constraint_models,
-        actuation_model,
-        visual_model,
-        collision_model,
-        ids_joints_to_lock,
-        q0,
-    )
-    return (
-        new_model,
-        constraint_models,
-        actuation_model,
-        visual_model,
-        collision_model,
-    )
 
 
 def models():
@@ -452,14 +487,14 @@ def simplifyModel(
         joints_mass = []
         points = []
         parent = new_model.getJointId(model.names[parent_old])
-        for jid2, jtype in zip(range(3), model.joints[jid : jid + 3]):
+        for jid2, jtype2 in enumerate(model.joints[jid : jid + 3]):
             joint_id = jid + jid2
             oMi = data.oMi[joint_id]
-            if "RX" in jtype.shortname():
+            if "RX" in jtype2.shortname():
                 vec = oMi.rotation[:, 0]
-            elif "RY" in jtype.shortname():
+            elif "RY" in jtype2.shortname():
                 vec = oMi.rotation[:, 1]
-            elif "RZ" in jtype.shortname():
+            elif "RZ" in jtype2.shortname():
                 vec = oMi.rotation[:, 2]
             else:
                 break
@@ -488,13 +523,18 @@ def simplifyModel(
 
                         fixed_joints_ids += [jid + 0, jid + 1]
         if jid != 0:
-            # print(jid)
             if spherical and jid == last_joint + 2:
                 jtype = pin.JointModelSpherical()
                 spherical = False
             test = new_model.addJoint(parent, jtype, place, name)
             new_model.appendBodyToJoint(test, iner, pin.SE3.Identity())
-    # print(fixed_joints_ids)
+        # Adding frames
+    for f in model.frames:
+        n, parent_old, placement = f.name, f.parentJoint, f.placement
+        parent = new_model.getJointId(model.names[parent_old])
+        frame = pin.Frame(n, parent, placement, f.type)
+        new_model.addFrame(frame, False)  # We assume that there is no inertial frame
+
     q0 = pin.neutral(new_model)
 
     (
@@ -540,3 +580,38 @@ def unitest_SimplifyModel():
     viz.clean()
     viz.loadViewerModel(rootNodeName="number 1" + str(np.random.rand()))
     viz.display(pin.randomConfiguration(new_model))
+
+
+if __name__ == "__main__":
+    model, constraints_models, actuation_model, visual_model, collision_model = load(
+        "battobot"
+    )
+    joints_lock_names = [
+        "free_knee_left_Y",
+        "free_knee_left_Z",
+    ]
+    jointToLockIds = [i for (i, n) in enumerate(model.names) if n in joints_lock_names]
+    (
+        reduced_model,
+        (),
+    ) = pin.buildReducedModel(model, [], jointToLockIds, pin.neutral(model))
+    print("End")
+
+    # from toolbox_parallel_robots.foo import createSlidersInterface
+    # from pinocchio.visualize import MeshcatVisualizer
+    # import meshcat
+
+    # viz = MeshcatVisualizer(model, visual_model, visual_model)
+    # viz.viewer = meshcat.Visualizer(zmq_url="tcp://127.0.0.1:6000")
+    # viz.clean()
+    # viz.loadViewerModel(rootNodeName="universe")
+
+    # createSlidersInterface(
+    #     model,
+    #     constraints_models,
+    #     visual_model,
+    #     actuation_model.mot_ids_q,
+    #     viz,
+    #     q0=pin.neutral(model),
+    # )
+    # print(model)
