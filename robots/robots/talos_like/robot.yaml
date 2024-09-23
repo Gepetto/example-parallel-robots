@@ -1,3 +1,0 @@
-closed_loop: [['closedloop1_B', 'closedloop1_A']]
-type: ['6d']
-name_mot: ['motor_hip_z', 'motor_hip_x', 'motor_hip_y', 'motor_knee', 'motor_ankle', 'motor_shin']

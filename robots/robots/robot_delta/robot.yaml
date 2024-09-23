@@ -1,3 +1,0 @@
-closed_loop: [['closedloop1_A', 'closedloop1_B'], ['closedloop2_B', 'closedloop2_A'], ['closedloop3_A', 'closedloop3_B']]
-type: ['6d', '6d', '6d']
-name_mot: ['mot1_rod1', 'mot1_rod2']

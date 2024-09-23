@@ -1,3 +1,0 @@
-closed_loop: [['closedloop0_B', 'closedloop0_A'], ['closedloop2_A', 'closedloop2_B'], ['closedloop3_B', 'closedloop3_A'], ['closedloop4_B', 'closedloop4_A'], ['closedloop5_A', 'closedloop5_B'], ['closedloop6_A', 'closedloop6_B'], ['closedloop7_B', 'closedloop7_A'], ['closedloop8_B', 'closedloop8_A'], ['closedloop9_A', 'closedloop9_B'], ['closedloop10_A', 'closedloop10_B'], ['closedloop11_B', 'closedloop11_A']]
-type: ['6d', '6d', '6d', '6d', '6d', '6d', '6d', '6d', '6d', '6d', '6d']
-name_mot: [ 'motor_hipz',  'motor_hip_xy1', 'motor_hip_xy2', 'motor_ankle2', 'motor_ankle1', 'motor_knee']
