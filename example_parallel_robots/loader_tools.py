@@ -194,7 +194,9 @@ def completeRobotLoader(
                 type1 = ujoints_type[joint_type[-2]]
                 type2 = ujoints_type[joint_type[-1]]
 
-                parent = new_model.addJoint(parent, type1(), place, old_name + f"_{joint_type[-2]}")
+                parent = new_model.addJoint(
+                    parent, type1(), place, old_name + f"_{joint_type[-2]}"
+                )
                 joint_model = type2()
                 place = pin.SE3.Identity()
                 name = old_name + f"_{joint_type[-1]}"
@@ -206,14 +208,23 @@ def completeRobotLoader(
     # Frames - Add ujoints frames
     # Frames
     for f in model.frames:
-        old_name, old_parent, old_place, old_type = f.name, f.parentJoint, f.placement, f.type
+        old_name, old_parent, old_place, old_type = (
+            f.name,
+            f.parentJoint,
+            f.placement,
+            f.type,
+        )
         # For ujoints, create frames for the joints
-        if old_name in update_joint: # If the frame is a joint frame for a joint that as been updated
+        if (
+            old_name in update_joint
+        ):  # If the frame is a joint frame for a joint that as been updated
             assert old_type == pin.JOINT, "Frame type should be JOINT"
-            assert model.names[old_parent] == old_name, "Frame parent should be the joint"
+            assert (
+                model.names[old_parent] == old_name
+            ), "Frame parent should be the joint"
             assert old_place == pin.SE3.Identity(), "Frame placement should be Identity"
             joint_type = joints_types[update_joint.index(old_name)]
-            if "UJOINT" in joint_type: # If this joint is a ujoint
+            if "UJOINT" in joint_type:  # If this joint is a ujoint
                 ujoint_frame = pin.Frame(
                     old_name + f"_{joint_type[-2]}",
                     new_model.getJointId(old_name + f"_{joint_type[-2]}"),
@@ -234,18 +245,22 @@ def completeRobotLoader(
                 assert old_type == pin.JOINT, "Frame type should be JOINT"
                 joint_frame = pin.Frame(name, parent, old_place, old_type)
                 new_model.addFrame(joint_frame, False)
-                
-        elif model.names[old_parent] in update_joint: # Frame is attached to a joint that has been modified (but is not this joint frame)
+
+        elif (
+            model.names[old_parent] in update_joint
+        ):  # Frame is attached to a joint that has been modified (but is not this joint frame)
             joint_type = joints_types[update_joint.index(model.names[old_parent])]
 
-            if "UJOINT" in joint_type: # The parent joint is ujoint
+            if "UJOINT" in joint_type:  # The parent joint is ujoint
                 type2 = ujoints_type[joint_type[-1]]
                 name = old_name
-                parent = new_model.getJointId(model.names[old_parent] + f"_{joint_type[-1]}")
+                parent = new_model.getJointId(
+                    model.names[old_parent] + f"_{joint_type[-1]}"
+                )
                 place = old_place
                 frame_type = old_type
 
-            else: # The parent joint is not ujoint
+            else:  # The parent joint is not ujoint
                 name = old_name
                 parent = new_model.getJointId(model.names[old_parent])
                 place = old_place
@@ -566,6 +581,7 @@ def unitest_SimplifyModel():
     viz.loadViewerModel(rootNodeName="number 1" + str(np.random.rand()))
     viz.display(pin.randomConfiguration(new_model))
 
+
 if __name__ == "__main__":
     model, constraints_models, actuation_model, visual_model, collision_model = load(
         "battobot"
@@ -578,9 +594,7 @@ if __name__ == "__main__":
     (
         reduced_model,
         (),
-    ) = pin.buildReducedModel(
-        model, [], jointToLockIds, pin.neutral(model)
-    )
+    ) = pin.buildReducedModel(model, [], jointToLockIds, pin.neutral(model))
     print("End")
 
     # from toolbox_parallel_robots.foo import createSlidersInterface
