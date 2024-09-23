@@ -168,7 +168,10 @@ def completeRobotLoader(
 
     fixed_joints_names = []
     new_model = pin.Model()
-    for place, iner, name, parent_old, joint in list(
+
+    ujoints_type = {"X": pin.JointModelRX, "Y": pin.JointModelRY, "Z": pin.JointModelRZ}
+
+    for old_place, old_iner, old_name, old_parent, old_joint in list(
         zip(
             model.jointPlacements,
             model.inertias,
@@ -177,72 +180,79 @@ def completeRobotLoader(
             model.joints,
         )
     )[1:]:
-        parent = new_model.getJointId(model.names[parent_old])
-        if name in update_joint:
-            joint_type = joints_types[update_joint.index(name)]
+        parent = new_model.getJointId(model.names[old_parent])
+        place = old_place
+        name = old_name
+        if old_name in update_joint:
+            joint_type = joints_types[update_joint.index(old_name)]
             if joint_type == "SPHERICAL":
-                jm = pin.JointModelSpherical()
+                joint_model = pin.JointModelSpherical()
             elif joint_type == "FIXED":
-                jm = joint
-                fixed_joints_names.append(joint.id)
-            elif joint_type == "UJOINT_XY":
-                parent = new_model.addJoint(
-                    parent, pin.JointModelRX(), place, name + "_X"
-                )
-                jm = pin.JointModelRY()
+                joint_model = old_joint
+                fixed_joints_names.append(old_joint.id)
+            if "UJOINT" in joint_type:
+                type1 = ujoints_type[joint_type[-2]]
+                type2 = ujoints_type[joint_type[-1]]
+
+                parent = new_model.addJoint(parent, type1(), place, old_name + f"_{joint_type[-2]}")
+                joint_model = type2()
                 place = pin.SE3.Identity()
-                name = name + "_Y"
-            elif joint_type == "UJOINT_YZ":
-                parent = new_model.addJoint(
-                    parent, pin.JointModelRY(), place, name + "_Y"
-                )
-                jm = pin.JointModelRZ()
-                place = pin.SE3.Identity()
-                name = name + "_Z"
-            elif joint_type == "UJOINT_ZX":
-                parent = new_model.addJoint(
-                    parent, pin.JointModelRZ(), place, name + "_Z"
-                )
-                jm = pin.JointModelRX()
-                place = pin.SE3.Identity()
-                name = name + "_X"
-            elif joint_type == "UJOINT_ZY":
-                parent = new_model.addJoint(
-                    parent, pin.JointModelRZ(), place, name + "_Z"
-                )
-                jm = pin.JointModelRY()
-                place = pin.SE3.Identity()
-                name = name + "_Y"
+                name = old_name + f"_{joint_type[-1]}"
         else:
-            jm = joint
-        jid = new_model.addJoint(parent, jm, place, name)
-        new_model.appendBodyToJoint(jid, iner, pin.SE3.Identity())
+            joint_model = old_joint
+        jid = new_model.addJoint(parent, joint_model, place, name)
+        new_model.appendBodyToJoint(jid, old_iner, pin.SE3.Identity())
+
+    # Frames - Add ujoints frames
     # Frames
     for f in model.frames:
-        n, parent_old, placement = f.name, f.parentJoint, f.placement
-        if (
-            model.names[parent_old] in update_joint
-            and "UJOINT" in joints_types[update_joint.index(model.names[parent_old])]
-        ):
-            if joints_types[update_joint.index(model.names[parent_old])] == "UJOINT_XY":
-                parent = new_model.getJointId(model.names[parent_old] + "_Y")
-            elif (
-                joints_types[update_joint.index(model.names[parent_old])] == "UJOINT_YZ"
-            ):
-                parent = new_model.getJointId(model.names[parent_old] + "_Z")
-            elif (
-                joints_types[update_joint.index(model.names[parent_old])] == "UJOINT_ZX"
-            ):
-                parent = new_model.getJointId(model.names[parent_old] + "_X")
-            elif (
-                joints_types[update_joint.index(model.names[parent_old])] == "UJOINT_ZY"
-            ):
-                parent = new_model.getJointId(model.names[parent_old] + "_Y")
-        else:
-            parent = new_model.getJointId(model.names[parent_old])
-            # print(parent)
-        frame = pin.Frame(n, parent, placement, f.type)
-        new_model.addFrame(frame, False)
+        old_name, old_parent, old_place, old_type = f.name, f.parentJoint, f.placement, f.type
+        # For ujoints, create frames for the joints
+        if old_name in update_joint: # If the frame is a joint frame for a joint that as been updated
+            assert old_type == pin.JOINT, "Frame type should be JOINT"
+            assert model.names[old_parent] == old_name, "Frame parent should be the joint"
+            assert old_place == pin.SE3.Identity(), "Frame placement should be Identity"
+            joint_type = joints_types[update_joint.index(old_name)]
+            if "UJOINT" in joint_type: # If this joint is a ujoint
+                ujoint_frame = pin.Frame(
+                    old_name + f"_{joint_type[-2]}",
+                    new_model.getJointId(old_name + f"_{joint_type[-2]}"),
+                    pin.SE3.Identity(),
+                    pin.FrameType.JOINT,
+                )
+                new_model.addFrame(ujoint_frame, False)
+                ujoint_frame = pin.Frame(
+                    old_name + f"_{joint_type[-1]}",
+                    new_model.getJointId(old_name + f"_{joint_type[-1]}"),
+                    pin.SE3.Identity(),
+                    pin.FrameType.JOINT,
+                )
+                new_model.addFrame(ujoint_frame, False)
+            else:
+                name = old_name
+                parent = new_model.getJointId(model.names[old_parent])
+                assert old_type == pin.JOINT, "Frame type should be JOINT"
+                joint_frame = pin.Frame(name, parent, old_place, old_type)
+                new_model.addFrame(joint_frame, False)
+                
+        elif model.names[old_parent] in update_joint: # Frame is attached to a joint that has been modified (but is not this joint frame)
+            joint_type = joints_types[update_joint.index(model.names[old_parent])]
+
+            if "UJOINT" in joint_type: # The parent joint is ujoint
+                type2 = ujoints_type[joint_type[-1]]
+                name = old_name
+                parent = new_model.getJointId(model.names[old_parent] + f"_{joint_type[-1]}")
+                place = old_place
+                frame_type = old_type
+
+            else: # The parent joint is not ujoint
+                name = old_name
+                parent = new_model.getJointId(model.names[old_parent])
+                place = old_place
+                frame_type = old_type
+
+            frame = pin.Frame(name, parent, place, frame_type)
+            new_model.addFrame(frame, False)
 
     # Geometry models
     geometry_models = []
@@ -556,26 +566,38 @@ def unitest_SimplifyModel():
     viz.loadViewerModel(rootNodeName="number 1" + str(np.random.rand()))
     viz.display(pin.randomConfiguration(new_model))
 
-
 if __name__ == "__main__":
     model, constraints_models, actuation_model, visual_model, collision_model = load(
-        "digit_2legs_6D"
+        "battobot"
     )
-    from toolbox_parallel_robots.foo import createSlidersInterface
-    from pinocchio.visualize import MeshcatVisualizer
-    import meshcat
-
-    viz = MeshcatVisualizer(model, visual_model, visual_model)
-    viz.viewer = meshcat.Visualizer(zmq_url="tcp://127.0.0.1:6000")
-    viz.clean()
-    viz.loadViewerModel(rootNodeName="universe")
-
-    createSlidersInterface(
-        model,
-        constraints_models,
-        visual_model,
-        actuation_model.mot_ids_q,
-        viz,
-        q0=pin.neutral(model),
+    joints_lock_names = [
+        "free_knee_left_Y",
+        "free_knee_left_Z",
+    ]
+    jointToLockIds = [i for (i, n) in enumerate(model.names) if n in joints_lock_names]
+    (
+        reduced_model,
+        (),
+    ) = pin.buildReducedModel(
+        model, [], jointToLockIds, pin.neutral(model)
     )
-    print(model)
+    print("End")
+
+    # from toolbox_parallel_robots.foo import createSlidersInterface
+    # from pinocchio.visualize import MeshcatVisualizer
+    # import meshcat
+
+    # viz = MeshcatVisualizer(model, visual_model, visual_model)
+    # viz.viewer = meshcat.Visualizer(zmq_url="tcp://127.0.0.1:6000")
+    # viz.clean()
+    # viz.loadViewerModel(rootNodeName="universe")
+
+    # createSlidersInterface(
+    #     model,
+    #     constraints_models,
+    #     visual_model,
+    #     actuation_model.mot_ids_q,
+    #     viz,
+    #     q0=pin.neutral(model),
+    # )
+    # print(model)
