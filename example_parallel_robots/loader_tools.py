@@ -214,9 +214,7 @@ def completeRobotLoader(
             f.type,
         )
         # For ujoints, create frames for the joints
-        if (
-            old_name in update_joint
-        ):  # If the frame is a joint frame for a joint that as been updated
+        if (old_name in update_joint):  # If the frame is a joint frame for a joint that as been updated
             assert old_type == pin.JOINT, "Frame type should be JOINT"
             assert (
                 model.names[old_parent] == old_name
@@ -267,7 +265,7 @@ def completeRobotLoader(
 
             frame = pin.Frame(name, parent, place, frame_type)
             new_model.addFrame(frame, False)
-        elif (model.names[old_parent] == old_name): # The frame corresponds to the joint
+        else: # The frame corresponds to the joint
             name = old_name
             parent = new_model.getJointId(model.names[old_parent])
             place = old_place
