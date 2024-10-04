@@ -13,7 +13,6 @@ set(PROJECT_URL "https://github.com/${PROJECT_ORG}/${PROJECT_NAME}")
 set(BUILD_PYTHON_INTERFACE ON)
 # option(INSTALL_PYTHON_INTERFACE_ONLY "Install *ONLY* the Python interface"
 # OFF) option(BUILD_TESTING "Build unit tests" OFF)
-set(BUILD_TESTING ON)
 
 # Project configuration
 set(CUSTOM_HEADER_DIR ${PROJECT_NAME})
