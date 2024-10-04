@@ -13,7 +13,7 @@ stdenv.mkDerivation rec {
   src = lib.fileset.toSource {
     root = ./.;
     fileset = lib.fileset.unions [
-      ./CMakeLists.txt 
+      ./CMakeLists.txt
       ./example_parallel_robots
       ./package.xml
       ./robots
