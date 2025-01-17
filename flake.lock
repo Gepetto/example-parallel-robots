@@ -49,7 +49,31 @@
     "root": {
       "inputs": {
         "flake-parts": "flake-parts",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "toolbox-parallel-robots": "toolbox-parallel-robots"
+      }
+    },
+    "toolbox-parallel-robots": {
+      "inputs": {
+        "flake-parts": [
+          "flake-parts"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1737126489,
+        "narHash": "sha256-/kiRmzX4KiwyjYNcksPmgjKh0r/G1BhAUsTuizpCdec=",
+        "owner": "Gepetto",
+        "repo": "toolbox-parallel-robots",
+        "rev": "61d5eeae9e9df97aa45c6fc0567fdcdcbdb95b46",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Gepetto",
+        "repo": "toolbox-parallel-robots",
+        "type": "github"
       }
     }
   },
