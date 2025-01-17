@@ -218,9 +218,9 @@ def completeRobotLoader(
             old_name in update_joint
         ):  # If the frame is a joint frame for a joint that as been updated
             assert old_type == pin.JOINT, "Frame type should be JOINT"
-            assert (
-                model.names[old_parent] == old_name
-            ), "Frame parent should be the joint"
+            assert model.names[old_parent] == old_name, (
+                "Frame parent should be the joint"
+            )
             assert old_place == pin.SE3.Identity(), "Frame placement should be Identity"
             joint_type = joints_types[update_joint.index(old_name)]
             if "UJOINT" in joint_type:  # If this joint is a ujoint
