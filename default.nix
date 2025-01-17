@@ -1,12 +1,15 @@
 {
   cmake,
   lib,
+  pinocchio,
   pkg-config,
-  python3Packages,
+  pythonImportsCheckHook,
+  pyyaml,
   stdenv,
+  toolbox-parallel-robots,
 }:
 
-stdenv.mkDerivation rec {
+stdenv.mkDerivation {
   pname = "example-parallel-robots";
   version = "0-unstable-2024-10-02";
 
@@ -32,8 +35,16 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [
     cmake
     pkg-config
+    pythonImportsCheckHook
   ];
-  propagatedBuildInputs = [ python3Packages.pinocchio ];
+  propagatedBuildInputs = [
+    pinocchio
+    pyyaml
+    toolbox-parallel-robots
+  ];
+
+  doCheck = true;
+  pythonImportsCheck = [ "example_parallel_robots" ];
 
   meta = {
     description = "Set of parallel robot models for general use in benchmarks and examples";
