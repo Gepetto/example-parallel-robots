@@ -2,6 +2,8 @@ pull_request_rules:
   - name: merge automatically when CI passes and PR is approved
     conditions:
       - check-success = "CMake"
+      - check-success = "nix (macos)"
+      - check-success = "nix (ubuntu)"
       - check-success = "Pip"
       - check-success = "pre-commit.ci - pr"
       - or:
