@@ -63,11 +63,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1738629828,
-        "narHash": "sha256-T6TBsOlb1m3TBaL58p/K3vB873VWFhm1LU6aAQyJfiI=",
+        "lastModified": 1739231359,
+        "narHash": "sha256-ziyp8pKapgWYr44QggbeuuHRHsXyaMu5xtjFxyKwzXA=",
         "owner": "Gepetto",
         "repo": "toolbox-parallel-robots",
-        "rev": "e4556ce64480fc7ba875366173cef911ea7e0d65",
+        "rev": "2d431be59856492ccb10b6c9755977d81c222778",
         "type": "github"
       },
       "original": {
