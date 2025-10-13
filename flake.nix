@@ -31,6 +31,7 @@
             default = self'.packages.example-parallel-robots;
             example-parallel-robots = pkgs.python3Packages.example-parallel-robots.overrideAttrs {
               cmakeFlags = [ (lib.cmakeBool "BUILD_PYTHON_INTERFACE" true) ];
+              doCheck = true;
               src = lib.fileset.toSource {
                 root = ./.;
                 fileset = lib.fileset.unions [
