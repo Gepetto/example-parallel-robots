@@ -67,6 +67,15 @@ if(BUILD_PYTHON_INTERFACE)
           DESTINATION "${PYTHON_SITELIB}/${PY_NAME}")
 
   if(BUILD_TESTING)
+    find_package(toolbox-parallel-robots QUIET) # tpr installed from source /
+                                                # system
+    if(NOT TARGET toolbox-parallel-robots::toolbox-parallel-robots)
+      # TODO: allow use of pinocchio.casadi from PyPI execute_process( COMMAND
+      # ${PYTHON_EXECUTABLE} "-c" "import toolbox_parallel_robots"
+      # RESULT_VARIABLE _tpr OUTPUT_QUIET ERROR_QUIET) if(NOT _tpr EQUAL 0)
+      # message( FATAL_ERROR "toolbox-parallel-robots not found. Please install
+      # it and ensure it is available." ) endif()
+    endif()
     add_subdirectory(unittest)
   endif(BUILD_TESTING)
 endif(BUILD_PYTHON_INTERFACE)

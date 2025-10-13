@@ -22,7 +22,7 @@ jobs:
         with:
           python-version: "3.12"
       - run: python -m pip install -U pip
-      - run: python -m pip install pin[build] pyyaml
+      - run: python -m pip install pin[build] pyyaml toolbox-parallel-robots
       - run: echo "CMAKE_PREFIX_PATH=$(cmeel cmake)" >> $GITHUB_ENV
       - run: cmake -B build -S .
       - run: cmake --build build

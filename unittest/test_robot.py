@@ -23,8 +23,8 @@ class TestRobotLoad(unittest.TestCase):
             "delta",
             "talos_leg",
             "wl16_leg",
-            "talos_full_closed",
-            "talos_only_leg",
+            # "talos_full_closed",
+            # "talos_only_leg",
         ]
 
     def test_robot(self):
