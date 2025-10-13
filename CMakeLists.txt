@@ -67,6 +67,7 @@ if(BUILD_PYTHON_INTERFACE)
           DESTINATION "${PYTHON_SITELIB}/${PY_NAME}")
 
   if(BUILD_TESTING)
+    find_package(toolbox-parallel-robots REQUIRED)
     add_subdirectory(unittest)
   endif(BUILD_TESTING)
 endif(BUILD_PYTHON_INTERFACE)
