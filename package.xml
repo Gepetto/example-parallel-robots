@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="3">
   <name>example-parallel-robots</name>
-  <version>0.0.1</version>
+  <version>1.0.0</version>
   <description>Set of parallel robots models for general use in benchmarks and examples</description>
   <author email="vbatto@laas.fr">Virgile Batto</author>
   <author email="ldematteis@laas.fr">Ludovic De Matteis</author>
