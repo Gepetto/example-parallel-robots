@@ -1,16 +1,23 @@
 [build-system]
-build-backend = "cmeel"
-requires = ["cmeel[build]", "pin[build]", "pyyaml"]
+requires = ["uv_build>=0.8.14,<0.9.0"]
+build-backend = "uv_build"
 
 [project]
 name = "example-parallel-robots"
 description = "Set of parallel robot models for general use in benchmarks and examples"
 version = "0.0.1"
+readme = "README.md"
+authors = [
+  {name = "Virgile Batto", email = "vbatto@laas.fr"},
+  {name = "Ludovic De Matteis", email = "ldematteis@laas.fr"}
+]
+maintainers = [
+  {name = "Guilhem Saurel", email = "guilhem.saurel@laas.fr"}
+]
+requires-python = ">=3.8"
 dependencies = [
-  "pin",
-  "pyyaml"
+  "toolbox-parallel-robots>=1.2.0"
 ]
 
-[tool.cmeel]
-# TODO: fix casadi
-run-tests = false
+[tool.uv.build-backend]
+module-root = ""
