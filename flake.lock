@@ -53,7 +53,6 @@
         "src-gepetto-viewer": "src-gepetto-viewer",
         "src-odri-control-interface": "src-odri-control-interface",
         "src-odri-masterboard-sdk": "src-odri-masterboard-sdk",
-        "src-toolbox-parallel-robots": "src-toolbox-parallel-robots",
         "system-manager": "system-manager",
         "systems": [
           "gepetto",
@@ -64,11 +63,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1760233259,
-        "narHash": "sha256-MxIsSnJ70zqZTmNX9dNornfLJziB2lgJ53vcQopc8OE=",
+        "lastModified": 1760357266,
+        "narHash": "sha256-uDqkCGFL557D9OuRp3Ot4SofIRZvFdkm5weO9q9sfXE=",
         "owner": "gepetto",
         "repo": "nix",
-        "rev": "14f5e0b740be2961830ccd9b3afcb30953964b3b",
+        "rev": "12edb8cbd72a84bafcbbc831842d5ae91a715bfc",
         "type": "github"
       },
       "original": {
@@ -286,22 +285,6 @@
         "owner": "gwennlbh",
         "ref": "nix",
         "repo": "master-board",
-        "type": "github"
-      }
-    },
-    "src-toolbox-parallel-robots": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1755590729,
-        "narHash": "sha256-NCpzhD12kXrxAwsufxZbtjw1Vrs1Usfpo/iXeQoTT94=",
-        "owner": "gepetto",
-        "repo": "toolbox-parallel-robots",
-        "rev": "280a9868a346ed1631272512dac02c96f9f24c2d",
-        "type": "github"
-      },
-      "original": {
-        "owner": "gepetto",
-        "repo": "toolbox-parallel-robots",
         "type": "github"
       }
     },
