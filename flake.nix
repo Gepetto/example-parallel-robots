@@ -19,36 +19,27 @@
         systems = import inputs.systems;
         imports = [
           inputs.gepetto.flakeModule
-          { gepetto-pkgs.overlays = [ self.overlays.default ]; }
-        ];
-        flake.overlays.default = _final: prev: {
-          pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
-            (_python-final: python-prev: {
-              example-parallel-robots = python-prev.example-parallel-robots.overrideAttrs {
-                src = lib.fileset.toSource {
-                  root = ./.;
-                  fileset = lib.fileset.unions [
-                    ./CMakeLists.txt
-                    ./example_parallel_robots
-                    ./package.xml
-                    ./robots
-                    ./unittest
-                  ];
-                };
+          {
+            gazebros2nix.pyOverrides.example-parallel-robots = _final: _python-final: {
+              src = lib.fileset.toSource {
+                root = ./.;
+                fileset = lib.fileset.unions [
+                  ./CMakeLists.txt
+                  ./example_parallel_robots
+                  ./package.xml
+                  ./robots
+                  ./unittest
+                ];
               };
-            })
-          ];
-        };
+            };
+          }
+        ];
         perSystem =
-          { pkgs, self', ... }:
+          { pkgs, ... }:
           {
             apps.default = {
               type = "app";
-              program = pkgs.python3.withPackages (_: [ self'.packages.default ]);
-            };
-            packages = {
-              default = self'.packages.example-parallel-robots;
-              example-parallel-robots = pkgs.python3Packages.example-parallel-robots;
+              program = pkgs.python3.withPackages (p: [ p.example-parallel-robots ]);
             };
           };
       }
