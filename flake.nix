@@ -3,13 +3,8 @@
 
   inputs = {
     gepetto.url = "github:gepetto/nix";
-    flakoboros.follows = "gepetto/flakoboros";
-    gazebros2nix.follows = "gepetto/gazebros2nix";
     flake-parts.follows = "gepetto/flake-parts";
-    nixpkgs.follows = "gepetto/nixpkgs";
-    nix-ros-overlay.follows = "gepetto/nix-ros-overlay";
     systems.follows = "gepetto/systems";
-    treefmt-nix.follows = "gepetto/treefmt-nix";
   };
 
   outputs =
@@ -21,7 +16,7 @@
         imports = [
           inputs.gepetto.flakeModule
           {
-            flakoboros.pyOverrides.example-parallel-robots = _: _: {
+            flakoboros.pyOverrideAttrs.example-parallel-robots = _: _: {
               src = lib.fileset.toSource {
                 root = ./.;
                 fileset = lib.fileset.unions [
