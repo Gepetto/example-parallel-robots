@@ -10,4 +10,3 @@
 	a DisneyBot like leg
 ## robot _marcheur_6
 	a WL16 like leg
-
